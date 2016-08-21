@@ -1,3 +1,4 @@
+"use strict"
 var width = 200
 var running = false;
 var arr = Array.apply(null, {length: width}).map(Number.call, Number)
@@ -16,7 +17,7 @@ function shuffle(a) {
 
 function superSetup() {
     shuffle(arr)
-    $content = $(".content");
+    var $content = $(".content");
     $content.html("")
     for(var i = 0; i < arr.length; i++) {
         var cellValue = arr[i];
@@ -24,7 +25,7 @@ function superSetup() {
             "<li style=left:"+i*multiplier+"px;bottom:"+cellValue*multiplier+"px></li>"
         )
     }
-    $lis = $("li")
+    var $lis = $("li")
     $lis.removeClass("current")
     $($lis[0]).addClass("current")
     window.sorted = true;

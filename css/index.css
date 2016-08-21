@@ -19,9 +19,25 @@ body {
     padding: 0;
     border-radius: 0;
     background: white;
-    height: 2px;
-    width: 2px;
+    height: 4px;
+    width: 4px;
     position: absolute;
+}
+
+.hidden {
+    display: none;
+}
+
+.card header {
+    cursor: pointer;
+}
+
+.card header:hover {
+    background: #eee;
+}
+
+.footer-hidden footer {
+    display: none
 }
 
 .content li.current {

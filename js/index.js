@@ -1,9 +1,9 @@
 "use strict"
-var width = 200
+var width = 100
 var running = false;
 var arr = Array.apply(null, {length: width}).map(Number.call, Number)
 var delay = 5;
-var multiplier = 2;
+var multiplier = 4;
 
 function shuffle(a) {
     var j, x, i;
@@ -37,6 +37,14 @@ function superSetup() {
 }
 
 $(document).ready(function () {
-    setup();
-    $(".reset").click(setup)
+    if (window.setup) {
+        setup();
+        $(".reset").click(setup)
+    }
+    $(".card header").click(
+        function (event) {
+            event.stopPropagation();
+            $(event.currentTarget).parent().toggleClass("footer-hidden")
+        }
+    )
 })

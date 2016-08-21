@@ -17,11 +17,13 @@ $(document).ready(function () {
     setup();
     window.sorted = true;
     setTimeout(next.bind(this, 0), delay)
+    $(".reset").click(setup)
 })
 
 function setup () {
     shuffle(arr)
     $content = $(".content");
+    $content.html("")
     for(var i = 0; i < arr.length; i++) {
         var cellValue = arr[i];
         $content.append(

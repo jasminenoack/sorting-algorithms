@@ -7,7 +7,22 @@ body {
 }
 
 .content {
+    height: 400px;
+    width: 400px;
+    background: black;
+    margin: auto;
+    position: relative;
+}
+.content li {
+    border-radius: 0;
+    background: white;
+    height: 2px;
+    width: 2px;
+    position: absolute;
+}
 
+.content li.current {
+    background: red;
 }
 
 .content:after {
@@ -35,10 +50,21 @@ ul {
     margin: 0;
 }
 
-li {
+.content li {
     list-style: none;
     background: black;
     border-radius: 100px;
     height: 5px;
     width: 5px;
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 10px;
+}
+body {
+    background: transparent;
 }

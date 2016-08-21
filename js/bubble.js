@@ -6,6 +6,7 @@ function setup () {
 function next () {
     if (index + 1 === lengthToCheck) {
         if (sorted) {
+            running = false
             return
         }
         sorted = true;

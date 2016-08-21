@@ -12,6 +12,7 @@ function next () {
         (direction < 0 && index === minIndex)
     ) {
         if (sorted) {
+            running = false
             return
         }
         sorted = true;

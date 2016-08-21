@@ -31,6 +31,7 @@ function superSetup() {
     window.sorted = true;
     window.index = 0;
     if (!running) {
+        running = true;
         next()
     }
 }

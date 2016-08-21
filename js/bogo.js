@@ -14,6 +14,7 @@ function checkSort() {
 function next() {
     var sorted = checkSort()
     if (sorted) {
+        running = false;
         return
     }
     if (index === 0) {

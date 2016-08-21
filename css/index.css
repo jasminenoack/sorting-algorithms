@@ -14,6 +14,9 @@ body {
     position: relative;
 }
 .content li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     border-radius: 0;
     background: white;
     height: 2px;
@@ -48,16 +51,6 @@ p {
 ul {
     padding: 0;
     margin: 0;
-}
-
-.content li {
-    list-style: none;
-    background: black;
-    border-radius: 100px;
-    height: 5px;
-    width: 5px;
-    margin: 0;
-    padding: 0;
 }
 
 .card {

@@ -1,0 +1,31 @@
+.content {
+
+}
+
+.content:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+h1 {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    font-family: sans-serif;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    background: black;
+    border-radius: 100px;
+    height: 5px;
+    width: 5px;
+}

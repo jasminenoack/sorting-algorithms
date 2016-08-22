@@ -1,14 +1,18 @@
 function setup () {
+    setupArray()
     window.last = undefined
     window.lengthToCheck = arr.length;
-    superSetup()
-    window.index = 1
+    superSetup(1)
 }
 
 function next () {
+    if (stop) {
+        stop = false;
+        running = false;
+        return
+    }
     var $lis = $("li")
     if (index + 2 > arr.length && index % 2 == 0) {
-        console.log("last", index)
         if (sorted) {
             running = false;
             return
@@ -16,7 +20,6 @@ function next () {
         index = 1;
         setTimeout(next, delay)
     } else if (index + 2 > arr.length && (index + 1) % 2 == 0) {
-        console.log("last", index)
         index = 0;
         sorted = true
         setTimeout(next, delay)

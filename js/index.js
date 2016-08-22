@@ -1,9 +1,10 @@
 "use strict"
-var width = 100
+var width = 40;
+var multiplier = 10;
 var running = false;
-var arr = Array.apply(null, {length: width}).map(Number.call, Number)
+var arr = null;
 var delay = 5;
-var multiplier = 4;
+var stop = false;
 
 function shuffle(a) {
     var j, x, i;
@@ -14,8 +15,11 @@ function shuffle(a) {
         a[j] = x;
     }
 }
+function setupArray () {
+    arr = Array.apply(null, {length: width}).map(Number.call, Number)
+}
 
-function superSetup() {
+function superSetup(firstIndex) {
     shuffle(arr)
     var $content = $(".content");
     $content.html("")
@@ -29,17 +33,34 @@ function superSetup() {
     $lis.removeClass("current")
     $($lis[0]).addClass("current")
     window.sorted = true;
-    window.index = 0;
+    window.index = firstIndex || 0;
     if (!running) {
         running = true;
         next()
     }
 }
 
+function resetIfStopped () {
+    if (!stop && !running) {
+        setup()
+    } else {
+        setTimeout(resetIfStopped, 5);
+    }
+}
+
+function stopAndReset() {
+    if (!running) {
+        setup();
+    } else {
+        stop = true;
+        setTimeout(resetIfStopped, 5);
+    }
+}
+
 $(document).ready(function () {
     if (window.setup) {
         setup();
-        $(".reset").click(setup)
+        $(".reset").click(stopAndReset)
     }
     $(".card header").click(
         function (event) {
@@ -47,4 +68,55 @@ $(document).ready(function () {
             $(event.currentTarget).parent().toggleClass("footer-hidden")
         }
     )
+    $(".x-x-sm").click(function () {
+        $(".content").removeClass().addClass("content item-x-x-sm")
+        width = 400;
+        multiplier = 1;
+        stopAndReset();
+    })
+    $(".x-sm").click(function () {
+        $(".content").removeClass().addClass("content item-x-sm")
+        width = 200;
+        multiplier = 2;
+        stopAndReset();
+    })
+    $(".sm").click(function () {
+        $(".content").removeClass().addClass("content item-sm")
+        width = 80;
+        multiplier = 5;
+        stopAndReset();
+    })
+    $(".md").click(function () {
+        $(".content").removeClass().addClass("content item-md")
+        width = 40;
+        multiplier = 10;
+        stopAndReset();
+    })
+    $(".lg").click(function () {
+        $(".content").removeClass().addClass("content item-lg")
+        width = 20;
+        multiplier = 20;
+        stopAndReset();
+    })
+    $(".x-lg").click(function () {
+        $(".content").removeClass().addClass("content item-x-lg")
+        width = 10;
+        multiplier = 40;
+        stopAndReset();
+    })
+    $(".x-x-lg").click(function () {
+        $(".content").removeClass().addClass("content item-x-x-lg")
+        width = 5;
+        multiplier = 80;
+        stopAndReset();
+    })
+
+    $(".faster").click(function () {
+        delay = min(delay, delay - 5);
+        $(".delay").text(delay + " milliseconds")
+    })
+    $(".slower").click(function () {
+        delay+=5;
+        $(".delay").text(delay + " milliseconds")
+    })
 })

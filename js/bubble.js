@@ -1,9 +1,15 @@
 function setup () {
+    setupArray()
     window.lengthToCheck = arr.length;
     superSetup()
 }
 
 function next () {
+    if (stop) {
+        stop = false;
+        running = false;
+        return
+    }
     if (index + 1 === lengthToCheck) {
         if (sorted) {
             running = false

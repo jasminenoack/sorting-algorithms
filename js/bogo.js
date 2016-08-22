@@ -1,4 +1,5 @@
 function setup () {
+    setupArray()
     superSetup()
 }
 
@@ -12,6 +13,11 @@ function checkSort() {
 }
 
 function next() {
+    if (stop) {
+        stop = false;
+        running = false;
+        return
+    }
     var sorted = checkSort()
     if (sorted) {
         running = false;

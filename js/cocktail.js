@@ -1,12 +1,17 @@
 function setup () {
+    setupArray()
     window.maxIndex = arr.length;
     window.minIndex = 0;
     window.direction = 1;
-
     superSetup()
 }
 
 function next () {
+    if (stop) {
+        stop = false;
+        running = false;
+        return
+    }
     if (
         (direction > 0 && index + direction === maxIndex) ||
         (direction < 0 && index === minIndex)

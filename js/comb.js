@@ -5,6 +5,7 @@ function shrinkGap () {
 }
 
 function setup () {
+    setupArray()
     $lis = $("li")
     window.gap = parseInt(width / shrinkFactor);
     $($lis[gap]).addClass("current")
@@ -12,6 +13,11 @@ function setup () {
 }
 
 function next () {
+    if (stop) {
+        stop = false;
+        running = false;
+        return
+    }
     if (index + gap >= arr.length) {
         if (gap === 1 && sorted) {
             running = false;

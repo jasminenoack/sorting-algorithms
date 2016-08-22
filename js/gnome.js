@@ -1,10 +1,16 @@
 function setup () {
+    setupArray()
     window.last = undefined
     window.lengthToCheck = arr.length;
     superSetup()
 }
 
 function next () {
+    if (stop) {
+        stop = false;
+        running = false;
+        return
+    }
     var $lis = $("li")
     if (index === arr.length) {
         running = false

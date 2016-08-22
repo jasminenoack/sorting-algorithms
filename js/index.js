@@ -3,7 +3,7 @@ var width = 40;
 var multiplier = 10;
 var running = false;
 var arr = null;
-var delay = 100;
+var delay = 20;
 var stop = false;
 
 function shuffle(a) {

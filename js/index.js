@@ -3,7 +3,7 @@ var width = 40;
 var multiplier = 10;
 var running = false;
 var arr = null;
-var delay = 5;
+var delay = 100;
 var stop = false;
 
 function shuffle(a) {
@@ -36,7 +36,7 @@ function superSetup(firstIndex) {
     window.index = firstIndex || 0;
     if (!running) {
         running = true;
-        next()
+        setTimeout(next, delay)
     }
 }
 
@@ -112,11 +112,11 @@ $(document).ready(function () {
     })
 
     $(".faster").click(function () {
-        delay = min(delay, delay - 5);
+        delay = Math.min(delay, delay - 10);
         $(".delay").text(delay + " milliseconds")
     })
     $(".slower").click(function () {
-        delay+=5;
+        delay += 10;
         $(".delay").text(delay + " milliseconds")
     })
 })

@@ -10,7 +10,7 @@ var program = {};
 $(document).ready(function () {
     var $template = $("#sort");
     var compiled = _.template($template.html());
-    program = window[window.location.search.replace("?", "")]
+    program = window[window.location.search.replace("?", "") || "quicksort"]
     $("body").html(compiled({
         name: program.title,
         delay: delay

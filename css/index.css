@@ -6,19 +6,33 @@ body {
     text-align: center
 }
 
-.size-select {
+.content-section {
+    position: relative;
+}
+.card.size-select, .card.sort-select {
     width: 200px;
-    position: absolute;
     text-align: center;
+    top: 0px;
+}
+
+.card.size-select {
+    position: absolute;
     right: calc(50% + 200px);
 }
 
+.card.sort-select {
+    position: absolute;
+    left: calc(50% + 200px);
+}
+
 @media (max-width: 800px) {
-    .size-select {
-        width: 200px;
+    .card.size-select, .card.sort-select {
+        width: 60%;
         position: relative;
         margin: auto;
         right: auto;
+        left: auto;
+        top: auto;
     }
 }
 

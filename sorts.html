@@ -14,57 +14,76 @@
                 <%= name %>
             </h1>
             <button class="reset warning">Reset</button>
-            <a href="../index.html" class="pseudo button"><< Back</a>
-            <div class="size-select">
-                <h4>Item Size</h4>
-                <div>
-                  <label class="stack">
-                    <input name="stack" type="radio">
-                    <span class="button toggle x-x-sm">
-                      X-X-Small
-                    </span>
-                  </label>
-                  <label class="stack">
-                    <input name="stack" type="radio">
-                    <span class="button toggle x-sm">
-                       X-Small
-                    </span>
-                  </label>
-                  <label class="stack">
-                    <input name="stack" type="radio">
-                    <span class="button toggle sm">
-                       Small
-                    </span>
-                  </label>
-                  <label class="stack">
-                    <input checked name="stack" type="radio">
-                    <span class="button toggle md">
-                       Medium
-                    </span>
-                  </label>
-                  <label class="stack">
-                    <input name="stack" type="radio">
-                    <span class="button toggle lg">
-                      Large
-                    </span>
-                  </label>
-                  <label class="stack">
-                    <input name="stack" type="radio">
-                    <span class="button toggle x-lg">
-                       X-Large
-                    </span>
-                  </label>
-                  <label class="stack">
-                    <input name="stack" type="radio">
-                    <span class="button toggle x-x-lg">
-                       X-X-Large
-                    </span>
-                  </label>
-                </div>
-            </div>
+            <a href="index.html" class="pseudo button"><< Back</a>
 
-            <ul class="content">
-            </ul>
+            <div class="content-section">
+                <ul class="content">
+                </ul>
+
+                <div class="size-select card">
+                    <header>Item Size</header>
+                    <footer>
+                      <label class="stack">
+                        <input name="stack" type="radio">
+                        <span class="button toggle x-x-sm">
+                          X-X-Small
+                        </span>
+                      </label>
+                      <label class="stack">
+                        <input name="stack" type="radio">
+                        <span class="button toggle x-sm">
+                           X-Small
+                        </span>
+                      </label>
+                      <label class="stack">
+                        <input name="stack" type="radio">
+                        <span class="button toggle sm">
+                           Small
+                        </span>
+                      </label>
+                      <label class="stack">
+                        <input checked name="stack" type="radio">
+                        <span class="button toggle md">
+                           Medium
+                        </span>
+                      </label>
+                      <label class="stack">
+                        <input name="stack" type="radio">
+                        <span class="button toggle lg">
+                          Large
+                        </span>
+                      </label>
+                      <label class="stack">
+                        <input name="stack" type="radio">
+                        <span class="button toggle x-lg">
+                           X-Large
+                        </span>
+                      </label>
+                      <label class="stack">
+                        <input name="stack" type="radio">
+                        <span class="button toggle x-x-lg">
+                           X-X-Large
+                        </span>
+                      </label>
+                  </footer>
+                </div>
+
+                <article class="sort-select card">
+                    <header>
+                        Exchange Sorts
+                    </header>
+                    <footer>
+                        <a href="sorts.html?bogo" class="stack button">Bogo Sort</a>
+                        <a href="sorts.html?bubble" class="stack button">Bubble Sort</a>
+                        <a href="sorts.html?cocktail" class="stack button">Cocktail Sort</a>
+                        <a href="sorts.html?comb" class="stack button">Comb Sort</a>
+                        <a href="sorts.html?gnome" class="stack button">Gnome Sort</a>
+                        <a href="sorts.html?oddEven" class="stack button">Odd-Even Sort</a>
+                        <a href="sorts.html?quicksort" class="stack button">Quick Sort</a>
+                        <a href="sorts.html?stooge" class="stack button">Stooge Sort</a>
+                    </footer>
+                </article>
+            </div>
 
             <button class="success faster">Faster</button>
             <span class="delay"><%= delay %> milliseconds</span>

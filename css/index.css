@@ -20,9 +20,14 @@ body {
     right: calc(50% + 200px);
 }
 
-.card.sort-select {
+.sort-select {
     position: absolute;
     left: calc(50% + 200px);
+    top: 0;
+}
+
+.sort-select .card {
+    width: 100%;
 }
 
 @media (max-width: 800px) {

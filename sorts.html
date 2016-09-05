@@ -67,22 +67,36 @@
                       </label>
                   </footer>
                 </div>
-
-                <article class="sort-select card">
-                    <header>
-                        Exchange Sorts
-                    </header>
-                    <footer>
-                        <a href="sorts.html?bogo" class="stack button">Bogo Sort</a>
-                        <a href="sorts.html?bubble" class="stack button">Bubble Sort</a>
-                        <a href="sorts.html?cocktail" class="stack button">Cocktail Sort</a>
-                        <a href="sorts.html?comb" class="stack button">Comb Sort</a>
-                        <a href="sorts.html?gnome" class="stack button">Gnome Sort</a>
-                        <a href="sorts.html?oddEven" class="stack button">Odd-Even Sort</a>
-                        <a href="sorts.html?quicksort" class="stack button">Quicksort</a>
-                        <a href="sorts.html?stooge" class="stack button">Stooge Sort</a>
-                    </footer>
-                </article>
+                <div class="sort-select">
+                    <article class="card footer-hidden">
+                        <header>
+                            Exchange Sorts
+                        </header>
+                        <footer>
+                            <a href="sorts.html?bogo" class="stack button">Bogo Sort</a>
+                            <a href="sorts.html?bubble" class="stack button">Bubble Sort</a>
+                            <a href="sorts.html?cocktail" class="stack button">Cocktail Sort</a>
+                            <a href="sorts.html?comb" class="stack button">Comb Sort</a>
+                            <a href="sorts.html?gnome" class="stack button">Gnome Sort</a>
+                            <a href="sorts.html?oddEven" class="stack button">Odd-Even Sort</a>
+                            <a href="sorts.html?quicksort" class="stack button">Quicksort</a>
+                            <a href="sorts.html?stooge" class="stack button">Stooge Sort</a>
+                        </footer>
+                    </article>
+                    <article class="card footer-hidden">
+                        <header>
+                            <h4>Selection Sorts</h4>
+                        </header>
+                        <footer>
+                            <a disabled class="stack button">Cartesian Tree Sort</a>
+                            <a disabled class="stack button">Cycle Sort</a>
+                            <a disabled class="stack button">Heap Sort</a>
+                            <a href="sorts.html?selection" class="stack button">Selection Sort</a>
+                            <a disabled class="stack button">Smooth Sort</a>
+                            <a disabled class="stack button">Tournament Sort</a>
+                        </footer>
+                    </article>
+                </div>
             </div>
 
             <button class="success faster">Faster</button>
@@ -98,8 +112,9 @@
         <script src="js/gnome.js"></script>
         <script src="js/odd_even.js"></script>
         <script src="js/quick_sort.js"></script>
-
         <script src="js/stooge.js"></script>
+
+        <script src="js/selection.js"></script>
 
     </body>
 </html>

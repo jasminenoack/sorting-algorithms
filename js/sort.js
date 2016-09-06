@@ -127,3 +127,11 @@ function stopAndReset() {
         setTimeout(resetIfStopped, 5);
     }
 }
+
+function swapNodes (firstNode, secondNode) {
+    var c = arr[firstNode]
+    arr[firstNode] = arr[secondNode]
+    arr[secondNode] = c
+    $($lis[firstNode]).css("bottom", arr[firstNode] * multiplier + "px")
+    $($lis[secondNode]).css("bottom", arr[secondNode] * multiplier + "px")
+}

@@ -25,7 +25,6 @@ smooth = {
             return setTimeout(smooth.setUpTrees, delay)
         }
         if (unsortedTop < 1) {
-            console.log(arr)
             running = false;
             return;
         }
@@ -72,21 +71,13 @@ smooth = {
             return setTimeout(window.siftCallback, delay)
         }
         if (arr[right] > arr[left]) {
-            smooth.swapNodes(right, siftHead)
+            swapNodes(right, siftHead)
             smooth.setCurrentNode(right)
         } else {
-            smooth.swapNodes(left, siftHead)
+            swapNodes(left, siftHead)
             smooth.setCurrentNode(left)
         }
         return setTimeout(smooth.sift, delay)
-    },
-
-    swapNodes: function (firstNode, secondNode) {
-        var c = arr[firstNode]
-        arr[firstNode] = arr[secondNode]
-        arr[secondNode] = c
-        $($lis[firstNode]).css("bottom", arr[firstNode] * multiplier + "px")
-        $($lis[secondNode]).css("bottom", arr[secondNode] * multiplier + "px")
     },
 
     compareRoots: function () {
@@ -99,7 +90,7 @@ smooth = {
         var firstRoot = roots[rootIndex]
         var secondRoot = roots[rootIndex + 1]
         if (arr[firstRoot] > arr[secondRoot]) {
-            smooth.swapNodes(firstRoot, secondRoot)
+            swapNodes(firstRoot, secondRoot)
             // set siftHead for the sift
             smooth.setCurrentNode(firstRoot)
             if (rootIndex !== 0) {

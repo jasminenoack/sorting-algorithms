@@ -3,7 +3,7 @@ var width = 40;
 var multiplier = 10;
 var running = false;
 var arr = [];
-var delay = 100;
+var delay = 10;
 var stop = false;
 var program = {};
 

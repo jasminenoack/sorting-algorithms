@@ -3,24 +3,39 @@ smooth = {
 
     setup: function () {
         setupArray()
+        window.unsortedTop = arr.length - 1
+        window.trees = []
+        window.siftHead = 0
+        window.rootToCompare = 0
+        window.roots = []
+        window.treesSetup = false
+        window.setUpHead = 0
         superSetup()
     },
 
     next: function () {
-        var arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-        var trees = smooth.setUpTrees(arr)
-        smooth.compareRoots(arr, trees)
-        // console.log(smooth.determineTreeSizes(arr.length))
+        if (!treesSetup) {
+            treesSetup = true;
+            return setTimeout(smooth.setUpTrees, delay)
+        }
+        if (unsortedTop < 1) {
+            console.log(arr)
+            running = false;
+            return;
+        }
+        smooth.compareRoots()
+        unsortedTop--
+        return setTimeout(smooth.next, delay)
     },
 
-    setUpTrees: function (arr) {
+    setUpTrees: function () {
+        console.log("setupTrees")
         // build all the trees
         var i = 0;
-        trees = []
 
-        while ( i < arr.length) {
-            prevTreeSize = trees[i - 1]
-            prePrevTreeSize = trees[i - 1 - prevTreeSize]
+        while ( setUpHead < arr.length) {
+            prevTreeSize = trees[setUpHead - 1]
+            prePrevTreeSize = trees[setUpHead - 1 - prevTreeSize]
             if (
                 prevTreeSize &&
                 prePrevTreeSize &&
@@ -30,63 +45,69 @@ smooth = {
             } else {
                 trees.push(1)
             }
-            smooth.sift(arr, trees, i)
-            i++
+            // set siftHead for the sift
+            siftHead = setUpHead
+            smooth.sift()
+            setUpHead++
         }
-        return trees
+
+        setTimeout(smooth.next, delay)
     },
 
-    sift: function (arr, trees, head) {
+    sift: function () {
+        console.log("sift")
         // sift values down the tree
-        var value = arr[head]
-        if (trees[head] === 1) {
+        var value = arr[siftHead]
+        if (trees[siftHead] === 1) {
             return
         }
-        var right = head - 1
-        var left = head - 1 - trees[right]
-        if (arr[right] < arr[head] && arr[left] < arr[head]) {
+        var right = siftHead - 1
+        var left = siftHead - 1 - trees[right]
+        if (arr[right] < arr[siftHead] && arr[left] < arr[siftHead]) {
             return;
         }
         if (arr[right] > arr[left]) {
-            arr[head] = arr[right]
-            head = right
+            arr[siftHead] = arr[right]
+            siftHead = right
         } else {
-            arr[head] = arr[left]
-            head = left
+            arr[siftHead] = arr[left]
+            siftHead = left
         }
-        arr[head] = value
-        smooth.sift(arr, trees, head)
+        arr[siftHead] = value
+        smooth.sift()
     },
 
-    compareRoots: function (arr, trees) {
-        var roots = smooth.getTreeRoots(trees)
+    compareRoots: function () {
+        console.log("compareRoots")
+        smooth.getTreeRoots(unsortedTop)
         for (var i = 0; i < roots.length -1; i++) {
             var firstRoot = roots[i]
             var secondRoot = roots[i + 1]
-            console.log(i, firstRoot, secondRoot)
             if (arr[firstRoot] > arr[secondRoot]) {
                 var c = arr[firstRoot]
                 arr[firstRoot] = arr[secondRoot]
                 arr[secondRoot] = c
-                smooth.sift(arr, trees, firstRoot)
+                // set siftHead for the sift
+                siftHead = firstRoot
+                smooth.sift()
                 if (i !== 0) {
                     i -= 2;
                 }
             }
         }
-        console.log(arr)
     },
 
-    getTreeRoots: function (trees) {
+    getTreeRoots: function () {
+        console.log("getroots")
         // returns the tree roots in ascending order.
-        var roots = []
-        var i = trees.length - 1;
-        while (i > 0) {
+        window.roots = []
+        var i = unsortedTop;
+        while (i >= 0) {
             roots.push(i)
             var currentTreeSize = trees[i];
             var i = i - currentTreeSize;
         }
-        return roots.reverse()
+        roots = roots.reverse()
     },
 
     sizes: [1, 1, 3, 5, 9, 15, 25, 41, 67, 109],

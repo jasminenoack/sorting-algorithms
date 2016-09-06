@@ -1,4 +1,5 @@
-smooth = {
+"use strict"
+window.smooth = {
     title: "Smooth Sort",
 
     setup: function () {
@@ -37,8 +38,8 @@ smooth = {
             return setTimeout(smooth.next, delay)
         }
         // build all the trees
-        prevTreeSize = trees[setUpHead - 1]
-        prePrevTreeSize = trees[setUpHead - 1 - prevTreeSize]
+        var prevTreeSize = trees[setUpHead - 1]
+        var prePrevTreeSize = trees[setUpHead - 1 - prevTreeSize]
         if (
             prevTreeSize &&
             prePrevTreeSize &&
@@ -88,6 +89,7 @@ smooth = {
         }
         smooth.getTreeRoots(unsortedTop)
         var firstRoot = roots[rootIndex]
+        smooth.setCurrentNode(firstRoot)
         var secondRoot = roots[rootIndex + 1]
         if (arr[firstRoot] > arr[secondRoot]) {
             swapNodes(firstRoot, secondRoot)
@@ -108,9 +110,7 @@ smooth = {
 
     setCurrentNode(node) {
         siftHead = node;
-        $lis = $("li")
-        $lis.removeClass("current");
-        $($lis[node]).addClass("current")
+        setCurrentNode(node)
     },
 
     getTreeRoots: function () {

@@ -129,9 +129,16 @@ function stopAndReset() {
 }
 
 function swapNodes (firstNode, secondNode) {
+    var $lis = $("li")
     var c = arr[firstNode]
     arr[firstNode] = arr[secondNode]
     arr[secondNode] = c
     $($lis[firstNode]).css("bottom", arr[firstNode] * multiplier + "px")
     $($lis[secondNode]).css("bottom", arr[secondNode] * multiplier + "px")
+}
+
+function setCurrentNode (node) {
+    var $lis = $("li")
+    $lis.removeClass("current");
+    $($lis[node]).addClass("current")
 }

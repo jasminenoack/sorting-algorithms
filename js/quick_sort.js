@@ -36,11 +36,7 @@ window.quicksort = {
         }
         $lis = $("li");
         if (index >= topElement) {
-            c = arr[pivotIndex]
-            arr[pivotIndex] = arr[lowerIndex]
-            arr[lowerIndex] = c
-            $($lis[lowerIndex]).css("bottom", arr[lowerIndex] * multiplier + "px")
-            $($lis[pivotIndex]).css("bottom", arr[pivotIndex] * multiplier + "px")
+            swapNodes(pivotIndex, lowerIndex)
             $lis.removeClass("current-pivot")
             $($lis[lowerIndex]).addClass("previous-pivot")
             pivotIndex = lowerIndex;
@@ -60,11 +56,7 @@ window.quicksort = {
         if (arr[index] >  arr[pivotIndex]) {
             higherIndex++
         } else {
-            c = arr[lowerIndex]
-            arr[lowerIndex] = arr[index]
-            arr[index] = c
-            $($lis[index]).css("bottom", arr[index] * multiplier + "px")
-            $($lis[lowerIndex]).css("bottom", arr[lowerIndex] * multiplier + "px")
+            swapNodes(lowerIndex, index)
             lowerIndex++
             higherIndex++
         }

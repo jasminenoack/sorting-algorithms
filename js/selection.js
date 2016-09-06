@@ -26,15 +26,10 @@ window.selection = {
         $lis = $("li")
         if (window.comparisonIndex == arr.length) {
             // do swap
-            var c = arr[unsortedIndex]
-            arr[unsortedIndex] = arr[smallestIndex]
-            arr[smallestIndex] = c
-            $($lis[unsortedIndex]).css("bottom", arr[unsortedIndex]*multiplier + "px")
-            $($lis[smallestIndex]).css("bottom", arr[smallestIndex]*multiplier + "px")
+            swapNodes(unsortedIndex, smallestIndex)
             // reset variables
             selection.setupIndexes();
-            $lis.removeClass("current")
-            $($lis[window.comparisonIndex]).addClass("current")
+            setCurrentNode(comparisonIndex)
             if (window.comparisonIndex == arr.length) {
                 running = false;
                 return;
@@ -47,8 +42,7 @@ window.selection = {
         }
         window.comparisonIndex++
         // set current
-        $lis.removeClass("current")
-        $($lis[window.comparisonIndex]).addClass("current")
+        setCurrentNode(comparisonIndex)
         return setTimeout(selection.next, delay)
     }
 }

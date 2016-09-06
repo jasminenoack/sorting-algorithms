@@ -14,7 +14,6 @@ window.oddEven = {
             running = false;
             return
         }
-        var $lis = $("li")
         if (index + 2 > arr.length && index % 2 == 0) {
             if (sorted) {
                 running = false;
@@ -29,15 +28,10 @@ window.oddEven = {
         } else {
             if (arr[index] > arr[index + 1]) {
                 sorted = false
-                var c = arr[index]
-                arr[index] = arr[index + 1]
-                arr[index + 1] = c
-                $($lis[index]).css("bottom", arr[index] * multiplier + "px")
-                $($lis[index + 1]).css("bottom", arr[index + 1] * multiplier + "px")
+                swapNodes(index, index + 1)
             }
             index += 2
-            $lis.removeClass("current")
-            $($lis[index]).addClass("current")
+            setCurrentNode(index)
             setTimeout(oddEven.next, delay)
         }
     },

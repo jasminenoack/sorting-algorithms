@@ -22,16 +22,11 @@ window.stooge = {
 
         i = firstIndexes.pop()
         j = lastIndexes.pop()
-        $lis.removeClass("current")
-        $($lis[i]).addClass("current")
+        setCurrentNode(i)
         $($lis[j]).addClass("current")
 
         if (arr[j] < arr[i]) {
-            var aux = arr[i];
-            arr[i] = arr[j];
-            arr[j] = aux;
-            $($lis[i]).css("bottom", arr[i] * multiplier + "px")
-            $($lis[j]).css("bottom", arr[j] * multiplier + "px")
+            swapNodes(i, j)
         }
 
         if (j - i > 1) {

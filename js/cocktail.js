@@ -34,21 +34,15 @@ window.cocktail = {
             index += direction
             return setTimeout(cocktail.next, delay)
         }
-        $lis = $("li")
         if (
             (arr[index] > arr[index + direction] && direction > 0) ||
             (arr[index] < arr[index + direction] && direction < 0)
         ) {
             sorted = false
-            var c = arr[index]
-            arr[index] = arr[index + direction]
-            arr[index + direction] = c
-            $($lis[index]).css("bottom", arr[index]*multiplier + "px")
-            $($lis[index + direction]).css("bottom", arr[index + direction]*multiplier + "px")
+            swapNodes(index, index + direction)
         }
-        $lis.removeClass("current")
-        $($lis[index + direction]).addClass("current")
         index += direction
+        setCurrentNode(index)
         setTimeout(cocktail.next, delay)
     },
 }

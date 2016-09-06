@@ -31,19 +31,14 @@ window.comb = {
             return setTimeout(comb.next, delay)
         }
 
-        $lis = $("li")
         if (arr[index] > arr[index + gap]) {
             sorted = false;
-            var c = arr[index]
-            arr[index] = arr[index + gap]
-            arr[index + gap] = c
-            $($lis[index]).css("bottom", arr[index]*multiplier + "px")
-            $($lis[index + gap]).css("bottom", arr[index + gap]*multiplier + "px")
+            swapNodes(index, index + gap)
         }
-        $lis.removeClass("current")
-        $($lis[index + 1]).addClass("current")
-        $($lis[index + 1 + gap]).addClass("current")
         index++
+        setCurrentNode(index)
+        $($lis[index + gap]).addClass("current")
+
         setTimeout(comb.next, delay)
     },
 }

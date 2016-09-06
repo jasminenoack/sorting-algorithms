@@ -56,8 +56,7 @@ window.cycle = {
         }
         window.comparisonIndex++
         // // set current
-        $lis.removeClass("current")
-        $($lis[window.comparisonIndex]).addClass("current")
+        setCurrentNode(comparisonIndex)
         return setTimeout(cycle.next, delay)
     }
 }

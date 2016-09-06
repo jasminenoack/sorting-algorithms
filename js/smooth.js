@@ -29,29 +29,27 @@ smooth = {
     },
 
     setUpTrees: function () {
-        console.log("setupTrees")
-        // build all the trees
-        var i = 0;
-
-        while ( setUpHead < arr.length) {
-            prevTreeSize = trees[setUpHead - 1]
-            prePrevTreeSize = trees[setUpHead - 1 - prevTreeSize]
-            if (
-                prevTreeSize &&
-                prePrevTreeSize &&
-                smooth.sizes.indexOf(prevTreeSize + prePrevTreeSize + 1) !== -1
-            ) {
-                trees.push(prevTreeSize + prePrevTreeSize + 1)
-            } else {
-                trees.push(1)
-            }
-            // set siftHead for the sift
-            siftHead = setUpHead
-            smooth.sift()
-            setUpHead++
+        if (setUpHead >= arr.length) {
+            return setTimeout(smooth.next, delay)
         }
+        // build all the trees
+        prevTreeSize = trees[setUpHead - 1]
+        prePrevTreeSize = trees[setUpHead - 1 - prevTreeSize]
+        if (
+            prevTreeSize &&
+            prePrevTreeSize &&
+            smooth.sizes.indexOf(prevTreeSize + prePrevTreeSize + 1) !== -1
+        ) {
+            trees.push(prevTreeSize + prePrevTreeSize + 1)
+        } else {
+            trees.push(1)
+        }
+        // set siftHead for the sift
+        siftHead = setUpHead
+        smooth.sift()
+        setUpHead++
 
-        setTimeout(smooth.next, delay)
+        setTimeout(smooth.setUpTrees, delay)
     },
 
     sift: function () {

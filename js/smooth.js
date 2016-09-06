@@ -10,11 +10,16 @@ smooth = {
         window.roots = []
         window.treesSetup = false
         window.setUpHead = 0
-        window.rootIndex = undefined
+        window.rootIndex = 0
         superSetup()
     },
 
     next: function () {
+        if (stop) {
+            stop = false;
+            running = false;
+            return
+        }
         if (!treesSetup) {
             treesSetup = true;
             return setTimeout(smooth.setUpTrees, delay)
@@ -24,6 +29,7 @@ smooth = {
             running = false;
             return;
         }
+        smooth.getTreeRoots()
         return setTimeout(smooth.compareRoots, delay)
     },
 
@@ -44,15 +50,19 @@ smooth = {
             trees.push(1)
         }
         // set siftHead for the sift
-        siftHead = setUpHead
+        smooth.setCurrentNode(setUpHead)
         setUpHead++
         window.siftCallback = smooth.setUpTrees
         return setTimeout(smooth.sift, delay)
     },
 
     sift: function () {
+        if (stop) {
+            stop = false;
+            running = false;
+            return
+        }
         // sift values down the tree
-        var value = arr[siftHead]
         if (trees[siftHead] === 1) {
             return setTimeout(window.siftCallback, delay)
         }
@@ -62,46 +72,54 @@ smooth = {
             return setTimeout(window.siftCallback, delay)
         }
         if (arr[right] > arr[left]) {
-            arr[siftHead] = arr[right]
-            siftHead = right
+            smooth.swapNodes(right, siftHead)
+            smooth.setCurrentNode(right)
         } else {
-            arr[siftHead] = arr[left]
-            siftHead = left
+            smooth.swapNodes(left, siftHead)
+            smooth.setCurrentNode(left)
         }
-        arr[siftHead] = value
         return setTimeout(smooth.sift, delay)
+    },
+
+    swapNodes: function (firstNode, secondNode) {
+        var c = arr[firstNode]
+        arr[firstNode] = arr[secondNode]
+        arr[secondNode] = c
+        $($lis[firstNode]).css("bottom", arr[firstNode] * multiplier + "px")
+        $($lis[secondNode]).css("bottom", arr[secondNode] * multiplier + "px")
     },
 
     compareRoots: function () {
         if (window.rootIndex >= roots.length) {
-            window.rootIndex = undefined;
+            window.rootIndex = 0;
             unsortedTop--
             return setTimeout(smooth.next, delay)
-        } else if (window.rootIndex === undefined) {
-            window.rootIndex = 0;
         }
         smooth.getTreeRoots(unsortedTop)
-        // for (var i = 0; i < roots.length -1; i++) {
-            var firstRoot = roots[rootIndex]
-            var secondRoot = roots[rootIndex + 1]
-            if (arr[firstRoot] > arr[secondRoot]) {
-                var c = arr[firstRoot]
-                arr[firstRoot] = arr[secondRoot]
-                arr[secondRoot] = c
-                // set siftHead for the sift
-                siftHead = firstRoot
-                if (rootIndex !== 0) {
-                    rootIndex -= 1;
-                } else {
-                    rootIndex++
-                }
-                window.siftCallback = smooth.compareRoots
-                return setTimeout(smooth.sift, delay)
+        var firstRoot = roots[rootIndex]
+        var secondRoot = roots[rootIndex + 1]
+        if (arr[firstRoot] > arr[secondRoot]) {
+            smooth.swapNodes(firstRoot, secondRoot)
+            // set siftHead for the sift
+            smooth.setCurrentNode(firstRoot)
+            if (rootIndex !== 0) {
+                rootIndex -= 1;
             } else {
                 rootIndex++
-                return setTimeout(smooth.compareRoots, delay)
             }
-        // }
+            window.siftCallback = smooth.compareRoots
+            return setTimeout(smooth.sift, delay)
+        } else {
+            rootIndex++
+            return setTimeout(smooth.compareRoots, delay)
+        }
+    },
+
+    setCurrentNode(node) {
+        siftHead = node;
+        $lis = $("li")
+        $lis.removeClass("current");
+        $($lis[node]).addClass("current")
     },
 
     getTreeRoots: function () {

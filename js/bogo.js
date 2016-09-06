@@ -30,16 +30,10 @@ window.bogo =  {
             index = arr.length - 1
             return bogo.next(arr.length - 1)
         }
-        $lis = $("li")
         var randNum = Math.floor(Math.random() * arr.length);
-        var cellValue = arr[index];
-        arr[index] = arr[randNum];
-        arr[randNum] = cellValue;
-
-        bogo.setupLis(index, randNum);
-        $lis.removeClass("current");
-        $($lis[index]).addClass("current")
+        swapNodes(index, randNum)
         index--
+        setCurrentNode(index)
         setTimeout(bogo.next, delay)
     },
 

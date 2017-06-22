@@ -105,6 +105,10 @@ describe("Board", function() {
             expect(values).toEqual(arr)
         })
 
+        xit("can request board min")
+
+        xit("can request board max")
+
         describe("createValues", function () {
             it("changes values on the board", () => {
                 let values = board.values().sortNumbers()

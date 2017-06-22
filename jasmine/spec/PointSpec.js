@@ -24,5 +24,7 @@ describe("Point", function() {
             let secondPoint = new Points.Point(index, color)
             expect(secondPoint.color).toBeTruthy()
         })
+
+        xit("defaults value")
     })
 });

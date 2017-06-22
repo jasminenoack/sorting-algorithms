@@ -1,6 +1,7 @@
 interface Array<T> {
-    shuffle(): T[],
-    range(x: number): T[]
+    shuffle(): T[];
+    range(x: number): T[];
+    sortNumbers(): T[];
 }
 
 Array.prototype.shuffle = function (): any[] {
@@ -19,4 +20,17 @@ Array.prototype.range = function (length): any[] {
         arr.push(i)
     }
     return arr
+}
+
+Array.prototype.sortNumbers = function(): any[] {
+    this.sort(function(x, y) {
+        if (x < y) {
+            return -1
+        } else if (y < x) {
+            return 1
+        } else {
+            return 0
+        }
+    })
+    return this
 }

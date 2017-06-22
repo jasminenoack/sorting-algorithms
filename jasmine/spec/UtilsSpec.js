@@ -4,7 +4,7 @@ describe("Utils", function() {
 
     describe("array utils", function () {
         describe("shuffle", () => {
-            it("array should have a shuffle function", function () {
+            it("should have a shuffle function", function () {
                 expect(Array.prototype.hasOwnProperty("shuffle")).toBeTruthy()
             })
 
@@ -24,7 +24,7 @@ describe("Utils", function() {
         })
 
         describe("range", () => {
-            it("array should have a range function", () => {
+            it("should have a range function", () => {
                 expect(Array.prototype.hasOwnProperty("range")).toBeTruthy()
             })
 
@@ -34,6 +34,18 @@ describe("Utils", function() {
 
                 arr = Array.prototype.range(8)
                 expect(arr).toEqual([0, 1, 2, 3, 4, 5, 6, 7])
+            })
+        })
+
+        describe("sortNumbers", () => {
+            it("should have sortNumbers fuction", () => {
+                expect(Array.prototype.hasOwnProperty("sortNumbers")).toBeTruthy()
+            })
+
+            it("should sort numbers by value", () => {
+                expect([5, 6, 1, 3, 11, 13].sortNumbers()).toEqual(
+                    [1, 3, 5, 6, 11, 13]
+                )
             })
         })
     })

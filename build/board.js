@@ -4,33 +4,45 @@ var Boards;
         function Board(size) {
             this.points = [];
             this.setSize(size);
-            this.createArray();
+            this.createValues();
+            this.shuffleBoard();
         }
-        Board.prototype.createArray = function () {
+        Board.prototype.createValues = function () {
             var that = this;
-            // reset points
-            this.points = [];
-            // create a list of values from 0 up to but not including the length
-            // shuffle these values
-            var values = Array.prototype.range(length);
-            values.forEach(function (value, index) {
-                that.points.push(new Points.Point(0, value));
-            });
+            var values = Array.prototype.range(this.length);
+            this.setPoints(values);
         };
         Board.prototype.shuffleBoard = function () {
-            var that = this;
-            var values = [];
-            for (var i = 0; i < this.length; i++) {
-                values.push(this.points[i].value);
-            }
+            // get the values in the current array
+            var values = this.values();
+            values.sortNumbers();
+            // shuffle the array
             values.shuffle();
+            this.setPoints(values);
+        };
+        Board.prototype.setPoints = function (values) {
+            var that = this;
             values.forEach(function (value, index) {
                 that.points[index].value = value;
             });
         };
+        Board.prototype.values = function () {
+            var items = [];
+            for (var i = 0; i < this.length; i++) {
+                items.push(this.points[i].value);
+            }
+            return items;
+        };
         Board.prototype.setSize = function (size) {
             this.size = size;
             this.length = this.size.elemCount;
+            this.points = [];
+            for (var i = 0; i < this.length; i++) {
+                this.points.push(new Points.Point(i));
+            }
+        };
+        Board.prototype.get = function (index) {
+            return this.points[index];
         };
         return Board;
     }());

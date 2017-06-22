@@ -14,3 +14,17 @@ Array.prototype.range = function (length) {
     }
     return arr;
 };
+Array.prototype.sortNumbers = function () {
+    this.sort(function (x, y) {
+        if (x < y) {
+            return -1;
+        }
+        else if (y < x) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    });
+    return this;
+};

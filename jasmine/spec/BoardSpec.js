@@ -14,49 +14,123 @@ describe("Board", function() {
             expect(board.size).toEqual(size)
         })
 
-        xit("board size should be readonly", () => {
+        it("board should have a length", () => {
+            expect(board.length).toEqual(size.elemCount)
         })
 
-        xit("board should have a length", () => {
+        it("board has a points array", () => {
+            expect(board.points.length).toBeTruthy()
         })
 
-        xit("board has a points array", () => {
+        it("points array is shuffled(slight chance shuffle may return in order)", () => {
+            let values = board.values()
+            let orderedArr = Array.prototype.range(size.elemCount)
+            expect(values).not.toEqual(orderedArr)
         })
 
-        xit("points array is shuffled", () => {
+        it("sets indexes of points", () => {
+            let indexes = []
+            for (let i = 0; i < board.length; i++) {
+                indexes.push(board.points[i].index)
+            }
+            let ordered = Array.prototype.range(indexes.length)
+            expect(indexes).toEqual(ordered)
         })
 
-        xit("points array is the same lenth as length property", () => {
+        it("points array is the same lenth as length property", () => {
+            expect(board.points.length).toEqual(size.elemCount)
+        })
+
+        it("creates a subsequent integers board", () => {
+            let points = board.values().sortNumbers()
+            let ordered = Array.prototype.range(points.length)
+            expect(points).toEqual(ordered)
+        })
+
+        xit("create few unique board", () => {
+        })
+
+        xit("creates a random numbers board", () => {
+        })
+
+        it("creates a random sort board(shuffle is slightly problematic to test)", () => {
+            let values = board.values()
+            let ordered = Array.prototype.range(values.length)
+            expect(values).not.toEqual(ordered)
+            let difference = 0
+            for(let i = 0; i < values.length; i++) {
+                difference += Math.abs(values[i] - i)
+            }
+            // I don't know what this value should be. but this seems okay
+            expect(difference).toBeGreaterThan(90)
+        })
+
+        xit("creates a mostly sorted board", () => {
+        })
+
+        xit("creates a sorted board", () => {
+        })
+
+        xit("creates a reversed board", () => {
+        })
+
+        xit("creates a mostly reversed board", () => {
         })
     })
 
     describe("utils", function () {
-        xit("can index into the board", () => {
+        beforeEach(function() {
+            size = Sizes.large
+            board = new Boards.Board(size)
+        });
+
+        it("can ask board for point", () => {
+            expect(board.get(0)).toEqual(board.points[0])
         })
 
-        describe("create", function () {
-            xit("recreates the board", () => {
+        it("sets points to an array", () => {
+            let newArr = []
+            for (var i = 0; i < board.length; i++) {
+                newArr.push(20)
+            }
+            expect(board.values()).not.toEqual(newArr)
+            board.setPoints(newArr)
+            expect(board.values()).toEqual(newArr)
+        })
+
+        it("retrieves values", () => {
+            let values = board.values()
+            values.sortNumbers()
+            let arr = Array.prototype.range(size.elemCount)
+            expect(values).toEqual(arr)
+        })
+
+        describe("createValues", function () {
+            it("changes values on the board", () => {
+                let values = board.values().sortNumbers()
+                let newArr = []
+                for (var i = 0; i < values.length; i++) {
+                    newArr.push(20)
+                }
+                board.setPoints(newArr)
+                let newValues = board.values().sortNumbers()
+                expect(values).not.toEqual(newValues)
+                board.createValues()
+                newValues = board.values().sortNumbers()
+                expect(values).toEqual(newValues)
             })
 
-            xit("creates a subsequent integers board", () => {
+            it("createValues a subsequent integers board", () => {
+                board.createValues()
+                let values = board.values().sortNumbers()
+                let range = Array.prototype.range(values.length)
+                expect(values).toEqual(range)
             })
 
-            xit("create few unique board", () => {
+            xit("createValues few unique board", () => {
             })
 
-            xit("creates a random board", () => {
-            })
-
-            xit("creates a mostly sorted board", () => {
-            })
-
-            xit("creates a sorted board", () => {
-            })
-
-            xit("creates a reversed board", () => {
-            })
-
-            xit("creates a mostly reversed board", () => {
+            xit("createValues a random board", () => {
             })
 
             xit("uses the same board settings if not given", () => {
@@ -64,27 +138,71 @@ describe("Board", function() {
         })
 
         describe("shuffle", function () {
-            xit("can shuffle the board", () => {
+            it("can shuffle the board", () => {
+                let values = board.values()
+                board.shuffleBoard()
+                let newValues = board.values()
+                expect(values).not.toEqual(newValues)
             })
 
-            xit("shuffles the same board", () => {
+            it("shuffles the same board", () => {
+                let values = board.values()
+                board.shuffleBoard()
+                let newValues = board.values()
+                expect(values.sortNumbers()).toEqual(newValues.sortNumbers())
+
+                values = []
+                for (let i = 0; i < newValues.length; i++) {
+                    values.push(i * 5)
+                }
+                board.setPoints(values)
+                board.shuffleBoard()
+                newValues = board.values()
+                expect(values).not.toEqual(newValues)
+                expect(values.sortNumbers()).toEqual(newValues.sortNumbers())
             })
 
-            xit("replaces the points array with shuffled values", () => {
+            xit("shuffles to a mostly sorted board", () => {
+            })
+
+            xit("shuffles to a sorted board", () => {
+            })
+
+            xit("shuffles to a reversed board", () => {
+            })
+
+            xit("shuffles to a mostly reversed board", () => {
+            })
+
+            it("shuffles to random", () => {
+                board.shuffleBoard()
+                let values = board.values()
+                let ordered = Array.prototype.range(values.length)
+                let difference = 0
+                for(let i = 0; i < values.length; i++) {
+                    difference += Math.abs(values[i] - i)
+                }
+                // I don't know what this value should be. but this seems okay
+                expect(difference).toBeGreaterThan(90)
             })
         })
 
         describe("board size", function () {
-            xit("can change size of board", () => {
+            it("can change size of board", () => {
+                newSize = Sizes.xLarge
+                board.setSize(newSize)
+                expect(board.length).toEqual(newSize.elemCount)
+                expect(board.points.length).toEqual(newSize.elemCount)
             })
 
-            xit("changing size changes the points array", () => {
-            })
-
-            xit("changing the size resets board size", () => {
-            })
-
-            xit("changing the size resets board length", () => {
+            it("replaces the points array with 0s", () => {
+                newSize = Sizes.xLarge
+                board.setSize(newSize)
+                let expected = []
+                for (let i = 0; i < newSize.elemCount; i++) {
+                    expected.push(0)
+                }
+                expect(board.values()).toEqual(expected)
             })
         })
     })

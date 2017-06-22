@@ -2,37 +2,48 @@ namespace Boards {
     export class Board {
         points: Points.Point[] = [];
         size: Sizes.Size;
-        [index: number]: Points.Point;
         length: number;
         constructor(size) {
             this.setSize(size)
-            this.createArray()
+            this.createValues()
+            this.shuffleBoard()
         }
-        createArray() {
+        createValues() {
             let that = this;
-            // reset points
-            this.points = []
-            // create a list of values from 0 up to but not including the length
-            // shuffle these values
-            let values = Array.prototype.range(length)
-            values.forEach(function(value, index) {
-                that.points.push(new Points.Point(0, value))
-            })
+            let values = Array.prototype.range(this.length)
+            this.setPoints(values)
         }
         shuffleBoard() {
-            let that = this;
-            let values = []
-            for (let i = 0; i < this.length; i++) {
-                values.push(this.points[i].value)
-            }
+            // get the values in the current array
+            let values = this.values()
+            values.sortNumbers()
+            // shuffle the array
             values.shuffle()
+            this.setPoints(values)
+        }
+        setPoints(values) {
+            let that = this
             values.forEach(function(value, index) {
                 that.points[index].value = value
             })
         }
+        values() {
+            let items = []
+            for (let i = 0; i < this.length; i++) {
+                items.push(this.points[i].value)
+            }
+            return items
+        }
         setSize(size) {
             this.size = size
             this.length = this.size.elemCount
+            this.points = []
+            for (let i = 0; i < this.length; i++) {
+                this.points.push(new Points.Point(i))
+            }
+        }
+        get(index) {
+            return this.points[index]
         }
     }
 }

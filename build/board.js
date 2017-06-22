@@ -1,33 +1,38 @@
-var Board;
-(function (Board) {
-    var ExampleArray = (function () {
-        function ExampleArray(size) {
+var Boards;
+(function (Boards) {
+    var Board = (function () {
+        function Board(size) {
             this.points = [];
             this.setSize(size);
             this.createArray();
         }
-        ExampleArray.prototype.createArray = function () {
-            // TODO create different types of arrays
+        Board.prototype.createArray = function () {
             var that = this;
             // reset points
             this.points = [];
             // create a list of values from 0 up to but not including the length
             // shuffle these values
-            var values = [];
-            for (var i = 0; i < this.length; i++) {
-                values.push(i);
-            }
-            values.shuffle();
-            // create a point for each value
+            var values = Array.prototype.range(length);
             values.forEach(function (value, index) {
                 that.points.push(new Points.Point(0, value));
             });
         };
-        ExampleArray.prototype.setSize = function (size) {
+        Board.prototype.shuffleBoard = function () {
+            var that = this;
+            var values = [];
+            for (var i = 0; i < this.length; i++) {
+                values.push(this.points[i].value);
+            }
+            values.shuffle();
+            values.forEach(function (value, index) {
+                that.points[index].value = value;
+            });
+        };
+        Board.prototype.setSize = function (size) {
             this.size = size;
             this.length = this.size.elemCount;
         };
-        return ExampleArray;
+        return Board;
     }());
-    Board.ExampleArray = ExampleArray;
-})(Board || (Board = {}));
+    Boards.Board = Board;
+})(Boards || (Boards = {}));

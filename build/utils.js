@@ -7,3 +7,10 @@ Array.prototype.shuffle = function () {
     }
     return this;
 };
+Array.prototype.range = function (length) {
+    var arr = [];
+    for (var i = 0; i < length; i++) {
+        arr.push(i);
+    }
+    return arr;
+};

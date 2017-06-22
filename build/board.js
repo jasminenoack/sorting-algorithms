@@ -8,10 +8,6 @@ var Board;
         }
         ExampleArray.prototype.createArray = function () {
             // TODO create different types of arrays
-            // lots of similar
-            // fully random
-            // one of each number
-            // to compare sorting speeds across
             var that = this;
             // reset points
             this.points = [];
@@ -24,12 +20,7 @@ var Board;
             values.shuffle();
             // create a point for each value
             values.forEach(function (value, index) {
-                that.points.push({
-                    index: 0,
-                    value: value,
-                    // TODO set up enum for colors
-                    color: "aliceblue"
-                });
+                that.points.push(new Points.Point(0, value));
             });
         };
         ExampleArray.prototype.setSize = function (size) {

@@ -1,15 +1,3 @@
-namespace Sizes {
-    export interface Size {
-        elemCount: number;
-        label: string;
-    }
-
-    export let small: Size = {
-        elemCount: 10,
-        label: "Medium"
-    }
-}
-
 namespace Board {
     interface Point {
         index: number;

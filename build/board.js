@@ -1,10 +1,3 @@
-var Sizes;
-(function (Sizes) {
-    Sizes.small = {
-        elemCount: 10,
-        label: "Medium"
-    };
-})(Sizes || (Sizes = {}));
 var Board;
 (function (Board) {
     var ExampleArray = (function () {

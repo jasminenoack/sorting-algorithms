@@ -44,6 +44,12 @@ var Boards;
         Board.prototype.get = function (index) {
             return this.points[index];
         };
+        Board.prototype.min = function () {
+            return Math.min.apply(Math, this.values());
+        };
+        Board.prototype.max = function () {
+            return Math.max.apply(Math, this.values());
+        };
         return Board;
     }());
     Boards.Board = Board;

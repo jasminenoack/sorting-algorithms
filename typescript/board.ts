@@ -45,5 +45,11 @@ namespace Boards {
         get(index) {
             return this.points[index]
         }
+        min() {
+            return Math.min(...this.values())
+        }
+        max() {
+            return Math.max(...this.values())
+        }
     }
 }

@@ -105,9 +105,25 @@ describe("Board", function() {
             expect(values).toEqual(arr)
         })
 
-        xit("can request board min")
+        it("can request board min", () => {
+            expect(board.min()).toEqual(0)
+            let newArr = []
+            for (var i = 0; i < board.length; i++) {
+                newArr.push(20)
+            }
+            board.setPoints(newArr)
+            expect(board.min()).toEqual(20)
+        })
 
-        xit("can request board max")
+        it("can request board max", () => {
+            expect(board.max()).toEqual(board.length - 1)
+            let newArr = []
+            for (var i = 0; i < board.length; i++) {
+                newArr.push(20)
+            }
+            board.setPoints(newArr)
+            expect(board.max()).toEqual(20)
+        })
 
         describe("createValues", function () {
             it("changes values on the board", () => {

@@ -47,10 +47,23 @@ describe("Board", function() {
             expect(points).toEqual(ordered)
         })
 
-        xit("create few unique board", () => {
+        it("create few unique board", () => {
+            let secondBoard = new Boards.Board(size, Boards.Shuffle.Ordered,
+                                               Boards.ValueType.FewUnique)
+            expect(secondBoard.distribution()).toEqual({
+                0: 4,
+                4: 4,
+                8: 4,
+                12: 4,
+                16: 4,
+            })
         })
 
-        xit("creates a random numbers board", () => {
+        it("creates a random numbers board", () => {
+            let secondBoard = new Boards.Board(size, Boards.Shuffle.Ordered,
+                                               Boards.ValueType.Random)
+            let values = secondBoard.values()
+            expect(values).not.toEqual(Array.prototype.range(secondBoard.length))
         })
 
         it("creates a random sort board(shuffle is slightly problematic to test)", () => {
@@ -61,16 +74,34 @@ describe("Board", function() {
             expect(board.differenceFromOrdered()).toBeGreaterThan(90)
         })
 
-        xit("creates a mostly sorted board", () => {
+        it("creates a mostly sorted board", () => {
+            let secondBoard = new Boards.Board(size, Boards.Shuffle.MostlySorted,
+                                               Boards.ValueType.Integers)
+            expect(secondBoard.differenceFromOrdered()).toBeLessThan(20)
+            expect(secondBoard.differenceFromOrdered()).toBeGreaterThan(1)
         })
 
-        xit("creates a sorted board", () => {
+        it("creates a sorted board", () => {
+            let secondBoard = new Boards.Board(size, Boards.Shuffle.Ordered,
+                                               Boards.ValueType.Integers)
+            let values = secondBoard.values()
+            expect(values).toEqual(Array.prototype.range(secondBoard.length))
         })
 
-        xit("creates a reversed board", () => {
+        it("creates a reversed board", () => {
+            let secondBoard = new Boards.Board(size, Boards.Shuffle.Reversed,
+                                               Boards.ValueType.Integers)
+            expect(secondBoard.differenceFromOrdered()).toEqual(200)
         })
 
-        xit("creates a mostly reversed board", () => {
+        it("creates a mostly reversed board", () => {
+            let secondBoard = new Boards.Board(size,
+                                               Boards.Shuffle.MostlyReversed,
+                                               Boards.ValueType.Integers)
+           expect(secondBoard.differenceFromOrdered()).toEqual(200)
+           expect(secondBoard.values).not.toEqual(
+               Array.prototype.range(secondBoard.length).reverse()
+           )
         })
     })
 
@@ -210,7 +241,10 @@ describe("Board", function() {
             it("shuffles to a mostly reversed board", () => {
                 board.shuffleType = Boards.Shuffle.MostlyReversed
                 board.shuffleBoard()
-                expect(board.differenceFromOrdered()).toBeGreaterThan(180)
+                expect(board.differenceFromOrdered()).toEqual(200)
+                expect(board.values).not.toEqual(
+                    Array.prototype.range(board.length).reverse()
+                )
             })
 
             it("shuffles to random", () => {

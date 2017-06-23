@@ -37,7 +37,9 @@ namespace Boards {
         shuffleBoard() {
             let values = this.values()
             values.sortNumbers()
-            if (this.shuffleType === Shuffle.MostlySorted) {
+            if (this.shuffleType === Shuffle.MostlySorted ||
+                this.shuffleType === Shuffle.MostlyReversed
+            ) {
                 this.shuffleToMostlySorted(values)
             }
             if (this.shuffleType === Shuffle.Random) {

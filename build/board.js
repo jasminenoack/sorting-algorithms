@@ -8,6 +8,7 @@ var Boards;
             this.shuffleBoard();
         }
         Board.prototype.createValues = function () {
+            var that = this;
             var values = Array.prototype.range(this.length);
             this.setPoints(values);
         };
@@ -28,7 +29,7 @@ var Boards;
         Board.prototype.values = function () {
             var items = [];
             for (var i = 0; i < this.length; i++) {
-                items.push(this.get(i).value);
+                items.push(this.points[i].value);
             }
             return items;
         };

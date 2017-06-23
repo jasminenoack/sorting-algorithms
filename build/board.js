@@ -8,18 +8,39 @@ var Boards;
         Shuffle[Shuffle["MostlySorted"] = 3] = "MostlySorted";
         Shuffle[Shuffle["MostlyReversed"] = 4] = "MostlyReversed";
     })(Shuffle = Boards.Shuffle || (Boards.Shuffle = {}));
+    var ValueType;
+    (function (ValueType) {
+        ValueType[ValueType["Integers"] = 0] = "Integers";
+        ValueType[ValueType["FewUnique"] = 1] = "FewUnique";
+        ValueType[ValueType["Random"] = 2] = "Random";
+    })(ValueType = Boards.ValueType || (Boards.ValueType = {}));
     var Board = (function () {
-        function Board(size, shuffleType) {
+        function Board(size, shuffleType, valueType) {
             if (shuffleType === void 0) { shuffleType = Shuffle.Random; }
+            if (valueType === void 0) { valueType = ValueType.Integers; }
             this.shuffleType = shuffleType;
+            this.valueType = valueType;
             this.points = [];
             this.setSize(size);
             this.createValues();
             this.shuffleBoard();
         }
         Board.prototype.createValues = function () {
-            var that = this;
-            var values = Array.prototype.range(this.length);
+            var values = [];
+            if (this.valueType === ValueType.FewUnique) {
+                var numberPerSection = this.length / 5;
+                for (var i = 0; i < this.length; i++) {
+                    values.push(Math.floor(i / numberPerSection) * numberPerSection);
+                }
+            }
+            else if (this.valueType === ValueType.Random) {
+                for (var i = 0; i < this.length; i++) {
+                    values.push(Math.floor(Math.random() * this.length));
+                }
+            }
+            else {
+                values = Array.prototype.range(this.length);
+            }
             this.setPoints(values);
         };
         Board.prototype.shuffleBoard = function () {
@@ -86,6 +107,14 @@ var Boards;
                 difference += Math.abs(values[i] - i);
             }
             return difference;
+        };
+        Board.prototype.distribution = function () {
+            var dist = {};
+            var values = this.values();
+            values.forEach(function (value) {
+                dist[value] = (dist[value] || 0) + 1;
+            });
+            return dist;
         };
         return Board;
     }());

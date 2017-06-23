@@ -143,13 +143,23 @@ describe("Board", function() {
                 expect(values).toEqual(range)
             })
 
-            xit("createValues few unique board", () => {
+            it("createValues few unique board", () => {
+                board.valueType = Boards.ValueType.FewUnique
+                board.createValues()
+                expect(board.distribution()).toEqual({
+                    0: 4,
+                    4: 4,
+                    8: 4,
+                    12: 4,
+                    16: 4,
+                })
             })
 
-            xit("createValues a random board", () => {
-            })
-
-            xit("uses the same board settings if not given", () => {
+            it("createValues a random board", () => {
+                board.valueType = Boards.ValueType.Random
+                board.createValues()
+                let values = board.values()
+                expect(values).not.toEqual(Array.prototype.range(board.length))
             })
         })
 

@@ -1,19 +1,38 @@
 namespace Boards {
     export enum Shuffle {Random, Ordered, Reversed, MostlySorted, MostlyReversed}
 
+    export enum ValueType {Integers, FewUnique, Random}
+
     export class Board {
         points: Points.Point[] = [];
         size: Sizes.Size;
         length: number;
-        constructor(size, public shuffleType: Shuffle = Shuffle.Random) {
+        constructor(
+            size, public shuffleType: Shuffle = Shuffle.Random,
+            public valueType: ValueType = ValueType.Integers
+        ) {
             this.setSize(size)
             this.createValues()
             this.shuffleBoard()
         }
         createValues() {
-            let that = this;
-            let values = Array.prototype.range(this.length)
+            let values = []
+            if (this.valueType === ValueType.FewUnique) {
+                let numberPerSection = this.length / 5
+                for (let i = 0; i < this.length; i ++) {
+                    values.push(
+                        Math.floor(i / numberPerSection) * numberPerSection
+                    )
+                }
+            } else if (this.valueType === ValueType.Random) {
+                for (let i = 0; i < this.length; i++) {
+                    values.push(Math.floor(Math.random() * this.length))
+                }
+            } else {
+                values = Array.prototype.range(this.length)
+            }
             this.setPoints(values)
+
         }
         shuffleBoard() {
             let values = this.values()
@@ -82,6 +101,14 @@ namespace Boards {
                 difference += Math.abs(values[i] - i)
             }
             return difference
+        }
+        distribution() {
+            let dist = {}
+            let values = this.values()
+            values.forEach((value) => {
+                dist[value] = (dist[value] || 0) + 1
+            })
+            return dist
         }
     }
 }

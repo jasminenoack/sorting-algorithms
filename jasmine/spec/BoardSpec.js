@@ -57,12 +57,8 @@ describe("Board", function() {
             let values = board.values()
             let ordered = Array.prototype.range(values.length)
             expect(values).not.toEqual(ordered)
-            let difference = 0
-            for(let i = 0; i < values.length; i++) {
-                difference += Math.abs(values[i] - i)
-            }
             // I don't know what this value should be. but this seems okay
-            expect(difference).toBeGreaterThan(90)
+            expect(board.differenceFromOrdered()).toBeGreaterThan(90)
         })
 
         xit("creates a mostly sorted board", () => {
@@ -182,28 +178,35 @@ describe("Board", function() {
                 expect(values.sortNumbers()).toEqual(newValues.sortNumbers())
             })
 
-            xit("shuffles to a mostly sorted board", () => {
+            it("shuffles to a mostly sorted board", () => {
+                board.shuffleType = Boards.Shuffle.MostlySorted
+                board.shuffleBoard()
+                expect(board.differenceFromOrdered()).toBeLessThan(20)
+                expect(board.differenceFromOrdered()).toBeGreaterThan(1)
             })
 
-            xit("shuffles to a sorted board", () => {
+            it("shuffles to a sorted board", () => {
+                board.shuffleType = Boards.Shuffle.Ordered
+                board.shuffleBoard()
+                expect(board.differenceFromOrdered()).toEqual(0)
             })
 
-            xit("shuffles to a reversed board", () => {
+            it("shuffles to a reversed board", () => {
+                board.shuffleType = Boards.Shuffle.Reversed
+                board.shuffleBoard()
+                expect(board.differenceFromOrdered()).toEqual(200)
             })
 
-            xit("shuffles to a mostly reversed board", () => {
+            it("shuffles to a mostly reversed board", () => {
+                board.shuffleType = Boards.Shuffle.MostlyReversed
+                board.shuffleBoard()
+                expect(board.differenceFromOrdered()).toBeGreaterThan(180)
             })
 
             it("shuffles to random", () => {
                 board.shuffleBoard()
-                let values = board.values()
-                let ordered = Array.prototype.range(values.length)
-                let difference = 0
-                for(let i = 0; i < values.length; i++) {
-                    difference += Math.abs(values[i] - i)
-                }
                 // I don't know what this value should be. but this seems okay
-                expect(difference).toBeGreaterThan(90)
+                expect(board.differenceFromOrdered()).toBeGreaterThan(90)
             })
         })
 

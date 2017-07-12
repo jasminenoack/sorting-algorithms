@@ -54,12 +54,11 @@ namespace Boards {
             this.setPoints(values)
         }
         shuffleToMostlySorted(values) {
-            let portionLength = Math.min(5, this.length)
-            let portionCount = this.length / portionLength
+            let numberOfSwitches = Math.ceil(Math.random() * this.length / 10) + 1
 
-            for (let i = 0; i < portionCount; i++) {
-                let first = Math.floor(Math.random() * portionLength) + 5 * i
-                let second = Math.floor(Math.random() * portionLength) + 5 * i
+            for (let i = 0; i < numberOfSwitches; i++) {
+                let first = Math.floor(Math.random() * this.length)
+                let second = Math.floor(Math.random() * this.length)
                 let temp = values[first]
                 values[first] = values[second]
                 values[second] = temp

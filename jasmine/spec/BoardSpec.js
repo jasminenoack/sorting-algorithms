@@ -72,12 +72,13 @@ describe("Board", function() {
             expect(values).not.toEqual(ordered)
             // I don't know what this value should be. but this seems okay
             expect(board.differenceFromOrdered()).toBeGreaterThan(90)
+            expect(board.differenceFromOrdered()).toBeLessThan(160)
         })
 
         it("creates a mostly sorted board", () => {
             let secondBoard = new Boards.Board(size, Boards.Shuffle.MostlySorted,
                                                Boards.ValueType.Integers)
-            expect(secondBoard.differenceFromOrdered()).toBeLessThan(20)
+            expect(secondBoard.differenceFromOrdered()).toBeLessThan(60)
             expect(secondBoard.differenceFromOrdered()).toBeGreaterThan(1)
         })
 
@@ -98,7 +99,7 @@ describe("Board", function() {
             let secondBoard = new Boards.Board(size,
                                                Boards.Shuffle.MostlyReversed,
                                                Boards.ValueType.Integers)
-           expect(secondBoard.differenceFromOrdered()).toEqual(200)
+           expect(secondBoard.differenceFromOrdered()).toBeGreaterThan(160)
            expect(secondBoard.values).not.toEqual(
                Array.prototype.range(secondBoard.length).reverse()
            )
@@ -222,7 +223,7 @@ describe("Board", function() {
             it("shuffles to a mostly sorted board", () => {
                 board.shuffleType = Boards.Shuffle.MostlySorted
                 board.shuffleBoard()
-                expect(board.differenceFromOrdered()).toBeLessThan(20)
+                expect(board.differenceFromOrdered()).toBeLessThan(60)
                 expect(board.differenceFromOrdered()).toBeGreaterThan(1)
             })
 
@@ -241,7 +242,7 @@ describe("Board", function() {
             it("shuffles to a mostly reversed board", () => {
                 board.shuffleType = Boards.Shuffle.MostlyReversed
                 board.shuffleBoard()
-                expect(board.differenceFromOrdered()).toEqual(200)
+                expect(board.differenceFromOrdered()).toBeGreaterThan(160)
                 expect(board.values).not.toEqual(
                     Array.prototype.range(board.length).reverse()
                 )

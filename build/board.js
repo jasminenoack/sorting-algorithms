@@ -60,11 +60,10 @@ var Boards;
             this.setPoints(values);
         };
         Board.prototype.shuffleToMostlySorted = function (values) {
-            var portionLength = Math.min(5, this.length);
-            var portionCount = this.length / portionLength;
-            for (var i = 0; i < portionCount; i++) {
-                var first = Math.floor(Math.random() * portionLength) + 5 * i;
-                var second = Math.floor(Math.random() * portionLength) + 5 * i;
+            var numberOfSwitches = Math.ceil(Math.random() * this.length / 10) + 1;
+            for (var i = 0; i < numberOfSwitches; i++) {
+                var first = Math.floor(Math.random() * this.length);
+                var second = Math.floor(Math.random() * this.length);
                 var temp = values[first];
                 values[first] = values[second];
                 values[second] = temp;

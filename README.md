@@ -1,1 +1,3 @@
 # algorithms
+
+tcs -watch

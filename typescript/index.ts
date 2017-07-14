@@ -43,20 +43,65 @@ namespace script {
 
         // let board = new Boards.Board(size)
         let board = new Boards.Board(size, order, value)
-        boardList.push(board)
+        boardList.push({
+            board: board,
+            sort: new Bubble.Bubble(board)
+        })
         createBoard(boardList.length - 1)
     })
 
+    function reRenderPoint(pointElements, board, index) {
+        let value = board.get(index).value
+        let valueMin = board.min()
+        let valueMax = board.max()
+        let heightCount = valueMax - valueMin + 1
+        let valueHeight = boxHeight / heightCount
+        let bottom = (value - valueMin) * valueHeight
+        let point = pointElements[index]
+        point.style.bottom = `${bottom}px`
+    }
+
+    function setCurrentNodes(currentNodes, pointElements) {
+        currentNodes.forEach(function (index) {
+            pointElements[index].classList.add("active")
+        })
+    }
+
+    function removeCurrentNodes(currentNodes, pointElements) {
+        currentNodes.forEach(function (index) {
+            pointElements[index].classList.remove("active")
+        })
+    }
+
+    let $step = document.getElementById("step")
+    $step.addEventListener('click', function () {
+        for (let i = 0; i < boardList.length; i++) {
+            let currentNodes
+            let boardData = boardList[i]
+            let sort = boardData.sort
+            let board = boardData.board
+            let boardElement = document.getElementsByClassName('board')[i]
+            let pointElements = boardElement.getElementsByClassName('point')
+
+            currentNodes = sort.currentNodes()
+            removeCurrentNodes(currentNodes, pointElements)
+
+            let points = sort.next()
+            points.forEach(function (point) {
+                reRenderPoint(pointElements, board, point)
+            })
+            currentNodes = sort.currentNodes()
+            setCurrentNodes(currentNodes, pointElements)
+        }
+    })
+
     function createBoard (index) {
-        let board = boardList[index]
+        let board = boardList[index].board
+        let sort = boardList[index].sort
         let $el = document.createElement('div')
         $el.className = 'board'
         $el.style.height = `${boxHeight}px`
         $el.style.width = `${boxWidth}px`
-        $el.style.background = "aliceblue"
-        $el.style.position = 'relative'
-        $el.style.display = 'block'
-        $el.style.border = '1px solid black'
 
         let values = board.values()
 
@@ -68,27 +113,26 @@ namespace script {
         let valueHeight = boxHeight / heightCount
         let valueWidth = boxWidth / widthCount
 
+        let currentNodes = sort.currentNodes()
         for (let i = 0; i < values.length; i++) {
             let value = values[i]
             let left = i * valueWidth
             let bottom = (value - valueMin) * valueHeight
 
             let $child = document.createElement('span')
+            $child.className = 'point'
+            if (currentNodes.indexOf(i) !== -1) {
+                $child.classList.add("active")
+            }
             $child.style.height = `${valueHeight}px`
             $child.style.width = `${valueWidth}px`
             $child.style.bottom = `${bottom}px`
             $child.style.left = `${left}px`
-            $child.style.background = 'orange'
-            $child.style.position = 'absolute'
-            $child.style.display = 'block'
             $el.appendChild($child)
         }
 
         let $wrapper = document.createElement('div')
         $wrapper.className = 'wrapper'
-        $wrapper.style.display = 'inline-block'
-        $wrapper.style.margin = '10px'
-        $wrapper.style.background = 'lightgrey'
         let $button = document.createElement('button')
         $button.textContent = 'Remove'
         $button.className = 'remove'
@@ -120,5 +164,6 @@ namespace script {
     createDelegatedEvent($boards, 'click', function (event, target) {
         let $wrapper = closestParent(target, '.wrapper')
         $wrapper.remove()
+        console.log("Remove from array!!!!!")
     }, '.remove')
 }

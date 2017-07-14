@@ -4,45 +4,50 @@
     <head>
         <meta charset="utf-8">
         <title></title>
+        <link rel="stylesheet" type="text/css" href="css/index2.css">
     </head>
 
     <body>
         <article class="sorting">
             <h1>Sorting Algorithms</h1>
             <div class="controls">
-                <label>
-                    Point count:
-                    <select id="size">
-                        <option value=0>Tons</option>
-                        <option value=1>Many</option>
-                        <option value=2>A Bit More</option>
-                        <option value=3>Some</option>
-                        <option value=4 selected>Not Too Many</option>
-                        <option value=5>Few</option>
-                        <option value=6>Very Few</option>
-                    </select>
-                <label>
+                <div>
+                    <label>
+                        Point count:
+                        <select id="size">
+                            <option value=0>Tons</option>
+                            <option value=1>Many</option>
+                            <option value=2>A Bit More</option>
+                            <option value=3>Some</option>
+                            <option value=4 selected>Not Too Many</option>
+                            <option value=5>Few</option>
+                            <option value=6>Very Few</option>
+                        </select>
+                    <label>
 
-                <label>
-                    Order:
-                    <select id="order">
-                        <option value=1>Ordered</option>
-                        <option value=3>MostlySorted</option>
-                        <option value=0 selected>Random</option>
-                        <option value=4>MostlyReversed</option>
-                        <option value=2>Reversed</option>
-                    </select>
-                <label>
+                    <label>
+                        Order:
+                        <select id="order">
+                            <option value=1>Ordered</option>
+                            <option value=3>MostlySorted</option>
+                            <option value=0 selected>Random</option>
+                            <option value=4>MostlyReversed</option>
+                            <option value=2>Reversed</option>
+                        </select>
+                    <label>
 
-                <label>
-                    Values:
-                    <select id="value-type">
-                        <option value=0 selected>All</option>
-                        <option value=1>Few Unique</option>
-                        <option value=2>Random</option>
-                    </select>
-                <label>
-                <button id="create">Create</button>
+                    <label>
+                        Values:
+                        <select id="value-type">
+                            <option value=0 selected>All</option>
+                            <option value=1>Few Unique</option>
+                            <option value=2>Random</option>
+                        </select>
+                    <label>
+                    <button id="create">Create</button>
+                </div>
+                <div>
+                    <button id="step">Step</button>
             </div>
             <div id="boards">
             </div>
@@ -53,6 +58,7 @@
         <script src="build/utils.js"></script>
         <script src="build/sizes.js"></script>
         <script src="build/board.js"></script>
+        <script src="build/sorts/bubble.js"></script>
         <script src="build/index.js"></script>
     </body>
 

@@ -36,19 +36,61 @@ var script;
         var order = orders[$order.value];
         // let board = new Boards.Board(size)
         var board = new Boards.Board(size, order, value);
-        boardList.push(board);
+        boardList.push({
+            board: board,
+            sort: new Bubble.Bubble(board)
+        });
         createBoard(boardList.length - 1);
     });
+    function reRenderPoint(pointElements, board, index) {
+        var value = board.get(index).value;
+        var valueMin = board.min();
+        var valueMax = board.max();
+        var heightCount = valueMax - valueMin + 1;
+        var valueHeight = boxHeight / heightCount;
+        var bottom = (value - valueMin) * valueHeight;
+        var point = pointElements[index];
+        point.style.bottom = bottom + "px";
+    }
+    function setCurrentNodes(currentNodes, pointElements) {
+        currentNodes.forEach(function (index) {
+            pointElements[index].classList.add("active");
+        });
+    }
+    function removeCurrentNodes(currentNodes, pointElements) {
+        currentNodes.forEach(function (index) {
+            pointElements[index].classList.remove("active");
+        });
+    }
+    var $step = document.getElementById("step");
+    $step.addEventListener('click', function () {
+        var _loop_1 = function (i) {
+            var currentNodes = void 0;
+            var boardData = boardList[i];
+            var sort = boardData.sort;
+            var board = boardData.board;
+            var boardElement = document.getElementsByClassName('board')[i];
+            var pointElements = boardElement.getElementsByClassName('point');
+            currentNodes = sort.currentNodes();
+            removeCurrentNodes(currentNodes, pointElements);
+            var points = sort.next();
+            points.forEach(function (point) {
+                reRenderPoint(pointElements, board, point);
+            });
+            currentNodes = sort.currentNodes();
+            setCurrentNodes(currentNodes, pointElements);
+        };
+        for (var i = 0; i < boardList.length; i++) {
+            _loop_1(i);
+        }
+    });
     function createBoard(index) {
-        var board = boardList[index];
+        var board = boardList[index].board;
+        var sort = boardList[index].sort;
         var $el = document.createElement('div');
         $el.className = 'board';
         $el.style.height = boxHeight + "px";
         $el.style.width = boxWidth + "px";
-        $el.style.background = "aliceblue";
-        $el.style.position = 'relative';
-        $el.style.display = 'block';
-        $el.style.border = '1px solid black';
         var values = board.values();
         var valueMin = board.min();
         var valueMax = board.max();
@@ -56,25 +98,24 @@ var script;
         var heightCount = valueMax - valueMin + 1;
         var valueHeight = boxHeight / heightCount;
         var valueWidth = boxWidth / widthCount;
+        var currentNodes = sort.currentNodes();
         for (var i = 0; i < values.length; i++) {
             var value = values[i];
             var left = i * valueWidth;
             var bottom = (value - valueMin) * valueHeight;
             var $child = document.createElement('span');
+            $child.className = 'point';
+            if (currentNodes.indexOf(i) !== -1) {
+                $child.classList.add("active");
+            }
             $child.style.height = valueHeight + "px";
             $child.style.width = valueWidth + "px";
             $child.style.bottom = bottom + "px";
             $child.style.left = left + "px";
-            $child.style.background = 'orange';
-            $child.style.position = 'absolute';
-            $child.style.display = 'block';
             $el.appendChild($child);
         }
         var $wrapper = document.createElement('div');
         $wrapper.className = 'wrapper';
-        $wrapper.style.display = 'inline-block';
-        $wrapper.style.margin = '10px';
-        $wrapper.style.background = 'lightgrey';
         var $button = document.createElement('button');
         $button.textContent = 'Remove';
         $button.className = 'remove';
@@ -105,5 +146,6 @@ var script;
     createDelegatedEvent($boards, 'click', function (event, target) {
         var $wrapper = closestParent(target, '.wrapper');
         $wrapper.remove();
+        console.log("Remove from array!!!!!");
     }, '.remove');
 })(script || (script = {}));

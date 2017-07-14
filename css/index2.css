@@ -1,0 +1,22 @@
+.point {
+    background: orange;
+    position: absolute;
+    display: block;
+}
+
+.board {
+    display: block;
+    background: aliceblue;
+    position: relative;
+    border: 1px solid black;
+}
+
+.wrapper {
+    display: inline-block;
+    margin: 10px;
+    background: lightgrey;
+}
+
+.active {
+    background: blue;
+}

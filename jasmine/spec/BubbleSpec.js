@@ -8,6 +8,10 @@ describe("Bubble", function() {
     });
 
     describe("create", function () {
+        it("has a step count", () => {
+            expect(sort.steps).toEqual(0)
+        })
+
         it("creates a bubble sort", () => {
             expect(sort).toBeTruthy()
         })
@@ -161,6 +165,7 @@ describe("Bubble", function() {
             expect(sort.next(board)).toEqual([8, 9])
             expect(sort.ordered).toEqual(true)
             expect(sort.done).toEqual(true)
+            expect(sort.steps).toEqual(18)
         })
     })
 });

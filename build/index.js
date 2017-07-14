@@ -79,6 +79,7 @@ var script;
             });
             currentNodes = sort.currentNodes();
             setCurrentNodes(currentNodes, pointElements);
+            boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].textContent = "steps: " + sort.steps;
         };
         for (var i = 0; i < boardList.length; i++) {
             _loop_1(i);
@@ -118,6 +119,13 @@ var script;
         }
         var $wrapper = document.createElement('div');
         $wrapper.className = 'wrapper';
+        var $header = document.createElement('h1');
+        $header.textContent = sort.title;
+        $wrapper.appendChild($header);
+        var $stepCount = document.createElement('span');
+        $stepCount.textContent = "steps: " + sort.steps;
+        $stepCount.className = 'step-count';
+        $wrapper.appendChild($stepCount);
         var $button = document.createElement('button');
         $button.textContent = 'Remove';
         $button.className = 'remove';
@@ -157,13 +165,15 @@ var script;
         $wrapper.remove();
     }, '.remove');
     var $auto = document.getElementById("auto");
-    $auto.addEventListener('click', function () {
+    $auto.addEventListener('click', function (event) {
         if (autoInterval) {
             clearInterval(autoInterval);
             autoInterval = null;
+            event.currentTarget.classList.remove('active');
         }
         else {
             autoInterval = setInterval(step, 200);
+            event.currentTarget.classList.add('active');
         }
     });
 })(script || (script = {}));

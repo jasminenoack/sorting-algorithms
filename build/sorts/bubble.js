@@ -6,6 +6,7 @@ var Bubble;
             this.title = "Bubble Sort";
             this.done = false;
             this.ordered = true;
+            this.steps = 0;
             this.length = board.length;
             this.baseNode = 0;
             this.comparisonNode = 1;
@@ -44,6 +45,7 @@ var Bubble;
                 this.board.swap.apply(this.board, currentNodes);
             }
             this.setUpNext();
+            this.steps++;
             return currentNodes;
         };
         return Bubble;

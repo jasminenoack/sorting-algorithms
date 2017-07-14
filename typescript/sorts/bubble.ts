@@ -5,6 +5,7 @@ namespace Bubble {
         comparisonNode: number
         done: boolean = false
         ordered: boolean = true
+        steps: number = 0
 
         constructor(public board: Boards.Board) {
             this.length = board.length
@@ -49,6 +50,7 @@ namespace Bubble {
                 this.board.swap.apply(this.board, currentNodes)
             }
             this.setUpNext()
+            this.steps++
             return currentNodes
         }
     }

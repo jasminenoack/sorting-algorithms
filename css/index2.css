@@ -41,6 +41,11 @@ button {
     box-sizing: border-box;
 }
 
+button.active {
+    background: #ab3c3c;
+    box-shadow: 0 6px #cb4e4e;
+}
+
 select {
     background: transparent;
     border: none;

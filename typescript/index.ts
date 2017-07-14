@@ -92,6 +92,11 @@ namespace script {
             })
             currentNodes = sort.currentNodes()
             setCurrentNodes(currentNodes, pointElements)
+            boardElement.closest(
+                '.wrapper'
+            ).getElementsByClassName(
+                'step-count'
+            )[0].textContent = `steps: ${sort.steps}`
         }
     }
 
@@ -136,6 +141,13 @@ namespace script {
 
         let $wrapper = document.createElement('div')
         $wrapper.className = 'wrapper'
+        let $header = document.createElement('h1')
+        $header.textContent = sort.title
+        $wrapper.appendChild($header)
+        let $stepCount = document.createElement('span')
+        $stepCount.textContent = `steps: ${sort.steps}`
+        $stepCount.className = 'step-count'
+        $wrapper.appendChild($stepCount)
         let $button = document.createElement('button')
         $button.textContent = 'Remove'
         $button.className = 'remove'
@@ -177,12 +189,14 @@ namespace script {
     }, '.remove')
 
     let $auto = document.getElementById("auto")
-    $auto.addEventListener('click', function () {
+    $auto.addEventListener('click', function (event) {
         if (autoInterval) {
             clearInterval(autoInterval)
             autoInterval = null
+            event.currentTarget.classList.remove('active')
         } else {
             autoInterval = setInterval(step, 200)
+            event.currentTarget.classList.add('active')
         }
     })
 }

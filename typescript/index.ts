@@ -166,8 +166,14 @@ namespace script {
 
     createDelegatedEvent($boards, 'click', function (event, target) {
         let $wrapper = closestParent(target, '.wrapper')
+        let wrappers = document.getElementsByClassName('wrapper')
+        for (let i = 0; i < wrappers.length; i++) {
+            if (wrappers[i] === $wrapper) {
+                boardList.splice(i, 1)
+                break
+            }
+        }
         $wrapper.remove()
-        console.log("Remove from array!!!!!")
     }, '.remove')
 
     let $auto = document.getElementById("auto")

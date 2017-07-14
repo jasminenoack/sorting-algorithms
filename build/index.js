@@ -147,8 +147,14 @@ var script;
     }
     createDelegatedEvent($boards, 'click', function (event, target) {
         var $wrapper = closestParent(target, '.wrapper');
+        var wrappers = document.getElementsByClassName('wrapper');
+        for (var i = 0; i < wrappers.length; i++) {
+            if (wrappers[i] === $wrapper) {
+                boardList.splice(i, 1);
+                break;
+            }
+        }
         $wrapper.remove();
-        console.log("Remove from array!!!!!");
     }, '.remove');
     var $auto = document.getElementById("auto");
     $auto.addEventListener('click', function () {

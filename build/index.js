@@ -4,6 +4,7 @@ var script;
     var $create = document.getElementById("create");
     var boxHeight = 300;
     var boxWidth = 300;
+    var autoInterval = null;
     var boardList = [];
     var sizes = [
         Sizes.xXSmall,
@@ -62,8 +63,7 @@ var script;
             pointElements[index].classList.remove("active");
         });
     }
-    var $step = document.getElementById("step");
-    $step.addEventListener('click', function () {
+    function step() {
         var _loop_1 = function (i) {
             var currentNodes = void 0;
             var boardData = boardList[i];
@@ -83,7 +83,9 @@ var script;
         for (var i = 0; i < boardList.length; i++) {
             _loop_1(i);
         }
-    });
+    }
+    var $step = document.getElementById("step");
+    $step.addEventListener('click', step);
     function createBoard(index) {
         var board = boardList[index].board;
         var sort = boardList[index].sort;
@@ -148,4 +150,14 @@ var script;
         $wrapper.remove();
         console.log("Remove from array!!!!!");
     }, '.remove');
+    var $auto = document.getElementById("auto");
+    $auto.addEventListener('click', function () {
+        if (autoInterval) {
+            clearInterval(autoInterval);
+            autoInterval = null;
+        }
+        else {
+            autoInterval = setInterval(step, 200);
+        }
+    });
 })(script || (script = {}));

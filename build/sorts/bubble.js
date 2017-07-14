@@ -36,7 +36,7 @@ var Bubble;
         };
         Bubble.prototype.next = function () {
             if (this.done) {
-                return;
+                return [];
             }
             var currentNodes = this.currentNodes();
             var values = this.board.values();

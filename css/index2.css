@@ -17,6 +17,6 @@
     background: lightgrey;
 }
 
-.active {
+.point.active {
     background: blue;
 }

@@ -41,7 +41,7 @@ namespace Bubble {
 
         next() {
             if (this.done) {
-                return
+                return []
             }
             let currentNodes = this.currentNodes()
             let values = this.board.values()

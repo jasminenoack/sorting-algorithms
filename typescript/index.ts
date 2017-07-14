@@ -3,6 +3,7 @@ namespace script {
     let $create = document.getElementById("create")
     let boxHeight = 300
     let boxWidth = 300
+    let autoInterval = null
 
     let boardList = []
 
@@ -73,8 +74,7 @@ namespace script {
         })
     }
 
-    let $step = document.getElementById("step")
-    $step.addEventListener('click', function () {
+    function step () {
         for (let i = 0; i < boardList.length; i++) {
             let currentNodes
             let boardData = boardList[i]
@@ -93,7 +93,10 @@ namespace script {
             currentNodes = sort.currentNodes()
             setCurrentNodes(currentNodes, pointElements)
         }
-    })
+    }
+
+    let $step = document.getElementById("step")
+    $step.addEventListener('click', step)
 
     function createBoard (index) {
         let board = boardList[index].board
@@ -166,4 +169,14 @@ namespace script {
         $wrapper.remove()
         console.log("Remove from array!!!!!")
     }, '.remove')
+
+    let $auto = document.getElementById("auto")
+    $auto.addEventListener('click', function () {
+        if (autoInterval) {
+            clearInterval(autoInterval)
+            autoInterval = null
+        } else {
+            autoInterval = setInterval(step, 200)
+        }
+    })
 }

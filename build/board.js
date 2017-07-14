@@ -75,6 +75,11 @@ var Boards;
                 that.points[index].value = value;
             });
         };
+        Board.prototype.swap = function (index1, index2) {
+            var temp = this.get(index1);
+            this.points[index1] = this.get(index2);
+            this.points[index2] = temp;
+        };
         Board.prototype.values = function () {
             var items = [];
             for (var i = 0; i < this.length; i++) {

@@ -6,7 +6,8 @@ namespace Bubble {
         done: boolean = false
         ordered: boolean = true
 
-        constructor(public length: number) {
+        constructor(public board: Boards.Board) {
+            this.length = board.length
             this.baseNode = 0
             this.comparisonNode = 1
         }
@@ -38,29 +39,17 @@ namespace Bubble {
             }
         }
 
-        // next() function () {
-        //     if (stop) {
-        //         stop = false;
-        //         running = false;
-        //         return
-        //     }
-        //     if (index + 1 === lengthToCheck) {
-        //         if (sorted) {
-        //             running = false
-        //             return
-        //         }
-        //         sorted = true;
-        //         lengthToCheck--
-        //         index = 0
-        //         return setTimeout(bubble.next, delay)
-        //     }
-        //     if (arr[index] > arr[index + 1]) {
-        //         sorted = false
-        //         swapNodes(index, index + 1)
-        //     }
-        //     index++
-        //     setCurrentNode(index)
-        //     setTimeout(bubble.next, delay)
-        // }
+        next() {
+            if (this.done) {
+                return
+            }
+            let currentNodes = this.currentNodes()
+            let values = this.board.values()
+            if (!this.nodesInOrder(values)) {
+                this.board.swap.apply(this.board, currentNodes)
+            }
+            this.setUpNext()
+            return currentNodes
+        }
     }
 }

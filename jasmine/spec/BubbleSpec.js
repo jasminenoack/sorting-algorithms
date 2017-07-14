@@ -1,8 +1,10 @@
 describe("Bubble", function() {
-    let length, sort;
+    let length, sort, board, size;
     beforeEach(function() {
         length = 10
-        sort = new Bubble.Bubble(length)
+        size = Sizes.xLarge
+        board = new Boards.Board(size)
+        sort = new Bubble.Bubble(board)
     });
 
     describe("create", function () {
@@ -20,6 +22,10 @@ describe("Bubble", function() {
 
         it("it has a comparison node", () => {
             expect(sort.comparisonNode).toEqual(1)
+        })
+
+        it("has a board", () => {
+            expect(sort.board).toEqual(board)
         })
 
         it("it knows the board length", () => {
@@ -125,6 +131,36 @@ describe("Bubble", function() {
             sort.setUpNext()
             expect(sort.ordered).toBeTruthy()
             expect(sort.done).toEqual(false)
+        })
+
+        it("performs full step and returns list of nodes to render", () => {
+            board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9])
+            expect(sort.next(board)).toEqual([0, 1])
+            expect(sort.ordered).toBeFalsy()
+            expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+            expect(sort.next(board)).toEqual([1, 2])
+            expect(sort.next(board)).toEqual([2, 3])
+            expect(sort.next(board)).toEqual([3, 4])
+            expect(sort.next(board)).toEqual([4, 5])
+            expect(sort.next(board)).toEqual([5, 6])
+            expect(sort.next(board)).toEqual([6, 7])
+            expect(sort.next(board)).toEqual([7, 8])
+            expect(sort.ordered).toEqual(false)
+            expect(sort.done).toEqual(false)
+            expect(sort.next(board)).toEqual([8, 9])
+            expect(sort.ordered).toEqual(true)
+            expect(sort.done).toEqual(false)
+            expect(sort.next(board)).toEqual([0, 1])
+            expect(sort.next(board)).toEqual([1, 2])
+            expect(sort.next(board)).toEqual([2, 3])
+            expect(sort.next(board)).toEqual([3, 4])
+            expect(sort.next(board)).toEqual([4, 5])
+            expect(sort.next(board)).toEqual([5, 6])
+            expect(sort.next(board)).toEqual([6, 7])
+            expect(sort.next(board)).toEqual([7, 8])
+            expect(sort.next(board)).toEqual([8, 9])
+            expect(sort.ordered).toEqual(true)
+            expect(sort.done).toEqual(true)
         })
     })
 });

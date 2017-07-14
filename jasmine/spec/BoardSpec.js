@@ -1,5 +1,5 @@
 describe("Board", function() {
-    var board, size;
+    var board, size, sort;
     describe("creates a board", function () {
         beforeEach(function() {
             size = Sizes.large
@@ -151,6 +151,20 @@ describe("Board", function() {
             }
             board.setPoints(newArr)
             expect(board.max()).toEqual(20)
+        })
+
+        it("can swap two values", () => {
+            let preFirst = board.get(0)
+            let preSecond = board.get(1)
+            board.swap(0, 1)
+            expect(preFirst).toEqual(board.get(1))
+            expect(preSecond).toEqual(board.get(0))
+
+            preFirst = board.get(8)
+            preSecond = board.get(4)
+            board.swap(8, 4)
+            expect(preFirst).toEqual(board.get(4))
+            expect(preSecond).toEqual(board.get(8))
         })
 
         describe("createValues", function () {

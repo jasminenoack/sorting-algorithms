@@ -70,6 +70,11 @@ namespace Boards {
                 that.points[index].value = value
             })
         }
+        swap(index1, index2) {
+            let temp = this.get(index1)
+            this.points[index1] = this.get(index2)
+            this.points[index2] = temp
+        }
         values() {
             let items = []
             for (let i = 0; i < this.length; i++) {

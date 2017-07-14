@@ -31,6 +31,10 @@ namespace script {
         Boards.Shuffle.MostlyReversed
     ]
 
+    let sorts = [
+        Bubble.Bubble
+    ]
+
     // when click create
     $create.addEventListener('click', function () {
         let $size = document.getElementById("size")
@@ -42,11 +46,14 @@ namespace script {
         let $order = document.getElementById("order")
         let order = orders[$order.value]
 
+        let $sort = document.getElementById("sort")
+        let Sort = sorts[$sort.value]
+
         // let board = new Boards.Board(size)
         let board = new Boards.Board(size, order, value)
         boardList.push({
             board: board,
-            sort: new Bubble.Bubble(board)
+            sort: new Sort(board)
         })
         createBoard(boardList.length - 1)
     })

@@ -27,6 +27,9 @@ var script;
         Boards.Shuffle.MostlySorted,
         Boards.Shuffle.MostlyReversed
     ];
+    var sorts = [
+        Bubble.Bubble
+    ];
     // when click create
     $create.addEventListener('click', function () {
         var $size = document.getElementById("size");
@@ -35,11 +38,13 @@ var script;
         var value = valueTypes[$valueType.value];
         var $order = document.getElementById("order");
         var order = orders[$order.value];
+        var $sort = document.getElementById("sort");
+        var Sort = sorts[$sort.value];
         // let board = new Boards.Board(size)
         var board = new Boards.Board(size, order, value);
         boardList.push({
             board: board,
-            sort: new Bubble.Bubble(board)
+            sort: new Sort(board)
         });
         createBoard(boardList.length - 1);
     });

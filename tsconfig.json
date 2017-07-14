@@ -3,6 +3,7 @@
         "outDir": "build"
     },
     "include": [
-        "typescript/*"
+        "typescript/*",
+        "typescript/sorts/*"
     ]
 }

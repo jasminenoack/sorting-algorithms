@@ -1,8 +1,8 @@
 namespace script {
     let $boards = document.getElementById("boards")
     let $create = document.getElementById("create")
-    let boxHeight = 300
-    let boxWidth = 300
+    let boxHeight = 400
+    let boxWidth = 400
     let autoInterval = null
 
     let boardList = []

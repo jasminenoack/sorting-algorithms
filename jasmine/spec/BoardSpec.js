@@ -2,7 +2,7 @@ describe("Board", function() {
     var board, size, sort;
     describe("creates a board", function () {
         beforeEach(function() {
-            size = Sizes.large
+            size = Sizes.xLarge
             board = new Boards.Board(size)
         });
 
@@ -108,7 +108,7 @@ describe("Board", function() {
 
     describe("utils", function () {
         beforeEach(function() {
-            size = Sizes.large
+            size = Sizes.xLarge
             board = new Boards.Board(size)
         });
 

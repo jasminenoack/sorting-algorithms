@@ -2,7 +2,7 @@ describe("Bubble", function() {
     let length, sort, board, size;
     beforeEach(function() {
         length = 10
-        size = Sizes.xLarge
+        size = Sizes.xXLarge
         board = new Boards.Board(size)
         sort = new Bubble.Bubble(board)
     });

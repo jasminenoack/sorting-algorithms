@@ -2,8 +2,8 @@ var script;
 (function (script) {
     var $boards = document.getElementById("boards");
     var $create = document.getElementById("create");
-    var boxHeight = 300;
-    var boxWidth = 300;
+    var boxHeight = 400;
+    var boxWidth = 400;
     var autoInterval = null;
     var boardList = [];
     var sizes = [

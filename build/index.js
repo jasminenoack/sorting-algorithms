@@ -47,8 +47,7 @@ var script;
         $el.style.width = boxWidth + "px";
         $el.style.background = "aliceblue";
         $el.style.position = 'relative';
-        $el.style.display = 'inline-block';
-        $el.style.margin = '10px';
+        $el.style.display = 'block';
         $el.style.border = '1px solid black';
         var values = board.values();
         var valueMin = board.min();
@@ -71,6 +70,40 @@ var script;
             $child.style.display = 'block';
             $el.appendChild($child);
         }
-        $boards.appendChild($el);
+        var $wrapper = document.createElement('div');
+        $wrapper.className = 'wrapper';
+        $wrapper.style.display = 'inline-block';
+        $wrapper.style.margin = '10px';
+        $wrapper.style.background = 'lightgrey';
+        var $button = document.createElement('button');
+        $button.textContent = 'Remove';
+        $button.className = 'remove';
+        $wrapper.appendChild($button);
+        $wrapper.appendChild($el);
+        $boards.appendChild($wrapper);
     }
+    function createDelegatedEvent(eventNode, eventType, fun, selector) {
+        var listener = eventNode.addEventListener(eventType, function (event) {
+            var currentTarget = event.target;
+            if (event.target.matches(selector)) {
+                fun(event, event.target);
+            }
+        });
+        return listener;
+    }
+    function closestParent(node, selector) {
+        if (node.matches(selector)) {
+            return node;
+        }
+        else if (!node.parentElement) {
+            return null;
+        }
+        else {
+            return closestParent(node.parentElement, selector);
+        }
+    }
+    createDelegatedEvent($boards, 'click', function (event, target) {
+        var $wrapper = closestParent(target, '.wrapper');
+        $wrapper.remove();
+    }, '.remove');
 })(script || (script = {}));

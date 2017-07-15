@@ -60,13 +60,17 @@ var Boards;
             this.setPoints(values);
         };
         Board.prototype.shuffleToMostlySorted = function (values) {
-            var numberOfSwitches = Math.ceil(Math.random() * this.length / 10) + 1;
+            var numberOfSwitches = Math.ceil(Math.random() * this.length / 5) + 1;
             for (var i = 0; i < numberOfSwitches; i++) {
-                var first = Math.floor(Math.random() * this.length);
-                var second = Math.floor(Math.random() * this.length);
-                var temp = values[first];
-                values[first] = values[second];
-                values[second] = temp;
+                var indexToInsert = Math.floor(Math.random() * this.length);
+                var rangeStart = Math.max(0, indexToInsert - 3);
+                var rangeEnd = Math.min(this.length - 1, indexToInsert + 3);
+                // can be any inclusive
+                var variability = rangeEnd - rangeStart + 1;
+                var insertLocation = Math.floor(Math.random() * variability) + rangeStart;
+                var valueToInsert = values[indexToInsert];
+                values.splice(indexToInsert, 1);
+                values.splice(insertLocation, 0, valueToInsert);
             }
         };
         Board.prototype.setPoints = function (values) {
@@ -105,13 +109,14 @@ var Boards;
             return Math.max.apply(Math, this.values());
         };
         Board.prototype.differenceFromOrdered = function () {
-            var values = this.values();
-            var ordered = Array.prototype.range(values.length);
-            var difference = 0;
-            for (var i = 0; i < values.length; i++) {
-                difference += Math.abs(values[i] - i);
-            }
-            return difference;
+            return 0;
+            // let values = this.values()
+            // let ordered = Array.prototype.range(values.length)
+            // let difference = 0
+            // for(let i = 0; i < values.length; i++) {
+            //     difference += Math.abs(values[i] - i)
+            // }
+            // return difference
         };
         Board.prototype.distribution = function () {
             var dist = {};

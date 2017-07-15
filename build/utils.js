@@ -28,3 +28,36 @@ Array.prototype.sortNumbers = function () {
     });
     return this;
 };
+Array.prototype.differenceFromOrdered = function () {
+    var values = this;
+    var ordered = Array.prototype.range(values.length);
+    var difference = 0;
+    for (var i = 0; i < values.length; i++) {
+        difference += Math.abs(values[i] - i);
+    }
+    return difference;
+};
+Array.prototype.kShuffle = function (k) {
+    var startingArray = this.slice();
+    var numberToShuffle = this.length / 5;
+    while (numberToShuffle) {
+        var indexToInsert = Math.floor(Math.random() * this.length);
+        var add = Math.floor(Math.random() * 2);
+        var movement = Math.ceil(Math.random() * k);
+        var insertPoint = void 0;
+        if (add) {
+            insertPoint = Math.min(this.length - 1, indexToInsert + movement);
+        }
+        else {
+            insertPoint = Math.max(0, indexToInsert - movement);
+        }
+        if (insertPoint !== indexToInsert &&
+            startingArray[indexToInsert] === this[indexToInsert]) {
+            var valueToInsert = this[indexToInsert];
+            this.splice(indexToInsert, 1);
+            this.splice(insertPoint, 0, valueToInsert);
+            numberToShuffle--;
+        }
+    }
+    return this;
+};

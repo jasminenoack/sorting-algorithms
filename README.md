@@ -26,13 +26,6 @@ visualitation types:(https://bost.ocks.org/mike/algorithms/)
 - color box
 - book sorting
 
-array types
-- ordered
-- mostly ordered
-- random
-- mostly reversed
-- reversed
-
 value types
 - integers
 - random
@@ -89,6 +82,7 @@ sorts:
 - cocktail sort(https://www.saylor.org/site/wp-content/uploads/2011/06/Sorting-Algorithm.pdf)
 - combsort(https://www.saylor.org/site/wp-content/uploads/2011/06/Sorting-Algorithm.pdf)
 - committe sort (https://www.quora.com/What-is-the-strangest-sorting-algorithm#!n=30)
+- conway sort (http://i.imgur.com/Lj23rdS.png)
 - counting sort (https://www.saylor.org/site/wp-content/uploads/2011/06/Sorting-Algorithm.pdf)
 - cube sort (https://en.wikipedia.org/wiki/Cubesort)
 - cycle sort(https://www.saylor.org/site/wp-content/uploads/2011/06/Sorting-Algorithm.pdf)

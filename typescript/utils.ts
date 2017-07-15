@@ -2,6 +2,8 @@ interface Array<T> {
     shuffle(): T[];
     range(x: number): T[];
     sortNumbers(): T[];
+    differenceFromOrdered(): number;
+    kShuffle(k: number): T[];
 }
 
 Array.prototype.shuffle = function (): any[] {
@@ -32,5 +34,42 @@ Array.prototype.sortNumbers = function(): any[] {
             return 0
         }
     })
+    return this
+}
+
+Array.prototype.differenceFromOrdered = function(): number {
+    let values = this
+    let ordered = Array.prototype.range(values.length)
+    let difference = 0
+    for(let i = 0; i < values.length; i++) {
+        difference += Math.abs(values[i] - i)
+    }
+    return difference
+}
+
+Array.prototype.kShuffle = function(k): any[] {
+    let startingArray = this.slice()
+    let numberToShuffle = this.length / 5
+    while (numberToShuffle) {
+        let indexToInsert = Math.floor(Math.random() * this.length);
+        let add = Math.floor(Math.random() * 2)
+        let movement = Math.ceil(Math.random() * k)
+
+        let insertPoint
+        if (add) {
+            insertPoint = Math.min(this.length - 1, indexToInsert + movement)
+        } else {
+            insertPoint = Math.max(0, indexToInsert - movement)
+        }
+        if (
+            insertPoint !== indexToInsert &&
+            startingArray[indexToInsert] === this[indexToInsert]
+        ) {
+            let valueToInsert = this[indexToInsert]
+            this.splice(indexToInsert, 1);
+            this.splice(insertPoint, 0, valueToInsert);
+            numberToShuffle--
+        }
+    }
     return this
 }

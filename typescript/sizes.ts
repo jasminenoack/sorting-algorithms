@@ -5,17 +5,17 @@ namespace Sizes {
     }
 
     export let xXSmall: Size = {
-        elemCount: 320,
+        elemCount: 70,
         label: "X-X-Small"
     }
 
     export let xSmall: Size = {
-        elemCount: 160,
+        elemCount: 60,
         label: "X-Small"
     }
 
     export let small: Size = {
-        elemCount: 80,
+        elemCount: 50,
         label: "Small"
     }
 
@@ -25,17 +25,17 @@ namespace Sizes {
     }
 
     export let large: Size = {
-        elemCount: 20,
+        elemCount: 30,
         label: "Large"
     }
 
     export let xLarge: Size = {
-        elemCount: 10,
+        elemCount: 20,
         label: "X-Large"
     }
 
     export let xXLarge: Size = {
-        elemCount: 5,
+        elemCount: 10,
         label: "X-X-Large"
     }
 }

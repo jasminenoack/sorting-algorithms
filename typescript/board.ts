@@ -54,14 +54,20 @@ namespace Boards {
             this.setPoints(values)
         }
         shuffleToMostlySorted(values) {
-            let numberOfSwitches = Math.ceil(Math.random() * this.length / 10) + 1
+            let numberOfSwitches = Math.ceil(Math.random() * this.length / 5) + 1
 
             for (let i = 0; i < numberOfSwitches; i++) {
-                let first = Math.floor(Math.random() * this.length)
-                let second = Math.floor(Math.random() * this.length)
-                let temp = values[first]
-                values[first] = values[second]
-                values[second] = temp
+                let indexToInsert = Math.floor(Math.random() * this.length)
+
+                let rangeStart = Math.max(0, indexToInsert - 3)
+                let rangeEnd = Math.min(this.length - 1, indexToInsert + 3)
+                // can be any inclusive
+                let variability = rangeEnd - rangeStart + 1
+                let insertLocation = Math.floor(Math.random() * variability) + rangeStart
+
+                let valueToInsert = values[indexToInsert]
+                values.splice(indexToInsert, 1)
+                values.splice(insertLocation, 0, valueToInsert)
             }
         }
         setPoints(values) {
@@ -100,13 +106,14 @@ namespace Boards {
             return Math.max(...this.values())
         }
         differenceFromOrdered() {
-            let values = this.values()
-            let ordered = Array.prototype.range(values.length)
-            let difference = 0
-            for(let i = 0; i < values.length; i++) {
-                difference += Math.abs(values[i] - i)
-            }
-            return difference
+            return 0
+            // let values = this.values()
+            // let ordered = Array.prototype.range(values.length)
+            // let difference = 0
+            // for(let i = 0; i < values.length; i++) {
+            //     difference += Math.abs(values[i] - i)
+            // }
+            // return difference
         }
         distribution() {
             let dist = {}

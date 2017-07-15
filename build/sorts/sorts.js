@@ -44,6 +44,8 @@ var Sorts;
         function Bubble() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        // currently using short circuit should do one without
+        // try one that skips the ones it already looked at. 
         Bubble.prototype.setUpNext = function () {
             this.baseNode++;
             this.comparisonNode++;

@@ -34,6 +34,8 @@ namespace Sorts {
     }
 
     export class Bubble extends BaseSort {
+        // currently using short circuit should do one without
+        // try one that skips the ones it already looked at. 
         setUpNext() {
             this.baseNode++
             this.comparisonNode++

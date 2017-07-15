@@ -6,24 +6,16 @@ var script;
     var boxWidth = 400;
     var autoInterval = null;
     var boardList = [];
-    var sizes = [
-        Sizes.xXSmall,
-        Sizes.xSmall,
-        Sizes.small,
-        Sizes.medium,
-        Sizes.large,
-        Sizes.xLarge,
-        Sizes.xXLarge
-    ];
-    var valueTypes = [
-        Boards.ValueType.Integers,
-        Boards.ValueType.FewUnique,
-        Boards.ValueType.Random
-    ];
-    var sorts = [
-        Bubble.Bubble
-    ];
-    // set up orders
+    // setup size dropdown
+    var sizes = Sizes.sizeList;
+    var sizeElement = document.getElementById("size");
+    sizes.forEach(function (size, index) {
+        var optionElement = document.createElement('option');
+        optionElement.value = index;
+        optionElement.textContent = size.label;
+        sizeElement.appendChild(optionElement);
+    });
+    // set up shuffles
     var orders = Shuffles.ShuffleList;
     var orderSelect = document.getElementById('order');
     orders.forEach(function (shuffle, index) {
@@ -32,6 +24,14 @@ var script;
         optionElement.textContent = shuffle.title;
         orderSelect.appendChild(optionElement);
     });
+    var valueTypes = [
+        Boards.ValueType.Integers,
+        Boards.ValueType.FewUnique,
+        Boards.ValueType.Random
+    ];
+    var sorts = [
+        Bubble.Bubble
+    ];
     // when click create
     $create.addEventListener('click', function () {
         var $size = document.getElementById("size");

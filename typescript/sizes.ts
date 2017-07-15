@@ -38,4 +38,14 @@ namespace Sizes {
         elemCount: 10,
         label: "X-X-Large"
     }
+
+    export const sizeList = [
+        Sizes.xXLarge,
+        Sizes.xLarge,
+        Sizes.large,
+        Sizes.medium,
+        Sizes.small,
+        Sizes.xSmall,
+        Sizes.xXSmall,
+    ]
 }

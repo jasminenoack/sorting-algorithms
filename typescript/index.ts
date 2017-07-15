@@ -7,15 +7,26 @@ namespace script {
 
     let boardList = []
 
-    let sizes = [
-        Sizes.xXSmall,
-        Sizes.xSmall,
-        Sizes.small,
-        Sizes.medium,
-        Sizes.large,
-        Sizes.xLarge,
-        Sizes.xXLarge
-    ]
+    // setup size dropdown
+    let sizes = Sizes.sizeList
+    let sizeElement = document.getElementById("size")
+    sizes.forEach((size, index) => {
+        let optionElement = document.createElement('option')
+        optionElement.value = index
+        optionElement.textContent = size.label
+        sizeElement.appendChild(optionElement)
+    })
+
+    // set up shuffles
+    let orders = Shuffles.ShuffleList
+    let orderSelect = document.getElementById('order')
+    orders.forEach((shuffle, index) => {
+        let optionElement = document.createElement('option')
+        optionElement.value = index
+        optionElement.textContent = shuffle.title
+        orderSelect.appendChild(optionElement)
+    })
+
 
     let valueTypes = [
         Boards.ValueType.Integers,
@@ -26,16 +37,6 @@ namespace script {
     let sorts = [
         Bubble.Bubble
     ]
-
-    // set up orders
-    let orders = Shuffles.ShuffleList
-    let orderSelect = document.getElementById('order')
-    orders.forEach((shuffle, index) => {
-        let optionElement = document.createElement('option')
-        optionElement.value = index
-        optionElement.textContent = shuffle.title
-        orderSelect.appendChild(optionElement)
-    })
 
     // when click create
     $create.addEventListener('click', function () {

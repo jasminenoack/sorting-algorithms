@@ -20,16 +20,18 @@ var script;
         Boards.ValueType.FewUnique,
         Boards.ValueType.Random
     ];
-    var orders = [
-        Boards.Shuffle.Random,
-        Boards.Shuffle.Ordered,
-        Boards.Shuffle.Reversed,
-        Boards.Shuffle.MostlySorted,
-        Boards.Shuffle.MostlyReversed
-    ];
     var sorts = [
         Bubble.Bubble
     ];
+    // set up orders
+    var orders = Shuffles.ShuffleList;
+    var orderSelect = document.getElementById('order');
+    orders.forEach(function (shuffle, index) {
+        var optionElement = document.createElement('option');
+        optionElement.value = index;
+        optionElement.textContent = shuffle.title;
+        orderSelect.appendChild(optionElement);
+    });
     // when click create
     $create.addEventListener('click', function () {
         var $size = document.getElementById("size");

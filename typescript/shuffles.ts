@@ -3,6 +3,7 @@ namespace Shuffles {
         // this is the max distance we move a number
         k: number
         reversed: boolean
+        title: string
 
         shuffle(array) {
             array.sortNumbers()
@@ -22,57 +23,66 @@ namespace Shuffles {
     export class OrderedShuffle extends Shuffle {
         k = 0
         reversed = false
+        title = "Ordered"
     }
 
     export class RandomShuffle extends Shuffle {
         k = null
         reversed = false
+        title = "Random"
     }
 
     export class K1Shuffle extends Shuffle {
         k = 1
         reversed = false
+        title = "K1"
     }
 
     export class K3Shuffle extends Shuffle {
         k = 3
         reversed = false
+        title = "K3"
     }
 
     export class K5Shuffle extends Shuffle {
         k = 5
         reversed = false
+        title = "K5"
     }
 
     export class K5ReversedShuffle extends Shuffle {
         k = 5
         reversed = true
+        title = "K5 Reversed"
     }
 
     export class K3ReversedShuffle extends Shuffle {
         k = 3
         reversed = true
+        title = "K3 Reversed"
     }
 
     export class K1ReversedShuffle extends Shuffle {
         k = 1
         reversed = true
+        title = "K1 Reversed"
     }
 
     export class ReversedShuffle extends Shuffle {
         k = 0
         reversed = true
+        title = "Reversed"
     }
 
     export let ShuffleList = [
-        OrderedShuffle,
-        K1Shuffle,
-        K3Shuffle,
-        K5Shuffle,
-        RandomShuffle,
-        K5ReversedShuffle,
-        K3ReversedShuffle,
-        K1ReversedShuffle,
-        ReversedShuffle
+        new OrderedShuffle(),
+        new K1Shuffle(),
+        new K3Shuffle(),
+        new K5Shuffle(),
+        new RandomShuffle(),
+        new K5ReversedShuffle(),
+        new K3ReversedShuffle(),
+        new K1ReversedShuffle(),
+        new ReversedShuffle()
     ]
 }

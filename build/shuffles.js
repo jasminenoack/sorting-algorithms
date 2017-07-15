@@ -35,6 +35,7 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = 0;
             _this.reversed = false;
+            _this.title = "Ordered";
             return _this;
         }
         return OrderedShuffle;
@@ -46,6 +47,7 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = null;
             _this.reversed = false;
+            _this.title = "Random";
             return _this;
         }
         return RandomShuffle;
@@ -57,6 +59,7 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = 1;
             _this.reversed = false;
+            _this.title = "K1";
             return _this;
         }
         return K1Shuffle;
@@ -68,6 +71,7 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = 3;
             _this.reversed = false;
+            _this.title = "K3";
             return _this;
         }
         return K3Shuffle;
@@ -79,6 +83,7 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = 5;
             _this.reversed = false;
+            _this.title = "K5";
             return _this;
         }
         return K5Shuffle;
@@ -90,6 +95,7 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = 5;
             _this.reversed = true;
+            _this.title = "K5 Reversed";
             return _this;
         }
         return K5ReversedShuffle;
@@ -101,6 +107,7 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = 3;
             _this.reversed = true;
+            _this.title = "K3 Reversed";
             return _this;
         }
         return K3ReversedShuffle;
@@ -112,6 +119,7 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = 1;
             _this.reversed = true;
+            _this.title = "K1 Reversed";
             return _this;
         }
         return K1ReversedShuffle;
@@ -123,20 +131,21 @@ var Shuffles;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.k = 0;
             _this.reversed = true;
+            _this.title = "Reversed";
             return _this;
         }
         return ReversedShuffle;
     }(Shuffle));
     Shuffles.ReversedShuffle = ReversedShuffle;
     Shuffles.ShuffleList = [
-        OrderedShuffle,
-        K1Shuffle,
-        K3Shuffle,
-        K5Shuffle,
-        RandomShuffle,
-        K5ReversedShuffle,
-        K3ReversedShuffle,
-        K1ReversedShuffle,
-        ReversedShuffle
+        new OrderedShuffle(),
+        new K1Shuffle(),
+        new K3Shuffle(),
+        new K5Shuffle(),
+        new RandomShuffle(),
+        new K5ReversedShuffle(),
+        new K3ReversedShuffle(),
+        new K1ReversedShuffle(),
+        new ReversedShuffle()
     ];
 })(Shuffles || (Shuffles = {}));

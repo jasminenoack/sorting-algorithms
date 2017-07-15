@@ -1,6 +1,5 @@
 var Boards;
 (function (Boards) {
-    // export enum Shuffle {Random, Ordered, Reversed, MostlySorted, MostlyReversed}
     var ValueType;
     (function (ValueType) {
         ValueType[ValueType["Integers"] = 0] = "Integers";
@@ -41,20 +40,6 @@ var Boards;
             this.shuffle.shuffle(values);
             this.setPoints(values);
         };
-        Board.prototype.shuffleToMostlySorted = function (values) {
-            var numberOfSwitches = Math.ceil(Math.random() * this.length / 5) + 1;
-            for (var i = 0; i < numberOfSwitches; i++) {
-                var indexToInsert = Math.floor(Math.random() * this.length);
-                var rangeStart = Math.max(0, indexToInsert - 3);
-                var rangeEnd = Math.min(this.length - 1, indexToInsert + 3);
-                // can be any inclusive
-                var variability = rangeEnd - rangeStart + 1;
-                var insertLocation = Math.floor(Math.random() * variability) + rangeStart;
-                var valueToInsert = values[indexToInsert];
-                values.splice(indexToInsert, 1);
-                values.splice(insertLocation, 0, valueToInsert);
-            }
-        };
         Board.prototype.setPoints = function (values) {
             var that = this;
             values.forEach(function (value, index) {
@@ -89,16 +74,6 @@ var Boards;
         };
         Board.prototype.max = function () {
             return Math.max.apply(Math, this.values());
-        };
-        Board.prototype.differenceFromOrdered = function () {
-            return 0;
-            // let values = this.values()
-            // let ordered = Array.prototype.range(values.length)
-            // let difference = 0
-            // for(let i = 0; i < values.length; i++) {
-            //     difference += Math.abs(values[i] - i)
-            // }
-            // return difference
         };
         Board.prototype.distribution = function () {
             var dist = {};

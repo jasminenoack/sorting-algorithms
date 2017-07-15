@@ -23,17 +23,19 @@ namespace script {
         Boards.ValueType.Random
     ]
 
-    let orders = [
-        Boards.Shuffle.Random,
-        Boards.Shuffle.Ordered,
-        Boards.Shuffle.Reversed,
-        Boards.Shuffle.MostlySorted,
-        Boards.Shuffle.MostlyReversed
-    ]
-
     let sorts = [
         Bubble.Bubble
     ]
+
+    // set up orders
+    let orders = Shuffles.ShuffleList
+    let orderSelect = document.getElementById('order')
+    orders.forEach((shuffle, index) => {
+        let optionElement = document.createElement('option')
+        optionElement.value = index
+        optionElement.textContent = shuffle.title
+        orderSelect.appendChild(optionElement)
+    })
 
     // when click create
     $create.addEventListener('click', function () {

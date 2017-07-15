@@ -1,6 +1,4 @@
 namespace Boards {
-    // export enum Shuffle {Random, Ordered, Reversed, MostlySorted, MostlyReversed}
-
     export enum ValueType {Integers, FewUnique, Random}
 
     export class Board {
@@ -39,23 +37,6 @@ namespace Boards {
             this.shuffle.shuffle(values)
             this.setPoints(values)
         }
-        shuffleToMostlySorted(values) {
-            let numberOfSwitches = Math.ceil(Math.random() * this.length / 5) + 1
-
-            for (let i = 0; i < numberOfSwitches; i++) {
-                let indexToInsert = Math.floor(Math.random() * this.length)
-
-                let rangeStart = Math.max(0, indexToInsert - 3)
-                let rangeEnd = Math.min(this.length - 1, indexToInsert + 3)
-                // can be any inclusive
-                let variability = rangeEnd - rangeStart + 1
-                let insertLocation = Math.floor(Math.random() * variability) + rangeStart
-
-                let valueToInsert = values[indexToInsert]
-                values.splice(indexToInsert, 1)
-                values.splice(insertLocation, 0, valueToInsert)
-            }
-        }
         setPoints(values) {
             let that = this
             values.forEach(function(value, index) {
@@ -90,16 +71,6 @@ namespace Boards {
         }
         max() {
             return Math.max(...this.values())
-        }
-        differenceFromOrdered() {
-            return 0
-            // let values = this.values()
-            // let ordered = Array.prototype.range(values.length)
-            // let difference = 0
-            // for(let i = 0; i < values.length; i++) {
-            //     difference += Math.abs(values[i] - i)
-            // }
-            // return difference
         }
         distribution() {
             let dist = {}

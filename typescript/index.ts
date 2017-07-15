@@ -218,7 +218,7 @@ namespace script {
             autoInterval = null
             event.currentTarget.classList.remove('active')
         } else {
-            autoInterval = setInterval(step, 200)
+            autoInterval = setInterval(step, 100)
             event.currentTarget.classList.add('active')
         }
     })

@@ -15,7 +15,7 @@ var Bubble;
             return [this.baseNode, this.comparisonNode];
         };
         Bubble.prototype.nodesInOrder = function (values) {
-            var inOrder = values[this.baseNode] < values[this.comparisonNode];
+            var inOrder = values[this.baseNode] <= values[this.comparisonNode];
             if (!inOrder) {
                 this.ordered = false;
             }

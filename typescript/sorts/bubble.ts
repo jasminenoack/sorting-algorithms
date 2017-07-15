@@ -18,7 +18,7 @@ namespace Bubble {
         }
 
         nodesInOrder(values) {
-            let inOrder = values[this.baseNode] < values[this.comparisonNode]
+            let inOrder = values[this.baseNode] <= values[this.comparisonNode]
             if (!inOrder) {
                 this.ordered = false
             }

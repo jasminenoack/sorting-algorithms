@@ -3,7 +3,8 @@
     position: absolute;
     display: block;
     box-sizing: border-box;
-    border: 1px solid black;
+    stroke: black;
+    stroke-width: 1;
 }
 
 .board {

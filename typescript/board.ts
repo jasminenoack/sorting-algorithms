@@ -1,34 +1,18 @@
 namespace Boards {
-    export enum ValueType {Integers, FewUnique, Random}
-
     export class Board {
         points: Points.Point[] = [];
         size: Sizes.Size;
         length: number;
         constructor(
             size, public shuffle: Shuffles.Shuffle = new Shuffles.RandomShuffle(),
-            public valueType: ValueType = ValueType.Integers
+            public valueType: ValueTypes.ValueType = new ValueTypes.Integer()
         ) {
             this.setSize(size)
             this.createValues()
             this.shuffleBoard()
         }
         createValues() {
-            let values = []
-            if (this.valueType === ValueType.FewUnique) {
-                let numberPerSection = this.length / 5
-                for (let i = 0; i < this.length; i ++) {
-                    values.push(
-                        Math.floor(i / numberPerSection) * numberPerSection
-                    )
-                }
-            } else if (this.valueType === ValueType.Random) {
-                for (let i = 0; i < this.length; i++) {
-                    values.push(Math.floor(Math.random() * this.length))
-                }
-            } else {
-                values = Array.prototype.range(this.length)
-            }
+            let values = this.valueType.generate(this.length)
             this.setPoints(values)
 
         }

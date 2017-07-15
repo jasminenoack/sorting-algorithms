@@ -24,11 +24,14 @@ var script;
         optionElement.textContent = shuffle.title;
         orderSelect.appendChild(optionElement);
     });
-    var valueTypes = [
-        Boards.ValueType.Integers,
-        Boards.ValueType.FewUnique,
-        Boards.ValueType.Random
-    ];
+    var valueTypes = ValueTypes.valueTypeList;
+    var valueTypeSelect = document.getElementById('value-type');
+    valueTypes.forEach(function (valueType, index) {
+        var optionElement = document.createElement('option');
+        optionElement.value = index;
+        optionElement.textContent = valueType.title;
+        valueTypeSelect.appendChild(optionElement);
+    });
     var sorts = [
         Bubble.Bubble
     ];

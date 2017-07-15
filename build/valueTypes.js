@@ -2,6 +2,7 @@ var ValueTypes;
 (function (ValueTypes) {
     var Random = (function () {
         function Random() {
+            this.title = "Random";
         }
         Random.prototype.generate = function (n) {
             var spread = n * 2;
@@ -16,6 +17,7 @@ var ValueTypes;
     ValueTypes.Random = Random;
     var Integer = (function () {
         function Integer() {
+            this.title = "Range";
         }
         Integer.prototype.generate = function (n) {
             return Array.prototype.range(n);
@@ -25,6 +27,7 @@ var ValueTypes;
     ValueTypes.Integer = Integer;
     var FewUnique = (function () {
         function FewUnique() {
+            this.title = "Few Values";
         }
         FewUnique.prototype.generate = function (n) {
             var values = [];
@@ -38,6 +41,7 @@ var ValueTypes;
     ValueTypes.FewUnique = FewUnique;
     var AllBut2Equal = (function () {
         function AllBut2Equal() {
+            this.title = "All But 2 Equal";
         }
         AllBut2Equal.prototype.generate = function (n) {
             var values = [];
@@ -52,8 +56,23 @@ var ValueTypes;
         return AllBut2Equal;
     }());
     ValueTypes.AllBut2Equal = AllBut2Equal;
+    var Equal = (function () {
+        function Equal() {
+            this.title = "Equal";
+        }
+        Equal.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                values.push(n / 2);
+            }
+            return values;
+        };
+        return Equal;
+    }());
+    ValueTypes.Equal = Equal;
     var Logarithmic = (function () {
         function Logarithmic() {
+            this.title = "Logarithmic";
         }
         Logarithmic.prototype.generate = function (n) {
             var values = [];
@@ -68,6 +87,7 @@ var ValueTypes;
     ValueTypes.Logarithmic = Logarithmic;
     var Quadratic = (function () {
         function Quadratic() {
+            this.title = "Quadratic";
         }
         Quadratic.prototype.generate = function (n) {
             var values = [];
@@ -82,6 +102,7 @@ var ValueTypes;
     ValueTypes.Quadratic = Quadratic;
     var Exponential = (function () {
         function Exponential() {
+            this.title = "Exponential";
         }
         Exponential.prototype.generate = function (n) {
             var values = [];
@@ -96,6 +117,7 @@ var ValueTypes;
     ValueTypes.Exponential = Exponential;
     var Cubic = (function () {
         function Cubic() {
+            this.title = "Cubic";
         }
         Cubic.prototype.generate = function (n) {
             var values = [];
@@ -110,6 +132,7 @@ var ValueTypes;
     ValueTypes.Cubic = Cubic;
     var Quintic = (function () {
         function Quintic() {
+            this.title = "Quintic";
         }
         Quintic.prototype.generate = function (n) {
             var values = [];
@@ -124,6 +147,7 @@ var ValueTypes;
     ValueTypes.Quintic = Quintic;
     var Sin = (function () {
         function Sin() {
+            this.title = "Sin";
         }
         Sin.prototype.generate = function (n) {
             var values = [];
@@ -138,6 +162,7 @@ var ValueTypes;
     ValueTypes.Sin = Sin;
     var Root = (function () {
         function Root() {
+            this.title = "Root";
         }
         Root.prototype.generate = function (n) {
             var values = [];
@@ -154,6 +179,7 @@ var ValueTypes;
         new Random(),
         new Integer(),
         new FewUnique(),
+        new Equal(),
         new AllBut2Equal(),
         new Logarithmic(),
         new Quadratic(),

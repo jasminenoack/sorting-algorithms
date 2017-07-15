@@ -2,6 +2,8 @@
     background: orange;
     position: absolute;
     display: block;
+    box-sizing: border-box;
+    border: 1px solid black;
 }
 
 .board {

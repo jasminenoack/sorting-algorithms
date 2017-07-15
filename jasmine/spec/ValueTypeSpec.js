@@ -38,6 +38,13 @@ describe("Value Type", function() {
             expect(array).toEqual([2, 5, 5, 5, 5, 5, 5, 5, 5, 8])
         })
 
+        it("should generate equal", () => {
+            let valueType = new ValueTypes.Equal()
+            let array = valueType.generate(10)
+            expect(array.length).toBeTruthy()
+            expect(array).toEqual([5, 5, 5, 5, 5, 5, 5, 5, 5, 5])
+        })
+
         it("should generate a logarithmic", () => {
             let valueType = new ValueTypes.Logarithmic()
             let array = valueType.generate(10)

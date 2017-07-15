@@ -28,11 +28,14 @@ namespace script {
     })
 
 
-    let valueTypes = [
-        Boards.ValueType.Integers,
-        Boards.ValueType.FewUnique,
-        Boards.ValueType.Random
-    ]
+    let valueTypes = ValueTypes.valueTypeList
+    let valueTypeSelect = document.getElementById('value-type')
+    valueTypes.forEach((valueType, index) => {
+        let optionElement = document.createElement('option')
+        optionElement.value = index
+        optionElement.textContent = valueType.title
+        valueTypeSelect.appendChild(optionElement)
+    })
 
     let sorts = [
         Bubble.Bubble

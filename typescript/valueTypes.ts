@@ -1,9 +1,11 @@
 namespace ValueTypes {
     export interface ValueType {
         generate(n: number): any[]
+        title: string
     }
 
     export class Random implements ValueType {
+        title = "Random"
         generate(n) {
             let spread = n * 2
             let values = []
@@ -15,12 +17,14 @@ namespace ValueTypes {
     }
 
     export class Integer implements ValueType {
+        title = "Range"
         generate(n) {
             return Array.prototype.range(n)
         }
     }
 
     export class FewUnique implements ValueType {
+        title = "Few Values"
         generate(n) {
             let values = []
             for(let i = 0; i < n; i++) {
@@ -31,6 +35,7 @@ namespace ValueTypes {
     }
 
     export class AllBut2Equal implements ValueType {
+        title = "All But 2 Equal"
         generate(n) {
             let values = []
             for(let i = 0; i < n - 2; i++) {
@@ -43,7 +48,19 @@ namespace ValueTypes {
         }
     }
 
+    export class Equal implements ValueType {
+        title = "Equal"
+        generate(n) {
+            let values = []
+            for(let i = 0; i < n; i++) {
+                values.push(n / 2)
+            }
+            return values
+        }
+    }
+
     export class Logarithmic implements ValueType {
+        title = "Logarithmic"
         generate(n) {
             let values = []
             for(let i = 0; i < n; i++) {
@@ -55,6 +72,7 @@ namespace ValueTypes {
     }
 
     export class Quadratic implements ValueType {
+        title = "Quadratic"
         generate(n) {
             let values = []
             for(let i = 0; i < n; i++) {
@@ -66,6 +84,7 @@ namespace ValueTypes {
     }
 
     export class Exponential implements ValueType {
+        title = "Exponential"
         generate(n) {
             let values = []
             for(let i = 0; i < n; i++) {
@@ -77,6 +96,7 @@ namespace ValueTypes {
     }
 
     export class Cubic implements ValueType {
+        title = "Cubic"
         generate(n) {
             let values = []
             for(let i = 0; i < n; i++) {
@@ -88,6 +108,7 @@ namespace ValueTypes {
     }
 
     export class Quintic implements ValueType {
+        title = "Quintic"
         generate(n) {
             let values = []
             for(let i = 0; i < n; i++) {
@@ -99,6 +120,7 @@ namespace ValueTypes {
     }
 
     export class Sin implements ValueType {
+        title = "Sin"
         generate(n) {
             let values = []
             for(let i = 0; i < n; i++) {
@@ -110,6 +132,7 @@ namespace ValueTypes {
     }
 
     export class Root implements ValueType {
+        title = "Root"
         generate(n) {
             let values = []
             for(let i = 0; i < n; i++) {
@@ -124,6 +147,7 @@ namespace ValueTypes {
         new Random(),
         new Integer(),
         new FewUnique(),
+        new Equal(),
         new AllBut2Equal(),
         new Logarithmic(),
         new Quadratic(),

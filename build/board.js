@@ -1,15 +1,9 @@
 var Boards;
 (function (Boards) {
-    var ValueType;
-    (function (ValueType) {
-        ValueType[ValueType["Integers"] = 0] = "Integers";
-        ValueType[ValueType["FewUnique"] = 1] = "FewUnique";
-        ValueType[ValueType["Random"] = 2] = "Random";
-    })(ValueType = Boards.ValueType || (Boards.ValueType = {}));
     var Board = (function () {
         function Board(size, shuffle, valueType) {
             if (shuffle === void 0) { shuffle = new Shuffles.RandomShuffle(); }
-            if (valueType === void 0) { valueType = ValueType.Integers; }
+            if (valueType === void 0) { valueType = new ValueTypes.Integer(); }
             this.shuffle = shuffle;
             this.valueType = valueType;
             this.points = [];
@@ -18,21 +12,7 @@ var Boards;
             this.shuffleBoard();
         }
         Board.prototype.createValues = function () {
-            var values = [];
-            if (this.valueType === ValueType.FewUnique) {
-                var numberPerSection = this.length / 5;
-                for (var i = 0; i < this.length; i++) {
-                    values.push(Math.floor(i / numberPerSection) * numberPerSection);
-                }
-            }
-            else if (this.valueType === ValueType.Random) {
-                for (var i = 0; i < this.length; i++) {
-                    values.push(Math.floor(Math.random() * this.length));
-                }
-            }
-            else {
-                values = Array.prototype.range(this.length);
-            }
+            var values = this.valueType.generate(this.length);
             this.setPoints(values);
         };
         Board.prototype.shuffleBoard = function () {

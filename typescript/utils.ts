@@ -4,6 +4,7 @@ interface Array<T> {
     sortNumbers(): T[];
     differenceFromOrdered(): number;
     kShuffle(k: number): T[];
+    distribution(): {};
 }
 
 Array.prototype.shuffle = function (): any[] {
@@ -73,4 +74,13 @@ Array.prototype.kShuffle = function(k): any[] {
         }
     }
     return this
+}
+
+Array.prototype.distribution = function (): {} {
+    let dist = {}
+    let values = this
+    values.forEach((value) => {
+        dist[value] = (dist[value] || 0) + 1
+    })
+    return dist
 }

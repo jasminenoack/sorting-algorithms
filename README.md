@@ -26,17 +26,6 @@ visualitation types:(https://bost.ocks.org/mike/algorithms/)
 - color box
 - book sorting
 
-value types
-- integers
-- random
-- few unique
-- quadratic
-- cubic
-- quantic
-- logarithmic
-- n - 2 equal
-- hard coded arrays
-
 algorithm types:
 - sorting
 - shuffleing
@@ -59,6 +48,7 @@ features:
 - movement count
 - step back
 - shadow arrays
+- hard coded arrays
 
 sorts:
 - abacus sort (http://www.dangermouse.net/esoteric/abacussort.html)

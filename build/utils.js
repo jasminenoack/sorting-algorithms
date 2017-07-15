@@ -62,3 +62,11 @@ Array.prototype.kShuffle = function (k) {
     }
     return this;
 };
+Array.prototype.distribution = function () {
+    var dist = {};
+    var values = this;
+    values.forEach(function (value) {
+        dist[value] = (dist[value] || 0) + 1;
+    });
+    return dist;
+};

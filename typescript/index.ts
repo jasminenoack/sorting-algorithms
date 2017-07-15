@@ -27,7 +27,7 @@ namespace script {
         orderSelect.appendChild(optionElement)
     })
 
-
+    // set up value types
     let valueTypes = ValueTypes.valueTypeList
     let valueTypeSelect = document.getElementById('value-type')
     valueTypes.forEach((valueType, index) => {
@@ -37,20 +37,19 @@ namespace script {
         valueTypeSelect.appendChild(optionElement)
     })
 
+
+
+
+
     let sorts = [
         Bubble.Bubble
     ]
 
     // when click create
     $create.addEventListener('click', function () {
-        let $size = document.getElementById("size")
-        let size = sizes[$size.value]
-
-        let $valueType = document.getElementById("value-type")
-        let value = valueTypes[$valueType.value]
-
-        let $order = document.getElementById("order")
-        let order = orders[$order.value]
+        let size = sizes[sizeElement.value]
+        let value = valueTypes[valueTypeSelect.value]
+        let order = orders[orderSelect.value]
 
         let $sort = document.getElementById("sort")
         let Sort = sorts[$sort.value]
@@ -68,11 +67,16 @@ namespace script {
         let value = board.get(index).value
         let valueMin = board.min()
         let valueMax = board.max()
-        let heightCount = valueMax - valueMin + 1
-        let valueHeight = boxHeight / heightCount
-        let bottom = (value - valueMin) * valueHeight
+        let widthSpread = board.values().length - 1
+        let heightSpread = valueMax - valueMin
+        let radius = Math.max(Math.min(
+            boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2
+        ), 5)
+        let yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight
+        let xCenter = (index) / widthSpread * boxWidth
         let point = pointElements[index]
-        point.style.bottom = `${bottom}px`
+        point.setAttribute('cx', xCenter + '')
+        point.setAttribute('cy', yCenter + '')
     }
 
     function setCurrentNodes(currentNodes, pointElements) {
@@ -119,37 +123,43 @@ namespace script {
     function createBoard (index) {
         let board = boardList[index].board
         let sort = boardList[index].sort
-        let $el = document.createElement('div')
-        $el.className = 'board'
-        $el.style.height = `${boxHeight}px`
-        $el.style.width = `${boxWidth}px`
-
         let values = board.values()
-
         let valueMin = board.min()
         let valueMax = board.max()
-        let widthCount = values.length
-        let heightCount = valueMax - valueMin + 1
+        let widthSpread = values.length - 1
+        let heightSpread = valueMax - valueMin
+        let radius = Math.max(Math.min(
+            boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2
+        ), 5)
 
-        let valueHeight = boxHeight / heightCount
-        let valueWidth = boxWidth / widthCount
+        let boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        boardElement.setAttribute('class', 'board')
+        boardElement.style.height = `${boxHeight + 40}px`
+        boardElement.style.width = `${boxWidth + 40}px`
+
+        let gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+        gElement.setAttribute('transform', `translate(${20}, ${20})`)
+
+        boardElement.appendChild(gElement)
 
         let currentNodes = sort.currentNodes()
         for (let i = 0; i < values.length; i++) {
             let value = values[i]
-            let left = i * valueWidth
-            let bottom = (value - valueMin) * valueHeight
 
-            let $child = document.createElement('span')
-            $child.className = 'point'
+            let yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight
+            let xCenter = (i) / widthSpread * boxWidth
+
+            let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+            circle.setAttribute('cx', xCenter + '')
+            circle.setAttribute('cy', yCenter + '')
+            circle.setAttribute('r', radius + '')
+
+            circle.setAttribute('class', 'point')
             if (currentNodes.indexOf(i) !== -1) {
-                $child.classList.add("active")
+                circle.classList.add('active')
             }
-            $child.style.height = `${valueHeight}px`
-            $child.style.width = `${valueWidth}px`
-            $child.style.bottom = `${bottom}px`
-            $child.style.left = `${left}px`
-            $el.appendChild($child)
+
+            gElement.appendChild(circle)
         }
 
         let $wrapper = document.createElement('div')
@@ -165,7 +175,7 @@ namespace script {
         $button.textContent = 'Remove'
         $button.className = 'remove'
         $wrapper.appendChild($button)
-        $wrapper.appendChild($el)
+        $wrapper.appendChild(boardElement)
         $boards.appendChild($wrapper)
     }
 

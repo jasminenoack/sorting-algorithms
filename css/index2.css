@@ -1,5 +1,5 @@
 .point {
-    background: orange;
+    fill: orange;
     position: absolute;
     display: block;
     box-sizing: border-box;
@@ -20,7 +20,7 @@
 }
 
 .point.active {
-    background: blue;
+    fill: blue;
 }
 
 button {
@@ -61,4 +61,7 @@ select {
     border-radius: 5px;
     color: #fff;
     background-color: #cb4e4e;
+}
+
+circle {
 }

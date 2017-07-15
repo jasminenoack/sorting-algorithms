@@ -176,8 +176,8 @@ var ValueTypes;
     }());
     ValueTypes.Root = Root;
     ValueTypes.valueTypeList = [
-        new Random(),
         new Integer(),
+        new Random(),
         new FewUnique(),
         new Equal(),
         new AllBut2Equal(),

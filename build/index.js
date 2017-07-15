@@ -24,6 +24,7 @@ var script;
         optionElement.textContent = shuffle.title;
         orderSelect.appendChild(optionElement);
     });
+    // set up value types
     var valueTypes = ValueTypes.valueTypeList;
     var valueTypeSelect = document.getElementById('value-type');
     valueTypes.forEach(function (valueType, index) {
@@ -37,12 +38,9 @@ var script;
     ];
     // when click create
     $create.addEventListener('click', function () {
-        var $size = document.getElementById("size");
-        var size = sizes[$size.value];
-        var $valueType = document.getElementById("value-type");
-        var value = valueTypes[$valueType.value];
-        var $order = document.getElementById("order");
-        var order = orders[$order.value];
+        var size = sizes[sizeElement.value];
+        var value = valueTypes[valueTypeSelect.value];
+        var order = orders[orderSelect.value];
         var $sort = document.getElementById("sort");
         var Sort = sorts[$sort.value];
         // let board = new Boards.Board(size)
@@ -57,11 +55,14 @@ var script;
         var value = board.get(index).value;
         var valueMin = board.min();
         var valueMax = board.max();
-        var heightCount = valueMax - valueMin + 1;
-        var valueHeight = boxHeight / heightCount;
-        var bottom = (value - valueMin) * valueHeight;
+        var widthSpread = board.values().length - 1;
+        var heightSpread = valueMax - valueMin;
+        var radius = Math.max(Math.min(boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2), 5);
+        var yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
+        var xCenter = (index) / widthSpread * boxWidth;
         var point = pointElements[index];
-        point.style.bottom = bottom + "px";
+        point.setAttribute('cx', xCenter + '');
+        point.setAttribute('cy', yCenter + '');
     }
     function setCurrentNodes(currentNodes, pointElements) {
         currentNodes.forEach(function (index) {
@@ -100,32 +101,33 @@ var script;
     function createBoard(index) {
         var board = boardList[index].board;
         var sort = boardList[index].sort;
-        var $el = document.createElement('div');
-        $el.className = 'board';
-        $el.style.height = boxHeight + "px";
-        $el.style.width = boxWidth + "px";
         var values = board.values();
         var valueMin = board.min();
         var valueMax = board.max();
-        var widthCount = values.length;
-        var heightCount = valueMax - valueMin + 1;
-        var valueHeight = boxHeight / heightCount;
-        var valueWidth = boxWidth / widthCount;
+        var widthSpread = values.length - 1;
+        var heightSpread = valueMax - valueMin;
+        var radius = Math.max(Math.min(boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2), 5);
+        var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        boardElement.setAttribute('class', 'board');
+        boardElement.style.height = boxHeight + 40 + "px";
+        boardElement.style.width = boxWidth + 40 + "px";
+        var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
+        boardElement.appendChild(gElement);
         var currentNodes = sort.currentNodes();
         for (var i = 0; i < values.length; i++) {
             var value = values[i];
-            var left = i * valueWidth;
-            var bottom = (value - valueMin) * valueHeight;
-            var $child = document.createElement('span');
-            $child.className = 'point';
+            var yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
+            var xCenter = (i) / widthSpread * boxWidth;
+            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', xCenter + '');
+            circle.setAttribute('cy', yCenter + '');
+            circle.setAttribute('r', radius + '');
+            circle.setAttribute('class', 'point');
             if (currentNodes.indexOf(i) !== -1) {
-                $child.classList.add("active");
+                circle.classList.add('active');
             }
-            $child.style.height = valueHeight + "px";
-            $child.style.width = valueWidth + "px";
-            $child.style.bottom = bottom + "px";
-            $child.style.left = left + "px";
-            $el.appendChild($child);
+            gElement.appendChild(circle);
         }
         var $wrapper = document.createElement('div');
         $wrapper.className = 'wrapper';
@@ -140,7 +142,7 @@ var script;
         $button.textContent = 'Remove';
         $button.className = 'remove';
         $wrapper.appendChild($button);
-        $wrapper.appendChild($el);
+        $wrapper.appendChild(boardElement);
         $boards.appendChild($wrapper);
     }
     function createDelegatedEvent(eventNode, eventType, fun, selector) {

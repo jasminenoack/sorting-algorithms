@@ -116,7 +116,7 @@ namespace script {
                 '.wrapper'
             ).getElementsByClassName(
                 'step-count'
-            )[0].textContent = `steps: ${sort.steps}`
+            )[0].textContent = `comparisons: ${sort.comparisons}. movements: ${sort.swaps}.`
         }
     }
 
@@ -171,7 +171,7 @@ namespace script {
         $header.textContent = sort.title
         $wrapper.appendChild($header)
         let $stepCount = document.createElement('span')
-        $stepCount.textContent = `steps: ${sort.steps}`
+        $stepCount.textContent = `comparisons: ${sort.comparisons}. movements: ${sort.swaps}.`
         $stepCount.className = 'step-count'
         $wrapper.appendChild($stepCount)
         let $button = document.createElement('button')

@@ -1,25 +1,49 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var Sorts;
 (function (Sorts) {
-    var Bubble = (function () {
-        function Bubble(board) {
+    var BaseSort = (function () {
+        function BaseSort(board) {
             this.board = board;
             this.done = false;
             this.ordered = true;
-            this.steps = 0;
+            this.comparisons = 0;
+            this.swaps = 0;
             this.length = board.length;
             this.baseNode = 0;
             this.comparisonNode = 1;
         }
-        Bubble.prototype.currentNodes = function () {
+        BaseSort.prototype.currentNodes = function () {
             return [this.baseNode, this.comparisonNode];
         };
-        Bubble.prototype.nodesInOrder = function (values) {
+        BaseSort.prototype.nodesInOrder = function (values) {
+            // used to compare nodes
             var inOrder = values[this.baseNode] <= values[this.comparisonNode];
             if (!inOrder) {
                 this.ordered = false;
             }
+            this.comparisons++;
             return inOrder;
         };
+        BaseSort.prototype.swap = function (currentNodes) {
+            this.swaps++;
+            this.board.swap.apply(this.board, currentNodes);
+        };
+        return BaseSort;
+    }());
+    var Bubble = (function (_super) {
+        __extends(Bubble, _super);
+        function Bubble() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
         Bubble.prototype.setUpNext = function () {
             this.baseNode++;
             this.comparisonNode++;
@@ -41,14 +65,13 @@ var Sorts;
             var currentNodes = this.currentNodes();
             var values = this.board.values();
             if (!this.nodesInOrder(values)) {
-                this.board.swap.apply(this.board, currentNodes);
+                this.swap(currentNodes);
             }
             this.setUpNext();
-            this.steps++;
             return currentNodes;
         };
         return Bubble;
-    }());
+    }(BaseSort));
     Sorts.Bubble = Bubble;
     Bubble.title = "Bubble Sort";
     Sorts.sortList = [

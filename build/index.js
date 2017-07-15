@@ -94,7 +94,7 @@ var script;
             });
             currentNodes = sort.currentNodes();
             setCurrentNodes(currentNodes, pointElements);
-            boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].textContent = "steps: " + sort.steps;
+            boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].textContent = "comparisons: " + sort.comparisons + ". movements: " + sort.swaps + ".";
         };
         for (var i = 0; i < boardList.length; i++) {
             _loop_1(i);
@@ -139,7 +139,7 @@ var script;
         $header.textContent = sort.title;
         $wrapper.appendChild($header);
         var $stepCount = document.createElement('span');
-        $stepCount.textContent = "steps: " + sort.steps;
+        $stepCount.textContent = "comparisons: " + sort.comparisons + ". movements: " + sort.swaps + ".";
         $stepCount.className = 'step-count';
         $wrapper.appendChild($stepCount);
         var $button = document.createElement('button');

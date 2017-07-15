@@ -1,10 +1,11 @@
 namespace Sorts {
-    export class Bubble {
+    class BaseSort {
         baseNode: number
         comparisonNode: number
         done: boolean = false
         ordered: boolean = true
-        steps: number = 0
+        comparisons: number = 0
+        swaps: number = 0
 
         constructor(public board: Boards.Board) {
             this.length = board.length
@@ -17,13 +18,22 @@ namespace Sorts {
         }
 
         nodesInOrder(values) {
+            // used to compare nodes
             let inOrder = values[this.baseNode] <= values[this.comparisonNode]
             if (!inOrder) {
                 this.ordered = false
             }
+            this.comparisons++
             return inOrder
         }
 
+        swap(currentNodes) {
+            this.swaps++
+            this.board.swap.apply(this.board, currentNodes)
+        }
+    }
+
+    export class Bubble extends BaseSort {
         setUpNext() {
             this.baseNode++
             this.comparisonNode++
@@ -46,10 +56,9 @@ namespace Sorts {
             let currentNodes = this.currentNodes()
             let values = this.board.values()
             if (!this.nodesInOrder(values)) {
-                this.board.swap.apply(this.board, currentNodes)
+                this.swap(currentNodes)
             }
             this.setUpNext()
-            this.steps++
             return currentNodes
         }
     }

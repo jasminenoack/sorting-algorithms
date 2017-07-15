@@ -1,13 +1,6 @@
 var Boards;
 (function (Boards) {
-    var Shuffle;
-    (function (Shuffle) {
-        Shuffle[Shuffle["Random"] = 0] = "Random";
-        Shuffle[Shuffle["Ordered"] = 1] = "Ordered";
-        Shuffle[Shuffle["Reversed"] = 2] = "Reversed";
-        Shuffle[Shuffle["MostlySorted"] = 3] = "MostlySorted";
-        Shuffle[Shuffle["MostlyReversed"] = 4] = "MostlyReversed";
-    })(Shuffle = Boards.Shuffle || (Boards.Shuffle = {}));
+    // export enum Shuffle {Random, Ordered, Reversed, MostlySorted, MostlyReversed}
     var ValueType;
     (function (ValueType) {
         ValueType[ValueType["Integers"] = 0] = "Integers";
@@ -15,10 +8,10 @@ var Boards;
         ValueType[ValueType["Random"] = 2] = "Random";
     })(ValueType = Boards.ValueType || (Boards.ValueType = {}));
     var Board = (function () {
-        function Board(size, shuffleType, valueType) {
-            if (shuffleType === void 0) { shuffleType = Shuffle.Random; }
+        function Board(size, shuffle, valueType) {
+            if (shuffle === void 0) { shuffle = new Shuffles.RandomShuffle(); }
             if (valueType === void 0) { valueType = ValueType.Integers; }
-            this.shuffleType = shuffleType;
+            this.shuffle = shuffle;
             this.valueType = valueType;
             this.points = [];
             this.setSize(size);
@@ -45,18 +38,7 @@ var Boards;
         };
         Board.prototype.shuffleBoard = function () {
             var values = this.values();
-            values.sortNumbers();
-            if (this.shuffleType === Shuffle.MostlySorted ||
-                this.shuffleType === Shuffle.MostlyReversed) {
-                this.shuffleToMostlySorted(values);
-            }
-            if (this.shuffleType === Shuffle.Random) {
-                values.shuffle();
-            }
-            if (this.shuffleType === Shuffle.Reversed ||
-                this.shuffleType === Shuffle.MostlyReversed) {
-                values.reverse();
-            }
+            this.shuffle.shuffle(values);
             this.setPoints(values);
         };
         Board.prototype.shuffleToMostlySorted = function (values) {

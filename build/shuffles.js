@@ -14,7 +14,7 @@ var Shuffles;
         function Shuffle() {
         }
         Shuffle.prototype.shuffle = function (array) {
-            array.sort();
+            array.sortNumbers();
             if (this.k === null) {
                 array.shuffle();
             }
@@ -28,6 +28,7 @@ var Shuffles;
         };
         return Shuffle;
     }());
+    Shuffles.Shuffle = Shuffle;
     var OrderedShuffle = (function (_super) {
         __extends(OrderedShuffle, _super);
         function OrderedShuffle() {

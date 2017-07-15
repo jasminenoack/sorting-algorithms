@@ -1,11 +1,11 @@
 namespace Shuffles {
-    class Shuffle {
+    export class Shuffle {
         // this is the max distance we move a number
         k: number
         reversed: boolean
 
         shuffle(array) {
-            array.sort()
+            array.sortNumbers()
             if (this.k === null) {
                 array.shuffle()
             } else if (this.k) {

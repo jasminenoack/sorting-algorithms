@@ -53,6 +53,7 @@ Array.prototype.kShuffle = function (k) {
         }
         if (insertPoint !== indexToInsert &&
             startingArray[indexToInsert] === this[indexToInsert]) {
+            // console.log(indexToInsert, insertPoint)
             var valueToInsert = this[indexToInsert];
             this.splice(indexToInsert, 1);
             this.splice(insertPoint, 0, valueToInsert);

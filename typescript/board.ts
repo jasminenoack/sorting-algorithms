@@ -1,5 +1,5 @@
 namespace Boards {
-    export enum Shuffle {Random, Ordered, Reversed, MostlySorted, MostlyReversed}
+    // export enum Shuffle {Random, Ordered, Reversed, MostlySorted, MostlyReversed}
 
     export enum ValueType {Integers, FewUnique, Random}
 
@@ -8,7 +8,7 @@ namespace Boards {
         size: Sizes.Size;
         length: number;
         constructor(
-            size, public shuffleType: Shuffle = Shuffle.Random,
+            size, public shuffle: Shuffles.Shuffle = new Shuffles.RandomShuffle(),
             public valueType: ValueType = ValueType.Integers
         ) {
             this.setSize(size)
@@ -36,21 +36,7 @@ namespace Boards {
         }
         shuffleBoard() {
             let values = this.values()
-            values.sortNumbers()
-            if (this.shuffleType === Shuffle.MostlySorted ||
-                this.shuffleType === Shuffle.MostlyReversed
-            ) {
-                this.shuffleToMostlySorted(values)
-            }
-            if (this.shuffleType === Shuffle.Random) {
-                values.shuffle()
-            }
-            if (
-                this.shuffleType === Shuffle.Reversed ||
-                this.shuffleType === Shuffle.MostlyReversed
-            ) {
-                values.reverse()
-            }
+            this.shuffle.shuffle(values)
             this.setPoints(values)
         }
         shuffleToMostlySorted(values) {

@@ -37,22 +37,25 @@ namespace script {
         valueTypeSelect.appendChild(optionElement)
     })
 
+    let sorts = Sorts.sortList
+    let sortElement = document.getElementById("sort")
+    sorts.forEach((sort, index) => {
+        let optionElement = document.createElement('option')
+        optionElement.value = index
+        optionElement.textContent = sort.title
+        sortElement.appendChild(optionElement)
+    })
 
 
 
 
-    let sorts = [
-        Bubble.Bubble
-    ]
 
     // when click create
     $create.addEventListener('click', function () {
         let size = sizes[sizeElement.value]
         let value = valueTypes[valueTypeSelect.value]
         let order = orders[orderSelect.value]
-
-        let $sort = document.getElementById("sort")
-        let Sort = sorts[$sort.value]
+        let Sort = sorts[sortElement.value]
 
         // let board = new Boards.Board(size)
         let board = new Boards.Board(size, order, value)

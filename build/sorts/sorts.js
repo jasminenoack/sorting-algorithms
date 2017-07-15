@@ -1,9 +1,8 @@
-var Bubble;
-(function (Bubble_1) {
+var Sorts;
+(function (Sorts) {
     var Bubble = (function () {
         function Bubble(board) {
             this.board = board;
-            this.title = "Bubble Sort";
             this.done = false;
             this.ordered = true;
             this.steps = 0;
@@ -50,5 +49,9 @@ var Bubble;
         };
         return Bubble;
     }());
-    Bubble_1.Bubble = Bubble;
-})(Bubble || (Bubble = {}));
+    Sorts.Bubble = Bubble;
+    Bubble.title = "Bubble Sort";
+    Sorts.sortList = [
+        Bubble
+    ];
+})(Sorts || (Sorts = {}));

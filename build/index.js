@@ -33,16 +33,20 @@ var script;
         optionElement.textContent = valueType.title;
         valueTypeSelect.appendChild(optionElement);
     });
-    var sorts = [
-        Bubble.Bubble
-    ];
+    var sorts = Sorts.sortList;
+    var sortElement = document.getElementById("sort");
+    sorts.forEach(function (sort, index) {
+        var optionElement = document.createElement('option');
+        optionElement.value = index;
+        optionElement.textContent = sort.title;
+        sortElement.appendChild(optionElement);
+    });
     // when click create
     $create.addEventListener('click', function () {
         var size = sizes[sizeElement.value];
         var value = valueTypes[valueTypeSelect.value];
         var order = orders[orderSelect.value];
-        var $sort = document.getElementById("sort");
-        var Sort = sorts[$sort.value];
+        var Sort = sorts[sortElement.value];
         // let board = new Boards.Board(size)
         var board = new Boards.Board(size, order, value);
         boardList.push({

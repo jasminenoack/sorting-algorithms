@@ -1,6 +1,5 @@
-namespace Bubble {
+namespace Sorts {
     export class Bubble {
-        title: string = "Bubble Sort"
         baseNode: number
         comparisonNode: number
         done: boolean = false
@@ -54,4 +53,9 @@ namespace Bubble {
             return currentNodes
         }
     }
+    Bubble.title = "Bubble Sort"
+
+    export let sortList = [
+        Bubble
+    ]
 }

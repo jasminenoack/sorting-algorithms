@@ -22,6 +22,7 @@ var Sorts;
             this.swaps = 0;
             this.placed = [];
             this.shadow = [];
+            this.lastSwapped = false;
             this.length = board.length;
             this.baseNode = 0;
             this.comparisonNode = 1;
@@ -39,6 +40,10 @@ var Sorts;
             var inOrder = values[this.baseNode] <= values[this.comparisonNode];
             if (!inOrder) {
                 this.ordered = false;
+                this.lastSwapped = true;
+            }
+            else {
+                this.lastSwapped = false;
             }
             this.comparisons++;
             return inOrder;
@@ -362,7 +367,7 @@ var Sorts;
 
         -- Conway sort
 
-         -- Counting sort
+        -- Counting sort
 
         -- cube sort
     */
@@ -443,125 +448,150 @@ var Sorts;
         -- flash sort
 
         -- Franceschini-Muthukrishnan-Pătrașcu algorithm
+        */
+    var Gnome = (function (_super) {
+        __extends(Gnome, _super);
+        function Gnome() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.currentGnome = 1;
+            return _this;
+        }
+        Gnome.prototype.setUpNext = function () {
+            if (this.baseNode === 0 || !this.lastSwapped) {
+                this.currentGnome++;
+                this.comparisonNode = this.currentGnome;
+                this.baseNode = this.currentGnome - 1;
+            }
+            else if (this.lastSwapped) {
+                this.baseNode--;
+                this.comparisonNode--;
+            }
+            if (this.comparisonNode >= this.length) {
+                this.done = true;
+            }
+        };
+        return Gnome;
+    }(BaseSort));
+    Gnome.title = "Gnome Sort";
+    Sorts.Gnome = Gnome;
+    /*
 
-        gnome
+    -- gravity sort
 
-        -- gravity sort
+    -- half hearted merge sort (https://xkcd.com/1185/)
 
-        -- half hearted merge sort (https://xkcd.com/1185/)
+    -- han's algorithm
 
-        -- han's algorithm
+    -- hanoi sort
 
-        -- hanoi sort
+    -- heap sort
 
-        -- heap sort
+    -- Insertion sort
 
-        -- Insertion sort
+    -- intelligent design sort
 
-        -- intelligent design sort
+    -- internet sort
 
-        -- internet sort
+    -- Introsort
 
-        -- Introsort
+    -- jingle sort
 
-        -- jingle sort
+    -- job interview quicksort (https://xkcd.com/1185/)
 
-        -- job interview quicksort (https://xkcd.com/1185/)
+    -- Library sort
 
-        -- Library sort
+    -- merge sort
 
-        -- merge sort
+    -- 3-way merge sort
 
-        -- 3-way merge sort
+    -- miracle sort
 
-        -- miracle sort
+    odd even
 
-        odd even
+    -- oscillating merge sort
 
-        -- oscillating merge sort
+    -- Pairwise Sorting Network
 
-        -- Pairwise Sorting Network
+    -- Pancake sorting
 
-        -- Pancake sorting
+    -- panic sort (https://xkcd.com/1185/)
 
-        -- panic sort (https://xkcd.com/1185/)
+    -- patience sorting
 
-        -- patience sorting
+    -- permutation sort
 
-        -- permutation sort
+    -- pigeonhole sort
 
-        -- pigeonhole sort
+    -- polyphase merge sort
 
-        -- polyphase merge sort
+    -- postman sort
 
-        -- postman sort
+    -- proxmap sort
 
-        -- proxmap sort
+    -- radix sort (lsd, msd)
 
-        -- radix sort (lsd, msd)
+    -- rolling ball sort
 
-        -- rolling ball sort
+    -- quantum bogo sort
 
-        -- quantum bogo sort
+    quick sort(2, 3)
 
-        quick sort(2, 3)
+    -- quora sort
 
-        -- quora sort
+    -- sample sort
 
-        -- sample sort
+    selection (base, track multiple)
 
-        selection (base, track multiple)
+    -- shatter sort
 
-        -- shatter sort
+    -- shell sort
 
-        -- shell sort
+    -- simple pancake sort
 
-        -- simple pancake sort
+    -- ska sort
 
-        -- ska sort
+    -- slow sort
 
-        -- slow sort
+    -- sleep sort
 
-        -- sleep sort
+    smooth
 
-        smooth
+    -- solar bitflip
 
-        -- solar bitflip
+    -- sorting networks
 
-        -- sorting networks
+    -- Spaghetti sort(poll)
 
-        -- Spaghetti sort(poll)
+    -- splay sort
 
-        -- splay sort
+    -- spread sort
 
-        -- spread sort
+    -- stack sort
 
-        -- stack sort
+    -- stalin sort
 
-        -- stalin sort
+    stooge
 
-        stooge
+    -- strand sort
 
-        -- strand sort
+    -- stupid sort
 
-        -- stupid sort
+    -- tag sort
 
-        -- tag sort
+    -- throups algorithm
 
-        -- throups algorithm
+    -- tim sort
 
-        -- tim sort
+    -- topological sorting
 
-        -- topological sorting
+    -- tournament sort
 
-        -- tournament sort
+    -- tree sort
 
-        -- tree sort
+    -- unshuffle sort
 
-        -- unshuffle sort
-
-        -- weak heap sort
-    */
+    -- weak heap sort
+*/
     Sorts.sortList = [
         Bogo,
         BogoSingle,
@@ -573,5 +603,6 @@ var Sorts;
         Cocktail,
         Comb,
         Cycle,
+        Gnome
     ];
 })(Sorts || (Sorts = {}));

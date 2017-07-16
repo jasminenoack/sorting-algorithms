@@ -16,6 +16,7 @@ namespace Sorts {
         setUpNext(): void {}
         placed: number[] = []
         shadow: any[] = []
+        lastSwapped: boolean = false
 
         constructor(public board: Boards.Board) {
             this.length = board.length
@@ -36,6 +37,9 @@ namespace Sorts {
             let inOrder = values[this.baseNode] <= values[this.comparisonNode]
             if (!inOrder) {
                 this.ordered = false
+                this.lastSwapped = true
+            } else {
+                this.lastSwapped = false
             }
             this.comparisons++
             return inOrder
@@ -336,7 +340,7 @@ namespace Sorts {
 
         -- Conway sort
 
-         -- Counting sort
+        -- Counting sort
 
         -- cube sort
     */
@@ -425,8 +429,28 @@ namespace Sorts {
         -- flash sort
 
         -- Franceschini-Muthukrishnan-Pătrașcu algorithm
+        */
 
-        gnome
+        export class Gnome extends BaseSort {
+            static title = "Gnome Sort"
+            currentGnome: number = 1
+
+            setUpNext() {
+                if (this.baseNode === 0 || !this.lastSwapped) {
+                    this.currentGnome++
+                    this.comparisonNode = this.currentGnome
+                    this.baseNode = this.currentGnome - 1
+                } else if (this.lastSwapped) {
+                    this.baseNode--
+                    this.comparisonNode--
+                }
+                if (this.comparisonNode >= this.length) {
+                    this.done = true
+                }
+            }
+        }
+
+        /*
 
         -- gravity sort
 
@@ -556,5 +580,6 @@ namespace Sorts {
         Cocktail,
         Comb,
         Cycle,
+        Gnome
     ]
 }

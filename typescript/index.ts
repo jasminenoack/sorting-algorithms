@@ -62,6 +62,39 @@ namespace script {
         createBoard(boardList.length - 1, Sort)
     })
 
+    function renderShadow(sort, board, boardElement) {
+        let valueMin = board.min()
+        let valueMax = board.max()
+        let widthSpread = board.values().length - 1
+        let heightSpread = valueMax - valueMin
+        let radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread)
+        let shadow = sort.shadow
+
+        if (shadow.length) {
+            shadow.forEach((obj) => {
+                let index = obj.index
+                let value = obj.value
+                let [xCenter, yCenter] = centers(
+                        heightSpread, widthSpread, boxHeight, boxWidth, value,
+                        index, valueMin
+                )
+                let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+                circle.setAttribute('cx', xCenter + '')
+                circle.setAttribute('cy', yCenter + '')
+                circle.setAttribute('r', radius + '')
+                circle.setAttribute('class', 'point shadow')
+                boardElement.appendChild(circle)
+            })
+        }
+    }
+
+    function removeShadow(boardElement) {
+        let shadowElements = boardElement.getElementsByClassName('shadow')
+        for(let i = 0; i < shadowElements.length; i++) {
+            shadowElements[i].remove()
+        }
+    }
+
     function reRenderPoint(pointElements, board, index) {
         let value = board.get(index).value
         let valueMin = board.min()
@@ -143,6 +176,9 @@ namespace script {
             ).getElementsByClassName(
                 'step-count'
             )[0].textContent = getTextContent(sort)
+
+            removeShadow(boardElement)
+            renderShadow(sort, board, boardElement)
         }
     }
 
@@ -160,11 +196,11 @@ namespace script {
         let radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread)
 
         let boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-        boardElement.setAttribute('class', 'board')
         boardElement.setAttribute('viewBox', `0 0 ${boxWidth+ 40} ${boxHeight + 40}`)
 
         let gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g')
         gElement.setAttribute('transform', `translate(${20}, ${20})`)
+        gElement.setAttribute('class', 'board')
 
         boardElement.appendChild(gElement)
 
@@ -205,6 +241,8 @@ namespace script {
         $wrapper.appendChild($button)
         $wrapper.appendChild(boardElement)
         $boards.appendChild($wrapper)
+
+        renderShadow(sort, board, gElement)
     }
 
     function createDelegatedEvent(eventNode, eventType, fun, selector) {

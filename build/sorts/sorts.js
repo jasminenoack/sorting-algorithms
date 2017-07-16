@@ -368,11 +368,70 @@ var Sorts;
     */
     var Cycle = (function (_super) {
         __extends(Cycle, _super);
-        function Cycle() {
-            return _super !== null && _super.apply(this, arguments) || this;
+        function Cycle(board) {
+            var _this = _super.call(this, board) || this;
+            _this.numberLess = 0;
+            _this.setCurrentValue(_this.baseNode);
+            return _this;
         }
+        Cycle.prototype.currentNodes = function () {
+            return [this.comparisonNode];
+        };
+        Cycle.prototype.setCurrentValue = function (index) {
+            this.currentValue = this.board.values()[index];
+            this.shadow = [{ index: this.baseNode, value: this.currentValue }];
+        };
+        Cycle.prototype.next = function () {
+            if (this.done) {
+                return [];
+            }
+            this.steps++;
+            var currentNodes = Array.prototype.range(this.length);
+            var values = this.board.values();
+            this.lesserThanComparison(values);
+            this.setUpNext();
+            return currentNodes;
+        };
+        Cycle.prototype.lesserThanComparison = function (values) {
+            this.comparisons++;
+            if (this.currentValue > values[this.comparisonNode]) {
+                this.numberLess++;
+            }
+        };
+        Cycle.prototype.setUpNext = function () {
+            var index = this.numberLess + this.baseNode;
+            this.comparisonNode++;
+            if (this.comparisonNode === this.baseNode) {
+                this.comparisonNode++;
+            }
+            if (this.comparisonNode === this.length) {
+                if (index !== this.baseNode ||
+                    this.currentValue !== this.board.values()[this.baseNode]) {
+                    var values = this.board.values();
+                    while (values[index] === this.currentValue) {
+                        index++;
+                    }
+                    var oldValue = this.currentValue;
+                    this.setCurrentValue(index);
+                    this.board.set(index, oldValue);
+                    this.swaps++;
+                }
+                if (this.baseNode === index) {
+                    this.placed.push(this.baseNode);
+                    this.baseNode++;
+                    this.setCurrentValue(this.baseNode);
+                }
+                this.comparisonNode = this.baseNode + 1;
+                this.numberLess = 0;
+                if (this.baseNode === this.length - 1) {
+                    this.done = true;
+                }
+            }
+            // console.log(this.board.values())
+        };
         return Cycle;
     }(BaseSort));
+    Cycle.title = "Cycle Sort";
     Sorts.Cycle = Cycle;
     /*
         -- demonsort
@@ -512,6 +571,7 @@ var Sorts;
         BubbleSkipNoShortCircuit,
         BubbleSkipsSorted,
         Cocktail,
-        Comb
+        Comb,
+        Cycle,
     ];
 })(Sorts || (Sorts = {}));

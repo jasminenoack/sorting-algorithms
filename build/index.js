@@ -55,6 +55,33 @@ var script;
         });
         createBoard(boardList.length - 1, Sort);
     });
+    function renderShadow(sort, board, boardElement) {
+        var valueMin = board.min();
+        var valueMax = board.max();
+        var widthSpread = board.values().length - 1;
+        var heightSpread = valueMax - valueMin;
+        var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
+        var shadow = sort.shadow;
+        if (shadow.length) {
+            shadow.forEach(function (obj) {
+                var index = obj.index;
+                var value = obj.value;
+                var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin), xCenter = _a[0], yCenter = _a[1];
+                var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', xCenter + '');
+                circle.setAttribute('cy', yCenter + '');
+                circle.setAttribute('r', radius + '');
+                circle.setAttribute('class', 'point shadow');
+                boardElement.appendChild(circle);
+            });
+        }
+    }
+    function removeShadow(boardElement) {
+        var shadowElements = boardElement.getElementsByClassName('shadow');
+        for (var i = 0; i < shadowElements.length; i++) {
+            shadowElements[i].remove();
+        }
+    }
     function reRenderPoint(pointElements, board, index) {
         var value = board.get(index).value;
         var valueMin = board.min();
@@ -117,6 +144,8 @@ var script;
             currentNodes = sort.currentNodes();
             setCurrentNodes(currentNodes, pointElements, sort);
             boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].textContent = getTextContent(sort);
+            removeShadow(boardElement);
+            renderShadow(sort, board, boardElement);
         };
         for (var i = 0; i < boardList.length; i++) {
             _loop_1(i);
@@ -134,10 +163,10 @@ var script;
         var heightSpread = valueMax - valueMin;
         var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
         var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        boardElement.setAttribute('class', 'board');
         boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
         var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
+        gElement.setAttribute('class', 'board');
         boardElement.appendChild(gElement);
         var currentNodes = sort.currentNodes();
         for (var i = 0; i < values.length; i++) {
@@ -168,6 +197,7 @@ var script;
         $wrapper.appendChild($button);
         $wrapper.appendChild(boardElement);
         $boards.appendChild($wrapper);
+        renderShadow(sort, board, gElement);
     }
     function createDelegatedEvent(eventNode, eventType, fun, selector) {
         var listener = eventNode.addEventListener(eventType, function (event) {

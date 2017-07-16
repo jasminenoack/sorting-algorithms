@@ -3,6 +3,8 @@ namespace Boards {
         points: Points.Point[] = [];
         size: Sizes.Size;
         length: number;
+        private _min: number
+        private _max: number
         constructor(
             size, public shuffle: Shuffles.Shuffle = new Shuffles.RandomShuffle(),
             public valueType: ValueTypes.ValueType = new ValueTypes.Integer()
@@ -14,7 +16,8 @@ namespace Boards {
         createValues() {
             let values = this.valueType.generate(this.length)
             this.setPoints(values)
-
+            this._min = Math.min(...values)
+            this._max = Math.max(...values)
         }
         shuffleBoard() {
             let values = this.values()
@@ -24,8 +27,13 @@ namespace Boards {
         setPoints(values) {
             let that = this
             values.forEach(function(value, index) {
-                that.points[index].value = value
+                that.set(index, value)
             })
+            this._min = Math.min(...values)
+            this._max = Math.max(...values)
+        }
+        set(index, value) {
+            this.points[index].value = value
         }
         swap(index1, index2) {
             let temp = this.get(index1)
@@ -51,10 +59,10 @@ namespace Boards {
             return this.points[index]
         }
         min() {
-            return Math.min(...this.values())
+            return this._min
         }
         max() {
-            return Math.max(...this.values())
+            return this._max
         }
         distribution() {
             let dist = {}

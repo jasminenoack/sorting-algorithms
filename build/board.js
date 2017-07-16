@@ -14,6 +14,8 @@ var Boards;
         Board.prototype.createValues = function () {
             var values = this.valueType.generate(this.length);
             this.setPoints(values);
+            this._min = Math.min.apply(Math, values);
+            this._max = Math.max.apply(Math, values);
         };
         Board.prototype.shuffleBoard = function () {
             var values = this.values();
@@ -23,8 +25,13 @@ var Boards;
         Board.prototype.setPoints = function (values) {
             var that = this;
             values.forEach(function (value, index) {
-                that.points[index].value = value;
+                that.set(index, value);
             });
+            this._min = Math.min.apply(Math, values);
+            this._max = Math.max.apply(Math, values);
+        };
+        Board.prototype.set = function (index, value) {
+            this.points[index].value = value;
         };
         Board.prototype.swap = function (index1, index2) {
             var temp = this.get(index1);
@@ -50,10 +57,10 @@ var Boards;
             return this.points[index];
         };
         Board.prototype.min = function () {
-            return Math.min.apply(Math, this.values());
+            return this._min;
         };
         Board.prototype.max = function () {
-            return Math.max.apply(Math, this.values());
+            return this._max;
         };
         Board.prototype.distribution = function () {
             var dist = {};

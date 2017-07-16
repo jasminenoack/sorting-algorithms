@@ -61,7 +61,7 @@ var script;
         var valueMax = board.max();
         var widthSpread = board.values().length - 1;
         var heightSpread = valueMax - valueMin;
-        var radius = Math.max(Math.min(boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2), 5);
+        var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
         var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin), xCenter = _a[0], yCenter = _a[1];
         var point = pointElements[index];
         point.setAttribute('cx', xCenter + '');
@@ -88,6 +88,12 @@ var script;
         var xCenter = (index) / widthSpread * boxWidth;
         return [xCenter, yCenter];
     }
+    function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
+        return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 5);
+    }
+    function getTextContent(sort) {
+        return "comparisons: " + sort.comparisons + ". movements: " + sort.swaps + ".";
+    }
     function step() {
         var _loop_1 = function (i) {
             var currentNodes = void 0;
@@ -104,7 +110,7 @@ var script;
             });
             currentNodes = sort.currentNodes();
             setCurrentNodes(currentNodes, pointElements);
-            boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].textContent = "comparisons: " + sort.comparisons + ". movements: " + sort.swaps + ".";
+            boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].textContent = getTextContent(sort);
         };
         for (var i = 0; i < boardList.length; i++) {
             _loop_1(i);
@@ -120,7 +126,7 @@ var script;
         var valueMax = board.max();
         var widthSpread = values.length - 1;
         var heightSpread = valueMax - valueMin;
-        var radius = Math.max(Math.min(boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2), 5);
+        var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
         var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         boardElement.setAttribute('class', 'board');
         boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
@@ -147,11 +153,11 @@ var script;
         $header.textContent = Sort.title;
         $wrapper.appendChild($header);
         var $stepCount = document.createElement('span');
-        $stepCount.textContent = "comparisons: " + sort.comparisons + ". movements: " + sort.swaps + ".";
+        $stepCount.textContent = getTextContent(sort);
         $stepCount.className = 'step-count';
         $wrapper.appendChild($stepCount);
         var $button = document.createElement('button');
-        $button.textContent = 'Remove';
+        $button.textContent = 'X';
         $button.className = 'remove';
         $wrapper.appendChild($button);
         $wrapper.appendChild(boardElement);

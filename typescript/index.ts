@@ -46,10 +46,6 @@ namespace script {
         sortElement.appendChild(optionElement)
     })
 
-
-
-
-
     // when click create
     $create.addEventListener('click', function () {
         let size = sizes[sizeElement.value]
@@ -72,9 +68,7 @@ namespace script {
         let valueMax = board.max()
         let widthSpread = board.values().length - 1
         let heightSpread = valueMax - valueMin
-        let radius = Math.max(Math.min(
-            boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2
-        ), 5)
+        let radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread)
 
         let [xCenter, yCenter] = centers(
                 heightSpread, widthSpread, boxHeight, boxWidth, value,
@@ -110,6 +104,16 @@ namespace script {
         return [xCenter, yCenter]
     }
 
+    function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
+        return Math.max(Math.min(
+            boxHeight / heightSpread / 2, boxWidth / widthSpread / 2
+        ), 5)
+    }
+
+    function getTextContent (sort) {
+        return `comparisons: ${sort.comparisons}. movements: ${sort.swaps}.`
+    }
+
     function step () {
         for (let i = 0; i < boardList.length; i++) {
             let currentNodes
@@ -132,7 +136,7 @@ namespace script {
                 '.wrapper'
             ).getElementsByClassName(
                 'step-count'
-            )[0].textContent = `comparisons: ${sort.comparisons}. movements: ${sort.swaps}.`
+            )[0].textContent = getTextContent(sort)
         }
     }
 
@@ -147,9 +151,7 @@ namespace script {
         let valueMax = board.max()
         let widthSpread = values.length - 1
         let heightSpread = valueMax - valueMin
-        let radius = Math.max(Math.min(
-            boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2
-        ), 5)
+        let radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread)
 
         let boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
         boardElement.setAttribute('class', 'board')
@@ -188,11 +190,11 @@ namespace script {
         $header.textContent = Sort.title
         $wrapper.appendChild($header)
         let $stepCount = document.createElement('span')
-        $stepCount.textContent = `comparisons: ${sort.comparisons}. movements: ${sort.swaps}.`
+        $stepCount.textContent = getTextContent(sort)
         $stepCount.className = 'step-count'
         $wrapper.appendChild($stepCount)
         let $button = document.createElement('button')
-        $button.textContent = 'Remove'
+        $button.textContent = 'X'
         $button.className = 'remove'
         $wrapper.appendChild($button)
         $wrapper.appendChild(boardElement)

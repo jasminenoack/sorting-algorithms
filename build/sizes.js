@@ -1,32 +1,36 @@
 var Sizes;
 (function (Sizes) {
+    Sizes.manyMany = {
+        elemCount: 300,
+        label: "300"
+    };
     Sizes.xXSmall = {
         elemCount: 70,
-        label: "X-X-Small"
+        label: "70"
     };
     Sizes.xSmall = {
         elemCount: 60,
-        label: "X-Small"
+        label: "60"
     };
     Sizes.small = {
         elemCount: 50,
-        label: "Small"
+        label: "50"
     };
     Sizes.medium = {
         elemCount: 40,
-        label: "Medium"
+        label: "40"
     };
     Sizes.large = {
         elemCount: 30,
-        label: "Large"
+        label: "30"
     };
     Sizes.xLarge = {
         elemCount: 20,
-        label: "X-Large"
+        label: "20"
     };
     Sizes.xXLarge = {
         elemCount: 10,
-        label: "X-X-Large"
+        label: "10"
     };
     Sizes.sizeList = [
         Sizes.xXLarge,
@@ -36,5 +40,6 @@ var Sizes;
         Sizes.small,
         Sizes.xSmall,
         Sizes.xXSmall,
+        Sizes.manyMany
     ];
 })(Sizes || (Sizes = {}));

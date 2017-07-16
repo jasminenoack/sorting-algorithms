@@ -2,8 +2,23 @@ body {
     margin: 0px;
 }
 
+button.remove {
+    border-radius: 100%;
+    padding: 3px 5px;
+    margin: 2px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 10px;
+    box-shadow: none;
+}
+
+.step-count {
+    font-size: 12px
+}
+
 .point {
-    fill: orange;
+    fill: transparent;
     position: absolute;
     display: block;
     box-sizing: border-box;
@@ -21,8 +36,9 @@ body {
     display: inline-block;
     margin: 1vw;
     background: lightgrey;
-    width: 23vw;
-    min-width: 300px;
+    width: 18vw;
+    min-width: 250px;
+    position: relative;
 }
 
 .board {
@@ -74,4 +90,10 @@ select {
 }
 
 circle {
+}
+
+h1 {
+    margin: 3px auto;
+    text-align: center;
+    font-size: 16px;
 }

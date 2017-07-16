@@ -4,39 +4,44 @@ namespace Sizes {
         label: string;
     }
 
+    export let manyMany: Size = {
+        elemCount: 300,
+        label: "300"
+    }
+
     export let xXSmall: Size = {
         elemCount: 70,
-        label: "X-X-Small"
+        label: "70"
     }
 
     export let xSmall: Size = {
         elemCount: 60,
-        label: "X-Small"
+        label: "60"
     }
 
     export let small: Size = {
         elemCount: 50,
-        label: "Small"
+        label: "50"
     }
 
     export let medium: Size = {
         elemCount: 40,
-        label: "Medium"
+        label: "40"
     }
 
     export let large: Size = {
         elemCount: 30,
-        label: "Large"
+        label: "30"
     }
 
     export let xLarge: Size = {
         elemCount: 20,
-        label: "X-Large"
+        label: "20"
     }
 
     export let xXLarge: Size = {
         elemCount: 10,
-        label: "X-X-Large"
+        label: "10"
     }
 
     export const sizeList = [
@@ -47,5 +52,6 @@ namespace Sizes {
         Sizes.small,
         Sizes.xSmall,
         Sizes.xXSmall,
+        Sizes.manyMany
     ]
 }

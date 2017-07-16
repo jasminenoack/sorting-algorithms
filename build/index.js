@@ -67,10 +67,16 @@ var script;
         point.setAttribute('cx', xCenter + '');
         point.setAttribute('cy', yCenter + '');
     }
-    function setCurrentNodes(currentNodes, pointElements) {
+    function setCurrentNodes(currentNodes, pointElements, sort) {
         currentNodes.forEach(function (index) {
             pointElements[index].classList.add("active");
         });
+        var placed = sort.placed;
+        if (placed.length) {
+            for (var i = 0; i < placed.length; i++) {
+                pointElements[placed[i]].classList.add("placed");
+            }
+        }
     }
     function removeCurrentNodes(currentNodes, pointElements) {
         currentNodes.forEach(function (index) {
@@ -109,7 +115,7 @@ var script;
                 reRenderPoint(pointElements, board, point);
             });
             currentNodes = sort.currentNodes();
-            setCurrentNodes(currentNodes, pointElements);
+            setCurrentNodes(currentNodes, pointElements, sort);
             boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].textContent = getTextContent(sort);
         };
         for (var i = 0; i < boardList.length; i++) {

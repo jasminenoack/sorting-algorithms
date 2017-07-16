@@ -14,6 +14,8 @@ namespace Sorts {
         end: number
         maxRounds: number
         setUpNext(): void {}
+        placed: number[] = []
+        shadow: any[] = []
 
         constructor(public board: Boards.Board) {
             this.length = board.length
@@ -212,6 +214,7 @@ namespace Sorts {
                 this.baseNode = 0
                 this.comparisonNode = 1
                 if (this.skipSorted) {
+                    this.placed.push(this.end)
                     this.end--
                     if (this.end === 0) {
                         this.done = true
@@ -246,7 +249,7 @@ namespace Sorts {
 
         -- Burst Sort
 
-         -- caresian tree sort
+        -- caresian tree sort
 
         -- cascade merge sort
 
@@ -271,6 +274,7 @@ namespace Sorts {
         setUpNext() {
             if(this.direction) {
                 if (this.comparisonNode === this.end) {
+                    this.placed.push(this.end)
                     this.end--
                     this.baseNode--
                     this.comparisonNode--
@@ -281,6 +285,7 @@ namespace Sorts {
                 }
             } else {
                 if (this.baseNode === this.start) {
+                    this.placed.push(this.start)
                     this.direction = 1
                     this.start++
                     this.baseNode++
@@ -334,9 +339,12 @@ namespace Sorts {
          -- Counting sort
 
         -- cube sort
+    */
 
-        cycle
+    export class Cycle extends BaseSort {
 
+    }
+    /*
         -- demonsort
 
         -- diamondsort

@@ -48,6 +48,9 @@ button.remove {
 .point.active {
     fill: blue;
 }
+.point.placed {
+    fill: black
+}
 
 button {
     background: #cb4e4e;

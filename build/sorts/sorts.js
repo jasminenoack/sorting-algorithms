@@ -20,6 +20,8 @@ var Sorts;
             this.ordered = true;
             this.comparisons = 0;
             this.swaps = 0;
+            this.placed = [];
+            this.shadow = [];
             this.length = board.length;
             this.baseNode = 0;
             this.comparisonNode = 1;
@@ -214,6 +216,7 @@ var Sorts;
                 this.baseNode = 0;
                 this.comparisonNode = 1;
                 if (this.skipSorted) {
+                    this.placed.push(this.end);
                     this.end--;
                     if (this.end === 0) {
                         this.done = true;
@@ -269,7 +272,7 @@ var Sorts;
 
         -- Burst Sort
 
-         -- caresian tree sort
+        -- caresian tree sort
 
         -- cascade merge sort
 
@@ -291,6 +294,7 @@ var Sorts;
         Cocktail.prototype.setUpNext = function () {
             if (this.direction) {
                 if (this.comparisonNode === this.end) {
+                    this.placed.push(this.end);
                     this.end--;
                     this.baseNode--;
                     this.comparisonNode--;
@@ -303,6 +307,7 @@ var Sorts;
             }
             else {
                 if (this.baseNode === this.start) {
+                    this.placed.push(this.start);
                     this.direction = 1;
                     this.start++;
                     this.baseNode++;
@@ -360,9 +365,16 @@ var Sorts;
          -- Counting sort
 
         -- cube sort
-
-        cycle
-
+    */
+    var Cycle = (function (_super) {
+        __extends(Cycle, _super);
+        function Cycle() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return Cycle;
+    }(BaseSort));
+    Sorts.Cycle = Cycle;
+    /*
         -- demonsort
 
         -- diamondsort

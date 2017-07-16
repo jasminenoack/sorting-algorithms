@@ -80,10 +80,16 @@ namespace script {
         point.setAttribute('cy', yCenter + '')
     }
 
-    function setCurrentNodes(currentNodes, pointElements) {
+    function setCurrentNodes(currentNodes, pointElements, sort) {
         currentNodes.forEach(function (index) {
             pointElements[index].classList.add("active")
         })
+        let placed = sort.placed
+        if (placed.length) {
+            for (let i = 0; i < placed.length; i++) {
+                pointElements[placed[i]].classList.add("placed")
+            }
+        }
     }
 
     function removeCurrentNodes(currentNodes, pointElements) {
@@ -131,7 +137,7 @@ namespace script {
                 reRenderPoint(pointElements, board, point)
             })
             currentNodes = sort.currentNodes()
-            setCurrentNodes(currentNodes, pointElements)
+            setCurrentNodes(currentNodes, pointElements, sort)
             boardElement.closest(
                 '.wrapper'
             ).getElementsByClassName(

@@ -60,158 +60,25 @@ var Sorts;
         };
         return BaseSort;
     }());
-    var Bubble = (function (_super) {
-        __extends(Bubble, _super);
-        function Bubble(board) {
-            var _this = _super.call(this, board) || this;
-            _this.ordered = true;
-            _this.skipSorted = false;
-            _this.shortCircuit = true;
-            _this.maxRounds = _this.length;
-            return _this;
-        }
-        Bubble.prototype.setUpNext = function () {
-            if (this.comparisonNode == this.end) {
-                this.maxRounds--;
-                if (this.maxRounds === 0) {
-                    this.done = true;
-                }
-                if (this.ordered && this.shortCircuit) {
-                    this.done = true;
-                }
-                else {
-                    this.ordered = true;
-                }
-                this.baseNode = 0;
-                this.comparisonNode = 1;
-                if (this.skipSorted) {
-                    this.end--;
-                    if (this.end === 0) {
-                        this.done = true;
-                    }
-                }
-            }
-            else {
-                this.baseNode++;
-                this.comparisonNode++;
-            }
-        };
-        return Bubble;
-    }(BaseSort));
-    Bubble.title = "Bubble(Short Circuit)";
-    Sorts.Bubble = Bubble;
-    var BubbleNonOptimized = (function (_super) {
-        __extends(BubbleNonOptimized, _super);
-        function BubbleNonOptimized() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.shortCircuit = false;
-            return _this;
-        }
-        return BubbleNonOptimized;
-    }(Bubble));
-    BubbleNonOptimized.title = 'Bubble Sort';
-    Sorts.BubbleNonOptimized = BubbleNonOptimized;
-    var BubbleSkipsSorted = (function (_super) {
-        __extends(BubbleSkipsSorted, _super);
-        function BubbleSkipsSorted() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.ordered = true;
-            _this.skipSorted = true;
-            return _this;
-        }
-        return BubbleSkipsSorted;
-    }(Bubble));
-    BubbleSkipsSorted.title = "Bubble(Short Circuit & Skip Sorted)";
-    Sorts.BubbleSkipsSorted = BubbleSkipsSorted;
-    var BubbleSkipNoShortCircuit = (function (_super) {
-        __extends(BubbleSkipNoShortCircuit, _super);
-        function BubbleSkipNoShortCircuit() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.skipSorted = true;
-            _this.shortCircuit = false;
-            return _this;
-        }
-        return BubbleSkipNoShortCircuit;
-    }(Bubble));
-    BubbleSkipNoShortCircuit.title = "Bubble(Skip Sorted)";
-    Sorts.BubbleSkipNoShortCircuit = BubbleSkipNoShortCircuit;
-    var Cocktail = (function (_super) {
-        __extends(Cocktail, _super);
-        function Cocktail(board) {
-            var _this = _super.call(this, board) || this;
-            _this.board = board;
-            // is there a way to respect sorted sections?
-            _this.direction = 1;
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            _this.start = 0;
-            _this.end = _this.length - 1;
-            return _this;
-        }
-        Cocktail.prototype.setUpNext = function () {
-            if (this.direction) {
-                if (this.comparisonNode === this.end) {
-                    this.end--;
-                    this.baseNode--;
-                    this.comparisonNode--;
-                    this.direction = 0;
-                }
-                else {
-                    this.baseNode++;
-                    this.comparisonNode++;
-                }
-            }
-            else {
-                if (this.baseNode === this.start) {
-                    this.direction = 1;
-                    this.start++;
-                    this.baseNode++;
-                    this.comparisonNode++;
-                }
-                else {
-                    this.baseNode--;
-                    this.comparisonNode--;
-                }
-            }
-            if (!(this.start < this.end)) {
-                this.done = true;
-            }
-        };
-        return Cocktail;
-    }(BaseSort));
-    Cocktail.title = "Cocktail Sort";
-    Sorts.Cocktail = Cocktail;
-    var Comb = (function (_super) {
-        __extends(Comb, _super);
-        function Comb(board) {
-            var _this = _super.call(this, board) || this;
-            _this.board = board;
-            _this.shrink = 1.3;
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            _this.gap = Math.floor(_this.length / 1.3);
-            _this.comparisonNode = 0 + _this.gap;
-            return _this;
-        }
-        Comb.prototype.setUpNext = function () {
-            this.baseNode++;
-            this.comparisonNode++;
-            if (this.comparisonNode >= this.length) {
-                if (this.ordered === true && this.gap === 1) {
-                    this.done = true;
-                }
-                this.gap = Math.max(Math.floor(this.gap / 1.3), 1);
-                this.baseNode = 0;
-                this.comparisonNode = this.gap;
-                this.ordered = true;
-            }
-        };
-        return Comb;
-    }(BaseSort));
-    // test different shrinks
-    // test ceil over floor
-    Comb.title = "Comb Sort";
-    Sorts.Comb = Comb;
+    /*
+        -- Abacus sort
+
+        -- American Flag Sort
+
+        -- Batcher Odd Even Merge Sort
+
+        -- Bead Sort
+
+        -- Binary Insertion Sort
+
+        -- Binary Tree Sort
+
+        -- Bitonic sorter
+
+        -- Block Sort
+
+        -- Block Merge Sort
+    */
     var Bogo = (function (_super) {
         __extends(Bogo, _super);
         function Bogo(board) {
@@ -315,6 +182,315 @@ var Sorts;
     }(BogoSingle));
     BogoSingleCompare.title = 'Bogo(Compare & Single Swap)';
     Sorts.BogoSingleCompare = BogoSingleCompare;
+    /*
+        -- fast bogo sort (https://xkcd.com/1185/)
+
+        -- Bogobogo sort
+
+        -- bozo sort
+    */
+    var Bubble = (function (_super) {
+        __extends(Bubble, _super);
+        function Bubble(board) {
+            var _this = _super.call(this, board) || this;
+            _this.ordered = true;
+            _this.skipSorted = false;
+            _this.shortCircuit = true;
+            _this.maxRounds = _this.length;
+            return _this;
+        }
+        Bubble.prototype.setUpNext = function () {
+            if (this.comparisonNode == this.end) {
+                this.maxRounds--;
+                if (this.maxRounds === 0) {
+                    this.done = true;
+                }
+                if (this.ordered && this.shortCircuit) {
+                    this.done = true;
+                }
+                else {
+                    this.ordered = true;
+                }
+                this.baseNode = 0;
+                this.comparisonNode = 1;
+                if (this.skipSorted) {
+                    this.end--;
+                    if (this.end === 0) {
+                        this.done = true;
+                    }
+                }
+            }
+            else {
+                this.baseNode++;
+                this.comparisonNode++;
+            }
+        };
+        return Bubble;
+    }(BaseSort));
+    Bubble.title = "Bubble(Short Circuit)";
+    Sorts.Bubble = Bubble;
+    var BubbleNonOptimized = (function (_super) {
+        __extends(BubbleNonOptimized, _super);
+        function BubbleNonOptimized() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.shortCircuit = false;
+            return _this;
+        }
+        return BubbleNonOptimized;
+    }(Bubble));
+    BubbleNonOptimized.title = 'Bubble Sort';
+    Sorts.BubbleNonOptimized = BubbleNonOptimized;
+    var BubbleSkipsSorted = (function (_super) {
+        __extends(BubbleSkipsSorted, _super);
+        function BubbleSkipsSorted() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.ordered = true;
+            _this.skipSorted = true;
+            return _this;
+        }
+        return BubbleSkipsSorted;
+    }(Bubble));
+    BubbleSkipsSorted.title = "Bubble(Short Circuit & Skip Sorted)";
+    Sorts.BubbleSkipsSorted = BubbleSkipsSorted;
+    var BubbleSkipNoShortCircuit = (function (_super) {
+        __extends(BubbleSkipNoShortCircuit, _super);
+        function BubbleSkipNoShortCircuit() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.skipSorted = true;
+            _this.shortCircuit = false;
+            return _this;
+        }
+        return BubbleSkipNoShortCircuit;
+    }(Bubble));
+    BubbleSkipNoShortCircuit.title = "Bubble(Skip Sorted)";
+    Sorts.BubbleSkipNoShortCircuit = BubbleSkipNoShortCircuit;
+    /*
+        -- Bucket Sort
+
+        -- Burst Sort
+
+         -- caresian tree sort
+
+        -- cascade merge sort
+
+        -- cata sort
+    */
+    var Cocktail = (function (_super) {
+        __extends(Cocktail, _super);
+        function Cocktail(board) {
+            var _this = _super.call(this, board) || this;
+            _this.board = board;
+            // is there a way to respect sorted sections?
+            _this.direction = 1;
+            // we start this at 1, because we want to stop at 1, when we
+            // come back down
+            _this.start = 0;
+            _this.end = _this.length - 1;
+            return _this;
+        }
+        Cocktail.prototype.setUpNext = function () {
+            if (this.direction) {
+                if (this.comparisonNode === this.end) {
+                    this.end--;
+                    this.baseNode--;
+                    this.comparisonNode--;
+                    this.direction = 0;
+                }
+                else {
+                    this.baseNode++;
+                    this.comparisonNode++;
+                }
+            }
+            else {
+                if (this.baseNode === this.start) {
+                    this.direction = 1;
+                    this.start++;
+                    this.baseNode++;
+                    this.comparisonNode++;
+                }
+                else {
+                    this.baseNode--;
+                    this.comparisonNode--;
+                }
+            }
+            if (!(this.start < this.end)) {
+                this.done = true;
+            }
+        };
+        return Cocktail;
+    }(BaseSort));
+    Cocktail.title = "Cocktail Sort";
+    Sorts.Cocktail = Cocktail;
+    var Comb = (function (_super) {
+        __extends(Comb, _super);
+        function Comb(board) {
+            var _this = _super.call(this, board) || this;
+            _this.board = board;
+            _this.shrink = 1.3;
+            // we start this at 1, because we want to stop at 1, when we
+            // come back down
+            _this.gap = Math.floor(_this.length / 1.3);
+            _this.comparisonNode = 0 + _this.gap;
+            return _this;
+        }
+        Comb.prototype.setUpNext = function () {
+            this.baseNode++;
+            this.comparisonNode++;
+            if (this.comparisonNode >= this.length) {
+                if (this.ordered === true && this.gap === 1) {
+                    this.done = true;
+                }
+                this.gap = Math.max(Math.floor(this.gap / 1.3), 1);
+                this.baseNode = 0;
+                this.comparisonNode = this.gap;
+                this.ordered = true;
+            }
+        };
+        return Comb;
+    }(BaseSort));
+    // test different shrinks
+    // test ceil over floor
+    Comb.title = "Comb Sort";
+    Sorts.Comb = Comb;
+    /*
+        -- committee sort
+
+        -- Conway sort
+
+         -- Counting sort
+
+        -- cube sort
+
+        cycle
+
+        -- demonsort
+
+        -- diamondsort
+
+        -- dropsort
+
+        -- flash sort
+
+        -- Franceschini-Muthukrishnan-Pătrașcu algorithm
+
+        gnome
+
+        -- gravity sort
+
+        -- half hearted merge sort (https://xkcd.com/1185/)
+
+        -- han's algorithm
+
+        -- hanoi sort
+
+        -- heap sort
+
+        -- Insertion sort
+
+        -- intelligent design sort
+
+        -- internet sort
+
+        -- Introsort
+
+        -- jingle sort
+
+        -- job interview quicksort (https://xkcd.com/1185/)
+
+        -- Library sort
+
+        -- merge sort
+
+        -- 3-way merge sort
+
+        -- miracle sort
+
+        odd even
+
+        -- oscillating merge sort
+
+        -- Pairwise Sorting Network
+
+        -- Pancake sorting
+
+        -- panic sort (https://xkcd.com/1185/)
+
+        -- patience sorting
+
+        -- permutation sort
+
+        -- pigeonhole sort
+
+        -- polyphase merge sort
+
+        -- postman sort
+
+        -- proxmap sort
+
+        -- radix sort (lsd, msd)
+
+        -- rolling ball sort
+
+        -- quantum bogo sort
+
+        quick sort(2, 3)
+
+        -- quora sort
+
+        -- sample sort
+
+        selection (base, track multiple)
+
+        -- shatter sort
+
+        -- shell sort
+
+        -- simple pancake sort
+
+        -- ska sort
+
+        -- slow sort
+
+        -- sleep sort
+
+        smooth
+
+        -- solar bitflip
+
+        -- sorting networks
+
+        -- Spaghetti sort(poll)
+
+        -- splay sort
+
+        -- spread sort
+
+        -- stack sort
+
+        -- stalin sort
+
+        stooge
+
+        -- strand sort
+
+        -- stupid sort
+
+        -- tag sort
+
+        -- throups algorithm
+
+        -- tim sort
+
+        -- topological sorting
+
+        -- tournament sort
+
+        -- tree sort
+
+        -- unshuffle sort
+
+        -- weak heap sort
+    */
     Sorts.sortList = [
         Bogo,
         BogoSingle,

@@ -125,7 +125,7 @@ var script;
         return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 5);
     }
     function getTextContent(sort) {
-        return "Steps: " + sort.steps + ". Comparisons: " + sort.comparisons + ". Moves: " + sort.swaps + ".";
+        return "<div>\n            <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n            <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n            <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n            <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n            <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n            <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n        </div>";
     }
     function step() {
         var _loop_1 = function (i) {
@@ -143,7 +143,7 @@ var script;
             });
             currentNodes = sort.currentNodes();
             setCurrentNodes(currentNodes, pointElements, sort);
-            boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].textContent = getTextContent(sort);
+            boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].innerHTML = getTextContent(sort);
             removeShadow(boardElement);
             renderShadow(sort, board, boardElement);
         };
@@ -188,7 +188,7 @@ var script;
         $header.textContent = Sort.title;
         $wrapper.appendChild($header);
         var $stepCount = document.createElement('span');
-        $stepCount.textContent = getTextContent(sort);
+        $stepCount.innerHTML = getTextContent(sort);
         $stepCount.className = 'step-count';
         $wrapper.appendChild($stepCount);
         var $button = document.createElement('button');

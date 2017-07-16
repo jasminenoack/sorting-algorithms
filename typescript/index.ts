@@ -150,7 +150,14 @@ namespace script {
     }
 
     function getTextContent (sort) {
-        return `Steps: ${sort.steps}. Comparisons: ${sort.comparisons}. Moves: ${sort.swaps}.`
+        return `<div>
+            <span class="nowrap">Order Type: ${sort.board.shuffle.title}.</span>
+            <span class="nowrap">Value Type: ${sort.board.valueType.title}.</span>
+            <span class="nowrap">Point Count: ${sort.board.size.label}.</span>
+            <span class="nowrap">Steps: ${sort.steps}.</span>
+            <span class="nowrap">Comparisons: ${sort.comparisons}.</span>
+            <span class="nowrap">Moves: ${sort.swaps}.</span>
+        </div>`
     }
 
     function step () {
@@ -175,7 +182,7 @@ namespace script {
                 '.wrapper'
             ).getElementsByClassName(
                 'step-count'
-            )[0].textContent = getTextContent(sort)
+            )[0].innerHTML = getTextContent(sort)
 
             removeShadow(boardElement)
             renderShadow(sort, board, boardElement)
@@ -232,7 +239,7 @@ namespace script {
         $header.textContent = Sort.title
         $wrapper.appendChild($header)
         let $stepCount = document.createElement('span')
-        $stepCount.textContent = getTextContent(sort)
+        $stepCount.innerHTML = getTextContent(sort)
         $stepCount.className = 'step-count'
         $wrapper.appendChild($stepCount)
         let $button = document.createElement('button')

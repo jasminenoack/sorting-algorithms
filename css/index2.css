@@ -109,3 +109,11 @@ h1 {
     white-space: nowrap;
     overflow: hidden;
 }
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.controls {
+    padding: 5px;
+}

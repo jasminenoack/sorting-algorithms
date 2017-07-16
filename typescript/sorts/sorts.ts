@@ -8,14 +8,20 @@ namespace Sorts {
         ordered: boolean = true
         comparisons: number = 0
         swaps: number = 0
+        length: number
+        end: number
 
         constructor(public board: Boards.Board) {
             this.length = board.length
             this.baseNode = 0
             this.comparisonNode = 1
+            this.end = this.length - 1
         }
 
         currentNodes() {
+            if (this.done) {
+                return []
+            }
             return [this.baseNode, this.comparisonNode]
         }
 
@@ -49,26 +55,58 @@ namespace Sorts {
     }
 
     export class Bubble extends BaseSort {
-        // currently using short circuit should do one without
-        // try one that skips the ones it already looked at.
         ordered: boolean = true
+        skipSorted: boolean = false
+        shortCircuit: boolean = true
+
+        constructor(board) {
+            super(board)
+            this.maxRounds = this.length
+        }
 
         setUpNext() {
-            this.baseNode++
-            this.comparisonNode++
-
-            if (this.comparisonNode == this.length) {
-                if (this.ordered) {
+            if (this.comparisonNode == this.end) {
+                this.maxRounds--
+                if (this.maxRounds === 0) {
+                    this.done = true
+                }
+                if (this.ordered && this.shortCircuit) {
                     this.done = true
                 } else {
                     this.ordered = true
                 }
                 this.baseNode = 0
                 this.comparisonNode = 1
+                if (this.skipSorted) {
+                    this.end--
+                    if (this.end === 0) {
+                        this.done = true
+                    }
+                }
+            } else {
+                this.baseNode++
+                this.comparisonNode++
             }
         }
     }
-    Bubble.title = "Bubble Sort"
+    Bubble.title = "Bubble(Short Circuit)"
+
+    export class BubbleNonOptimized extends Bubble {
+        shortCircuit: boolean = false
+    }
+    BubbleNonOptimized.title = 'Bubble Sort'
+
+    export class BubbleSkipsSorted extends Bubble {
+        ordered: boolean = true
+        skipSorted: boolean = true
+    }
+    BubbleSkipsSorted.title = "Bubble(Short Circuit & Skip Sorted)"
+
+    export class BubbleSkipNoShortCircuit extends Bubble {
+        skipSorted: boolean = true
+        shortCircuit: boolean = false
+    }
+    BubbleSkipNoShortCircuit.title = "Bubble(Skip Sorted)"
 
     export class Cocktail extends BaseSort {
         // is there a way to respect sorted sections?
@@ -142,7 +180,10 @@ namespace Sorts {
     Comb.title = "Comb Sort"
 
     export let sortList = [
+        BubbleNonOptimized,
         Bubble,
+        BubbleSkipNoShortCircuit,
+        BubbleSkipsSorted,
         Cocktail,
         Comb
     ]

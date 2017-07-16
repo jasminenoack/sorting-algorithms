@@ -22,8 +22,12 @@ var Sorts;
             this.length = board.length;
             this.baseNode = 0;
             this.comparisonNode = 1;
+            this.end = this.length - 1;
         }
         BaseSort.prototype.currentNodes = function () {
+            if (this.done) {
+                return [];
+            }
             return [this.baseNode, this.comparisonNode];
         };
         BaseSort.prototype.nodesInOrder = function (values) {
@@ -55,18 +59,21 @@ var Sorts;
     }());
     var Bubble = (function (_super) {
         __extends(Bubble, _super);
-        function Bubble() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            // currently using short circuit should do one without
-            // try one that skips the ones it already looked at.
+        function Bubble(board) {
+            var _this = _super.call(this, board) || this;
             _this.ordered = true;
+            _this.skipSorted = false;
+            _this.shortCircuit = true;
+            _this.maxRounds = _this.length;
             return _this;
         }
         Bubble.prototype.setUpNext = function () {
-            this.baseNode++;
-            this.comparisonNode++;
-            if (this.comparisonNode == this.length) {
-                if (this.ordered) {
+            if (this.comparisonNode == this.end) {
+                this.maxRounds--;
+                if (this.maxRounds === 0) {
+                    this.done = true;
+                }
+                if (this.ordered && this.shortCircuit) {
                     this.done = true;
                 }
                 else {
@@ -74,12 +81,57 @@ var Sorts;
                 }
                 this.baseNode = 0;
                 this.comparisonNode = 1;
+                if (this.skipSorted) {
+                    this.end--;
+                    if (this.end === 0) {
+                        this.done = true;
+                    }
+                }
+            }
+            else {
+                this.baseNode++;
+                this.comparisonNode++;
             }
         };
         return Bubble;
     }(BaseSort));
     Sorts.Bubble = Bubble;
-    Bubble.title = "Bubble Sort";
+    Bubble.title = "Bubble(Short Circuit)";
+    var BubbleNonOptimized = (function (_super) {
+        __extends(BubbleNonOptimized, _super);
+        function BubbleNonOptimized() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.shortCircuit = false;
+            return _this;
+        }
+        return BubbleNonOptimized;
+    }(Bubble));
+    Sorts.BubbleNonOptimized = BubbleNonOptimized;
+    BubbleNonOptimized.title = 'Bubble Sort';
+    var BubbleSkipsSorted = (function (_super) {
+        __extends(BubbleSkipsSorted, _super);
+        function BubbleSkipsSorted() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.ordered = true;
+            _this.skipSorted = true;
+            return _this;
+        }
+        return BubbleSkipsSorted;
+    }(Bubble));
+    Sorts.BubbleSkipsSorted = BubbleSkipsSorted;
+    BubbleSkipsSorted.title = "Bubble(Short Circuit & Skip Sorted)";
+    var BubbleSkipNoShortCircuit = (function (_super) {
+        __extends(BubbleSkipNoShortCircuit, _super);
+        function BubbleSkipNoShortCircuit() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.skipSorted = true;
+            _this.shortCircuit = false;
+            return _this;
+        }
+        return BubbleSkipNoShortCircuit;
+    }(Bubble));
+    Sorts.BubbleSkipNoShortCircuit = BubbleSkipNoShortCircuit;
+    BubbleSkipNoShortCircuit.title = "Bubble(Skip Sorted)";
     var Cocktail = (function (_super) {
         __extends(Cocktail, _super);
         function Cocktail(board) {
@@ -158,7 +210,10 @@ var Sorts;
     Sorts.Comb = Comb;
     Comb.title = "Comb Sort";
     Sorts.sortList = [
+        BubbleNonOptimized,
         Bubble,
+        BubbleSkipNoShortCircuit,
+        BubbleSkipsSorted,
         Cocktail,
         Comb
     ];

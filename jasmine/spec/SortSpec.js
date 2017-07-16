@@ -22,7 +22,7 @@ describe("Sorts", function() {
             })
 
             it("it has a title", () => {
-                expect(Sorts.Bubble.title).toEqual('Bubble Sort')
+                expect(Sorts.Bubble.title).toEqual('Bubble(Short Circuit)')
             })
 
             it("it has a base node", () => {
@@ -72,6 +72,7 @@ describe("Sorts", function() {
             })
 
             it("it changes to the next nodes", () => {
+                sort.ordered = false
                 expect(sort.currentNodes()).toEqual([0, 1])
                 sort.setUpNext()
                 expect(sort.currentNodes()).toEqual([1, 2])
@@ -174,6 +175,190 @@ describe("Sorts", function() {
                 expect(sort.done).toEqual(true)
                 expect(sort.comparisons).toEqual(18)
                 expect(sort.swaps).toEqual(1)
+            })
+        })
+    })
+
+    describe("bubble non-optimized", () => {
+        beforeEach(function() {
+            length = 10
+            size = Sizes.xXLarge
+            board = new Boards.Board(size)
+            sort = new Sorts.BubbleNonOptimized(board)
+        });
+
+        describe("create", function () {
+            it("it has a title", () => {
+                expect(Sorts.BubbleNonOptimized.title).toEqual('Bubble Sort')
+            })
+        })
+
+        describe("utils", () => {
+            it("it changes to done if reseting with ordered", () => {
+                let values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                sort.nodesInOrder(values)
+                sort.setUpNext()
+                sort.nodesInOrder(values)
+                sort.setUpNext()
+                sort.nodesInOrder(values)
+                sort.setUpNext()
+                sort.nodesInOrder(values)
+                sort.setUpNext()
+                sort.nodesInOrder(values)
+                sort.setUpNext()
+                sort.nodesInOrder(values)
+                sort.setUpNext()
+                sort.nodesInOrder(values)
+                sort.setUpNext()
+                sort.nodesInOrder(values)
+                sort.setUpNext()
+                sort.nodesInOrder(values)
+                expect(sort.ordered).toBeTruthy()
+                sort.setUpNext()
+                expect(sort.done).toEqual(false)
+                expect(sort.swaps).toEqual(0)
+                expect(sort.comparisons).toEqual(9)
+            })
+
+        })
+    })
+
+    describe("bubble skip sorted", () => {
+        beforeEach(function() {
+            length = 10
+            size = Sizes.xXLarge
+            board = new Boards.Board(size)
+            sort = new Sorts.BubbleSkipsSorted(board)
+        });
+
+        describe("create", function () {
+            it("it has a title", () => {
+                expect(Sorts.BubbleSkipsSorted.title).toEqual('Bubble(Short Circuit & Skip Sorted)')
+            })
+        })
+
+        describe("utils", () => {
+            it("skips sorted nodes", () => {
+                board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9])
+                expect(sort.next(board)).toEqual([0, 1])
+                expect(sort.ordered).toBeFalsy()
+                expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+                expect(sort.next(board)).toEqual([1, 2])
+                expect(sort.next(board)).toEqual([2, 3])
+                expect(sort.next(board)).toEqual([3, 4])
+                expect(sort.next(board)).toEqual([4, 5])
+                expect(sort.next(board)).toEqual([5, 6])
+                expect(sort.next(board)).toEqual([6, 7])
+                expect(sort.next(board)).toEqual([7, 8])
+                expect(sort.ordered).toEqual(false)
+                expect(sort.done).toEqual(false)
+                expect(sort.next(board)).toEqual([8, 9])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(false)
+                expect(sort.next(board)).toEqual([0, 1])
+                expect(sort.next(board)).toEqual([1, 2])
+                expect(sort.next(board)).toEqual([2, 3])
+                expect(sort.next(board)).toEqual([3, 4])
+                expect(sort.next(board)).toEqual([4, 5])
+                expect(sort.next(board)).toEqual([5, 6])
+                expect(sort.next(board)).toEqual([6, 7])
+                expect(sort.next(board)).toEqual([7, 8])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(true)
+                expect(sort.comparisons).toEqual(17)
+                expect(sort.swaps).toEqual(1)
+            })
+
+            it("short circuits", () => {
+                board.setPoints([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+                expect(sort.next(board)).toEqual([0, 1])
+                expect(sort.next(board)).toEqual([1, 2])
+                expect(sort.next(board)).toEqual([2, 3])
+                expect(sort.next(board)).toEqual([3, 4])
+                expect(sort.next(board)).toEqual([4, 5])
+                expect(sort.next(board)).toEqual([5, 6])
+                expect(sort.next(board)).toEqual([6, 7])
+                expect(sort.next(board)).toEqual([7, 8])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(false)
+                expect(sort.next(board)).toEqual([8, 9])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(true)
+            })
+        })
+    })
+
+    describe("bubble skip sorted no short circuit", () => {
+        beforeEach(function() {
+            length = 10
+            size = Sizes.xXLarge
+            board = new Boards.Board(size)
+            sort = new Sorts.BubbleSkipNoShortCircuit(board)
+        });
+
+        describe("create", function () {
+            it("it has a title", () => {
+                expect(Sorts.BubbleSkipNoShortCircuit.title).toEqual('Bubble(Skip Sorted)')
+            })
+        })
+
+        describe("utils", () => {
+            it("skips sorted nodes", () => {
+                board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9])
+                expect(sort.next(board)).toEqual([0, 1])
+                expect(sort.next(board)).toEqual([1, 2])
+                expect(sort.next(board)).toEqual([2, 3])
+                expect(sort.next(board)).toEqual([3, 4])
+                expect(sort.next(board)).toEqual([4, 5])
+                expect(sort.next(board)).toEqual([5, 6])
+                expect(sort.next(board)).toEqual([6, 7])
+                expect(sort.next(board)).toEqual([7, 8])
+                expect(sort.ordered).toEqual(false)
+                expect(sort.done).toEqual(false)
+                expect(sort.next(board)).toEqual([8, 9])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(false)
+                expect(sort.next(board)).toEqual([0, 1])
+                expect(sort.next(board)).toEqual([1, 2])
+                expect(sort.next(board)).toEqual([2, 3])
+                expect(sort.next(board)).toEqual([3, 4])
+                expect(sort.next(board)).toEqual([4, 5])
+                expect(sort.next(board)).toEqual([5, 6])
+                expect(sort.next(board)).toEqual([6, 7])
+                expect(sort.next(board)).toEqual([7, 8])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(false)
+                expect(sort.comparisons).toEqual(17)
+                expect(sort.swaps).toEqual(1)
+            })
+
+            it("skips short circuits", () => {
+                board.setPoints([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+                expect(sort.next(board)).toEqual([0, 1])
+                expect(sort.next(board)).toEqual([1, 2])
+                expect(sort.next(board)).toEqual([2, 3])
+                expect(sort.next(board)).toEqual([3, 4])
+                expect(sort.next(board)).toEqual([4, 5])
+                expect(sort.next(board)).toEqual([5, 6])
+                expect(sort.next(board)).toEqual([6, 7])
+                expect(sort.next(board)).toEqual([7, 8])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(false)
+                expect(sort.next(board)).toEqual([8, 9])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(false)
+                expect(sort.next(board)).toEqual([0, 1])
+                expect(sort.next(board)).toEqual([1, 2])
+                expect(sort.next(board)).toEqual([2, 3])
+                expect(sort.next(board)).toEqual([3, 4])
+                expect(sort.next(board)).toEqual([4, 5])
+                expect(sort.next(board)).toEqual([5, 6])
+                expect(sort.next(board)).toEqual([6, 7])
+                expect(sort.next(board)).toEqual([7, 8])
+                expect(sort.ordered).toEqual(true)
+                expect(sort.done).toEqual(false)
+                expect(sort.comparisons).toEqual(17)
+                expect(sort.swaps).toEqual(0)
             })
         })
     })

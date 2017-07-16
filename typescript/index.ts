@@ -63,7 +63,7 @@ namespace script {
             board: board,
             sort: new Sort(board)
         })
-        createBoard(boardList.length - 1)
+        createBoard(boardList.length - 1, Sort)
     })
 
     function reRenderPoint(pointElements, board, index) {
@@ -75,8 +75,12 @@ namespace script {
         let radius = Math.max(Math.min(
             boxHeight / heightSpread / 2 - 2, boxWidth / widthSpread / 2 - 2
         ), 5)
-        let yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight
-        let xCenter = (index) / widthSpread * boxWidth
+
+        let [xCenter, yCenter] = centers(
+                heightSpread, widthSpread, boxHeight, boxWidth, value,
+                index, valueMin
+        )
+
         let point = pointElements[index]
         point.setAttribute('cx', xCenter + '')
         point.setAttribute('cy', yCenter + '')
@@ -92,6 +96,18 @@ namespace script {
         currentNodes.forEach(function (index) {
             pointElements[index].classList.remove("active")
         })
+    }
+
+    function centers(heightSpread, widthSpread, boxHeight, boxWidth, value,
+                     index, valueMin) {
+        let yCenter
+        if (heightSpread) {
+            yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight
+        } else {
+            yCenter = boxHeight / 2
+        }
+        let xCenter = (index) / widthSpread * boxWidth
+        return [xCenter, yCenter]
     }
 
     function step () {
@@ -123,7 +139,7 @@ namespace script {
     let $step = document.getElementById("step")
     $step.addEventListener('click', step)
 
-    function createBoard (index) {
+    function createBoard (index, Sort) {
         let board = boardList[index].board
         let sort = boardList[index].sort
         let values = board.values()
@@ -137,8 +153,7 @@ namespace script {
 
         let boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
         boardElement.setAttribute('class', 'board')
-        boardElement.style.height = `${boxHeight + 40}px`
-        boardElement.style.width = `${boxWidth + 40}px`
+        boardElement.setAttribute('viewBox', `0 0 ${boxWidth+ 40} ${boxHeight + 40}`)
 
         let gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g')
         gElement.setAttribute('transform', `translate(${20}, ${20})`)
@@ -149,8 +164,10 @@ namespace script {
         for (let i = 0; i < values.length; i++) {
             let value = values[i]
 
-            let yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight
-            let xCenter = (i) / widthSpread * boxWidth
+            let [xCenter, yCenter] = centers(
+                    heightSpread, widthSpread, boxHeight, boxWidth, value,
+                    i, valueMin
+            )
 
             let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
             circle.setAttribute('cx', xCenter + '')
@@ -168,7 +185,7 @@ namespace script {
         let $wrapper = document.createElement('div')
         $wrapper.className = 'wrapper'
         let $header = document.createElement('h1')
-        $header.textContent = sort.title
+        $header.textContent = Sort.title
         $wrapper.appendChild($header)
         let $stepCount = document.createElement('span')
         $stepCount.textContent = `comparisons: ${sort.comparisons}. movements: ${sort.swaps}.`

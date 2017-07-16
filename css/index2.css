@@ -1,3 +1,7 @@
+body {
+    margin: 0px;
+}
+
 .point {
     fill: orange;
     position: absolute;
@@ -11,13 +15,18 @@
     display: block;
     background: aliceblue;
     position: relative;
-    border: 1px solid black;
 }
 
 .wrapper {
     display: inline-block;
-    margin: 10px;
+    margin: 1vw;
     background: lightgrey;
+    width: 23vw;
+    min-width: 300px;
+}
+
+.board {
+    margin: 5px;
 }
 
 .point.active {

@@ -72,7 +72,7 @@ describe("Board", function() {
             expect(values).not.toEqual(ordered)
             // I don't know what this value should be. but this seems okay
             expect(values.differenceFromOrdered()).toBeGreaterThan(70)
-            expect(values.differenceFromOrdered()).toBeLessThan(170)
+            expect(values.differenceFromOrdered()).toBeLessThan(180)
         })
 
         it("creates a mostly sorted board", () => {

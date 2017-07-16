@@ -92,7 +92,7 @@ var script;
         return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 5);
     }
     function getTextContent(sort) {
-        return "comparisons: " + sort.comparisons + ". movements: " + sort.swaps + ".";
+        return "Steps: " + sort.steps + ". Comparisons: " + sort.comparisons + ". Moves: " + sort.swaps + ".";
     }
     function step() {
         var _loop_1 = function (i) {

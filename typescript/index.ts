@@ -111,7 +111,7 @@ namespace script {
     }
 
     function getTextContent (sort) {
-        return `comparisons: ${sort.comparisons}. movements: ${sort.swaps}.`
+        return `Steps: ${sort.steps}. Comparisons: ${sort.comparisons}. Moves: ${sort.swaps}.`
     }
 
     function step () {

@@ -44,14 +44,20 @@ namespace Sizes {
         label: "10"
     }
 
+    export let fewFew = {
+        elemCount: 5,
+        label: '5'
+    }
+
     export const sizeList = [
-        Sizes.xXLarge,
-        Sizes.xLarge,
-        Sizes.large,
-        Sizes.medium,
-        Sizes.small,
-        Sizes.xSmall,
-        Sizes.xXSmall,
-        Sizes.manyMany
+        fewFew,
+        xXLarge,
+        xLarge,
+        large,
+        medium,
+        small,
+        xSmall,
+        xXSmall,
+        manyMany
     ]
 }

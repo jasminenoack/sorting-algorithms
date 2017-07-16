@@ -13,6 +13,7 @@ var Sorts;
     var BaseSort = (function () {
         function BaseSort(board) {
             this.board = board;
+            this.steps = 0;
             // used for sorts that short circuit
             this.done = false;
             // used for sorts that short circuit
@@ -24,6 +25,7 @@ var Sorts;
             this.comparisonNode = 1;
             this.end = this.length - 1;
         }
+        BaseSort.prototype.setUpNext = function () { };
         BaseSort.prototype.currentNodes = function () {
             if (this.done) {
                 return [];
@@ -47,6 +49,7 @@ var Sorts;
             if (this.done) {
                 return [];
             }
+            this.steps++;
             var currentNodes = this.currentNodes();
             var values = this.board.values();
             if (!this.nodesInOrder(values)) {
@@ -95,8 +98,8 @@ var Sorts;
         };
         return Bubble;
     }(BaseSort));
-    Sorts.Bubble = Bubble;
     Bubble.title = "Bubble(Short Circuit)";
+    Sorts.Bubble = Bubble;
     var BubbleNonOptimized = (function (_super) {
         __extends(BubbleNonOptimized, _super);
         function BubbleNonOptimized() {
@@ -106,8 +109,8 @@ var Sorts;
         }
         return BubbleNonOptimized;
     }(Bubble));
-    Sorts.BubbleNonOptimized = BubbleNonOptimized;
     BubbleNonOptimized.title = 'Bubble Sort';
+    Sorts.BubbleNonOptimized = BubbleNonOptimized;
     var BubbleSkipsSorted = (function (_super) {
         __extends(BubbleSkipsSorted, _super);
         function BubbleSkipsSorted() {
@@ -118,8 +121,8 @@ var Sorts;
         }
         return BubbleSkipsSorted;
     }(Bubble));
-    Sorts.BubbleSkipsSorted = BubbleSkipsSorted;
     BubbleSkipsSorted.title = "Bubble(Short Circuit & Skip Sorted)";
+    Sorts.BubbleSkipsSorted = BubbleSkipsSorted;
     var BubbleSkipNoShortCircuit = (function (_super) {
         __extends(BubbleSkipNoShortCircuit, _super);
         function BubbleSkipNoShortCircuit() {
@@ -130,8 +133,8 @@ var Sorts;
         }
         return BubbleSkipNoShortCircuit;
     }(Bubble));
-    Sorts.BubbleSkipNoShortCircuit = BubbleSkipNoShortCircuit;
     BubbleSkipNoShortCircuit.title = "Bubble(Skip Sorted)";
+    Sorts.BubbleSkipNoShortCircuit = BubbleSkipNoShortCircuit;
     var Cocktail = (function (_super) {
         __extends(Cocktail, _super);
         function Cocktail(board) {
@@ -176,15 +179,13 @@ var Sorts;
         };
         return Cocktail;
     }(BaseSort));
-    Sorts.Cocktail = Cocktail;
     Cocktail.title = "Cocktail Sort";
+    Sorts.Cocktail = Cocktail;
     var Comb = (function (_super) {
         __extends(Comb, _super);
         function Comb(board) {
             var _this = _super.call(this, board) || this;
             _this.board = board;
-            // test different shrinks
-            // test ceil over floor
             _this.shrink = 1.3;
             // we start this at 1, because we want to stop at 1, when we
             // come back down
@@ -207,9 +208,117 @@ var Sorts;
         };
         return Comb;
     }(BaseSort));
-    Sorts.Comb = Comb;
+    // test different shrinks
+    // test ceil over floor
     Comb.title = "Comb Sort";
+    Sorts.Comb = Comb;
+    var Bogo = (function (_super) {
+        __extends(Bogo, _super);
+        function Bogo(board) {
+            var _this = _super.call(this, board) || this;
+            _this.checkSorted();
+            return _this;
+        }
+        Bogo.prototype.currentNodes = function () {
+            if (!this.done) {
+                return Array.prototype.range(this.board.length);
+            }
+            else {
+                return [];
+            }
+        };
+        Bogo.prototype.checkSorted = function () {
+            var values = this.board.values();
+            if (values.sorted()) {
+                this.done = true;
+                return true;
+            }
+            return false;
+        };
+        Bogo.prototype.next = function () {
+            if (this.done) {
+                return [];
+            }
+            var currentNodes = this.currentNodes();
+            this.steps++;
+            var values = this.board.values();
+            var start = values.slice();
+            this.board.setPoints(values.shuffle());
+            var difference = 0;
+            for (var i = 0; i < values.length; i++) {
+                if (values[i] !== start[i]) {
+                    difference++;
+                }
+            }
+            this.swaps += difference / 2;
+            this.checkSorted();
+            return currentNodes;
+        };
+        return Bogo;
+    }(BaseSort));
+    Bogo.title = 'Bogo';
+    Sorts.Bogo = Bogo;
+    var BogoSingle = (function (_super) {
+        __extends(BogoSingle, _super);
+        function BogoSingle(board) {
+            var _this = _super.call(this, board) || this;
+            _this.checkSorted();
+            _this.setUpNext();
+            return _this;
+        }
+        BogoSingle.prototype.checkSorted = function () {
+            var values = this.board.values();
+            if (values.sorted()) {
+                this.done = true;
+                return true;
+            }
+            return false;
+        };
+        BogoSingle.prototype.nodesInOrder = function (values) {
+            // always swap
+            return false;
+        };
+        BogoSingle.prototype.setUpNext = function () {
+            var first = Math.floor(Math.random() * this.length);
+            var second = Math.floor(Math.random() * this.length);
+            while (first === second) {
+                second = Math.floor(Math.random() * this.length);
+            }
+            this.baseNode = Math.min(first, second);
+            this.comparisonNode = Math.max(first, second);
+        };
+        BogoSingle.prototype.next = function () {
+            var currentNodes = this.currentNodes();
+            _super.prototype.next.call(this);
+            this.checkSorted();
+            return currentNodes;
+        };
+        return BogoSingle;
+    }(BaseSort));
+    BogoSingle.title = "Bogo(Single Swap)";
+    Sorts.BogoSingle = BogoSingle;
+    var BogoSingleCompare = (function (_super) {
+        __extends(BogoSingleCompare, _super);
+        function BogoSingleCompare() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        BogoSingleCompare.prototype.nodesInOrder = function (values) {
+            // used to compare nodes
+            var inOrder = values[this.baseNode] <= values[this.comparisonNode];
+            if (!inOrder) {
+                this.ordered = false;
+            }
+            this.comparisons++;
+            return inOrder;
+        };
+        return BogoSingleCompare;
+    }(BogoSingle));
+    BogoSingleCompare.title = 'Bogo(Compare & Single Swap)';
+    Sorts.BogoSingleCompare = BogoSingleCompare;
     Sorts.sortList = [
+        Bogo,
+        BogoSingle,
+        BogoSingleCompare,
         BubbleNonOptimized,
         Bubble,
         BubbleSkipNoShortCircuit,

@@ -53,7 +53,6 @@ Array.prototype.kShuffle = function (k) {
         }
         if (insertPoint !== indexToInsert &&
             startingArray[indexToInsert] === this[indexToInsert]) {
-            // console.log(indexToInsert, insertPoint)
             var valueToInsert = this[indexToInsert];
             this.splice(indexToInsert, 1);
             this.splice(insertPoint, 0, valueToInsert);
@@ -69,4 +68,14 @@ Array.prototype.distribution = function () {
         dist[value] = (dist[value] || 0) + 1;
     });
     return dist;
+};
+Array.prototype.sorted = function () {
+    var values = this;
+    var ordered = true;
+    for (var i = 0; i < values.length - 1; i++) {
+        if (values[i] > values[i + 1]) {
+            return false;
+        }
+    }
+    return true;
 };

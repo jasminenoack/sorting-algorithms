@@ -5,6 +5,7 @@ interface Array<T> {
     differenceFromOrdered(): number;
     kShuffle(k: number): T[];
     distribution(): {};
+    sorted(): boolean;
 }
 
 Array.prototype.shuffle = function (): any[] {
@@ -66,7 +67,6 @@ Array.prototype.kShuffle = function(k): any[] {
             insertPoint !== indexToInsert &&
             startingArray[indexToInsert] === this[indexToInsert]
         ) {
-            // console.log(indexToInsert, insertPoint)
             let valueToInsert = this[indexToInsert]
             this.splice(indexToInsert, 1);
             this.splice(insertPoint, 0, valueToInsert);
@@ -83,4 +83,15 @@ Array.prototype.distribution = function (): {} {
         dist[value] = (dist[value] || 0) + 1
     })
     return dist
+}
+
+Array.prototype.sorted = function (): boolean {
+    let values = this
+    let ordered = true
+    for (let i = 0; i < values.length - 1; i++) {
+        if (values[i] > values[i + 1]) {
+            return false
+        }
+    }
+    return true
 }

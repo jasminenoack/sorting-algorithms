@@ -32,7 +32,12 @@ var Sizes;
         elemCount: 10,
         label: "10"
     };
+    Sizes.fewFew = {
+        elemCount: 5,
+        label: '5'
+    };
     Sizes.sizeList = [
+        Sizes.fewFew,
         Sizes.xXLarge,
         Sizes.xLarge,
         Sizes.large,

@@ -137,17 +137,19 @@ var script;
             var pointElements = boardElement.getElementsByClassName('point');
             currentNodes = sort.currentNodes();
             removeCurrentNodes(currentNodes, pointElements);
+            removeShadow(boardElement);
             var points = sort.next();
             // update all points
-            points = Array.prototype.range(sort.length);
-            points.forEach(function (point) {
-                reRenderPoint(pointElements, board, point);
-            });
-            currentNodes = sort.currentNodes();
-            setCurrentNodes(currentNodes, pointElements, sort);
-            boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].innerHTML = getTextContent(sort);
-            removeShadow(boardElement);
-            renderShadow(sort, board, boardElement);
+            if (!sort.done) {
+                points = Array.prototype.range(sort.length);
+                points.forEach(function (point) {
+                    reRenderPoint(pointElements, board, point);
+                });
+                currentNodes = sort.currentNodes();
+                setCurrentNodes(currentNodes, pointElements, sort);
+                boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].innerHTML = getTextContent(sort);
+                renderShadow(sort, board, boardElement);
+            }
         };
         for (var i = 0; i < boardList.length; i++) {
             _loop_1(i);

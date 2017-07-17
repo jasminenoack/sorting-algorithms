@@ -308,14 +308,14 @@ namespace Sorts {
     export class Comb extends BaseSort {
         // test different shrinks
         // test ceil over floor
-        static readonly title = "Comb Sort"
+        static title = "Comb Sort"
         gap: number
         shrink: number = 1.3
         constructor(public board: Boards.Board) {
             super(board)
             // we start this at 1, because we want to stop at 1, when we
             // come back down
-            this.gap = Math.floor(this.length / 1.3)
+            this.gap = Math.floor(this.length / this.shrink)
             this.comparisonNode = 0 + this.gap
         }
 
@@ -327,11 +327,47 @@ namespace Sorts {
                 if (this.ordered === true && this.gap === 1) {
                     this.done = true
                 }
-                this.gap = Math.max(Math.floor(this.gap / 1.3), 1)
+                this.gap = Math.max(Math.floor(this.gap / this.shrink), 1)
                 this.baseNode = 0
                 this.comparisonNode = this.gap
                 this.ordered = true
             }
+        }
+    }
+
+    export class CombSmallShrink extends Comb {
+        shrink = 1.1
+        static title = "Comb(Small Shrink: 1.1)"
+        constructor(public board: Boards.Board) {
+            super(board)
+            // we start this at 1, because we want to stop at 1, when we
+            // come back down
+            this.gap = Math.floor(this.length / this.shrink)
+            this.comparisonNode = 0 + this.gap
+        }
+    }
+
+    export class CombLargeShrink extends Comb {
+        shrink = 1.5
+        static title = "Comb(Large Shrink: 1.5)"
+        constructor(public board: Boards.Board) {
+            super(board)
+            // we start this at 1, because we want to stop at 1, when we
+            // come back down
+            this.gap = Math.floor(this.length / this.shrink)
+            this.comparisonNode = 0 + this.gap
+        }
+    }
+
+    export class CombEvenLarger extends Comb {
+        static title = "Comb(Shrink: 2.0)"
+        shrink = 2.0
+        constructor(public board: Boards.Board) {
+            super(board)
+            // we start this at 1, because we want to stop at 1, when we
+            // come back down
+            this.gap = Math.floor(this.length / this.shrink)
+            this.comparisonNode = 0 + this.gap
         }
     }
 
@@ -430,7 +466,7 @@ namespace Sorts {
         -- Franceschini-Muthukrishnan-Pătrașcu algorithm
     */
 
-        export class Gnome extends BaseSort {
+    export class Gnome extends BaseSort {
             static title = "Gnome Sort"
             currentGnome: number = 1
 
@@ -750,6 +786,9 @@ namespace Sorts {
         BubbleSkipsSorted,
         Cocktail,
         Comb,
+        CombSmallShrink,
+        CombLargeShrink,
+        CombEvenLarger,
         Cycle,
         Gnome,
         QuickSort2,

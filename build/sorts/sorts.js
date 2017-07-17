@@ -339,7 +339,7 @@ var Sorts;
             _this.shrink = 1.3;
             // we start this at 1, because we want to stop at 1, when we
             // come back down
-            _this.gap = Math.floor(_this.length / 1.3);
+            _this.gap = Math.floor(_this.length / _this.shrink);
             _this.comparisonNode = 0 + _this.gap;
             return _this;
         }
@@ -350,7 +350,7 @@ var Sorts;
                 if (this.ordered === true && this.gap === 1) {
                     this.done = true;
                 }
-                this.gap = Math.max(Math.floor(this.gap / 1.3), 1);
+                this.gap = Math.max(Math.floor(this.gap / this.shrink), 1);
                 this.baseNode = 0;
                 this.comparisonNode = this.gap;
                 this.ordered = true;
@@ -362,6 +362,54 @@ var Sorts;
     // test ceil over floor
     Comb.title = "Comb Sort";
     Sorts.Comb = Comb;
+    var CombSmallShrink = (function (_super) {
+        __extends(CombSmallShrink, _super);
+        function CombSmallShrink(board) {
+            var _this = _super.call(this, board) || this;
+            _this.board = board;
+            _this.shrink = 1.1;
+            // we start this at 1, because we want to stop at 1, when we
+            // come back down
+            _this.gap = Math.floor(_this.length / _this.shrink);
+            _this.comparisonNode = 0 + _this.gap;
+            return _this;
+        }
+        return CombSmallShrink;
+    }(Comb));
+    CombSmallShrink.title = "Comb(Small Shrink: 1.1)";
+    Sorts.CombSmallShrink = CombSmallShrink;
+    var CombLargeShrink = (function (_super) {
+        __extends(CombLargeShrink, _super);
+        function CombLargeShrink(board) {
+            var _this = _super.call(this, board) || this;
+            _this.board = board;
+            _this.shrink = 1.5;
+            // we start this at 1, because we want to stop at 1, when we
+            // come back down
+            _this.gap = Math.floor(_this.length / _this.shrink);
+            _this.comparisonNode = 0 + _this.gap;
+            return _this;
+        }
+        return CombLargeShrink;
+    }(Comb));
+    CombLargeShrink.title = "Comb(Large Shrink: 1.5)";
+    Sorts.CombLargeShrink = CombLargeShrink;
+    var CombEvenLarger = (function (_super) {
+        __extends(CombEvenLarger, _super);
+        function CombEvenLarger(board) {
+            var _this = _super.call(this, board) || this;
+            _this.board = board;
+            _this.shrink = 2.0;
+            // we start this at 1, because we want to stop at 1, when we
+            // come back down
+            _this.gap = Math.floor(_this.length / _this.shrink);
+            _this.comparisonNode = 0 + _this.gap;
+            return _this;
+        }
+        return CombEvenLarger;
+    }(Comb));
+    CombEvenLarger.title = "Comb(Shrink: 2.0)";
+    Sorts.CombEvenLarger = CombEvenLarger;
     /*
         -- committee sort
 
@@ -782,6 +830,9 @@ var Sorts;
         BubbleSkipsSorted,
         Cocktail,
         Comb,
+        CombSmallShrink,
+        CombLargeShrink,
+        CombEvenLarger,
         Cycle,
         Gnome,
         QuickSort2,

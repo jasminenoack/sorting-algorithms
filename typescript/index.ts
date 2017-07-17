@@ -171,23 +171,25 @@ namespace script {
 
             currentNodes = sort.currentNodes()
             removeCurrentNodes(currentNodes, pointElements)
+            removeShadow(boardElement)
 
             let points = sort.next()
             // update all points
-            points = Array.prototype.range(sort.length)
-            points.forEach(function (point) {
-                reRenderPoint(pointElements, board, point)
-            })
-            currentNodes = sort.currentNodes()
-            setCurrentNodes(currentNodes, pointElements, sort)
-            boardElement.closest(
-                '.wrapper'
-            ).getElementsByClassName(
-                'step-count'
-            )[0].innerHTML = getTextContent(sort)
+            if (!sort.done) {
+                points = Array.prototype.range(sort.length)
+                points.forEach(function (point) {
+                    reRenderPoint(pointElements, board, point)
+                })
+                currentNodes = sort.currentNodes()
+                setCurrentNodes(currentNodes, pointElements, sort)
+                boardElement.closest(
+                    '.wrapper'
+                ).getElementsByClassName(
+                    'step-count'
+                )[0].innerHTML = getTextContent(sort)
 
-            removeShadow(boardElement)
-            renderShadow(sort, board, boardElement)
+                renderShadow(sort, board, boardElement)
+            }
         }
     }
 

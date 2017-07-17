@@ -513,7 +513,7 @@ namespace Sorts {
 
     export class QuickSort2 extends BaseSort {
         static title = "Quick Sort(Left Partition)"
-        addToUpdate: number
+        addToUpdate: number[] = []
         partition: number
         partitions: any[] = []
         partitionValue: number
@@ -549,11 +549,11 @@ namespace Sorts {
                 this.placed.push(this.partition)
                 let partitions = this.partitions
 
-                if (this.lower < this.partition - 1) {
-                    partitions.unshift([this.lower, this.partition - 1])
-                }
                 if (this.higher > this.partition + 1) {
                     partitions.unshift([this.partition + 1, this.higher])
+                }
+                if (this.lower < this.partition - 1) {
+                    partitions.unshift([this.lower, this.partition - 1])
                 }
 
                 if (partitions.length) {
@@ -585,8 +585,10 @@ namespace Sorts {
             this.higher++
             let values = this.board.values()
 
+            this.comparisons++
             if (values[this.higher] < values[this.partition]) {
                 // if the value at higher is less than the partition
+                this.swaps++
                 let temp = values.splice(this.higher, 1)[0];
                 values.splice(this.partition, 0, temp)
                 this.board.setPoints(values)
@@ -595,12 +597,16 @@ namespace Sorts {
                 for (let i = this.partition - 1; i <= this.higher; i++) {
                     valuesToUpdate.push(i)
                 }
-                if (
-                    this.addToUpdate &&
-                    valuesToUpdate.indexOf(this.addToUpdate) === -1
-                ) {
-                    valuesToUpdate.push(this.addToUpdate)
-                }
+            }
+            if (
+                this.addToUpdate.length
+            ) {
+                this.addToUpdate.forEach((index) => {
+                    if (valuesToUpdate.indexOf(index) === -1) {
+                        valuesToUpdate.push(index)
+                    }
+                })
+                this.addToUpdate = []
             }
             this.setUpNext()
             return valuesToUpdate
@@ -610,7 +616,13 @@ namespace Sorts {
     export class QuickSort2RightPartition extends QuickSort2 {
         static title = "Quick Sort(Right Partition)"
 
-
+        setPartition() {
+            this.partition = this.lower
+            let temp = this.board.get(this.partitionEnd).value
+            this.board.set(this.partitionEnd, this.board.get(this.partition).value)
+            this.board.set(this.partition, temp)
+            this.addToUpdate = [this.lower, this.partitionEnd]
+        }
 
     }
 
@@ -687,6 +699,7 @@ namespace Sorts {
         Comb,
         Cycle,
         Gnome,
-        QuickSort2
+        QuickSort2,
+        QuickSort2RightPartition
     ]
 }

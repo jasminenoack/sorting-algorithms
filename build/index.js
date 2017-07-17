@@ -138,6 +138,8 @@ var script;
             currentNodes = sort.currentNodes();
             removeCurrentNodes(currentNodes, pointElements);
             var points = sort.next();
+            // update all points
+            points = Array.prototype.range(sort.length);
             points.forEach(function (point) {
                 reRenderPoint(pointElements, board, point);
             });

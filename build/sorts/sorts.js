@@ -538,6 +538,7 @@ var Sorts;
         __extends(QuickSort2, _super);
         function QuickSort2(board) {
             var _this = _super.call(this, board) || this;
+            _this.addToUpdate = [];
             _this.partitions = [];
             _this.lower = _this.baseNode;
             _this.higher = _this.baseNode;
@@ -562,11 +563,11 @@ var Sorts;
             if (this.higher === this.partitionEnd) {
                 this.placed.push(this.partition);
                 var partitions = this.partitions;
-                if (this.lower < this.partition - 1) {
-                    partitions.unshift([this.lower, this.partition - 1]);
-                }
                 if (this.higher > this.partition + 1) {
                     partitions.unshift([this.partition + 1, this.higher]);
+                }
+                if (this.lower < this.partition - 1) {
+                    partitions.unshift([this.lower, this.partition - 1]);
                 }
                 if (partitions.length) {
                     var newPartition = partitions.shift();
@@ -594,8 +595,10 @@ var Sorts;
             // look at the next value
             this.higher++;
             var values = this.board.values();
+            this.comparisons++;
             if (values[this.higher] < values[this.partition]) {
                 // if the value at higher is less than the partition
+                this.swaps++;
                 var temp = values.splice(this.higher, 1)[0];
                 values.splice(this.partition, 0, temp);
                 this.board.setPoints(values);
@@ -603,10 +606,14 @@ var Sorts;
                 for (var i = this.partition - 1; i <= this.higher; i++) {
                     valuesToUpdate.push(i);
                 }
-                if (this.addToUpdate &&
-                    valuesToUpdate.indexOf(this.addToUpdate) === -1) {
-                    valuesToUpdate.push(this.addToUpdate);
-                }
+            }
+            if (this.addToUpdate.length) {
+                this.addToUpdate.forEach(function (index) {
+                    if (valuesToUpdate.indexOf(index) === -1) {
+                        valuesToUpdate.push(index);
+                    }
+                });
+                this.addToUpdate = [];
             }
             this.setUpNext();
             return valuesToUpdate;
@@ -620,6 +627,13 @@ var Sorts;
         function QuickSort2RightPartition() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        QuickSort2RightPartition.prototype.setPartition = function () {
+            this.partition = this.lower;
+            var temp = this.board.get(this.partitionEnd).value;
+            this.board.set(this.partitionEnd, this.board.get(this.partition).value);
+            this.board.set(this.partition, temp);
+            this.addToUpdate = [this.lower, this.partitionEnd];
+        };
         return QuickSort2RightPartition;
     }(QuickSort2));
     QuickSort2RightPartition.title = "Quick Sort(Right Partition)";
@@ -696,6 +710,7 @@ var Sorts;
         Comb,
         Cycle,
         Gnome,
-        QuickSort2
+        QuickSort2,
+        QuickSort2RightPartition
     ];
 })(Sorts || (Sorts = {}));

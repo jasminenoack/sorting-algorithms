@@ -429,7 +429,7 @@ namespace Sorts {
         -- flash sort
 
         -- Franceschini-Muthukrishnan-Pătrașcu algorithm
-        */
+    */
 
         export class Gnome extends BaseSort {
             static title = "Gnome Sort"
@@ -450,7 +450,7 @@ namespace Sorts {
             }
         }
 
-        /*
+    /*
 
         -- gravity sort
 
@@ -509,7 +509,113 @@ namespace Sorts {
         -- rolling ball sort
 
         -- quantum bogo sort
+    */
 
+    export class QuickSort2 extends BaseSort {
+        static title = "Quick Sort(Left Partition)"
+        addToUpdate: number
+        partition: number
+        partitions: any[] = []
+        partitionValue: number
+        lower: number
+        higher: number
+        partitionStart: number
+        partitionEnd: number
+
+        constructor(board) {
+            super(board)
+            this.lower = this.baseNode
+            this.higher = this.baseNode
+            this.partitionStart = this.baseNode
+            this.partitionEnd = this.length - 1
+            this.setPartition()
+        }
+
+        currentNodes() {
+            let nodes = []
+            if (this.partition !== this.lower) {
+                nodes.push(this.lower)
+            }
+            nodes.push(this.partition)
+            if (this.partition !== this.higher) {
+                nodes.push(this.higher)
+            }
+            return nodes
+        }
+
+        setUpNext() {
+            // if higher is at the end of the current partition
+            if (this.higher === this.partitionEnd) {
+                this.placed.push(this.partition)
+                let partitions = this.partitions
+
+                if (this.lower < this.partition - 1) {
+                    partitions.unshift([this.lower, this.partition - 1])
+                }
+                if (this.higher > this.partition + 1) {
+                    partitions.unshift([this.partition + 1, this.higher])
+                }
+
+                if (partitions.length) {
+                    let newPartition = partitions.shift()
+                    this.partitionStart = newPartition[0]
+                    this.partitionEnd = newPartition[1]
+                    this.lower = this.partitionStart
+                    this.higher = this.partitionStart
+                    this.setPartition()
+                } else {
+                    this.done = true
+                    return []
+                }
+            }
+        }
+
+        setPartition() {
+            this.partition = this.lower
+        }
+
+        next() {
+            if (this.done) {
+                return []
+            }
+            this.steps++
+
+            let valuesToUpdate = []
+            // look at the next value
+            this.higher++
+            let values = this.board.values()
+
+            if (values[this.higher] < values[this.partition]) {
+                // if the value at higher is less than the partition
+                let temp = values.splice(this.higher, 1)[0];
+                values.splice(this.partition, 0, temp)
+                this.board.setPoints(values)
+                this.partition++
+
+                for (let i = this.partition - 1; i <= this.higher; i++) {
+                    valuesToUpdate.push(i)
+                }
+                if (
+                    this.addToUpdate &&
+                    valuesToUpdate.indexOf(this.addToUpdate) === -1
+                ) {
+                    valuesToUpdate.push(this.addToUpdate)
+                }
+            }
+            this.setUpNext()
+            return valuesToUpdate
+        }
+    }
+
+    export class QuickSort2RightPartition extends QuickSort2 {
+        static title = "Quick Sort(Right Partition)"
+
+
+
+    }
+
+    /*
+        random partition
         quick sort(2, 3)
 
         -- quora sort
@@ -580,6 +686,7 @@ namespace Sorts {
         Cocktail,
         Comb,
         Cycle,
-        Gnome
+        Gnome,
+        QuickSort2
     ]
 }

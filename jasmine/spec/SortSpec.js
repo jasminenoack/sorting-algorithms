@@ -1677,13 +1677,25 @@ describe("Sorts", function() {
                 }
             })
 
-            xit("it handles first and last swapped", () => {
+            it("it handles first and last swapped", () => {
                 board.setPoints([4, 1, 2, 3, 0])
                 sort = new Sort(board)
                 expect(sort.next()).toEqual([0, 1])
+                // 1 4 2 3 0
+
                 expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([0, 1])
+                // 1 2 4 3 0
+
                 expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([1, 2])
+                // 1 2 3 4 0
+
                 expect(sort.next()).toEqual([3, 4])
+                expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([0, 1])
+
                 expect(sort.done).toEqual(true)
                 for(let i = 0; i < board.length; i++) {
                     expect(i).toEqual(board.values()[i])
@@ -1714,53 +1726,530 @@ describe("Sorts", function() {
                 }
             })
 
+            it("handles duplicates", () => {
+                let values = [0, 2, 3, 1, 1]
+                board.setPoints(values)
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+
+                expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([0, 1])
+
+                expect(sort.next()).toEqual([3, 4])
+                expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([1, 2])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(values.slice().sort()[i]).toEqual(board.values()[i])
+                }
+            })
+
+            it("handles more duplicates", () => {
+                let values = [2, 1, 1, 2, 1]
+                board.setPoints(values)
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                // 1 2 1 2 1
+
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([0, 1])
+                // 1 1 2 2 1
+
+                expect(sort.next()).toEqual([2, 3])
+
+                expect(sort.next()).toEqual([3, 4])
+                expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([1, 2])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(values.slice().sort()[i]).toEqual(board.values()[i])
+                }
+            })
+        })
+    })
+
+    describe("quick 2 left partition", () => {
+        beforeEach(function() {
+            length = 5
+            size = Sizes.fewFew
+            board = new Boards.Board(size)
+            Sort = Sorts.QuickSort2
+            sort = new Sort(board)
+        });
+
+        describe("create", function () {
+            it("it has a title", () => {
+                expect(Sort.title).toEqual('Quick Sort(Left Partition)')
+            })
+
+            it("has a partition", () => {
+                expect(sort.partition).not.toEqual(undefined)
+            })
+        })
+
+        describe("utils", () => {
+
+            it("has current nodes", () => {
+                expect(sort.currentNodes()).toEqual([0])
+
+                sort.lower = 1
+                sort.partition = 2
+                sort.higher = 3
+                expect(sort.currentNodes()).toEqual([1, 2, 3])
+
+                sort.lower = 2
+                expect(sort.currentNodes()).toEqual([2, 3])
+
+                sort.lower = 1
+                sort.higher = 2
+                expect(sort.currentNodes()).toEqual([1, 2])
+            })
+
+            it("it handles ordered group", () => {
+                board.setPoints([0, 1, 2, 3, 4])
+                sort = new Sort(board)
+
+                sort.partition = 0
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+
+            it("handles a random group", () => {
+                board.setPoints([0, 3, 1, 4, 2])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([2, 3, 4])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            it("handles a swaping first group", () => {
+                board.setPoints([1, 0, 2, 3, 4])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            it("handles a swaping last group", () => {
+                board.setPoints([0, 1, 2, 4, 3])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([3, 4])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            it("it does reverse group", () => {
+                board.setPoints([4, 3, 2, 1, 0])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([3, 4])
+                // 3 2 1 0
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([2, 3])
+                // 2 1 0
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+
+                expect(sort.next()).toEqual([0, 1])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            it("it handles first and last swapped", () => {
+                board.setPoints([4, 1, 2, 3, 0])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([3, 4])
+                // 1, 2, 3, 0
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([0, 1, 2, 3])
+                // _ _ 2 3
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            it("handles partially ordered grouping", () => {
+                board.setPoints([0, 3, 2, 1, 4])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                // _ 3 2 1 4
+
+                expect(sort.next()).toEqual([1, 2])
+                // _ 2 *3 1 4
+                expect(sort.next()).toEqual([2, 3])
+                // _ 2 1 *3 4
+                expect(sort.next()).toEqual([])
+                // _ 2 1 _ _
+
+                expect(sort.next()).toEqual([1, 2])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            it("handles duplicates", () => {
+                let values = [0, 2, 3, 1, 1]
+                board.setPoints(values)
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                // _ 2 3 1 1
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([1, 2, 3])
+                expect(sort.next()).toEqual([2, 3, 4])
+                // _ 1 1 _ _
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(values.slice().sort()[i]).toEqual(board.values()[i])
+                }
+            })
+
+            it("handles more duplicates", () => {
+                let values = [2, 1, 1, 2, 1]
+                board.setPoints(values)
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([2, 3, 4])
+                // 1 1 1 _ _
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(values.slice().sort()[i]).toEqual(board.values()[i])
+                }
+            })
+        })
+    })
+
+    describe("quick 2 right partition", () => {
+        beforeEach(function() {
+            length = 5
+            size = Sizes.fewFew
+            board = new Boards.Board(size)
+            Sort = Sorts.QuickSort2RightPartition
+            sort = new Sort(board)
+        });
+
+        describe("create", function () {
+            it("it has a title", () => {
+                expect(Sort.title).toEqual('Quick Sort(Right Partition)')
+            })
+
+            it("has a partition", () => {
+                expect(sort.partition).not.toEqual(undefined)
+            })
+        })
+
+        describe("utils", () => {
+
+            it("has current nodes", () => {
+                expect(sort.currentNodes()).toEqual([0])
+
+                sort.lower = 1
+                sort.partition = 2
+                sort.higher = 3
+                expect(sort.currentNodes()).toEqual([1, 2, 3])
+
+                sort.lower = 2
+                expect(sort.currentNodes()).toEqual([2, 3])
+
+                sort.lower = 1
+                sort.higher = 2
+                expect(sort.currentNodes()).toEqual([1, 2])
+            })
+
+            xit("it handles ordered group", () => {
+                board.setPoints([0, 1, 2, 3, 4])
+                sort = new Sort(board)
+
+                sort.partition = 0
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([0, 1, 2])
+                expect(sort.next()).toEqual([0, 1, 2, 3])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            xit("handles a random group", () => {
+                board.setPoints([0, 3, 1, 4, 2])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([2, 3, 4])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            xit("handles a swaping first group", () => {
+                board.setPoints([1, 0, 2, 3, 4])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            xit("handles a swaping last group", () => {
+                board.setPoints([0, 1, 2, 4, 3])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+
+                expect(sort.next()).toEqual([3, 4])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            xit("it does reverse group", () => {
+                board.setPoints([4, 3, 2, 1, 0])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([3, 4])
+                // 3 2 1 0
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([2, 3])
+                // 2 1 0
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+
+                expect(sort.next()).toEqual([0, 1])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            xit("it handles first and last swapped", () => {
+                board.setPoints([4, 1, 2, 3, 0])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([2, 3])
+                expect(sort.next()).toEqual([3, 4])
+                // 1, 2, 3, 0
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([0, 1, 3])
+                // _ _ 2 3
+
+                expect(sort.next()).toEqual([])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            xit("handles partially ordered grouping", () => {
+                board.setPoints([0, 3, 2, 1, 4])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                // _ 3 2 1 4
+
+                expect(sort.next()).toEqual([1, 2])
+                // _ 2 *3 1 4
+                expect(sort.next()).toEqual([2, 3])
+                // _ 2 1 *3 4
+                expect(sort.next()).toEqual([])
+                // _ 2 1 _ _
+
+                expect(sort.next()).toEqual([1, 2])
+
+                expect(sort.done).toEqual(true)
+                for(let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
             xit("handles duplicates", () => {
                 let values = [0, 2, 3, 1, 1]
                 board.setPoints(values)
-                sort = new Sorts.Cycle(board)
-                let currentValue = sort.currentValue
-                expect(currentValue).toEqual(0)
-                expect(sort.baseNode).toEqual(0)
-                sort.next()
-                sort.next()
-                sort.next()
-                sort.next()
-                expect(board.values()[currentValue]).toEqual(currentValue)
+                sort = new Sort(board)
 
-                currentValue = sort.currentValue
-                expect(currentValue).toEqual(2)
-                expect(sort.baseNode).toEqual(1)
-                sort.next()
-                sort.next()
-                sort.next()
-                expect(board.values()[3]).toEqual(currentValue)
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
+                // _ 2 3 1 1
 
-                currentValue = sort.currentValue
-                expect(currentValue).toEqual(1)
-                expect(sort.baseNode).toEqual(1)
-                sort.next()
-                sort.next()
-                sort.next()
-                expect(board.values()[currentValue]).toEqual(currentValue)
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([1, 2, 3])
+                expect(sort.next()).toEqual([2, 3, 4])
+                // _ 1 1 _ _
 
-                currentValue = sort.currentValue
-                expect(currentValue).toEqual(3)
-                expect(sort.baseNode).toEqual(2)
-                sort.next()
-                sort.next()
-                expect(board.values()[4]).toEqual(currentValue)
-
-                currentValue = sort.currentValue
-                expect(currentValue).toEqual(1)
-                expect(sort.baseNode).toEqual(2)
-                sort.next()
-                sort.next()
-                expect(board.values()[2]).toEqual(currentValue)
-
-                currentValue = sort.currentValue
-                expect(sort.baseNode).toEqual(3)
-                expect(currentValue).toEqual(2)
-                sort.next()
+                expect(sort.next()).toEqual([])
 
                 expect(sort.done).toEqual(true)
                 for(let i = 0; i < board.length; i++) {
@@ -1771,47 +2260,18 @@ describe("Sorts", function() {
             xit("handles more duplicates", () => {
                 let values = [2, 1, 1, 2, 1]
                 board.setPoints(values)
-                sort = new Sorts.Cycle(board)
-                let currentValue = sort.currentValue
-                expect(currentValue).toEqual(2)
-                expect(sort.baseNode).toEqual(0)
-                sort.next()
-                sort.next()
-                sort.next()
-                sort.next()
-                expect(board.values()[4]).toEqual(currentValue)
-                // 1 1 1 2 2
+                sort = new Sort(board)
 
-                currentValue = sort.currentValue
-                expect(currentValue).toEqual(1)
-                expect(sort.baseNode).toEqual(0)
-                sort.next()
-                sort.next()
-                sort.next()
-                sort.next()
-                expect(board.values()[0]).toEqual(currentValue)
-                // 1 1 1 2 2
+                expect(sort.next()).toEqual([0, 1])
+                expect(sort.next()).toEqual([1, 2])
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([2, 3, 4])
+                // 1 1 1 _ _
 
-                currentValue = sort.currentValue
-                expect(currentValue).toEqual(1)
-                expect(sort.baseNode).toEqual(1)
-                sort.next()
-                sort.next()
-                sort.next()
-                expect(board.values()[1]).toEqual(currentValue)
+                expect(sort.next()).toEqual([])
+                expect(sort.next()).toEqual([])
 
-                currentValue = sort.currentValue
-                expect(currentValue).toEqual(1)
-                expect(sort.baseNode).toEqual(2)
-                sort.next()
-                sort.next()
-                expect(board.values()[2]).toEqual(currentValue)
-
-                currentValue = sort.currentValue
-                expect(currentValue).toEqual(2)
-                expect(sort.baseNode).toEqual(3)
-                sort.next()
-                expect(board.values()[3]).toEqual(currentValue)
+                expect(sort.next()).toEqual([])
 
                 expect(sort.done).toEqual(true)
                 for(let i = 0; i < board.length; i++) {

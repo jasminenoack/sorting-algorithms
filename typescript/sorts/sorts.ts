@@ -416,7 +416,6 @@ namespace Sorts {
                     this.done = true
                 }
             }
-            // console.log(this.board.values())
         }
     }
     /*
@@ -521,14 +520,22 @@ namespace Sorts {
         higher: number
         partitionStart: number
         partitionEnd: number
+        // for 3-way partition
+        partitionTop: number
+        threeWay: boolean = false
 
         constructor(board) {
             super(board)
-            this.lower = this.baseNode
-            this.higher = this.baseNode
-            this.partitionStart = this.baseNode
-            this.partitionEnd = this.length - 1
+            this.setUpValues([this.baseNode, this.length -1])
+        }
+
+        setUpValues(values) {
+            this.lower = values[0]
+            this.higher = values[0]
+            this.partitionStart = values[0]
+            this.partitionEnd = values[1]
             this.setPartition()
+            this.partitionTop  = this.partition
         }
 
         currentNodes() {
@@ -546,11 +553,23 @@ namespace Sorts {
         setUpNext() {
             // if higher is at the end of the current partition
             if (this.higher === this.partitionEnd) {
-                this.placed.push(this.partition)
+                if (this.threeWay) {
+                    for (let i = this.partition; i <= this.partitionTop; i++) {
+                        this.placed.push(i)
+                    }
+                } else {
+                    this.placed.push(this.partition)
+                }
                 let partitions = this.partitions
+                let topLow
+                if (this.threeWay) {
+                    topLow = this.partitionTop
+                } else {
+                    topLow = this.partition
+                }
 
-                if (this.higher > this.partition + 1) {
-                    partitions.unshift([this.partition + 1, this.higher])
+                if (this.higher > topLow + 1) {
+                    partitions.unshift([topLow + 1, this.higher])
                 }
                 if (this.lower < this.partition - 1) {
                     partitions.unshift([this.lower, this.partition - 1])
@@ -558,11 +577,7 @@ namespace Sorts {
 
                 if (partitions.length) {
                     let newPartition = partitions.shift()
-                    this.partitionStart = newPartition[0]
-                    this.partitionEnd = newPartition[1]
-                    this.lower = this.partitionStart
-                    this.higher = this.partitionStart
-                    this.setPartition()
+                    this.setUpValues(newPartition)
                 } else {
                     this.done = true
                     return []
@@ -586,16 +601,25 @@ namespace Sorts {
             let values = this.board.values()
 
             this.comparisons++
-            if (values[this.higher] < values[this.partition]) {
+            let threeWay = this.threeWay && values[this.higher] === values[this.partition]
+            if (values[this.higher] < values[this.partition] || threeWay) {
                 // if the value at higher is less than the partition
                 this.swaps++
                 let temp = values.splice(this.higher, 1)[0];
                 values.splice(this.partition, 0, temp)
                 this.board.setPoints(values)
-                this.partition++
+
+                if (threeWay) {
+                    this.partitionTop++
+                } else {
+                    this.partition++
+                    this.partitionTop++
+                }
 
                 for (let i = this.partition - 1; i <= this.higher; i++) {
-                    valuesToUpdate.push(i)
+                    if (i >= 0) {
+                        valuesToUpdate.push(i)
+                    }
                 }
             }
             if (
@@ -624,6 +648,35 @@ namespace Sorts {
             this.addToUpdate = [this.lower, this.partitionEnd]
         }
 
+    }
+
+    export class QuickSort2Random extends QuickSort2 {
+        static title = "Quick Sort(Random Partition)"
+
+        setPartition() {
+            let diff = this.partitionEnd - this.partitionStart + 1
+            let index = this.partitionStart + Math.floor(Math.random() * diff)
+            this.partition = this.lower
+            let temp = this.board.get(index).value
+            this.board.set(index, this.board.get(this.partition).value)
+            this.board.set(this.partition, temp)
+            this.addToUpdate = [this.lower, index]
+        }
+    }
+
+    export class QuickSort3 extends QuickSort2 {
+        static title = "Quick Sort 3(Left Partition)"
+        threeWay: boolean = true
+    }
+
+    export class QuickSort3RightPartition extends QuickSort2RightPartition {
+        static title = "Quick Sort 3(Right Partition)"
+        threeWay: boolean = true
+    }
+
+    export class QuickSort3Random extends QuickSort2Random {
+        static title = "Quick Sort 3(Random Partition)"
+        threeWay: boolean = true
     }
 
     /*
@@ -700,6 +753,10 @@ namespace Sorts {
         Cycle,
         Gnome,
         QuickSort2,
-        QuickSort2RightPartition
+        QuickSort2RightPartition,
+        QuickSort2Random,
+        QuickSort3,
+        QuickSort3RightPartition,
+        QuickSort3Random
     ]
 }

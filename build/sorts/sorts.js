@@ -552,9 +552,68 @@ var Sorts;
         -- 3-way merge sort
 
         -- miracle sort
-
-        odd even
-
+    */
+    var OddEven = (function (_super) {
+        __extends(OddEven, _super);
+        function OddEven(board) {
+            var _this = _super.call(this, board) || this;
+            _this.oddPhase = true;
+            _this.oddSorted = false;
+            _this.evenSorted = false;
+            _this.baseNodes = [];
+            _this.setUpLists();
+            _this.baseNode = _this.baseNodes.shift();
+            _this.comparisonNode = _this.baseNode + 1;
+            return _this;
+        }
+        OddEven.prototype.setUpLists = function () {
+            if (this.oddPhase) {
+                for (var i = 1; i < this.length - 1; i += 2) {
+                    this.baseNodes.push(i);
+                }
+            }
+            else {
+                for (var i = 0; i < this.length - 1; i += 2) {
+                    this.baseNodes.push(i);
+                }
+            }
+        };
+        OddEven.prototype.swap = function () {
+            _super.prototype.swap.call(this, [this.baseNode, this.comparisonNode]);
+        };
+        OddEven.prototype.setUpNext = function () {
+            if (!this.baseNodes.length) {
+                if (this.ordered) {
+                    if (this.oddPhase) {
+                        this.oddSorted = true;
+                    }
+                    else {
+                        this.evenSorted = true;
+                    }
+                }
+                else {
+                    this.oddSorted = false;
+                    this.evenSorted = false;
+                }
+                if (this.evenSorted && this.oddSorted) {
+                    this.done = true;
+                    return;
+                }
+                this.oddPhase = !this.oddPhase;
+                this.setUpLists();
+                this.ordered = true;
+            }
+            this.baseNode = this.baseNodes.shift();
+            this.comparisonNode = this.baseNode + 1;
+        };
+        OddEven.prototype.currentNodes = function () {
+            return [this.baseNode].concat(this.baseNodes);
+        };
+        return OddEven;
+    }(BaseSort));
+    OddEven.title = "Odd Even(Single Processor)";
+    Sorts.OddEven = OddEven;
+    /*
         -- oscillating merge sort
 
         -- Pairwise Sorting Network

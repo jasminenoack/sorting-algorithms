@@ -516,9 +516,67 @@ namespace Sorts {
         -- 3-way merge sort
 
         -- miracle sort
+    */
 
-        odd even
+    export class OddEven extends BaseSort {
+        static title = "Odd Even(Single Processor)"
+        oddPhase: boolean = true
+        oddSorted: boolean = false
+        evenSorted: boolean = false
+        baseNodes: number[] = []
+        constructor (board) {
+            super(board)
+            this.setUpLists()
+            this.baseNode = this.baseNodes.shift()
+            this.comparisonNode = this.baseNode + 1
+        }
 
+        setUpLists () {
+            if (this.oddPhase) {
+                for (let i = 1; i < this.length - 1; i += 2) {
+                    this.baseNodes.push(i)
+                }
+            } else {
+                for (let i = 0; i < this.length - 1; i += 2) {
+                    this.baseNodes.push(i)
+                }
+            }
+        }
+
+        swap() {
+            super.swap([this.baseNode, this.comparisonNode])
+        }
+
+        setUpNext () {
+            if (!this.baseNodes.length) {
+                if (this.ordered) {
+                    if (this.oddPhase) {
+                        this.oddSorted = true
+                    } else {
+                        this.evenSorted = true
+                    }
+                } else {
+                    this.oddSorted = false
+                    this.evenSorted = false
+                }
+                if (this.evenSorted && this.oddSorted) {
+                    this.done = true
+                    return
+                }
+                this.oddPhase = !this.oddPhase
+                this.setUpLists()
+                this.ordered = true
+            }
+            this.baseNode = this.baseNodes.shift()
+            this.comparisonNode = this.baseNode + 1
+        }
+
+        currentNodes() {
+            return [this.baseNode].concat(this.baseNodes)
+        }
+    }
+
+    /*
         -- oscillating merge sort
 
         -- Pairwise Sorting Network

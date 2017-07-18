@@ -486,7 +486,6 @@ namespace Sorts {
         }
 
     /*
-
         -- gravity sort
 
         -- half hearted merge sort (https://xkcd.com/1185/)
@@ -572,7 +571,34 @@ namespace Sorts {
         }
 
         currentNodes() {
-            return [this.baseNode].concat(this.baseNodes)
+            if (this.baseNode !== undefined) {
+                return [this.baseNode].concat(this.baseNodes)
+            }
+            return this.baseNodes
+        }
+    }
+
+    export class OddEvenConcurrent extends OddEven {
+        static title = "Odd Even(Concurrent)"
+        next() {
+            if (this.done) {
+                return []
+            }
+            this.steps++
+            let currentNodes = this.currentNodes()
+            let values = this.board.values()
+
+            while(this.baseNode !== undefined) {
+                if (!this.nodesInOrder(values)) {
+                    this.swap()
+                }
+                this.baseNode = this.baseNodes.shift()
+                if (this.baseNode) {
+                    this.comparisonNode = this.baseNode + 1
+                }
+            }
+            this.setUpNext()
+            return currentNodes
         }
     }
 
@@ -774,15 +800,14 @@ namespace Sorts {
     }
 
     /*
-        random partition
-        quick sort(2, 3)
-
         -- quora sort
 
         -- sample sort
+    */
 
-        selection (base, track multiple)
+        // selection (base, track multiple)
 
+    /*
         -- shatter sort
 
         -- shell sort
@@ -794,9 +819,11 @@ namespace Sorts {
         -- slow sort
 
         -- sleep sort
+    */
 
-        smooth
+        // smooth
 
+    /*
         -- solar bitflip
 
         -- sorting networks
@@ -810,9 +837,11 @@ namespace Sorts {
         -- stack sort
 
         -- stalin sort
+    */
 
-        stooge
+        // stooge
 
+    /*
         -- strand sort
 
         -- stupid sort
@@ -849,6 +878,8 @@ namespace Sorts {
         CombEvenLarger,
         Cycle,
         Gnome,
+        OddEven,
+        OddEvenConcurrent,
         QuickSort2,
         QuickSort2RightPartition,
         QuickSort2Random,

@@ -522,7 +522,6 @@ var Sorts;
     Gnome.title = "Gnome Sort";
     Sorts.Gnome = Gnome;
     /*
-
         -- gravity sort
 
         -- half hearted merge sort (https://xkcd.com/1185/)
@@ -607,12 +606,43 @@ var Sorts;
             this.comparisonNode = this.baseNode + 1;
         };
         OddEven.prototype.currentNodes = function () {
-            return [this.baseNode].concat(this.baseNodes);
+            if (this.baseNode !== undefined) {
+                return [this.baseNode].concat(this.baseNodes);
+            }
+            return this.baseNodes;
         };
         return OddEven;
     }(BaseSort));
     OddEven.title = "Odd Even(Single Processor)";
     Sorts.OddEven = OddEven;
+    var OddEvenConcurrent = (function (_super) {
+        __extends(OddEvenConcurrent, _super);
+        function OddEvenConcurrent() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        OddEvenConcurrent.prototype.next = function () {
+            if (this.done) {
+                return [];
+            }
+            this.steps++;
+            var currentNodes = this.currentNodes();
+            var values = this.board.values();
+            while (this.baseNode !== undefined) {
+                if (!this.nodesInOrder(values)) {
+                    this.swap();
+                }
+                this.baseNode = this.baseNodes.shift();
+                if (this.baseNode) {
+                    this.comparisonNode = this.baseNode + 1;
+                }
+            }
+            this.setUpNext();
+            return currentNodes;
+        };
+        return OddEvenConcurrent;
+    }(OddEven));
+    OddEvenConcurrent.title = "Odd Even(Concurrent)";
+    Sorts.OddEvenConcurrent = OddEvenConcurrent;
     /*
         -- oscillating merge sort
 
@@ -820,15 +850,12 @@ var Sorts;
     QuickSort3Random.title = "Quick Sort 3(Random Partition)";
     Sorts.QuickSort3Random = QuickSort3Random;
     /*
-        random partition
-        quick sort(2, 3)
-
         -- quora sort
 
         -- sample sort
-
-        selection (base, track multiple)
-
+    */
+    // selection (base, track multiple)
+    /*
         -- shatter sort
 
         -- shell sort
@@ -840,9 +867,9 @@ var Sorts;
         -- slow sort
 
         -- sleep sort
-
-        smooth
-
+    */
+    // smooth
+    /*
         -- solar bitflip
 
         -- sorting networks
@@ -856,9 +883,9 @@ var Sorts;
         -- stack sort
 
         -- stalin sort
-
-        stooge
-
+    */
+    // stooge
+    /*
         -- strand sort
 
         -- stupid sort
@@ -894,6 +921,8 @@ var Sorts;
         CombEvenLarger,
         Cycle,
         Gnome,
+        OddEven,
+        OddEvenConcurrent,
         QuickSort2,
         QuickSort2RightPartition,
         QuickSort2Random,

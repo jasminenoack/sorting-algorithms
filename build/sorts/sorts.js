@@ -854,7 +854,45 @@ var Sorts;
 
         -- sample sort
     */
-    // selection (base, track multiple)
+    var SelectionSort = (function (_super) {
+        __extends(SelectionSort, _super);
+        function SelectionSort() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.baseIndex = 0;
+            return _this;
+        }
+        SelectionSort.prototype.setUpNext = function () {
+            this.comparisonNode++;
+            if (this.comparisonNode === this.length) {
+                if (this.baseNode !== this.baseIndex) {
+                    this.swap([this.baseNode, this.baseIndex]);
+                }
+                this.baseIndex++;
+                this.baseNode = this.baseIndex;
+                this.comparisonNode = this.baseNode + 1;
+                if (this.baseNode === this.length - 1) {
+                    this.done = true;
+                }
+            }
+        };
+        SelectionSort.prototype.next = function () {
+            if (this.done) {
+                return [];
+            }
+            this.steps++;
+            var currentNodes = this.currentNodes();
+            var values = this.board.values();
+            if (!this.nodesInOrder(values)) {
+                this.baseNode = this.comparisonNode;
+            }
+            this.setUpNext();
+            return currentNodes;
+        };
+        return SelectionSort;
+    }(BaseSort));
+    SelectionSort.title = "Selection Sort";
+    Sorts.SelectionSort = SelectionSort;
+    // select highest and lowest
     /*
         -- shatter sort
 
@@ -928,6 +966,7 @@ var Sorts;
         QuickSort2Random,
         QuickSort3,
         QuickSort3RightPartition,
-        QuickSort3Random
+        QuickSort3Random,
+        SelectionSort
     ];
 })(Sorts || (Sorts = {}));

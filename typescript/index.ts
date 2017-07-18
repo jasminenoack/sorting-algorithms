@@ -175,7 +175,7 @@ namespace script {
 
             let points = sort.next()
             // update all points
-            if (!sort.done) {
+            if (!sort.done || points) {
                 points = Array.prototype.range(sort.length)
                 points.forEach(function (point) {
                     reRenderPoint(pointElements, board, point)

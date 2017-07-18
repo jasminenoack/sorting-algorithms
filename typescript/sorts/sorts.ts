@@ -371,6 +371,60 @@ namespace Sorts {
         }
     }
 
+    export class CombGnome5 extends BaseSort {
+        comb: Comb
+        gnome: BaseSort
+        gnomeSwitchValue: number = 5
+        static title = "Comb & Gnome(at gap 5)"
+
+        constructor(board) {
+            super(board)
+            this.comb = new Comb(board)
+            this.gnome = new Gnome(board)
+        }
+
+        currentNodes() {
+            if (this.comb.gap >= this.gnomeSwitchValue) {
+                return this.comb.currentNodes()
+            } else {
+                return this.gnome.currentNodes()
+            }
+        }
+
+        next() {
+            let currentNodes
+            if (this.comb.gap >= this.gnomeSwitchValue) {
+                currentNodes = this.comb.currentNodes()
+                this.comb.next()
+            } else {
+                this.gnome.next()
+            }
+            this.steps = this.comb.steps + this.gnome.steps
+            this.swaps = this.comb.swaps + this.gnome.swaps
+            this.comparisons = this.comb.comparisons + this.gnome.comparisons
+            return currentNodes
+        }
+    }
+
+    export class CombGnome3 extends CombGnome5 {
+        gnomeSwitchValue: number = 3
+        static title = "Comb & Gnome(at gap 3)"
+    }
+
+    export class CombGnome2 extends CombGnome5 {
+        gnomeSwitchValue: number = 2
+        static title = "Comb & Gnome(at gap 2)"
+    }
+
+    export class CombGnome10 extends CombGnome5 {
+        gnomeSwitchValue: number = 10
+        static title = "Comb & Gnome(at gap 10)"
+    }
+
+    // try there with large shrink
+
+    // comb and insertion
+
     /*
         -- committee sort
 
@@ -908,10 +962,14 @@ namespace Sorts {
         BubbleSkipNoShortCircuit,
         BubbleSkipsSorted,
         Cocktail,
-        Comb,
         CombSmallShrink,
+        Comb,
         CombLargeShrink,
         CombEvenLarger,
+        CombGnome2,
+        CombGnome3,
+        CombGnome5,
+        CombGnome10,
         Cycle,
         Gnome,
         OddEven,

@@ -410,6 +410,76 @@ var Sorts;
     }(Comb));
     CombEvenLarger.title = "Comb(Shrink: 2.0)";
     Sorts.CombEvenLarger = CombEvenLarger;
+    var CombGnome5 = (function (_super) {
+        __extends(CombGnome5, _super);
+        function CombGnome5(board) {
+            var _this = _super.call(this, board) || this;
+            _this.gnomeSwitchValue = 5;
+            _this.comb = new Comb(board);
+            _this.gnome = new Gnome(board);
+            return _this;
+        }
+        CombGnome5.prototype.currentNodes = function () {
+            if (this.comb.gap >= this.gnomeSwitchValue) {
+                return this.comb.currentNodes();
+            }
+            else {
+                return this.gnome.currentNodes();
+            }
+        };
+        CombGnome5.prototype.next = function () {
+            var currentNodes;
+            if (this.comb.gap >= this.gnomeSwitchValue) {
+                currentNodes = this.comb.currentNodes();
+                this.comb.next();
+            }
+            else {
+                this.gnome.next();
+            }
+            this.steps = this.comb.steps + this.gnome.steps;
+            this.swaps = this.comb.swaps + this.gnome.swaps;
+            this.comparisons = this.comb.comparisons + this.gnome.comparisons;
+            return currentNodes;
+        };
+        return CombGnome5;
+    }(BaseSort));
+    CombGnome5.title = "Comb & Gnome(at gap 5)";
+    Sorts.CombGnome5 = CombGnome5;
+    var CombGnome3 = (function (_super) {
+        __extends(CombGnome3, _super);
+        function CombGnome3() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.gnomeSwitchValue = 3;
+            return _this;
+        }
+        return CombGnome3;
+    }(CombGnome5));
+    CombGnome3.title = "Comb & Gnome(at gap 3)";
+    Sorts.CombGnome3 = CombGnome3;
+    var CombGnome2 = (function (_super) {
+        __extends(CombGnome2, _super);
+        function CombGnome2() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.gnomeSwitchValue = 2;
+            return _this;
+        }
+        return CombGnome2;
+    }(CombGnome5));
+    CombGnome2.title = "Comb & Gnome(at gap 2)";
+    Sorts.CombGnome2 = CombGnome2;
+    var CombGnome10 = (function (_super) {
+        __extends(CombGnome10, _super);
+        function CombGnome10() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.gnomeSwitchValue = 10;
+            return _this;
+        }
+        return CombGnome10;
+    }(CombGnome5));
+    CombGnome10.title = "Comb & Gnome(at gap 10)";
+    Sorts.CombGnome10 = CombGnome10;
+    // try there with large shrink
+    // comb and insertion
     /*
         -- committee sort
 
@@ -953,10 +1023,14 @@ var Sorts;
         BubbleSkipNoShortCircuit,
         BubbleSkipsSorted,
         Cocktail,
-        Comb,
         CombSmallShrink,
+        Comb,
         CombLargeShrink,
         CombEvenLarger,
+        CombGnome2,
+        CombGnome3,
+        CombGnome5,
+        CombGnome10,
         Cycle,
         Gnome,
         OddEven,

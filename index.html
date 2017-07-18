@@ -1,137 +1,58 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/picnicss/6.1.4/picnic.min.css">
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-</head>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="css/index2.css">
+    </head>
 
-<body>
-    <h1>
-            Algorithms
-        </h1>
+    <body>
+        <article class="sorting">
+            <h1>Sorting Algorithms</h1>
+            <div class="controls">
+                <div>
+                    <label>
+                        Sort:
+                        <select id="sort">
+                        </select>
+                    </label>
+                    <label>
+                        Point count:
+                        <select id="size">
+                        </select>
+                    <label>
 
-    <article class="card sort-cards">
-        <header>
-            <h3>Sorting Algorithms</h3>
-            <h6>Shows the shape of sorting algoritms</h6>
-        </header>
-        <footer>
+                    <label>
+                        Order:
+                        <select id="order">
+                        </select>
+                    <label>
 
-            <article class="card">
-                <header>
-                    <h4>Exchange Sorts</h4>
-                </header>
-                <footer>
-                    <a href="sorts.html?bogo" class="pseudo button">Bogo Sort</a>
-                    <a href="sorts.html?bubble" class="pseudo button">Bubble Sort</a>
-                    <a href="sorts.html?cocktail" class="pseudo button">Cocktail Sort</a>
-                    <a href="sorts.html?comb" class="pseudo button">Comb Sort</a>
-                    <a href="sorts.html?gnome" class="pseudo button">Gnome Sort</a>
-                    <a href="sorts.html?oddEven" class="pseudo button">Odd-Even Sort</a>
-                    <a href="sorts.html?quicksort" class="pseudo button">Quicksort</a>
-                    <a href="sorts.html?stooge" class="pseudo button">Stooge Sort</a>
-                </footer>
-            </article>
+                    <label>
+                        Values:
+                        <select id="value-type">
+                        </select>
+                    <label>
+                    <button id="create">Create</button>
+                </div>
+                <div>
+                    <button id="step">Step</button>
+                    <button id="auto">Auto</button>
+            </div>
+            <div id="boards">
+            </div>
+        </article>
 
-            <article class="card">
-                <header>
-                    <h4>Selection Sorts</h4>
-                </header>
-                <footer>
-                    <a disabled class="pseudo button">Cartesian Tree Sort</a>
-                    <a href="sorts.html?cycle" class="pseudo button">Cycle Sort</a>
-                    <a disabled class="pseudo button">Heap Sort</a>
-                    <a href="sorts.html?selection" class="pseudo button">Selection Sort</a>
-                    <a href="sorts.html?smooth" class="pseudo button">Smooth Sort</a>
-                    <a disabled class="pseudo button">Tournament Sort</a>
-                </footer>
-            </article>
 
-            <article class="card hidden">
-                <header>
-                    <h4>Insertion Sorts</h4>
-                </header>
-                <footer>
-                    <a disabled class="pseudo button">Binary Insertion Sort</a>
-                    <a disabled class="pseudo button">Insertion Sort</a>
-                    <a disabled class="pseudo button">Library Sort</a>
-                    <a disabled class="pseudo button">Patience Sorting</a>
-                    <a disabled class="pseudo button">Shell Sort</a>
-                    <a disabled class="pseudo button">Splay Sort</a>
-                    <a disabled class="pseudo button">Tree Sort</a>
-                </footer>
-            </article>
-
-            <article class="card hidden">
-                <header>
-                    <h4>Merge Sorts</h4>
-                </header>
-                <footer>
-                    <a disabled class="pseudo button">Cascade Merge Sort</a>
-                    <a disabled class="pseudo button">Merge Sort</a>
-                    <a disabled class="pseudo button">Oscillating Merge Sort</a>
-                    <a disabled class="pseudo button">Polyphase Merge Sort</a>
-                </footer>
-            </article>
-
-            <article class="card hidden">
-                <header>
-                    <h4>Distribution Sorts</h4>
-                </header>
-                <footer>
-                    <a disabled class="pseudo button">American Flag Sort</a>
-                    <a disabled class="pseudo button">Bead Sort</a>
-                    <a disabled class="pseudo button">Bucket Sort</a>
-                    <a disabled class="pseudo button">Burst Sort</a>
-                    <a disabled class="pseudo button">Counting Sort</a>
-                    <a disabled class="pseudo button">Flash Sort</a>
-                    <a disabled class="pseudo button">Pigeonhole Sort</a>
-                    <a disabled class="pseudo button">Proxmap Sort</a>
-                    <a disabled class="pseudo button">Radix Sort</a>
-                </footer>
-            </article>
-
-            <article class="card hidden">
-                <header>
-                    <h4>Concurrent Sorts</h4>
-                </header>
-                <footer>
-                    <a disabled class="pseudo button">Bitonic Sorter</a>
-                    <a disabled class="pseudo button">Cube Sort</a>
-                    <a disabled class="pseudo button">Batcher Odd Even Merge Sort</a>
-                    <a disabled class="pseudo button">Pairwise Sorting Network</a>
-                </footer>
-            </article>
-
-            <article class="card hidden">
-                <header>
-                    <h4>Hybrid Sorts</h4>
-                </header>
-                <footer>
-                    <a disabled class="pseudo button">Block Sort</a>
-                    <a disabled class="pseudo button">Intro Sort</a>
-                    <a disabled class="pseudo button">Tim Sort</a>
-                    <a disabled class="pseudo button">Spread Sort</a>
-                </footer>
-            </article>
-
-            <article class="card hidden">
-                <header>
-                    <h4>Other Sorts</h4>
-                </header>
-                <footer>
-                    <a disabled class="pseudo button">Pancake Sorting</a>
-                    <a disabled class="pseudo button">Spaghetti Sort</a>
-                    <a disabled class="pseudo button">Topological Sorting</a>
-                </footer>
-            </article>
-        </footer>
-    </article>
-    <script src="js/index.js"></script>
-</body>
+        <script src="build/point.js"></script>
+        <script src="build/utils.js"></script>
+        <script src="build/sizes.js"></script>
+        <script src="build/valueTypes.js"></script>
+        <script src="build/shuffles.js"></script>
+        <script src="build/board.js"></script>
+        <script src="build/sorts/sorts.js"></script>
+        <script src="build/index.js"></script>
+    </body>
 
 </html>

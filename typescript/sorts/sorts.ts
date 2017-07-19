@@ -17,6 +17,7 @@ namespace Sorts {
         placed: number[] = []
         shadow: any[] = []
         lastSwapped: boolean = false
+        links: any[]
 
         constructor(public board: Boards.Board) {
             this.length = board.length
@@ -66,9 +67,13 @@ namespace Sorts {
     }
 
     /*
+        -- AA - sort http://www.dia.eui.upm.es/asignatu/pro_par/articulos/AASort.pdf
+
         -- Abacus sort
 
         -- American Flag Sort
+
+        -- arc sort https://arxiv.org/pdf/1406.2262.pdf
 
         -- Batcher Odd Even Merge Sort
 
@@ -78,7 +83,7 @@ namespace Sorts {
 
         -- Binary Tree Sort
 
-        -- Bitonic sorter
+        -- Bitonic sorter http://www.dcc.fc.up.pt/~fds/aulas/PPD/1112/sorting.pdf
 
         -- Block Sort
 
@@ -198,6 +203,12 @@ namespace Sorts {
         ordered: boolean = true
         skipSorted: boolean = false
         shortCircuit: boolean = true
+        links = [
+            {
+                url: 'https://users.cs.duke.edu/~ola/bubble/bubble.pdf',
+                name: 'Bubble Sort: An Archaeological Algorithmic Analysis'
+            }
+        ]
 
         constructor(board) {
             super(board)
@@ -257,7 +268,11 @@ namespace Sorts {
 
         -- cascade merge sort
 
-        -- cata sort
+        -- cata sort https://github.com/Folatt/Catasort/blob/master/catasort.py
+
+        -- check sort http://academia.wikia.com/wiki/Check_sort#Check_sort_and_Rapid_sort
+
+        -- Circle Sort http://rosettacode.org/wiki/Sorting_Algorithms/Circle_Sort http://www.cscjournals.org/manuscript/Journals/IJEA/Volume6/Issue2/IJEA-48.pdf
     */
 
     export class Cocktail extends BaseSort {
@@ -424,6 +439,7 @@ namespace Sorts {
     // try there with large shrink
 
     // comb and insertion
+    // comb shrink faster if no switching???
 
     /*
         -- committee sort
@@ -439,6 +455,12 @@ namespace Sorts {
         static title = "Cycle Sort"
         currentValue: number
         numberLess: number = 0
+        links = [
+            {
+                url: 'https://corte.si/posts/code/cyclesort/index.html',
+                name: 'Cyclesort - a curious little sorting algorithm'
+            }
+        ]
 
         constructor(board) {
             super(board)
@@ -515,6 +537,8 @@ namespace Sorts {
 
         -- dropsort
 
+        -- evil sort http://richardhartersworld.com/cri_d/cri/2001/badsort.html
+
         -- flash sort
 
         -- Franceschini-Muthukrishnan-Pătrașcu algorithm
@@ -540,7 +564,11 @@ namespace Sorts {
         }
 
     /*
+        -- goro sort https://code.google.com/codejam/contest/dashboard?c=975485#s=p3
+
         -- gravity sort
+
+        -- Grouping Comparison sort http://www.cscjournals.org/manuscript/Journals/IJCSS/Volume7/Issue3/IJCSS-877.pdf
 
         -- half hearted merge sort (https://xkcd.com/1185/)
 
@@ -550,9 +578,11 @@ namespace Sorts {
 
         -- heap sort
 
+        -- index sort http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.403.2955&rep=rep1&type=pdf
+
         -- Insertion sort
 
-        -- intelligent design sort
+        -- intelligent design sort https://motherboard.vice.com/en_us/article/4xad8b/a-real-sorting-algorithm-based-on-the-fake-theory-of-intelligent-design
 
         -- internet sort
 
@@ -562,13 +592,19 @@ namespace Sorts {
 
         -- job interview quicksort (https://xkcd.com/1185/)
 
+        -- JumpDownSort (modified bubble sort) https://users.cs.duke.edu/~ola/bubble/bubble.pdf
+
         -- Library sort
+
+        -- List Sort https://arxiv.org/pdf/1310.7890.pdf
 
         -- merge sort
 
         -- 3-way merge sort
 
         -- miracle sort
+
+        -- monkey sort http://richardhartersworld.com/cri_d/cri/2001/badsort.html
     */
 
     export class OddEven extends BaseSort {
@@ -676,10 +712,6 @@ namespace Sorts {
         -- postman sort
 
         -- proxmap sort
-
-        -- radix sort (lsd, msd)
-
-        -- rolling ball sort
 
         -- quantum bogo sort
     */
@@ -856,7 +888,19 @@ namespace Sorts {
     /*
         -- quora sort
 
+        -- radix sort (lsd, msd)
+
+        -- rapid sort http://academia.wikia.com/wiki/Check_sort#Check_sort_and_Rapid_sort
+
+        -- reverse subsequence Reversing subsequence algorithm
+
+        -- rolling ball sort
+
+        -- rva sorting http://dl.acm.org/citation.cfm?id=2677942&CFID=787105030&CFTOKEN=78811798
+
         -- sample sort
+
+        -- Schwartzian transform https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Schwartzian_transform
     */
 
     export class SelectionSort extends BaseSort {
@@ -900,13 +944,15 @@ namespace Sorts {
     /*
         -- shatter sort
 
-        -- shell sort
+        -- shell sort http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.193.6248&rep=rep1&type=pdf TIGCC (a GCC-based compiler for TI-89/92/V200 graphing calculators) uses Shell sort for the qsort implementation in its standard library: http://www.thechalkface.net/resources/Sorting_Algorithms.pdf
+
+        -- silly sort http://richardhartersworld.com/cri_d/cri/2001/badsort.html
 
         -- simple pancake sort
 
         -- ska sort
 
-        -- slow sort
+        -- slow sort https://en.wikipedia.org/wiki/Slowsort, http://www.mipmip.org/tidbits/pasa.pdf
 
         -- sleep sort
     */
@@ -947,6 +993,8 @@ namespace Sorts {
         -- tournament sort
 
         -- tree sort
+
+        -- Two-way replacement selection http://dl.acm.org/citation.cfm?id=1920952
 
         -- unshuffle sort
 

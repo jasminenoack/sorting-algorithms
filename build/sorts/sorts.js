@@ -480,6 +480,7 @@ var Sorts;
     Sorts.CombGnome10 = CombGnome10;
     // try there with large shrink
     // comb and insertion
+    // comb shrink faster if no switching???
     /*
         -- committee sort
 

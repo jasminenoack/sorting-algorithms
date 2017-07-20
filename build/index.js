@@ -5,6 +5,7 @@ var script;
     var boxHeight = 400;
     var boxWidth = 400;
     var autoInterval = null;
+    var delay = 200;
     var boardList = [];
     // setup size dropdown
     var sizes = Sizes.sizeList;
@@ -242,7 +243,7 @@ var script;
             event.currentTarget.classList.remove('active');
         }
         else {
-            autoInterval = setInterval(step, 100);
+            autoInterval = setInterval(step, delay);
             event.currentTarget.classList.add('active');
         }
     });

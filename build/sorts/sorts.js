@@ -68,9 +68,13 @@ var Sorts;
         return BaseSort;
     }());
     /*
+        -- AA - sort http://www.dia.eui.upm.es/asignatu/pro_par/articulos/AASort.pdf
+
         -- Abacus sort
 
         -- American Flag Sort
+
+        -- arc sort https://arxiv.org/pdf/1406.2262.pdf
 
         -- Batcher Odd Even Merge Sort
 
@@ -80,7 +84,7 @@ var Sorts;
 
         -- Binary Tree Sort
 
-        -- Bitonic sorter
+        -- Bitonic sorter http://www.dcc.fc.up.pt/~fds/aulas/PPD/1112/sorting.pdf
 
         -- Block Sort
 
@@ -203,6 +207,12 @@ var Sorts;
             _this.ordered = true;
             _this.skipSorted = false;
             _this.shortCircuit = true;
+            _this.links = [
+                {
+                    url: 'https://users.cs.duke.edu/~ola/bubble/bubble.pdf',
+                    name: 'Bubble Sort: An Archaeological Algorithmic Analysis'
+                }
+            ];
             _this.maxRounds = _this.length;
             return _this;
         }
@@ -281,7 +291,11 @@ var Sorts;
 
         -- cascade merge sort
 
-        -- cata sort
+        -- cata sort https://github.com/Folatt/Catasort/blob/master/catasort.py
+
+        -- check sort http://academia.wikia.com/wiki/Check_sort#Check_sort_and_Rapid_sort
+
+        -- Circle Sort http://rosettacode.org/wiki/Sorting_Algorithms/Circle_Sort http://www.cscjournals.org/manuscript/Journals/IJEA/Volume6/Issue2/IJEA-48.pdf
     */
     var Cocktail = (function (_super) {
         __extends(Cocktail, _super);
@@ -495,6 +509,12 @@ var Sorts;
         function Cycle(board) {
             var _this = _super.call(this, board) || this;
             _this.numberLess = 0;
+            _this.links = [
+                {
+                    url: 'https://corte.si/posts/code/cyclesort/index.html',
+                    name: 'Cyclesort - a curious little sorting algorithm'
+                }
+            ];
             _this.setCurrentValue(_this.baseNode);
             return _this;
         }
@@ -563,6 +583,8 @@ var Sorts;
 
         -- dropsort
 
+        -- evil sort http://richardhartersworld.com/cri_d/cri/2001/badsort.html
+
         -- flash sort
 
         -- Franceschini-Muthukrishnan-Pătrașcu algorithm
@@ -593,19 +615,99 @@ var Sorts;
     Gnome.title = "Gnome Sort";
     Sorts.Gnome = Gnome;
     /*
+        -- goro sort https://code.google.com/codejam/contest/dashboard?c=975485#s=p3
+
         -- gravity sort
+
+        -- Grouping Comparison sort http://www.cscjournals.org/manuscript/Journals/IJCSS/Volume7/Issue3/IJCSS-877.pdf
 
         -- half hearted merge sort (https://xkcd.com/1185/)
 
         -- han's algorithm
 
         -- hanoi sort
-
-        -- heap sort
+    */
+    var Heap = (function (_super) {
+        __extends(Heap, _super);
+        function Heap(board) {
+            var _this = _super.call(this, board) || this;
+            _this.nodesToHeap = [];
+            var heapIndex = Math.floor(_this.length / 2) - 1;
+            for (var i = heapIndex; i >= 0; i--) {
+                _this.nodesToHeap.push(i);
+            }
+            _this.comparisonNode = _this.length - 1;
+            return _this;
+        }
+        Heap.prototype.currentNodes = function () {
+            if (this.done) {
+                return [];
+            }
+            if (this.nodesToHeap.length) {
+                return [this.nodesToHeap[0]];
+            }
+            else {
+                return [0];
+            }
+        };
+        Heap.prototype.heapify = function (node) {
+            var values = this.board.values();
+            var comparison = values[node];
+            var leftChild = (2 * node) + 1;
+            var rightChild = (2 * node) + 2;
+            var left = leftChild <= this.comparisonNode && values[leftChild];
+            var right = rightChild <= this.comparisonNode && values[rightChild];
+            var swapNode;
+            if ((left && left > comparison) || (right && right > comparison)) {
+                this.comparisons++;
+                if (right && right > left) {
+                    swapNode = rightChild;
+                    this.comparisons += 2;
+                }
+                else {
+                    swapNode = leftChild;
+                }
+                this.swap([node, swapNode]);
+                var possibleChild = (2 * swapNode) + 1;
+                if (possibleChild <= this.comparisonNode) {
+                    this.nodesToHeap.unshift(swapNode);
+                }
+            }
+        };
+        Heap.prototype.removeNode = function () {
+            this.swap([0, this.comparisonNode]);
+            this.nodesToHeap.unshift(0);
+            this.comparisonNode--;
+        };
+        Heap.prototype.next = function () {
+            if (this.done) {
+                return [];
+            }
+            this.steps++;
+            var currentNodes = [];
+            if (this.nodesToHeap.length) {
+                var node = this.nodesToHeap.shift();
+                currentNodes.push(node);
+                this.heapify(node);
+            }
+            else {
+                this.removeNode();
+            }
+            if (this.comparisonNode === 0) {
+                this.done = true;
+            }
+            return currentNodes;
+        };
+        return Heap;
+    }(BaseSort));
+    Heap.title = "Heap Sort";
+    Sorts.Heap = Heap;
+    /*
+        -- index sort http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.403.2955&rep=rep1&type=pdf
 
         -- Insertion sort
 
-        -- intelligent design sort
+        -- intelligent design sort https://motherboard.vice.com/en_us/article/4xad8b/a-real-sorting-algorithm-based-on-the-fake-theory-of-intelligent-design
 
         -- internet sort
 
@@ -615,13 +717,19 @@ var Sorts;
 
         -- job interview quicksort (https://xkcd.com/1185/)
 
+        -- JumpDownSort (modified bubble sort) https://users.cs.duke.edu/~ola/bubble/bubble.pdf
+
         -- Library sort
+
+        -- List Sort https://arxiv.org/pdf/1310.7890.pdf
 
         -- merge sort
 
         -- 3-way merge sort
 
         -- miracle sort
+
+        -- monkey sort http://richardhartersworld.com/cri_d/cri/2001/badsort.html
     */
     var OddEven = (function (_super) {
         __extends(OddEven, _super);
@@ -734,10 +842,6 @@ var Sorts;
         -- postman sort
 
         -- proxmap sort
-
-        -- radix sort (lsd, msd)
-
-        -- rolling ball sort
 
         -- quantum bogo sort
     */
@@ -923,7 +1027,19 @@ var Sorts;
     /*
         -- quora sort
 
+        -- radix sort (lsd, msd)
+
+        -- rapid sort http://academia.wikia.com/wiki/Check_sort#Check_sort_and_Rapid_sort
+
+        -- reverse subsequence Reversing subsequence algorithm
+
+        -- rolling ball sort
+
+        -- rva sorting http://dl.acm.org/citation.cfm?id=2677942&CFID=787105030&CFTOKEN=78811798
+
         -- sample sort
+
+        -- Schwartzian transform https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Schwartzian_transform
     */
     var SelectionSort = (function (_super) {
         __extends(SelectionSort, _super);
@@ -967,13 +1083,15 @@ var Sorts;
     /*
         -- shatter sort
 
-        -- shell sort
+        -- shell sort http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.193.6248&rep=rep1&type=pdf TIGCC (a GCC-based compiler for TI-89/92/V200 graphing calculators) uses Shell sort for the qsort implementation in its standard library: http://www.thechalkface.net/resources/Sorting_Algorithms.pdf
+
+        -- silly sort http://richardhartersworld.com/cri_d/cri/2001/badsort.html
 
         -- simple pancake sort
 
         -- ska sort
 
-        -- slow sort
+        -- slow sort https://en.wikipedia.org/wiki/Slowsort, http://www.mipmip.org/tidbits/pasa.pdf
 
         -- sleep sort
     */
@@ -1011,6 +1129,8 @@ var Sorts;
 
         -- tree sort
 
+        -- Two-way replacement selection http://dl.acm.org/citation.cfm?id=1920952
+
         -- unshuffle sort
 
         -- weak heap sort
@@ -1034,6 +1154,7 @@ var Sorts;
         CombGnome10,
         Cycle,
         Gnome,
+        Heap,
         OddEven,
         OddEvenConcurrent,
         QuickSort2,

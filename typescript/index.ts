@@ -4,6 +4,7 @@ namespace script {
     let boxHeight = 400
     let boxWidth = 400
     let autoInterval = null
+    let delay = 200
 
     let boardList = []
 
@@ -295,7 +296,7 @@ namespace script {
             autoInterval = null
             event.currentTarget.classList.remove('active')
         } else {
-            autoInterval = setInterval(step, 100)
+            autoInterval = setInterval(step, delay)
             event.currentTarget.classList.add('active')
         }
     })

@@ -575,9 +575,82 @@ namespace Sorts {
         -- han's algorithm
 
         -- hanoi sort
+    */
 
-        -- heap sort
+    export class Heap extends BaseSort {
+        static title = "Heap Sort"
+        nodesToHeap = []
+        constructor(board) {
+            super(board)
+            let heapIndex = Math.floor(this.length / 2)  - 1
+            for (let i = heapIndex; i >= 0; i--) {
+                this.nodesToHeap.push(i)
+            }
+            this.comparisonNode = this.length - 1
+        }
 
+        currentNodes() {
+            if (this.done) {
+                return []
+            }
+            if (this.nodesToHeap.length) {
+                return [this.nodesToHeap[0]]
+            } else {
+                return [0]
+            }
+        }
+
+        heapify(node) {
+            let values = this.board.values()
+            let comparison = values[node]
+            let leftChild = (2 * node) + 1
+            let rightChild = (2 * node) + 2
+            let left = leftChild <= this.comparisonNode && values[leftChild]
+            let right = rightChild <= this.comparisonNode && values[rightChild]
+            let swapNode
+            if ((left && left > comparison) || (right && right > comparison)) {
+                this.comparisons++
+                if (right && right > left) {
+                    swapNode = rightChild
+                    this.comparisons += 2
+                } else {
+                    swapNode = leftChild
+                }
+                this.swap([node, swapNode])
+                let possibleChild = (2 * swapNode) + 1
+                if (possibleChild <= this.comparisonNode) {
+                    this.nodesToHeap.unshift(swapNode)
+                }
+            }
+        }
+
+        removeNode() {
+            this.swap([0, this.comparisonNode])
+            this.nodesToHeap.unshift(0)
+            this.comparisonNode--
+        }
+
+        next() {
+            if (this.done) {
+                return []
+            }
+            this.steps++
+            let currentNodes = []
+            if (this.nodesToHeap.length) {
+                let node = this.nodesToHeap.shift()
+                currentNodes.push(node)
+                this.heapify(node)
+            } else {
+                this.removeNode()
+            }
+            if(this.comparisonNode === 0) {
+                this.done = true
+            }
+            return currentNodes
+        }
+    }
+
+    /*
         -- index sort http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.403.2955&rep=rep1&type=pdf
 
         -- Insertion sort
@@ -1020,6 +1093,7 @@ namespace Sorts {
         CombGnome10,
         Cycle,
         Gnome,
+        Heap,
         OddEven,
         OddEvenConcurrent,
         QuickSort2,

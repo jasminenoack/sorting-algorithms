@@ -658,11 +658,11 @@ var Sorts;
             var left = leftChild <= this.comparisonNode && values[leftChild];
             var right = rightChild <= this.comparisonNode && values[rightChild];
             var swapNode;
+            this.comparisons += 2;
             if ((left && left > comparison) || (right && right > comparison)) {
                 this.comparisons++;
                 if (right && right > left) {
                     swapNode = rightChild;
-                    this.comparisons += 2;
                 }
                 else {
                     swapNode = leftChild;

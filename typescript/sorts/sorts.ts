@@ -608,11 +608,11 @@ namespace Sorts {
             let left = leftChild <= this.comparisonNode && values[leftChild]
             let right = rightChild <= this.comparisonNode && values[rightChild]
             let swapNode
+            this.comparisons += 2
             if ((left && left > comparison) || (right && right > comparison)) {
                 this.comparisons++
                 if (right && right > left) {
                     swapNode = rightChild
-                    this.comparisons += 2
                 } else {
                     swapNode = leftChild
                 }

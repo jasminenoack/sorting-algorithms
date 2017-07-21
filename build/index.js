@@ -1,62 +1,6 @@
-var script;
-(function (script) {
-    var $boards = document.getElementById("boards");
-    var $create = document.getElementById("create");
-    var boxHeight = 500;
-    var boxWidth = 500;
-    var autoInterval = null;
-    var delay = 100;
-    var boardList = [];
-    // setup size dropdown
-    var sizes = Sizes.sizeList;
-    var sizeElement = document.getElementById("size");
-    sizes.forEach(function (size, index) {
-        var optionElement = document.createElement('option');
-        optionElement.value = index + '';
-        optionElement.textContent = size.label;
-        sizeElement.appendChild(optionElement);
-    });
-    // set up shuffles
-    var orders = Shuffles.ShuffleList;
-    var orderSelect = document.getElementById('order');
-    orders.forEach(function (shuffle, index) {
-        var optionElement = document.createElement('option');
-        optionElement.value = index + '';
-        optionElement.textContent = shuffle.title;
-        orderSelect.appendChild(optionElement);
-    });
-    // set up value types
-    var valueTypes = ValueTypes.valueTypeList;
-    var valueTypeSelect = document.getElementById('value-type');
-    valueTypes.forEach(function (valueType, index) {
-        var optionElement = document.createElement('option');
-        optionElement.value = index + '';
-        optionElement.textContent = valueType.title;
-        valueTypeSelect.appendChild(optionElement);
-    });
-    var sorts = Sorts.sortList;
-    var sortElement = document.getElementById("sort");
-    sorts.forEach(function (sort, index) {
-        var optionElement = document.createElement('option');
-        optionElement.value = index + '';
-        optionElement.textContent = sort.title;
-        sortElement.appendChild(optionElement);
-    });
-    // when click create
-    $create.addEventListener('click', function () {
-        var size = sizes[sizeElement.value];
-        var value = valueTypes[valueTypeSelect.value];
-        var order = orders[orderSelect.value];
-        var Sort = sorts[sortElement.value];
-        // let board = new Boards.Board(size)
-        var board = new Boards.Board(size, order, value);
-        boardList.push({
-            board: board,
-            sort: new Sort(board)
-        });
-        createBoard(boardList.length - 1, Sort);
-    });
-    function renderShadow(sort, board, boardElement) {
+var Index;
+(function (Index) {
+    function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
         var valueMin = board.min();
         var valueMax = board.max();
         var widthSpread = board.values().length - 1;
@@ -83,7 +27,7 @@ var script;
             shadowElements[i].remove();
         }
     }
-    function reRenderPoint(pointElements, board, index) {
+    function reRenderPoint(pointElements, board, index, boxHeight, boxWidth) {
         var value = board.get(index).value;
         var valueMin = board.min();
         var valueMax = board.max();
@@ -128,7 +72,7 @@ var script;
     function getTextContent(sort) {
         return "<div>\n            <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n            <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n            <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n            <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n            <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n            <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n        </div>";
     }
-    function step() {
+    function step(boardList, boxHeight, boxWidth) {
         var _loop_1 = function (i) {
             var currentNodes = void 0;
             var boardData = boardList[i];
@@ -146,21 +90,20 @@ var script;
                 }
                 var points = Array.prototype.range(sort.length);
                 points.forEach(function (point) {
-                    reRenderPoint(pointElements, board, point);
+                    reRenderPoint(pointElements, board, point, boxHeight, boxWidth);
                 });
                 currentNodes = sort.currentNodes();
                 setCurrentNodes(currentNodes, pointElements, sort);
                 boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].innerHTML = getTextContent(sort);
-                renderShadow(sort, board, boardElement);
+                renderShadow(sort, board, boardElement, boxHeight, boxWidth);
             }
         };
         for (var i = 0; i < boardList.length; i++) {
             _loop_1(i);
         }
     }
-    var $step = document.getElementById("step");
-    $step.addEventListener('click', step);
-    function createBoard(index, Sort) {
+    Index.step = step;
+    function createBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
         var board = boardList[index].board;
         var sort = boardList[index].sort;
         var values = board.values();
@@ -168,7 +111,7 @@ var script;
         var valueMax = board.max();
         var widthSpread = values.length - 1;
         var heightSpread = valueMax - valueMin;
-        var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
+        var radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread);
         var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
         var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -203,9 +146,10 @@ var script;
         $button.className = 'remove';
         $wrapper.appendChild($button);
         $wrapper.appendChild(boardElement);
-        $boards.appendChild($wrapper);
-        renderShadow(sort, board, gElement);
+        boardsElement.appendChild($wrapper);
+        renderShadow(sort, board, gElement, boxHeight, boxWidth);
     }
+    Index.createBoard = createBoard;
     function createDelegatedEvent(eventNode, eventType, fun, selector) {
         var listener = eventNode.addEventListener(eventType, function (event) {
             var currentTarget = event.target;
@@ -215,6 +159,7 @@ var script;
         });
         return listener;
     }
+    Index.createDelegatedEvent = createDelegatedEvent;
     function closestParent(node, selector) {
         if (node.matches(selector)) {
             return node;
@@ -226,27 +171,5 @@ var script;
             return closestParent(node.parentElement, selector);
         }
     }
-    createDelegatedEvent($boards, 'click', function (event, target) {
-        var $wrapper = closestParent(target, '.wrapper');
-        var wrappers = document.getElementsByClassName('wrapper');
-        for (var i = 0; i < wrappers.length; i++) {
-            if (wrappers[i] === $wrapper) {
-                boardList.splice(i, 1);
-                break;
-            }
-        }
-        $wrapper.remove();
-    }, '.remove');
-    var $auto = document.getElementById("auto");
-    $auto.addEventListener('click', function (event) {
-        if (autoInterval) {
-            clearInterval(autoInterval);
-            autoInterval = null;
-            event.currentTarget.classList.remove('active');
-        }
-        else {
-            autoInterval = setInterval(step, delay);
-            event.currentTarget.classList.add('active');
-        }
-    });
-})(script || (script = {}));
+    Index.closestParent = closestParent;
+})(Index || (Index = {}));

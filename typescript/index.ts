@@ -1,69 +1,5 @@
-namespace script {
-    let $boards = document.getElementById("boards")
-    let $create = document.getElementById("create")
-    let boxHeight = 500
-    let boxWidth = 500
-    let autoInterval = null
-    let delay = 100
-
-    let boardList = []
-
-    // setup size dropdown
-    let sizes = Sizes.sizeList
-    let sizeElement = document.getElementById("size")
-    sizes.forEach((size, index) => {
-        let optionElement = document.createElement('option')
-        optionElement.value = index + ''
-        optionElement.textContent = size.label
-        sizeElement.appendChild(optionElement)
-    })
-
-    // set up shuffles
-    let orders = Shuffles.ShuffleList
-    let orderSelect = document.getElementById('order')
-    orders.forEach((shuffle, index) => {
-        let optionElement = document.createElement('option')
-        optionElement.value = index + ''
-        optionElement.textContent = shuffle.title
-        orderSelect.appendChild(optionElement)
-    })
-
-    // set up value types
-    let valueTypes = ValueTypes.valueTypeList
-    let valueTypeSelect = document.getElementById('value-type')
-    valueTypes.forEach((valueType, index) => {
-        let optionElement = document.createElement('option')
-        optionElement.value = index + ''
-        optionElement.textContent = valueType.title
-        valueTypeSelect.appendChild(optionElement)
-    })
-
-    let sorts = Sorts.sortList
-    let sortElement = document.getElementById("sort")
-    sorts.forEach((sort, index) => {
-        let optionElement = document.createElement('option')
-        optionElement.value = index + ''
-        optionElement.textContent = sort.title
-        sortElement.appendChild(optionElement)
-    })
-
-    // when click create
-    $create.addEventListener('click', function () {
-        let size = sizes[sizeElement.value]
-        let value = valueTypes[valueTypeSelect.value]
-        let order = orders[orderSelect.value]
-        let Sort = sorts[sortElement.value]
-
-        // let board = new Boards.Board(size)
-        let board = new Boards.Board(size, order, value)
-        boardList.push({
-            board: board,
-            sort: new Sort(board)
-        })
-        createBoard(boardList.length - 1, Sort)
-    })
-
-    function renderShadow(sort, board, boardElement) {
+namespace Index {
+    function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
         let valueMin = board.min()
         let valueMax = board.max()
         let widthSpread = board.values().length - 1
@@ -96,7 +32,7 @@ namespace script {
         }
     }
 
-    function reRenderPoint(pointElements, board, index) {
+    function reRenderPoint(pointElements, board, index, boxHeight, boxWidth) {
         let value = board.get(index).value
         let valueMin = board.min()
         let valueMax = board.max()
@@ -161,7 +97,7 @@ namespace script {
         </div>`
     }
 
-    function step () {
+    export function step (boardList, boxHeight, boxWidth) {
         for (let i = 0; i < boardList.length; i++) {
             let currentNodes
             let boardData = boardList[i]
@@ -181,7 +117,7 @@ namespace script {
                 }
                 let points = Array.prototype.range(sort.length)
                 points.forEach(function (point) {
-                    reRenderPoint(pointElements, board, point)
+                    reRenderPoint(pointElements, board, point, boxHeight, boxWidth)
                 })
                 currentNodes = sort.currentNodes()
                 setCurrentNodes(currentNodes, pointElements, sort)
@@ -191,15 +127,12 @@ namespace script {
                     'step-count'
                 )[0].innerHTML = getTextContent(sort)
 
-                renderShadow(sort, board, boardElement)
+                renderShadow(sort, board, boardElement, boxHeight, boxWidth)
             }
         }
     }
 
-    let $step = document.getElementById("step")
-    $step.addEventListener('click', step)
-
-    function createBoard (index, Sort) {
+    export function createBoard (index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
         let board = boardList[index].board
         let sort = boardList[index].sort
         let values = board.values()
@@ -207,10 +140,10 @@ namespace script {
         let valueMax = board.max()
         let widthSpread = values.length - 1
         let heightSpread = valueMax - valueMin
-        let radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread)
+        let radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread)
 
         let boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-        boardElement.setAttribute('viewBox', `0 0 ${boxWidth+ 40} ${boxHeight + 40}`)
+        boardElement.setAttribute('viewBox', `0 0 ${boxWidth + 40} ${boxHeight + 40}`)
 
         let gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g')
         gElement.setAttribute('transform', `translate(${20}, ${20})`)
@@ -254,12 +187,12 @@ namespace script {
         $button.className = 'remove'
         $wrapper.appendChild($button)
         $wrapper.appendChild(boardElement)
-        $boards.appendChild($wrapper)
+        boardsElement.appendChild($wrapper)
 
-        renderShadow(sort, board, gElement)
+        renderShadow(sort, board, gElement, boxHeight, boxWidth)
     }
 
-    function createDelegatedEvent(eventNode, eventType, fun, selector) {
+    export function createDelegatedEvent(eventNode, eventType, fun, selector) {
         let listener = eventNode.addEventListener(eventType, function(event) {
             let currentTarget = event.target
             if (event.target.matches(selector)) {
@@ -269,7 +202,7 @@ namespace script {
         return listener
     }
 
-    function closestParent(node, selector) {
+    export function closestParent(node, selector) {
         if (node.matches(selector)) {
             return node
         } else if (!node.parentElement) {
@@ -278,28 +211,4 @@ namespace script {
             return closestParent(node.parentElement, selector)
         }
     }
-
-    createDelegatedEvent($boards, 'click', function (event, target) {
-        let $wrapper = closestParent(target, '.wrapper')
-        let wrappers = document.getElementsByClassName('wrapper')
-        for (let i = 0; i < wrappers.length; i++) {
-            if (wrappers[i] === $wrapper) {
-                boardList.splice(i, 1)
-                break
-            }
-        }
-        $wrapper.remove()
-    }, '.remove')
-
-    let $auto = document.getElementById("auto")
-    $auto.addEventListener('click', function (event) {
-        if (autoInterval) {
-            clearInterval(autoInterval)
-            autoInterval = null
-            event.currentTarget.classList.remove('active')
-        } else {
-            autoInterval = setInterval(step, delay)
-            event.currentTarget.classList.add('active')
-        }
-    })
 }

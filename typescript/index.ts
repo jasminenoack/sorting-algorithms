@@ -4,7 +4,7 @@ namespace script {
     let boxHeight = 400
     let boxWidth = 400
     let autoInterval = null
-    let delay = 200
+    let delay = 100
 
     let boardList = []
 
@@ -169,6 +169,10 @@ namespace script {
             let board = boardData.board
             let boardElement = document.getElementsByClassName('board')[i]
             let pointElements = boardElement.getElementsByClassName('point')
+
+            console.log(sort.nodesToHeap)
+            console.log(sort.roots)
+            console.log(sort.placed)
 
             currentNodes = sort.currentNodes()
             removeCurrentNodes(currentNodes, pointElements)

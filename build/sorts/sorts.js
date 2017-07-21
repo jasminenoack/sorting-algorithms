@@ -1095,7 +1095,203 @@ var Sorts;
 
         -- sleep sort
     */
-    // smooth
+    var Smooth = (function (_super) {
+        __extends(Smooth, _super);
+        function Smooth(board, skip) {
+            if (skip === void 0) { skip = false; }
+            var _this = _super.call(this, board) || this;
+            // size of each tree
+            _this.treeSizes = [];
+            // tree roots
+            _this.roots = [];
+            // numbers
+            _this.leonardoNumbers = [];
+            _this.nodesToHeap = [];
+            _this.rootsToCompare = [];
+            _this.fromBottom = false;
+            if (!skip) {
+                _this.setUp(_this.fromBottom);
+            }
+            return _this;
+        }
+        Smooth.prototype.setUp = function (fromBottom) {
+            this.leonardoNumbers = this.getLeoNums(this.length);
+            if (!fromBottom) {
+                this.treeSizes = this.getTreeSizes(this.length);
+            }
+        };
+        Smooth.prototype.getLeoNums = function (length) {
+            var numbers = [1, 1];
+            while (true) {
+                var nextNum = numbers[numbers.length - 1] + numbers[numbers.length - 2] + 1;
+                if (nextNum >= this.length) {
+                    break;
+                }
+                numbers.push(nextNum);
+            }
+            return numbers;
+        };
+        Smooth.prototype.getTreeSizes = function (length) {
+            var numbers = [];
+            for (var i = 0; i < length; i++) {
+                var sub1 = numbers[i - 1];
+                var sub2 = numbers[i - 1 - sub1];
+                if (this.leonardoNumbers.indexOf(sub1 + sub2 + 1) !== -1) {
+                    numbers.push(sub1 + sub2 + 1);
+                    this.roots.splice(this.roots.length - 2, 2, i);
+                    if (!this.fromBottom) {
+                        this.nodesToHeap.push(i);
+                    }
+                }
+                else {
+                    numbers.push(1);
+                    this.roots.push(i);
+                }
+            }
+            this.rootsToCompare = this.roots.slice();
+            return numbers;
+        };
+        Smooth.prototype.currentNodes = function () {
+            if (this.done) {
+                return [];
+            }
+            var nodes;
+            if (this.nodesToHeap.length) {
+                return [this.nodesToHeap[0]];
+            }
+            else if (this.rootsToCompare.length) {
+                return [this.rootsToCompare[0]];
+            }
+            else {
+                return [this.roots[this.roots.length - 1]];
+            }
+        };
+        Smooth.prototype.next = function () {
+            if (this.done) {
+                return [];
+            }
+            this.steps++;
+            var nodes;
+            if (this.nodesToHeap.length) {
+                nodes = this.heapify(this.nodesToHeap.shift());
+            }
+            else if (this.rootsToCompare.length) {
+                nodes = this.compare(this.rootsToCompare);
+            }
+            else if (this.fromBottom && this.baseNode < this.length) {
+                nodes = this.addNextNode(this.baseNode);
+                this.baseNode++;
+            }
+            else {
+                nodes = this.remove(this.roots.pop());
+            }
+            if (!this.roots.length && !(this.fromBottom && this.baseNode < this.length)) {
+                this.done = true;
+            }
+            return nodes;
+        };
+        Smooth.prototype.addNextNode = function (index) {
+            var _a = this.getChildren(index), sub1 = _a[0], sub2 = _a[1];
+            var nodes;
+            if (sub2 < 0) {
+                // there is only sub 1
+                this.roots.push(index);
+                nodes = this.compare(this.roots.slice());
+                this.treeSizes.push(1);
+            }
+            else if (this.leonardoNumbers.indexOf(1 + this.treeSizes[sub1] + this.treeSizes[sub2]) !== -1) {
+                // combine trees
+                nodes = this.heapify(index);
+                this.roots.splice(this.roots.length - 2, 2, index);
+                this.treeSizes.push(1 + this.treeSizes[sub1] + this.treeSizes[sub2]);
+            }
+            else {
+                // we are adding a tree
+                this.treeSizes.push(1);
+                this.roots.push(index);
+                nodes = this.compare(this.roots.slice());
+            }
+            return nodes;
+        };
+        Smooth.prototype.compare = function (nodes) {
+            var current = nodes.slice();
+            var endpoint = nodes[nodes.length - 1];
+            var maxNode = nodes[0];
+            var values = this.board.values();
+            for (var i = 1; i < nodes.length; i++) {
+                this.comparisons++;
+                if (values[maxNode] < values[nodes[i]]) {
+                    maxNode = nodes[i];
+                }
+            }
+            if (maxNode !== endpoint) {
+                this.swap([maxNode, endpoint]);
+                if (this.treeSizes[maxNode] > 1) {
+                    this.nodesToHeap.push(maxNode);
+                }
+            }
+            if (nodes.length > 2) {
+                var pickedIndex = nodes.indexOf(maxNode);
+                nodes.splice(nodes.length - 1, 1);
+                this.rootsToCompare = nodes;
+            }
+            else {
+                this.rootsToCompare = [];
+            }
+            return current;
+        };
+        Smooth.prototype.remove = function (index) {
+            var nodes = [index];
+            if (this.treeSizes[index] > 1) {
+                var _a = this.getChildren(index), sub1 = _a[0], sub2 = _a[1];
+                var prevRoot = void 0;
+                this.roots.push(sub2);
+                this.roots.push(sub1);
+                this.rootsToCompare = this.roots.slice();
+            }
+            this.placed.push(index);
+            return nodes;
+        };
+        Smooth.prototype.getChildren = function (index) {
+            var sub1 = index - 1;
+            var sub2 = sub1 - this.treeSizes[sub1];
+            return [sub1, sub2];
+        };
+        Smooth.prototype.heapify = function (index) {
+            var nodes = [index];
+            var _a = this.getChildren(index), sub1 = _a[0], sub2 = _a[1];
+            this.comparisons += 2;
+            var values = this.board.values();
+            if (values[index] < values[sub1] || values[index] < values[sub2]) {
+                this.comparisons++;
+                var high = values[sub2] > values[sub1] ? sub2 : sub1;
+                this.swap([index, high]);
+                nodes = [index, high];
+                if (this.treeSizes[high] > 1) {
+                    this.nodesToHeap.unshift(high);
+                }
+            }
+            return nodes;
+        };
+        return Smooth;
+    }(BaseSort));
+    Smooth.title = "Smooth Sort";
+    Sorts.Smooth = Smooth;
+    var SmoothSetUpBottom = (function (_super) {
+        __extends(SmoothSetUpBottom, _super);
+        function SmoothSetUpBottom(board) {
+            var _this = _super.call(this, board, true) || this;
+            _this.fromBottom = true;
+            _this.setUp(_this.fromBottom);
+            _this.baseNode = 1;
+            _this.treeSizes = [1];
+            _this.roots = [0];
+            return _this;
+        }
+        return SmoothSetUpBottom;
+    }(Smooth));
+    SmoothSetUpBottom.title = 'Smooth Sort(Set up from bottom)';
+    Sorts.SmoothSetUpBottom = SmoothSetUpBottom;
     /*
         -- solar bitflip
 
@@ -1163,6 +1359,8 @@ var Sorts;
         QuickSort3,
         QuickSort3RightPartition,
         QuickSort3Random,
-        SelectionSort
+        SelectionSort,
+        Smooth,
+        SmoothSetUpBottom
     ];
 })(Sorts || (Sorts = {}));

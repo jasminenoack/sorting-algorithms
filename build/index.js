@@ -5,7 +5,7 @@ var script;
     var boxHeight = 400;
     var boxWidth = 400;
     var autoInterval = null;
-    var delay = 200;
+    var delay = 100;
     var boardList = [];
     // setup size dropdown
     var sizes = Sizes.sizeList;
@@ -136,6 +136,9 @@ var script;
             var board = boardData.board;
             var boardElement = document.getElementsByClassName('board')[i];
             var pointElements = boardElement.getElementsByClassName('point');
+            console.log(sort.nodesToHeap);
+            console.log(sort.roots);
+            console.log(sort.placed);
             currentNodes = sort.currentNodes();
             removeCurrentNodes(currentNodes, pointElements);
             removeShadow(boardElement);

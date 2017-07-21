@@ -110,3 +110,5 @@ Python’s sort() – Timsort (Hybrid of Mergesort and Insertion Sort)
     Adaptive- Yes
 
 javascript - https://stackoverflow.com/questions/234683/javascript-array-sort-implementation
+
+https://www.codeproject.com/Articles/26048/Fastest-In-Place-Stable-Sort

@@ -1,8 +1,8 @@
 namespace script {
     let $boards = document.getElementById("boards")
     let $create = document.getElementById("create")
-    let boxHeight = 400
-    let boxWidth = 400
+    let boxHeight = 500
+    let boxWidth = 500
     let autoInterval = null
     let delay = 100
 
@@ -147,7 +147,7 @@ namespace script {
     function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
         return Math.max(Math.min(
             boxHeight / heightSpread / 2, boxWidth / widthSpread / 2
-        ), 5)
+        ), 2)
     }
 
     function getTextContent (sort) {
@@ -170,18 +170,16 @@ namespace script {
             let boardElement = document.getElementsByClassName('board')[i]
             let pointElements = boardElement.getElementsByClassName('point')
 
-            console.log(sort.nodesToHeap)
-            console.log(sort.roots)
-            console.log(sort.placed)
-
             currentNodes = sort.currentNodes()
             removeCurrentNodes(currentNodes, pointElements)
             removeShadow(boardElement)
 
-            let points = sort.next()
             // update all points
-            if (!sort.done || points) {
-                points = Array.prototype.range(sort.length)
+            if (!sort.done) {
+                for (let i = 0; i < board.size.elemCount / 100; i++) {
+                    sort.next()
+                }
+                let points = Array.prototype.range(sort.length)
                 points.forEach(function (point) {
                     reRenderPoint(pointElements, board, point)
                 })

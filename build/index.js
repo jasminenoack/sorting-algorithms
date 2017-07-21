@@ -2,8 +2,8 @@ var script;
 (function (script) {
     var $boards = document.getElementById("boards");
     var $create = document.getElementById("create");
-    var boxHeight = 400;
-    var boxWidth = 400;
+    var boxHeight = 500;
+    var boxWidth = 500;
     var autoInterval = null;
     var delay = 100;
     var boardList = [];
@@ -123,7 +123,7 @@ var script;
         return [xCenter, yCenter];
     }
     function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
-        return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 5);
+        return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
     }
     function getTextContent(sort) {
         return "<div>\n            <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n            <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n            <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n            <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n            <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n            <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n        </div>";
@@ -136,16 +136,15 @@ var script;
             var board = boardData.board;
             var boardElement = document.getElementsByClassName('board')[i];
             var pointElements = boardElement.getElementsByClassName('point');
-            console.log(sort.nodesToHeap);
-            console.log(sort.roots);
-            console.log(sort.placed);
             currentNodes = sort.currentNodes();
             removeCurrentNodes(currentNodes, pointElements);
             removeShadow(boardElement);
-            var points = sort.next();
             // update all points
-            if (!sort.done || points) {
-                points = Array.prototype.range(sort.length);
+            if (!sort.done) {
+                for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
+                    sort.next();
+                }
+                var points = Array.prototype.range(sort.length);
                 points.forEach(function (point) {
                     reRenderPoint(pointElements, board, point);
                 });

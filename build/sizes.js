@@ -1,5 +1,9 @@
 var Sizes;
 (function (Sizes) {
+    Sizes.speedTest = {
+        elemCount: 9000,
+        label: "9000"
+    };
     Sizes.stupidNumber = {
         elemCount: 1000,
         label: "1000"
@@ -50,6 +54,7 @@ var Sizes;
         Sizes.xSmall,
         Sizes.xXSmall,
         Sizes.manyMany,
-        Sizes.stupidNumber
+        Sizes.stupidNumber,
+        Sizes.speedTest
     ];
 })(Sizes || (Sizes = {}));

@@ -609,9 +609,9 @@ namespace Sorts {
             let right = rightChild <= this.comparisonNode && values[rightChild]
             let swapNode
             this.comparisons += 2
-            if ((left && left > comparison) || (right && right > comparison)) {
+            if (((left || left === 0) && left > comparison) || ((right || right === 0) && right > comparison)) {
                 this.comparisons++
-                if (right && right > left) {
+                if ((right || (right !== false && right !== undefined)) && right > left) {
                     swapNode = rightChild
                 } else {
                     swapNode = leftChild
@@ -653,9 +653,72 @@ namespace Sorts {
 
     /*
         -- index sort http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.403.2955&rep=rep1&type=pdf
+    */
 
-        -- Insertion sort
+    export class Insertion extends BaseSort {
+        static title = "Insertion Sort"
+        insertValue: number = null
 
+        constructor(board) {
+            super(board)
+            this.baseNode = 1
+        }
+
+        currentNodes() {
+            if (this.done) {
+                return []
+            }
+            let nodes = [this.baseNode]
+            if (this.comparisonNode >= 0) {
+                nodes.push(this.comparisonNode)
+            }
+            return nodes
+        }
+
+        next() {
+            if (this.done) {
+                return []
+            }
+            this.steps++
+
+            if (this.insertValue === null) {
+                this.insertValue = this.board.values()[this.baseNode]
+                this.shadow = [{index: this.baseNode, value: this.insertValue}]
+                this.comparisonNode = this.baseNode - 1
+            }
+
+            let nodes = [this.baseNode]
+
+            this.comparisons++
+            if (this.insertValue < this.board.values()[this.comparisonNode]) {
+                nodes = [this.comparisonNode, this.baseNode]
+                this.swaps += 0.5
+                this.board.set(
+                    this.comparisonNode + 1,
+                    this.board.values()[this.comparisonNode]
+                )
+                this.comparisonNode--
+            } else {
+                if (this.comparisonNode + 1 !== this.baseNode) {
+                    nodes = [this.comparisonNode + 1]
+                    this.swaps += 0.5
+                    this.board.set(
+                        this.comparisonNode + 1,
+                        this.insertValue
+                    )
+                }
+                this.baseNode++
+                this.insertValue = null
+            }
+
+            if (this.baseNode === this.length) {
+                this.done = true
+            }
+            return nodes
+        }
+    }
+
+    /*
         -- intelligent design sort https://motherboard.vice.com/en_us/article/4xad8b/a-real-sorting-algorithm-based-on-the-fake-theory-of-intelligent-design
 
         -- internet sort
@@ -1295,6 +1358,7 @@ namespace Sorts {
         Cycle,
         Gnome,
         Heap,
+        Insertion,
         OddEven,
         OddEvenConcurrent,
         QuickSort2,

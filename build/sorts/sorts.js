@@ -659,9 +659,9 @@ var Sorts;
             var right = rightChild <= this.comparisonNode && values[rightChild];
             var swapNode;
             this.comparisons += 2;
-            if ((left && left > comparison) || (right && right > comparison)) {
+            if (((left || left === 0) && left > comparison) || ((right || right === 0) && right > comparison)) {
                 this.comparisons++;
-                if (right && right > left) {
+                if ((right || (right !== false && right !== undefined)) && right > left) {
                     swapNode = rightChild;
                 }
                 else {
@@ -705,9 +705,62 @@ var Sorts;
     Sorts.Heap = Heap;
     /*
         -- index sort http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.403.2955&rep=rep1&type=pdf
-
-        -- Insertion sort
-
+    */
+    var Insertion = (function (_super) {
+        __extends(Insertion, _super);
+        function Insertion(board) {
+            var _this = _super.call(this, board) || this;
+            _this.insertValue = null;
+            _this.baseNode = 1;
+            return _this;
+        }
+        Insertion.prototype.currentNodes = function () {
+            if (this.done) {
+                return [];
+            }
+            var nodes = [this.baseNode];
+            if (this.comparisonNode >= 0) {
+                nodes.push(this.comparisonNode);
+            }
+            return nodes;
+        };
+        Insertion.prototype.next = function () {
+            if (this.done) {
+                return [];
+            }
+            this.steps++;
+            if (this.insertValue === null) {
+                this.insertValue = this.board.values()[this.baseNode];
+                this.shadow = [{ index: this.baseNode, value: this.insertValue }];
+                this.comparisonNode = this.baseNode - 1;
+            }
+            var nodes = [this.baseNode];
+            this.comparisons++;
+            if (this.insertValue < this.board.values()[this.comparisonNode]) {
+                nodes = [this.comparisonNode, this.baseNode];
+                this.swaps += 0.5;
+                this.board.set(this.comparisonNode + 1, this.board.values()[this.comparisonNode]);
+                this.comparisonNode--;
+            }
+            else {
+                if (this.comparisonNode + 1 !== this.baseNode) {
+                    nodes = [this.comparisonNode + 1];
+                    this.swaps += 0.5;
+                    this.board.set(this.comparisonNode + 1, this.insertValue);
+                }
+                this.baseNode++;
+                this.insertValue = null;
+            }
+            if (this.baseNode === this.length) {
+                this.done = true;
+            }
+            return nodes;
+        };
+        return Insertion;
+    }(BaseSort));
+    Insertion.title = "Insertion Sort";
+    Sorts.Insertion = Insertion;
+    /*
         -- intelligent design sort https://motherboard.vice.com/en_us/article/4xad8b/a-real-sorting-algorithm-based-on-the-fake-theory-of-intelligent-design
 
         -- internet sort
@@ -1358,6 +1411,7 @@ var Sorts;
         Cycle,
         Gnome,
         Heap,
+        Insertion,
         OddEven,
         OddEvenConcurrent,
         QuickSort2,

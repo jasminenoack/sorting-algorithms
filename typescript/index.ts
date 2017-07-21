@@ -147,7 +147,7 @@ namespace script {
     function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
         return Math.max(Math.min(
             boxHeight / heightSpread / 2, boxWidth / widthSpread / 2
-        ), 2)
+        ), 5)
     }
 
     function getTextContent (sort) {

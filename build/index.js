@@ -12,7 +12,7 @@ var script;
     var sizeElement = document.getElementById("size");
     sizes.forEach(function (size, index) {
         var optionElement = document.createElement('option');
-        optionElement.value = index;
+        optionElement.value = index + '';
         optionElement.textContent = size.label;
         sizeElement.appendChild(optionElement);
     });
@@ -21,7 +21,7 @@ var script;
     var orderSelect = document.getElementById('order');
     orders.forEach(function (shuffle, index) {
         var optionElement = document.createElement('option');
-        optionElement.value = index;
+        optionElement.value = index + '';
         optionElement.textContent = shuffle.title;
         orderSelect.appendChild(optionElement);
     });
@@ -30,7 +30,7 @@ var script;
     var valueTypeSelect = document.getElementById('value-type');
     valueTypes.forEach(function (valueType, index) {
         var optionElement = document.createElement('option');
-        optionElement.value = index;
+        optionElement.value = index + '';
         optionElement.textContent = valueType.title;
         valueTypeSelect.appendChild(optionElement);
     });
@@ -38,7 +38,7 @@ var script;
     var sortElement = document.getElementById("sort");
     sorts.forEach(function (sort, index) {
         var optionElement = document.createElement('option');
-        optionElement.value = index;
+        optionElement.value = index + '';
         optionElement.textContent = sort.title;
         sortElement.appendChild(optionElement);
     });

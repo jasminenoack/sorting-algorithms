@@ -13,7 +13,7 @@ namespace script {
     let sizeElement = document.getElementById("size")
     sizes.forEach((size, index) => {
         let optionElement = document.createElement('option')
-        optionElement.value = index
+        optionElement.value = index + ''
         optionElement.textContent = size.label
         sizeElement.appendChild(optionElement)
     })
@@ -23,7 +23,7 @@ namespace script {
     let orderSelect = document.getElementById('order')
     orders.forEach((shuffle, index) => {
         let optionElement = document.createElement('option')
-        optionElement.value = index
+        optionElement.value = index + ''
         optionElement.textContent = shuffle.title
         orderSelect.appendChild(optionElement)
     })
@@ -33,7 +33,7 @@ namespace script {
     let valueTypeSelect = document.getElementById('value-type')
     valueTypes.forEach((valueType, index) => {
         let optionElement = document.createElement('option')
-        optionElement.value = index
+        optionElement.value = index + ''
         optionElement.textContent = valueType.title
         valueTypeSelect.appendChild(optionElement)
     })
@@ -42,7 +42,7 @@ namespace script {
     let sortElement = document.getElementById("sort")
     sorts.forEach((sort, index) => {
         let optionElement = document.createElement('option')
-        optionElement.value = index
+        optionElement.value = index + ''
         optionElement.textContent = sort.title
         sortElement.appendChild(optionElement)
     })

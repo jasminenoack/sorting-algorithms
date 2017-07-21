@@ -4,6 +4,11 @@ namespace Sizes {
         label: string;
     }
 
+    export let speedTest = {
+        elemCount: 9000,
+        label: "9000"
+    };
+
     export let stupidNumber = {
         elemCount: 1000,
         label: "1000"
@@ -64,6 +69,7 @@ namespace Sizes {
         xSmall,
         xXSmall,
         manyMany,
-        stupidNumber
+        stupidNumber,
+        speedTest
     ]
 }

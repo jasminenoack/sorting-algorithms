@@ -1,5 +1,9 @@
 var Sizes;
 (function (Sizes) {
+    Sizes.stupidNumber = {
+        elemCount: 1000,
+        label: "1000"
+    };
     Sizes.manyMany = {
         elemCount: 300,
         label: "300"
@@ -45,6 +49,7 @@ var Sizes;
         Sizes.small,
         Sizes.xSmall,
         Sizes.xXSmall,
-        Sizes.manyMany
+        Sizes.manyMany,
+        Sizes.stupidNumber
     ];
 })(Sizes || (Sizes = {}));

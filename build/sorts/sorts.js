@@ -207,12 +207,6 @@ var Sorts;
             _this.ordered = true;
             _this.skipSorted = false;
             _this.shortCircuit = true;
-            _this.links = [
-                {
-                    url: 'https://users.cs.duke.edu/~ola/bubble/bubble.pdf',
-                    name: 'Bubble Sort: An Archaeological Algorithmic Analysis'
-                }
-            ];
             _this.maxRounds = _this.length;
             return _this;
         }
@@ -246,6 +240,12 @@ var Sorts;
         return Bubble;
     }(BaseSort));
     Bubble.title = "Bubble(Short Circuit)";
+    Bubble.links = [
+        {
+            url: 'https://users.cs.duke.edu/~ola/bubble/bubble.pdf',
+            name: 'Bubble Sort: An Archaeological Algorithmic Analysis'
+        }
+    ];
     Sorts.Bubble = Bubble;
     var BubbleNonOptimized = (function (_super) {
         __extends(BubbleNonOptimized, _super);
@@ -509,12 +509,6 @@ var Sorts;
         function Cycle(board) {
             var _this = _super.call(this, board) || this;
             _this.numberLess = 0;
-            _this.links = [
-                {
-                    url: 'https://corte.si/posts/code/cyclesort/index.html',
-                    name: 'Cyclesort - a curious little sorting algorithm'
-                }
-            ];
             _this.setCurrentValue(_this.baseNode);
             return _this;
         }
@@ -575,6 +569,12 @@ var Sorts;
         return Cycle;
     }(BaseSort));
     Cycle.title = "Cycle Sort";
+    Cycle.links = [
+        {
+            url: 'https://corte.si/posts/code/cyclesort/index.html',
+            name: 'Cyclesort - a curious little sorting algorithm'
+        }
+    ];
     Sorts.Cycle = Cycle;
     /*
         -- demonsort
@@ -676,6 +676,7 @@ var Sorts;
         };
         Heap.prototype.removeNode = function () {
             this.swap([0, this.comparisonNode]);
+            this.placed.push(this.comparisonNode);
             this.nodesToHeap.unshift(0);
             this.comparisonNode--;
         };
@@ -1276,6 +1277,12 @@ var Sorts;
         return Smooth;
     }(BaseSort));
     Smooth.title = "Smooth Sort";
+    Smooth.links = [
+        {
+            url: 'http://scidok.sulb.uni-saarland.de/volltexte/2011/4062/pdf/fb14_1982_11.pdf',
+            name: "Smoothsort's Behavior on Presorted Sequences"
+        }
+    ];
     Sorts.Smooth = Smooth;
     var SmoothSetUpBottom = (function (_super) {
         __extends(SmoothSetUpBottom, _super);

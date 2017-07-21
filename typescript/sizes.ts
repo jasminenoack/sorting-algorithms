@@ -4,6 +4,11 @@ namespace Sizes {
         label: string;
     }
 
+    export let stupidNumber = {
+        elemCount: 1000,
+        label: "1000"
+    };
+
     export let manyMany: Size = {
         elemCount: 300,
         label: "300"
@@ -58,6 +63,7 @@ namespace Sizes {
         small,
         xSmall,
         xXSmall,
-        manyMany
+        manyMany,
+        stupidNumber
     ]
 }

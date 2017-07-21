@@ -17,7 +17,7 @@ namespace Sorts {
         placed: number[] = []
         shadow: any[] = []
         lastSwapped: boolean = false
-        links: any[]
+        static links: any[]
 
         constructor(public board: Boards.Board) {
             this.length = board.length
@@ -203,7 +203,7 @@ namespace Sorts {
         ordered: boolean = true
         skipSorted: boolean = false
         shortCircuit: boolean = true
-        links = [
+        static links = [
             {
                 url: 'https://users.cs.duke.edu/~ola/bubble/bubble.pdf',
                 name: 'Bubble Sort: An Archaeological Algorithmic Analysis'
@@ -455,7 +455,7 @@ namespace Sorts {
         static title = "Cycle Sort"
         currentValue: number
         numberLess: number = 0
-        links = [
+        static links = [
             {
                 url: 'https://corte.si/posts/code/cyclesort/index.html',
                 name: 'Cyclesort - a curious little sorting algorithm'
@@ -626,6 +626,7 @@ namespace Sorts {
 
         removeNode() {
             this.swap([0, this.comparisonNode])
+            this.placed.push(this.comparisonNode)
             this.nodesToHeap.unshift(0)
             this.comparisonNode--
         }
@@ -1032,6 +1033,12 @@ namespace Sorts {
 
     export class Smooth extends BaseSort {
         static title = "Smooth Sort"
+        static links = [
+            {
+                url: 'http://scidok.sulb.uni-saarland.de/volltexte/2011/4062/pdf/fb14_1982_11.pdf',
+                name: "Smoothsort's Behavior on Presorted Sequences"
+            }
+        ]
         // size of each tree
         treeSizes: number[] = []
         // tree roots

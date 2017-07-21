@@ -49,6 +49,7 @@ features:
 - step back
 - shadow arrays
 - hard coded arrays
+- tons of points automate multiple steps at a time
 
 languages:
 

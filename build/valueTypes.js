@@ -78,7 +78,8 @@ var ValueTypes;
             var values = [];
             for (var i = 0; i < n; i++) {
                 var j = (i + 1) / 8;
-                values.push(Math.log(j));
+                var num = Math.log(j);
+                values.push(Math.floor(num * 10));
             }
             return values;
         };
@@ -93,7 +94,8 @@ var ValueTypes;
             var values = [];
             for (var i = 0; i < n; i++) {
                 var j = 10 * (i / n) - 5;
-                values.push(j * j);
+                var num = j * j;
+                values.push(Math.floor(num * 2));
             }
             return values;
         };
@@ -108,7 +110,8 @@ var ValueTypes;
             var values = [];
             for (var i = 0; i < n; i++) {
                 var j = 10 * (i / n) - 5;
-                values.push(Math.pow(2, j));
+                var num = Math.pow(2, j);
+                values.push(Math.floor(num * 2));
             }
             return values;
         };
@@ -123,7 +126,8 @@ var ValueTypes;
             var values = [];
             for (var i = 0; i < n; i++) {
                 var j = 4 * (i / n) - 2;
-                values.push(j * j * j);
+                var num = j * j * j;
+                values.push(Math.floor(num * 3));
             }
             return values;
         };
@@ -138,7 +142,8 @@ var ValueTypes;
             var values = [];
             for (var i = 0; i < n; i++) {
                 var j = 2 * (i / n) - 1;
-                values.push(j * j * j * j * j);
+                var num = j * j * j * j * j;
+                values.push(Math.floor(num * 30));
             }
             return values;
         };
@@ -153,7 +158,8 @@ var ValueTypes;
             var values = [];
             for (var i = 0; i < n; i++) {
                 var j = 12 * (i / n) - 6;
-                values.push(Math.sin(j));
+                var num = Math.sin(j);
+                values.push(Math.floor(num * 30));
             }
             return values;
         };
@@ -168,7 +174,8 @@ var ValueTypes;
             var values = [];
             for (var i = 0; i < n; i++) {
                 var j = 5 * (i / n);
-                values.push(Math.sqrt(j));
+                var num = Math.sqrt(j);
+                values.push(Math.floor(num * 15));
             }
             return values;
         };

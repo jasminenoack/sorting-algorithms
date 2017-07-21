@@ -65,7 +65,8 @@ namespace ValueTypes {
             let values = []
             for(let i = 0; i < n; i++) {
                 let j = (i + 1) / 8
-                values.push(Math.log(j))
+                let num = Math.log(j)
+                values.push(Math.floor(num * 10))
             }
             return values
         }
@@ -77,7 +78,8 @@ namespace ValueTypes {
             let values = []
             for(let i = 0; i < n; i++) {
                 let j = 10 * (i / n) - 5
-                values.push(j * j)
+                let num = j * j
+                values.push(Math.floor(num * 2))
             }
             return values
         }
@@ -89,7 +91,8 @@ namespace ValueTypes {
             let values = []
             for(let i = 0; i < n; i++) {
                 let j = 10 * (i / n) - 5
-                values.push(Math.pow(2, j))
+                let num = Math.pow(2, j)
+                values.push(Math.floor(num * 2))
             }
             return values
         }
@@ -101,7 +104,8 @@ namespace ValueTypes {
             let values = []
             for(let i = 0; i < n; i++) {
                 let j = 4 * (i / n) - 2
-                values.push(j * j * j)
+                let num = j * j * j
+                values.push(Math.floor(num * 3))
             }
             return values
         }
@@ -113,7 +117,8 @@ namespace ValueTypes {
             let values = []
             for(let i = 0; i < n; i++) {
                 let j = 2 * (i / n) - 1
-                values.push(j * j * j * j * j)
+                let num = j * j * j * j * j
+                values.push(Math.floor(num * 30))
             }
             return values
         }
@@ -125,7 +130,8 @@ namespace ValueTypes {
             let values = []
             for(let i = 0; i < n; i++) {
                 let j = 12 * (i / n) - 6
-                values.push(Math.sin(j))
+                let num = Math.sin(j)
+                values.push(Math.floor(num * 30))
             }
             return values
         }
@@ -137,7 +143,8 @@ namespace ValueTypes {
             let values = []
             for(let i = 0; i < n; i++) {
                 let j = 5 * (i / n)
-                values.push(Math.sqrt(j))
+                let num = Math.sqrt(j)
+                values.push(Math.floor(num * 15))
             }
             return values
         }

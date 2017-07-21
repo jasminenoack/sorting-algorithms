@@ -45,7 +45,7 @@ figcaption {
     background: floralwhite;
 }
 
-p, h2, h3 {
+p, h2, h3, h4 {
     padding: 10px;
     width: 1080px;
     margin: auto;

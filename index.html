@@ -1,58 +1,35 @@
 <!DOCTYPE html>
 <html>
-
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>Algorithms</title>
         <link rel="stylesheet" type="text/css" href="css/index2.css">
     </head>
-
     <body>
-        <article class="sorting">
-            <h1>Sorting Algorithms</h1>
-            <div class="controls">
-                <div>
-                    <label>
-                        Sort:
-                        <select id="sort">
-                        </select>
-                    </label>
-                    <label>
-                        Point count:
-                        <select id="size">
-                        </select>
-                    <label>
+        <h2>Algorithms</h2>
+        <h3>Why We Visualize Data</h3>
+        <p>
+            This is a site mostly built for me. Why build it? Well I find the best way to understand how things work is to really look at them.
+            To change them, to play with them, to implement them, and to edit them. I love algorithms. I do things with them on a daily basis.
+            I love to consider them to read about them, and to think about them. And although we do not as programmers implement many kinds algorithms on a daily basis.
+            (I'm not going to implement a sort when the language has a perfectly good one built it.) I believe it's important to know what the language is doing under the hood.
+            So I spend a lot of time playing with algorithms. How can we make them better? How can we understand them better?
+            To do this I very much believe that one important step is to understand what data looks like. How it behaves. How algorithms move and manipulate patterns.
+            To do this I use <a href="https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0">visualizations</a> This site is a collection of those visualizations.
+            They exist in many formats, orientations and settings because data dictates patterns. The result of running a sort of reversed data is
+            very different then the result of running the same code on ordered data. In these patterns we can find beauty and insight, and if we are lucky we
+            can begin to understand the magic. But I make no promises.
+        </p>
 
-                    <label>
-                        Order:
-                        <select id="order">
-                        </select>
-                    <label>
+        <h3>Sorting Algorithms</h3>
+        <p>
+            One way to evaluate algorithms data patterns is to compare algorithms. That can be done on the sort <a href="sort_comparison.html">comparison page</a>.
+            <figure>
+                <img src='images/reverse_sorts.png'/>
+                <figcaption>Data patterns for sorts on a reversed array.</figcaption>
+            </figure>
+        </p>
 
-                    <label>
-                        Values:
-                        <select id="value-type">
-                        </select>
-                    <label>
-                    <button id="create">Create</button>
-                </div>
-                <div>
-                    <button id="step">Step</button>
-                    <button id="auto">Auto</button>
-            </div>
-            <div id="boards">
-            </div>
-        </article>
-
-
-        <script src="build/point.js"></script>
-        <script src="build/utils.js"></script>
-        <script src="build/sizes.js"></script>
-        <script src="build/valueTypes.js"></script>
-        <script src="build/shuffles.js"></script>
-        <script src="build/board.js"></script>
-        <script src="build/sorts/sorts.js"></script>
-        <script src="build/index.js"></script>
+        <script src="build/queensBackground.js"></script>
     </body>
-
 </html>

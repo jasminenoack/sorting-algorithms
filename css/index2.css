@@ -1,5 +1,54 @@
 body {
-    margin: 0px;
+    margin: 10px;
+    font-family: sans-serif;
+}
+
+figure {
+    width: 80%;
+    margin: auto;
+}
+
+img {
+    width: 100%;
+}
+
+a {
+    font-weight: bold;
+}
+
+figcaption {
+    font-size: 10px;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: -1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.square {
+    background: aliceblue;
+    width: calc(100% / 8);
+    height: calc(100% / 8);
+    float: left;
+    display: block;
+    box-sizing: border-box;;
+}
+
+.queen {
+    background: floralwhite;
+}
+
+p, h2, h3 {
+    padding: 10px;
+    width: 1080px;
+    margin: auto;
 }
 
 button.remove {

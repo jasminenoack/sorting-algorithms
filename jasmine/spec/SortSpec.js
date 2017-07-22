@@ -1,6 +1,20 @@
 describe("Sorts", function() {
     let length, sort, board, size;
 
+    it("has a reset function", () => {
+        size = Sizes.xXLarge
+        board = new Boards.Board(size)
+        sort = new Sorts.Bubble(board)
+
+        while(!sort.done) {
+            sort.next()
+        }
+        let values = board.values().slice()
+        sort.reset()
+        expect(sort.done).toBeFalsy()
+        expect(values).not.toEqual(board.values())
+    })
+
     describe("bubble", () => {
         beforeEach(function() {
             length = 10

@@ -65,6 +65,10 @@ var Sorts;
             this.setUpNext();
             return currentNodes;
         };
+        BaseSort.prototype.reset = function () {
+            this.done = false;
+            this.board.shuffleBoard();
+        };
         return BaseSort;
     }());
     /*

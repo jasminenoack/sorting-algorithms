@@ -64,6 +64,11 @@ namespace Sorts {
             this.setUpNext()
             return currentNodes
         }
+
+        reset() {
+            this.done = false
+            this.board.shuffleBoard()
+        }
     }
 
     /*

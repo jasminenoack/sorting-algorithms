@@ -1,29 +1,26 @@
 namespace Sorts {
     class BaseSort {
-        steps: number = 0
+        steps: number
         static readonly title: string
         baseNode: number
         comparisonNode: number
         // used for sorts that short circuit
-        done: boolean = false
+        done: boolean
         // used for sorts that short circuit
-        ordered: boolean = true
-        comparisons: number = 0
-        swaps: number = 0
+        ordered: boolean
+        comparisons: number
+        swaps: number
         length: number
         end: number
         maxRounds: number
         setUpNext(): void {}
-        placed: number[] = []
-        shadow: any[] = []
-        lastSwapped: boolean = false
+        placed: number[]
+        shadow: any[]
+        lastSwapped: boolean
         static links: any[]
 
         constructor(public board: Boards.Board) {
-            this.length = board.length
-            this.baseNode = 0
-            this.comparisonNode = 1
-            this.end = this.length - 1
+            this.baseSetUp()
         }
 
         currentNodes() {
@@ -66,8 +63,33 @@ namespace Sorts {
         }
 
         reset() {
-            this.done = false
             this.board.shuffleBoard()
+            this.baseSetUp()
+        }
+
+        baseSetUp() {
+            this.length = this.board.length
+            this.baseNode = 0
+            this.comparisonNode = 1
+            this.end = this.length - 1
+            this.done = false
+            this.swaps = 0
+            this.comparisons = 0
+            this.steps = 0
+            this.baseNode = 0
+            this.comparisonNode = 1
+            this.length = this.board.length
+            this.end = this.length - 1
+            this.lastSwapped = false
+            this.ordered = true
+            this.placed = []
+            this.shadow = []
+            this.setUp()
+        }
+
+        setUp() {
+            console.log("not implemented")
+            console.log(this)
         }
     }
 
@@ -97,8 +119,7 @@ namespace Sorts {
 
     export class Bogo extends BaseSort {
         static title: string = 'Bogo'
-        constructor (board) {
-            super(board)
+        setUp() {
             this.checkSorted()
         }
 
@@ -142,9 +163,7 @@ namespace Sorts {
 
     export class BogoSingle extends BaseSort {
         static title = "Bogo(Single Swap)"
-
-        constructor (board) {
-            super(board)
+        setUp() {
             this.checkSorted()
             this.setUpNext()
         }
@@ -205,7 +224,7 @@ namespace Sorts {
 
     export class Bubble extends BaseSort {
         static readonly title: string = "Bubble(Short Circuit)"
-        ordered: boolean = true
+        ordered: boolean
         skipSorted: boolean = false
         shortCircuit: boolean = true
         static links = [
@@ -214,11 +233,6 @@ namespace Sorts {
                 name: 'Bubble Sort: An Archaeological Algorithmic Analysis'
             }
         ]
-
-        constructor(board) {
-            super(board)
-            this.maxRounds = this.length
-        }
 
         setUpNext() {
             if (this.comparisonNode == this.end) {
@@ -245,6 +259,11 @@ namespace Sorts {
                 this.comparisonNode++
             }
         }
+
+        setUp() {
+            this.maxRounds = this.length
+            this.ordered = true
+        }
     }
 
     export class BubbleNonOptimized extends Bubble {
@@ -253,7 +272,6 @@ namespace Sorts {
     }
 
     export class BubbleSkipsSorted extends Bubble {
-        ordered: boolean = true
         skipSorted: boolean = true
         static readonly title = "Bubble(Short Circuit & Skip Sorted)"
     }
@@ -282,17 +300,15 @@ namespace Sorts {
 
     export class Cocktail extends BaseSort {
         // is there a way to respect sorted sections?
-        direction: number = 1
+        direction: number
         start: number
         end: number
         static readonly title = "Cocktail Sort"
 
-        constructor(public board: Boards.Board) {
-            super(board)
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
+        setUp() {
             this.start = 0
             this.end = this.length - 1
+            this.direction = 1
         }
 
         setUpNext() {
@@ -330,11 +346,11 @@ namespace Sorts {
         // test ceil over floor
         static title = "Comb Sort"
         gap: number
-        shrink: number = 1.3
-        constructor(public board: Boards.Board) {
-            super(board)
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
+        static shrink: number = 1.3
+        shrink: number
+
+        setUp() {
+            this.shrink = this.constructor.shrink
             this.gap = Math.floor(this.length / this.shrink)
             this.comparisonNode = 0 + this.gap
         }
@@ -356,39 +372,18 @@ namespace Sorts {
     }
 
     export class CombSmallShrink extends Comb {
-        shrink = 1.1
+        static shrink = 1.1
         static title = "Comb(Small Shrink: 1.1)"
-        constructor(public board: Boards.Board) {
-            super(board)
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            this.gap = Math.floor(this.length / this.shrink)
-            this.comparisonNode = 0 + this.gap
-        }
     }
 
     export class CombLargeShrink extends Comb {
-        shrink = 1.5
+        static shrink = 1.5
         static title = "Comb(Large Shrink: 1.5)"
-        constructor(public board: Boards.Board) {
-            super(board)
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            this.gap = Math.floor(this.length / this.shrink)
-            this.comparisonNode = 0 + this.gap
-        }
     }
 
     export class CombEvenLarger extends Comb {
         static title = "Comb(Shrink: 2.0)"
-        shrink = 2.0
-        constructor(public board: Boards.Board) {
-            super(board)
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            this.gap = Math.floor(this.length / this.shrink)
-            this.comparisonNode = 0 + this.gap
-        }
+        static shrink = 2.0
     }
 
     export class CombGnome5 extends BaseSort {
@@ -397,10 +392,9 @@ namespace Sorts {
         gnomeSwitchValue: number = 5
         static title = "Comb & Gnome(at gap 5)"
 
-        constructor(board) {
-            super(board)
-            this.comb = new Comb(board)
-            this.gnome = new Gnome(board)
+        setUp() {
+            this.comb = new Comb(this.board)
+            this.gnome = new Gnome(this.board)
         }
 
         currentNodes() {
@@ -459,7 +453,7 @@ namespace Sorts {
     export class Cycle extends BaseSort {
         static title = "Cycle Sort"
         currentValue: number
-        numberLess: number = 0
+        numberLess: number
         static links = [
             {
                 url: 'https://corte.si/posts/code/cyclesort/index.html',
@@ -467,9 +461,9 @@ namespace Sorts {
             }
         ]
 
-        constructor(board) {
-            super(board)
+        setUp() {
             this.setCurrentValue(this.baseNode)
+            this.numberLess = 0
         }
 
         currentNodes() {
@@ -551,7 +545,7 @@ namespace Sorts {
 
     export class Gnome extends BaseSort {
             static title = "Gnome Sort"
-            currentGnome: number = 1
+            currentGnome: number
 
             setUpNext() {
                 if (this.baseNode === 0 || !this.lastSwapped) {
@@ -565,6 +559,10 @@ namespace Sorts {
                 if (this.comparisonNode >= this.length) {
                     this.done = true
                 }
+            }
+
+            setUp() {
+                this.currentGnome = 1
             }
         }
 
@@ -584,9 +582,10 @@ namespace Sorts {
 
     export class Heap extends BaseSort {
         static title = "Heap Sort"
-        nodesToHeap = []
-        constructor(board) {
-            super(board)
+        nodesToHeap: number[]
+
+        setUp() {
+            this.nodesToHeap = []
             let heapIndex = Math.floor(this.length / 2)  - 1
             for (let i = heapIndex; i >= 0; i--) {
                 this.nodesToHeap.push(i)
@@ -664,8 +663,7 @@ namespace Sorts {
         static title = "Insertion Sort"
         insertValue: number = null
 
-        constructor(board) {
-            super(board)
+        setUp() {
             this.baseNode = 1
         }
 
@@ -751,18 +749,23 @@ namespace Sorts {
 
     export class OddEven extends BaseSort {
         static title = "Odd Even(Single Processor)"
-        oddPhase: boolean = true
-        oddSorted: boolean = false
-        evenSorted: boolean = false
-        baseNodes: number[] = []
-        constructor (board) {
-            super(board)
+        oddPhase: boolean
+        oddSorted: boolean
+        evenSorted: boolean
+        baseNodes: number[]
+
+        setUp() {
+            this.oddPhase = true
+            this.oddSorted = false
+            this.evenSorted = false
             this.setUpLists()
             this.baseNode = this.baseNodes.shift()
             this.comparisonNode = this.baseNode + 1
+            console.log(this.baseNodes, this.baseNode, this.comparisonNode)
         }
 
         setUpLists () {
+            this.baseNodes = []
             if (this.oddPhase) {
                 for (let i = 1; i < this.length - 1; i += 2) {
                     this.baseNodes.push(i)
@@ -803,6 +806,7 @@ namespace Sorts {
         }
 
         currentNodes() {
+            console.log(this.baseNodes, this.baseNode, this.comparisonNode)
             if (this.baseNode !== undefined) {
                 return [this.baseNode].concat(this.baseNodes)
             }
@@ -860,9 +864,9 @@ namespace Sorts {
 
     export class QuickSort2 extends BaseSort {
         static title = "Quick Sort(Left Partition)"
-        addToUpdate: number[] = []
+        addToUpdate: number[]
         partition: number
-        partitions: any[] = []
+        partitions: any[]
         partitionValue: number
         lower: number
         higher: number
@@ -872,8 +876,9 @@ namespace Sorts {
         partitionTop: number
         threeWay: boolean = false
 
-        constructor(board) {
-            super(board)
+        setUp() {
+            this.addToUpdate = []
+            this.partitions = []
             this.setUpValues([this.baseNode, this.length -1])
         }
 
@@ -1047,7 +1052,11 @@ namespace Sorts {
 
     export class SelectionSort extends BaseSort {
         static title = "Selection Sort"
-        baseIndex: number = 0
+        baseIndex: number
+
+        setUp() {
+            this.baseIndex = 0
+        }
 
         setUpNext() {
             this.comparisonNode++
@@ -1108,23 +1117,27 @@ namespace Sorts {
             }
         ]
         // size of each tree
-        treeSizes: number[] = []
+        treeSizes: number[]
         // tree roots
-        roots: number[] = []
+        roots: number[]
         // numbers
-        leonardoNumbers: number[] = []
-        nodesToHeap: number[] = []
-        rootsToCompare: number[] = []
-        fromBottom: boolean = false
+        leonardoNumbers: number[]
+        nodesToHeap: number[]
+        rootsToCompare: number[]
+        static fromBottom: boolean = false
+        fromBottom: boolean
 
-        constructor(board, skip: boolean = false) {
-            super(board)
-            if (!skip) {
-                this.setUp(this.fromBottom)
-            }
+        setUp() {
+            this.leonardoNumbers = []
+            this.nodesToHeap = []
+            this.rootsToCompare = []
+            this.roots = []
+            this.treeSizes = []
+            this.fromBottom = this.constructor.fromBottom
+            this.setUpNumbers(this.fromBottom)
         }
 
-        setUp(fromBottom) {
+        setUpNumbers(fromBottom) {
             this.leonardoNumbers = this.getLeoNums(this.length)
             if (!fromBottom) {
                 this.treeSizes = this.getTreeSizes(this.length)
@@ -1290,11 +1303,10 @@ namespace Sorts {
 
     export class SmoothSetUpBottom extends Smooth {
         static title = 'Smooth Sort(Set up from bottom)'
-        fromBottom: boolean = true
+        static fromBottom: boolean = true
 
-        constructor(board) {
-            super(board, true)
-            this.setUp(this.fromBottom)
+        setUp() {
+            super.setUp()
             this.baseNode = 1
             this.treeSizes = [1]
             this.roots = [0]

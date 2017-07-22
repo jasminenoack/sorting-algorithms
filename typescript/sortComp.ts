@@ -1,6 +1,6 @@
 namespace SortComp {
     let boardsElement = document.getElementById("boards")
-    let $create = document.getElementById("create")
+    let createButton = document.getElementById("create")
     let boxHeight = 500
     let boxWidth = 500
     let autoInterval = null
@@ -48,7 +48,7 @@ namespace SortComp {
     })
 
     // when click create
-    $create.addEventListener('click', function () {
+    createButton.addEventListener('click', function () {
         let size = sizes[sizeElement.value]
         let value = valueTypes[valueTypeSelect.value]
         let order = orders[orderSelect.value]
@@ -63,24 +63,34 @@ namespace SortComp {
         Index.createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement)
     })
 
-    let $step = document.getElementById("step")
+    let stepElement = document.getElementById("step")
     let boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth)
-    $step.addEventListener('click', boundStep)
+    stepElement.addEventListener('click', boundStep)
 
     Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
-        let $wrapper = Index.closestParent(target, '.wrapper')
+        let wrapperElement = Index.closestParent(target, '.wrapper')
         let wrappers = document.getElementsByClassName('wrapper')
         for (let i = 0; i < wrappers.length; i++) {
-            if (wrappers[i] === $wrapper) {
+            if (wrappers[i] === wrapperElement) {
                 boardList.splice(i, 1)
                 break
             }
         }
-        $wrapper.remove()
+        wrapperElement.remove()
     }, '.remove')
 
-    let $auto = document.getElementById("auto")
-    $auto.addEventListener('click', function (event) {
+    Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
+        let wrapperElement = Index.closestParent(target, '.wrapper')
+        let wrappers = document.getElementsByClassName('wrapper')
+        let wrapperIndex
+        for (let i = 0; i < wrappers.length; i++) {
+            wrapperIndex = i
+        }
+        console.log(wrapperIndex)
+    }, '.reset')
+
+    let autoElement = document.getElementById("auto")
+    autoElement.addEventListener('click', function (event) {
         if (autoInterval) {
             clearInterval(autoInterval)
             autoInterval = null

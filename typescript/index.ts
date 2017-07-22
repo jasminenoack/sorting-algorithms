@@ -173,21 +173,27 @@ namespace Index {
             gElement.appendChild(circle)
         }
 
-        let $wrapper = document.createElement('div')
-        $wrapper.className = 'wrapper'
-        let $header = document.createElement('h1')
-        $header.textContent = Sort.title
-        $wrapper.appendChild($header)
-        let $stepCount = document.createElement('span')
-        $stepCount.innerHTML = getTextContent(sort)
-        $stepCount.className = 'step-count'
-        $wrapper.appendChild($stepCount)
-        let $button = document.createElement('button')
-        $button.textContent = 'X'
-        $button.className = 'remove'
-        $wrapper.appendChild($button)
-        $wrapper.appendChild(boardElement)
-        boardsElement.appendChild($wrapper)
+        let wrapperElement = document.createElement('div')
+        wrapperElement.className = 'wrapper'
+        let headerElement = document.createElement('h1')
+        headerElement.textContent = Sort.title
+        wrapperElement.appendChild(headerElement)
+        let textElement = document.createElement('span')
+        textElement.innerHTML = getTextContent(sort)
+        textElement.className = 'step-count'
+        wrapperElement.appendChild(textElement)
+        let removeElement = document.createElement('button')
+        removeElement.textContent = 'X'
+        removeElement.className = 'remove'
+        wrapperElement.appendChild(removeElement)
+
+        let resetElement = document.createElement('button')
+        resetElement.textContent = 'Reset'
+        resetElement.className = 'reset'
+        wrapperElement.appendChild(resetElement)
+
+        wrapperElement.appendChild(boardElement)
+        boardsElement.appendChild(wrapperElement)
 
         renderShadow(sort, board, gElement, boxHeight, boxWidth)
     }

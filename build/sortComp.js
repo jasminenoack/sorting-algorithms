@@ -1,7 +1,7 @@
 var SortComp;
 (function (SortComp) {
     var boardsElement = document.getElementById("boards");
-    var $create = document.getElementById("create");
+    var createButton = document.getElementById("create");
     var boxHeight = 500;
     var boxWidth = 500;
     var autoInterval = null;
@@ -43,7 +43,7 @@ var SortComp;
         sortElement.appendChild(optionElement);
     });
     // when click create
-    $create.addEventListener('click', function () {
+    createButton.addEventListener('click', function () {
         var size = sizes[sizeElement.value];
         var value = valueTypes[valueTypeSelect.value];
         var order = orders[orderSelect.value];
@@ -56,22 +56,31 @@ var SortComp;
         });
         Index.createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement);
     });
-    var $step = document.getElementById("step");
+    var stepElement = document.getElementById("step");
     var boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth);
-    $step.addEventListener('click', boundStep);
+    stepElement.addEventListener('click', boundStep);
     Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
-        var $wrapper = Index.closestParent(target, '.wrapper');
+        var wrapperElement = Index.closestParent(target, '.wrapper');
         var wrappers = document.getElementsByClassName('wrapper');
         for (var i = 0; i < wrappers.length; i++) {
-            if (wrappers[i] === $wrapper) {
+            if (wrappers[i] === wrapperElement) {
                 boardList.splice(i, 1);
                 break;
             }
         }
-        $wrapper.remove();
+        wrapperElement.remove();
     }, '.remove');
-    var $auto = document.getElementById("auto");
-    $auto.addEventListener('click', function (event) {
+    Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
+        var wrapperElement = Index.closestParent(target, '.wrapper');
+        var wrappers = document.getElementsByClassName('wrapper');
+        var wrapperIndex;
+        for (var i = 0; i < wrappers.length; i++) {
+            wrapperIndex = i;
+        }
+        console.log(wrapperIndex);
+    }, '.reset');
+    var autoElement = document.getElementById("auto");
+    autoElement.addEventListener('click', function (event) {
         if (autoInterval) {
             clearInterval(autoInterval);
             autoInterval = null;

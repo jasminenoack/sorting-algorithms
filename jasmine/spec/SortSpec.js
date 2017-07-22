@@ -1,20 +1,6 @@
 describe("Sorts", function() {
     let length, sort, board, size;
 
-    it("has a reset function", () => {
-        size = Sizes.xXLarge
-        board = new Boards.Board(size)
-        sort = new Sorts.Bubble(board)
-
-        while(!sort.done) {
-            sort.next()
-        }
-        let values = board.values().slice()
-        sort.reset()
-        expect(sort.done).toBeFalsy()
-        expect(values).not.toEqual(board.values())
-    })
-
     describe("bubble", () => {
         beforeEach(function() {
             length = 10
@@ -62,6 +48,23 @@ describe("Sorts", function() {
             it("starts with ordered param", () => {
                 expect(sort.ordered).toEqual(true)
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.maxRounds).toEqual(board.length)
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.end).toEqual(board.length - 1)
         })
 
         describe("utils", () => {
@@ -207,6 +210,23 @@ describe("Sorts", function() {
             })
         })
 
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.maxRounds).toEqual(board.length)
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.end).toEqual(board.length - 1)
+        })
+
         describe("utils", () => {
             it("it changes to done if reseting with ordered", () => {
                 let values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -249,6 +269,23 @@ describe("Sorts", function() {
             it("it has a title", () => {
                 expect(Sorts.BubbleSkipsSorted.title).toEqual('Bubble(Short Circuit & Skip Sorted)')
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.maxRounds).toEqual(board.length)
+            expect(sort.end).toEqual(board.length - 1)
         })
 
         describe("utils", () => {
@@ -314,6 +351,27 @@ describe("Sorts", function() {
             it("it has a title", () => {
                 expect(Sorts.BubbleSkipNoShortCircuit.title).toEqual('Bubble(Skip Sorted)')
             })
+        })
+
+        it("has a reset function", () => {
+            size = Sizes.xXLarge
+            board = new Boards.Board(size)
+            sort = new Sorts.Bubble(board)
+
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.maxRounds).toEqual(board.length)
+            expect(sort.end).toEqual(board.length - 1)
         })
 
         describe("utils", () => {
@@ -432,6 +490,23 @@ describe("Sorts", function() {
             it("it has an end node", () => {
                 expect(sort.end).toEqual(9)
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.start).toEqual(0)
+            expect(sort.end).toEqual(sort.length - 1)
         })
 
         describe("utils", () => {
@@ -629,6 +704,22 @@ describe("Sorts", function() {
             it("it has a shrink", () => {
                 expect(sort.shrink).toEqual(1.3)
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(sort.baseNode + sort.gap)
+            expect(sort.gap).toEqual(Math.floor(sort.length / sort.shrink))
         })
 
         describe("utils", () => {
@@ -954,6 +1045,21 @@ describe("Sorts", function() {
             })
         })
 
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+        })
+
         describe("utils", () => {
             it("it returns all node indexes", () => {
                 expect(sort.currentNodes()).toEqual(
@@ -1031,6 +1137,21 @@ describe("Sorts", function() {
             it("starts with ordered param", () => {
                 expect(sort.ordered).toEqual(true)
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            let base = sort.baseNode
+            let comparison = sort.comparisonNode
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
         })
 
         describe("utils", () => {
@@ -1141,6 +1262,21 @@ describe("Sorts", function() {
             })
         })
 
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            let base = sort.baseNode
+            let comparison = sort.comparisonNode
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+        })
+
         describe("utils", () => {
             it("it returns two nodes", () => {
                 expect(sort.currentNodes().length).toEqual(2)
@@ -1208,6 +1344,23 @@ describe("Sorts", function() {
             it("has a current value", () => {
                 expect(sort.currentValue).toEqual(board.values()[0])
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.currentValue).toEqual(board.values()[0])
+            expect(sort.numberLess).toEqual(0)
         })
 
         describe("utils", () => {
@@ -1594,6 +1747,22 @@ describe("Sorts", function() {
             })
         })
 
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.currentGnome).toEqual(1)
+        })
+
         describe("utils", () => {
             it("has current nodes", () => {
                 expect(sort.currentNodes()).toEqual([0, 1])
@@ -1805,6 +1974,27 @@ describe("Sorts", function() {
             it("has a partition", () => {
                 expect(sort.partition).not.toEqual(undefined)
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.lower).toEqual(sort.baseNode)
+            expect(sort.higher).toEqual(sort.baseNode)
+            expect(sort.partitionStart).toEqual(sort.baseNode)
+            expect(sort.partitionEnd).toEqual(sort.length - 1)
+            expect(sort.partition).toEqual(sort.lower)
+            expect(sort.partitionTop).toEqual(sort.partition)
         })
 
         describe("utils", () => {
@@ -2060,6 +2250,27 @@ describe("Sorts", function() {
             })
         })
 
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.lower).toEqual(sort.baseNode)
+            expect(sort.higher).toEqual(sort.baseNode)
+            expect(sort.partitionStart).toEqual(sort.baseNode)
+            expect(sort.partitionEnd).toEqual(sort.length - 1)
+            expect(sort.partition).toEqual(sort.lower)
+            expect(sort.partitionTop).toEqual(sort.partition)
+        })
+
         describe("utils", () => {
 
             it("has current nodes", () => {
@@ -2150,6 +2361,27 @@ describe("Sorts", function() {
             it("has a partition", () => {
                 expect(sort.partition).not.toEqual(undefined)
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
+            expect(sort.lower).toEqual(sort.baseNode)
+            expect(sort.higher).toEqual(sort.baseNode)
+            expect(sort.partitionStart).toEqual(sort.baseNode)
+            expect(sort.partitionEnd).toEqual(sort.length - 1)
+            expect(sort.partition).toEqual(sort.lower)
+            expect(sort.partitionTop).toEqual(sort.partition)
         })
 
         describe("utils", () => {
@@ -2395,9 +2627,29 @@ describe("Sorts", function() {
             })
         })
 
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNodes.length).toBeTruthy()
+            expect(sort.baseNode).toEqual(1)
+            expect(sort.comparisonNode).toEqual(2)
+            expect(sort.evenSorted).toBeFalsy()
+            expect(sort.oddSorted).toBeFalsy()
+            expect(sort.oddPhase).toBeTruthy()
+        })
+
         describe("utils", () => {
 
             it("has current nodes(returns base nodes)", () => {
+                console.log(sort.baseNodes)
                 expect(sort.currentNodes()).toEqual([1, 3])
             })
 
@@ -2713,6 +2965,24 @@ describe("Sorts", function() {
             })
         })
 
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(1)
+            expect(sort.comparisonNode).toEqual(2)
+            expect(sort.evenSorted).toBeFalsy()
+            expect(sort.oddSorted).toBeFalsy()
+            expect(sort.oddPhase).toBeTruthy()
+        })
+
         describe("utils", () => {
 
             it("has current nodes(returns base nodes)", () => {
@@ -2982,6 +3252,21 @@ describe("Sorts", function() {
             it("it has a title", () => {
                 expect(Sort.title).toEqual('Selection Sort')
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
         })
 
         describe("utils", () => {
@@ -3278,6 +3563,21 @@ describe("Sorts", function() {
             it("it has a title", () => {
                 expect(Sort.title).toEqual('Heap Sort')
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(sort.length - 1)
         })
 
         describe("utils", () => {
@@ -3696,6 +3996,21 @@ describe("Sorts", function() {
             it("has roots to compare", function () {
                 expect(sort.rootsToCompare).toEqual([8, 9])
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
         })
 
         describe("utils", () => {
@@ -4730,6 +5045,21 @@ describe("Sorts", function() {
             })
         })
 
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(1)
+            expect(sort.comparisonNode).toEqual(1)
+        })
+
         describe("utils", () => {
             it("it does reverse group", () => {
                 board.setPoints([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
@@ -4876,6 +5206,21 @@ describe("Sorts", function() {
             it("it has a title", () => {
                 expect(Sort.title).toEqual('Insertion Sort')
             })
+        })
+
+        it("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(1)
+            expect(sort.comparisonNode).toEqual(1)
         })
 
         describe("utils", () => {
@@ -5149,6 +5494,21 @@ describe("Sorts", function() {
             xit("it has a title", () => {
                 expect(Sort.title).toEqual('Title')
             })
+        })
+
+        xit("has a reset function", () => {
+            while(!sort.done) {
+                sort.next()
+            }
+            let values = board.values().slice()
+            sort.reset()
+            expect(sort.done).toBeFalsy()
+            expect(sort.steps).toEqual(0)
+            expect(sort.swaps).toEqual(0)
+            expect(sort.comparisons).toEqual(0)
+            expect(values).not.toEqual(board.values())
+            expect(sort.baseNode).toEqual(0)
+            expect(sort.comparisonNode).toEqual(1)
         })
 
         xdescribe("utils", () => {

@@ -13,20 +13,7 @@ var Sorts;
     var BaseSort = (function () {
         function BaseSort(board) {
             this.board = board;
-            this.steps = 0;
-            // used for sorts that short circuit
-            this.done = false;
-            // used for sorts that short circuit
-            this.ordered = true;
-            this.comparisons = 0;
-            this.swaps = 0;
-            this.placed = [];
-            this.shadow = [];
-            this.lastSwapped = false;
-            this.length = board.length;
-            this.baseNode = 0;
-            this.comparisonNode = 1;
-            this.end = this.length - 1;
+            this.baseSetUp();
         }
         BaseSort.prototype.setUpNext = function () { };
         BaseSort.prototype.currentNodes = function () {
@@ -66,8 +53,31 @@ var Sorts;
             return currentNodes;
         };
         BaseSort.prototype.reset = function () {
-            this.done = false;
             this.board.shuffleBoard();
+            this.baseSetUp();
+        };
+        BaseSort.prototype.baseSetUp = function () {
+            this.length = this.board.length;
+            this.baseNode = 0;
+            this.comparisonNode = 1;
+            this.end = this.length - 1;
+            this.done = false;
+            this.swaps = 0;
+            this.comparisons = 0;
+            this.steps = 0;
+            this.baseNode = 0;
+            this.comparisonNode = 1;
+            this.length = this.board.length;
+            this.end = this.length - 1;
+            this.lastSwapped = false;
+            this.ordered = true;
+            this.placed = [];
+            this.shadow = [];
+            this.setUp();
+        };
+        BaseSort.prototype.setUp = function () {
+            console.log("not implemented");
+            console.log(this);
         };
         return BaseSort;
     }());
@@ -96,11 +106,12 @@ var Sorts;
     */
     var Bogo = (function (_super) {
         __extends(Bogo, _super);
-        function Bogo(board) {
-            var _this = _super.call(this, board) || this;
-            _this.checkSorted();
-            return _this;
+        function Bogo() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        Bogo.prototype.setUp = function () {
+            this.checkSorted();
+        };
         Bogo.prototype.currentNodes = function () {
             if (!this.done) {
                 return Array.prototype.range(this.board.length);
@@ -142,12 +153,13 @@ var Sorts;
     Sorts.Bogo = Bogo;
     var BogoSingle = (function (_super) {
         __extends(BogoSingle, _super);
-        function BogoSingle(board) {
-            var _this = _super.call(this, board) || this;
-            _this.checkSorted();
-            _this.setUpNext();
-            return _this;
+        function BogoSingle() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        BogoSingle.prototype.setUp = function () {
+            this.checkSorted();
+            this.setUpNext();
+        };
         BogoSingle.prototype.checkSorted = function () {
             var values = this.board.values();
             if (values.sorted()) {
@@ -206,12 +218,10 @@ var Sorts;
     */
     var Bubble = (function (_super) {
         __extends(Bubble, _super);
-        function Bubble(board) {
-            var _this = _super.call(this, board) || this;
-            _this.ordered = true;
+        function Bubble() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.skipSorted = false;
             _this.shortCircuit = true;
-            _this.maxRounds = _this.length;
             return _this;
         }
         Bubble.prototype.setUpNext = function () {
@@ -241,6 +251,10 @@ var Sorts;
                 this.comparisonNode++;
             }
         };
+        Bubble.prototype.setUp = function () {
+            this.maxRounds = this.length;
+            this.ordered = true;
+        };
         return Bubble;
     }(BaseSort));
     Bubble.title = "Bubble(Short Circuit)";
@@ -266,7 +280,6 @@ var Sorts;
         __extends(BubbleSkipsSorted, _super);
         function BubbleSkipsSorted() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.ordered = true;
             _this.skipSorted = true;
             return _this;
         }
@@ -303,17 +316,14 @@ var Sorts;
     */
     var Cocktail = (function (_super) {
         __extends(Cocktail, _super);
-        function Cocktail(board) {
-            var _this = _super.call(this, board) || this;
-            _this.board = board;
-            // is there a way to respect sorted sections?
-            _this.direction = 1;
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            _this.start = 0;
-            _this.end = _this.length - 1;
-            return _this;
+        function Cocktail() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        Cocktail.prototype.setUp = function () {
+            this.start = 0;
+            this.end = this.length - 1;
+            this.direction = 1;
+        };
         Cocktail.prototype.setUpNext = function () {
             if (this.direction) {
                 if (this.comparisonNode === this.end) {
@@ -351,16 +361,14 @@ var Sorts;
     Sorts.Cocktail = Cocktail;
     var Comb = (function (_super) {
         __extends(Comb, _super);
-        function Comb(board) {
-            var _this = _super.call(this, board) || this;
-            _this.board = board;
-            _this.shrink = 1.3;
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            _this.gap = Math.floor(_this.length / _this.shrink);
-            _this.comparisonNode = 0 + _this.gap;
-            return _this;
+        function Comb() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        Comb.prototype.setUp = function () {
+            this.shrink = this.constructor.shrink;
+            this.gap = Math.floor(this.length / this.shrink);
+            this.comparisonNode = 0 + this.gap;
+        };
         Comb.prototype.setUpNext = function () {
             this.baseNode++;
             this.comparisonNode++;
@@ -379,64 +387,49 @@ var Sorts;
     // test different shrinks
     // test ceil over floor
     Comb.title = "Comb Sort";
+    Comb.shrink = 1.3;
     Sorts.Comb = Comb;
     var CombSmallShrink = (function (_super) {
         __extends(CombSmallShrink, _super);
-        function CombSmallShrink(board) {
-            var _this = _super.call(this, board) || this;
-            _this.board = board;
-            _this.shrink = 1.1;
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            _this.gap = Math.floor(_this.length / _this.shrink);
-            _this.comparisonNode = 0 + _this.gap;
-            return _this;
+        function CombSmallShrink() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         return CombSmallShrink;
     }(Comb));
+    CombSmallShrink.shrink = 1.1;
     CombSmallShrink.title = "Comb(Small Shrink: 1.1)";
     Sorts.CombSmallShrink = CombSmallShrink;
     var CombLargeShrink = (function (_super) {
         __extends(CombLargeShrink, _super);
-        function CombLargeShrink(board) {
-            var _this = _super.call(this, board) || this;
-            _this.board = board;
-            _this.shrink = 1.5;
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            _this.gap = Math.floor(_this.length / _this.shrink);
-            _this.comparisonNode = 0 + _this.gap;
-            return _this;
+        function CombLargeShrink() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         return CombLargeShrink;
     }(Comb));
+    CombLargeShrink.shrink = 1.5;
     CombLargeShrink.title = "Comb(Large Shrink: 1.5)";
     Sorts.CombLargeShrink = CombLargeShrink;
     var CombEvenLarger = (function (_super) {
         __extends(CombEvenLarger, _super);
-        function CombEvenLarger(board) {
-            var _this = _super.call(this, board) || this;
-            _this.board = board;
-            _this.shrink = 2.0;
-            // we start this at 1, because we want to stop at 1, when we
-            // come back down
-            _this.gap = Math.floor(_this.length / _this.shrink);
-            _this.comparisonNode = 0 + _this.gap;
-            return _this;
+        function CombEvenLarger() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         return CombEvenLarger;
     }(Comb));
     CombEvenLarger.title = "Comb(Shrink: 2.0)";
+    CombEvenLarger.shrink = 2.0;
     Sorts.CombEvenLarger = CombEvenLarger;
     var CombGnome5 = (function (_super) {
         __extends(CombGnome5, _super);
-        function CombGnome5(board) {
-            var _this = _super.call(this, board) || this;
+        function CombGnome5() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.gnomeSwitchValue = 5;
-            _this.comb = new Comb(board);
-            _this.gnome = new Gnome(board);
             return _this;
         }
+        CombGnome5.prototype.setUp = function () {
+            this.comb = new Comb(this.board);
+            this.gnome = new Gnome(this.board);
+        };
         CombGnome5.prototype.currentNodes = function () {
             if (this.comb.gap >= this.gnomeSwitchValue) {
                 return this.comb.currentNodes();
@@ -510,12 +503,13 @@ var Sorts;
     */
     var Cycle = (function (_super) {
         __extends(Cycle, _super);
-        function Cycle(board) {
-            var _this = _super.call(this, board) || this;
-            _this.numberLess = 0;
-            _this.setCurrentValue(_this.baseNode);
-            return _this;
+        function Cycle() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        Cycle.prototype.setUp = function () {
+            this.setCurrentValue(this.baseNode);
+            this.numberLess = 0;
+        };
         Cycle.prototype.currentNodes = function () {
             return [this.comparisonNode];
         };
@@ -596,9 +590,7 @@ var Sorts;
     var Gnome = (function (_super) {
         __extends(Gnome, _super);
         function Gnome() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.currentGnome = 1;
-            return _this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         Gnome.prototype.setUpNext = function () {
             if (this.baseNode === 0 || !this.lastSwapped) {
@@ -613,6 +605,9 @@ var Sorts;
             if (this.comparisonNode >= this.length) {
                 this.done = true;
             }
+        };
+        Gnome.prototype.setUp = function () {
+            this.currentGnome = 1;
         };
         return Gnome;
     }(BaseSort));
@@ -633,16 +628,17 @@ var Sorts;
     */
     var Heap = (function (_super) {
         __extends(Heap, _super);
-        function Heap(board) {
-            var _this = _super.call(this, board) || this;
-            _this.nodesToHeap = [];
-            var heapIndex = Math.floor(_this.length / 2) - 1;
-            for (var i = heapIndex; i >= 0; i--) {
-                _this.nodesToHeap.push(i);
-            }
-            _this.comparisonNode = _this.length - 1;
-            return _this;
+        function Heap() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        Heap.prototype.setUp = function () {
+            this.nodesToHeap = [];
+            var heapIndex = Math.floor(this.length / 2) - 1;
+            for (var i = heapIndex; i >= 0; i--) {
+                this.nodesToHeap.push(i);
+            }
+            this.comparisonNode = this.length - 1;
+        };
         Heap.prototype.currentNodes = function () {
             if (this.done) {
                 return [];
@@ -712,12 +708,14 @@ var Sorts;
     */
     var Insertion = (function (_super) {
         __extends(Insertion, _super);
-        function Insertion(board) {
-            var _this = _super.call(this, board) || this;
+        function Insertion() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.insertValue = null;
-            _this.baseNode = 1;
             return _this;
         }
+        Insertion.prototype.setUp = function () {
+            this.baseNode = 1;
+        };
         Insertion.prototype.currentNodes = function () {
             if (this.done) {
                 return [];
@@ -791,18 +789,20 @@ var Sorts;
     */
     var OddEven = (function (_super) {
         __extends(OddEven, _super);
-        function OddEven(board) {
-            var _this = _super.call(this, board) || this;
-            _this.oddPhase = true;
-            _this.oddSorted = false;
-            _this.evenSorted = false;
-            _this.baseNodes = [];
-            _this.setUpLists();
-            _this.baseNode = _this.baseNodes.shift();
-            _this.comparisonNode = _this.baseNode + 1;
-            return _this;
+        function OddEven() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        OddEven.prototype.setUp = function () {
+            this.oddPhase = true;
+            this.oddSorted = false;
+            this.evenSorted = false;
+            this.setUpLists();
+            this.baseNode = this.baseNodes.shift();
+            this.comparisonNode = this.baseNode + 1;
+            console.log(this.baseNodes, this.baseNode, this.comparisonNode);
+        };
         OddEven.prototype.setUpLists = function () {
+            this.baseNodes = [];
             if (this.oddPhase) {
                 for (var i = 1; i < this.length - 1; i += 2) {
                     this.baseNodes.push(i);
@@ -843,6 +843,7 @@ var Sorts;
             this.comparisonNode = this.baseNode + 1;
         };
         OddEven.prototype.currentNodes = function () {
+            console.log(this.baseNodes, this.baseNode, this.comparisonNode);
             if (this.baseNode !== undefined) {
                 return [this.baseNode].concat(this.baseNodes);
             }
@@ -905,14 +906,16 @@ var Sorts;
     */
     var QuickSort2 = (function (_super) {
         __extends(QuickSort2, _super);
-        function QuickSort2(board) {
-            var _this = _super.call(this, board) || this;
-            _this.addToUpdate = [];
-            _this.partitions = [];
+        function QuickSort2() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.threeWay = false;
-            _this.setUpValues([_this.baseNode, _this.length - 1]);
             return _this;
         }
+        QuickSort2.prototype.setUp = function () {
+            this.addToUpdate = [];
+            this.partitions = [];
+            this.setUpValues([this.baseNode, this.length - 1]);
+        };
         QuickSort2.prototype.setUpValues = function (values) {
             this.lower = values[0];
             this.higher = values[0];
@@ -1102,10 +1105,11 @@ var Sorts;
     var SelectionSort = (function (_super) {
         __extends(SelectionSort, _super);
         function SelectionSort() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.baseIndex = 0;
-            return _this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        SelectionSort.prototype.setUp = function () {
+            this.baseIndex = 0;
+        };
         SelectionSort.prototype.setUpNext = function () {
             this.comparisonNode++;
             if (this.comparisonNode === this.length) {
@@ -1155,24 +1159,19 @@ var Sorts;
     */
     var Smooth = (function (_super) {
         __extends(Smooth, _super);
-        function Smooth(board, skip) {
-            if (skip === void 0) { skip = false; }
-            var _this = _super.call(this, board) || this;
-            // size of each tree
-            _this.treeSizes = [];
-            // tree roots
-            _this.roots = [];
-            // numbers
-            _this.leonardoNumbers = [];
-            _this.nodesToHeap = [];
-            _this.rootsToCompare = [];
-            _this.fromBottom = false;
-            if (!skip) {
-                _this.setUp(_this.fromBottom);
-            }
-            return _this;
+        function Smooth() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
-        Smooth.prototype.setUp = function (fromBottom) {
+        Smooth.prototype.setUp = function () {
+            this.leonardoNumbers = [];
+            this.nodesToHeap = [];
+            this.rootsToCompare = [];
+            this.roots = [];
+            this.treeSizes = [];
+            this.fromBottom = this.constructor.fromBottom;
+            this.setUpNumbers(this.fromBottom);
+        };
+        Smooth.prototype.setUpNumbers = function (fromBottom) {
             this.leonardoNumbers = this.getLeoNums(this.length);
             if (!fromBottom) {
                 this.treeSizes = this.getTreeSizes(this.length);
@@ -1340,21 +1339,23 @@ var Sorts;
             name: "Smoothsort's Behavior on Presorted Sequences"
         }
     ];
+    Smooth.fromBottom = false;
     Sorts.Smooth = Smooth;
     var SmoothSetUpBottom = (function (_super) {
         __extends(SmoothSetUpBottom, _super);
-        function SmoothSetUpBottom(board) {
-            var _this = _super.call(this, board, true) || this;
-            _this.fromBottom = true;
-            _this.setUp(_this.fromBottom);
-            _this.baseNode = 1;
-            _this.treeSizes = [1];
-            _this.roots = [0];
-            return _this;
+        function SmoothSetUpBottom() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
+        SmoothSetUpBottom.prototype.setUp = function () {
+            _super.prototype.setUp.call(this);
+            this.baseNode = 1;
+            this.treeSizes = [1];
+            this.roots = [0];
+        };
         return SmoothSetUpBottom;
     }(Smooth));
     SmoothSetUpBottom.title = 'Smooth Sort(Set up from bottom)';
+    SmoothSetUpBottom.fromBottom = true;
     Sorts.SmoothSetUpBottom = SmoothSetUpBottom;
     /*
         -- solar bitflip

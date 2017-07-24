@@ -84,9 +84,14 @@ namespace SortComp {
         let wrappers = document.getElementsByClassName('wrapper')
         let wrapperIndex
         for (let i = 0; i < wrappers.length; i++) {
-            wrapperIndex = i
+            if (wrappers[i] === wrapperElement) {
+                wrapperIndex = i
+                break
+            }
         }
-        console.log(wrapperIndex)
+        let item = boardList[wrapperIndex]
+        item.sort.reset()
+        Index.renderBoard(wrapperIndex, item.sort, item.board, boxHeight, boxWidth)
     }, '.reset')
 
     let autoElement = document.getElementById("auto")

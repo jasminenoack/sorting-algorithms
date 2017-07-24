@@ -799,7 +799,6 @@ var Sorts;
             this.setUpLists();
             this.baseNode = this.baseNodes.shift();
             this.comparisonNode = this.baseNode + 1;
-            console.log(this.baseNodes, this.baseNode, this.comparisonNode);
         };
         OddEven.prototype.setUpLists = function () {
             this.baseNodes = [];
@@ -843,7 +842,6 @@ var Sorts;
             this.comparisonNode = this.baseNode + 1;
         };
         OddEven.prototype.currentNodes = function () {
-            console.log(this.baseNodes, this.baseNode, this.comparisonNode);
             if (this.baseNode !== undefined) {
                 return [this.baseNode].concat(this.baseNodes);
             }

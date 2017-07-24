@@ -2649,7 +2649,6 @@ describe("Sorts", function() {
         describe("utils", () => {
 
             it("has current nodes(returns base nodes)", () => {
-                console.log(sort.baseNodes)
                 expect(sort.currentNodes()).toEqual([1, 3])
             })
 

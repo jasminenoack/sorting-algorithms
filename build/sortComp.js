@@ -75,9 +75,14 @@ var SortComp;
         var wrappers = document.getElementsByClassName('wrapper');
         var wrapperIndex;
         for (var i = 0; i < wrappers.length; i++) {
-            wrapperIndex = i;
+            if (wrappers[i] === wrapperElement) {
+                wrapperIndex = i;
+                break;
+            }
         }
-        console.log(wrapperIndex);
+        var item = boardList[wrapperIndex];
+        item.sort.reset();
+        Index.renderBoard(wrapperIndex, item.sort, item.board, boxHeight, boxWidth);
     }, '.reset');
     var autoElement = document.getElementById("auto");
     autoElement.addEventListener('click', function (event) {

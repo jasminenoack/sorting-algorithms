@@ -761,7 +761,6 @@ namespace Sorts {
             this.setUpLists()
             this.baseNode = this.baseNodes.shift()
             this.comparisonNode = this.baseNode + 1
-            console.log(this.baseNodes, this.baseNode, this.comparisonNode)
         }
 
         setUpLists () {
@@ -806,7 +805,6 @@ namespace Sorts {
         }
 
         currentNodes() {
-            console.log(this.baseNodes, this.baseNode, this.comparisonNode)
             if (this.baseNode !== undefined) {
                 return [this.baseNode].concat(this.baseNodes)
             }

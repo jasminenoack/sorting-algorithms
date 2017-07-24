@@ -50,10 +50,11 @@ var Index;
             }
         }
     }
-    function removeCurrentNodes(currentNodes, pointElements) {
-        currentNodes.forEach(function (index) {
-            pointElements[index].classList.remove("active");
-        });
+    function removeCurrentNodes(boardElement) {
+        var currentNodes = Array.prototype.slice.call(boardElement.getElementsByClassName('active'));
+        for (var i = 0; i < currentNodes.length; i++) {
+            currentNodes[i].classList.remove("active");
+        }
     }
     function centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin) {
         var yCenter;
@@ -72,34 +73,34 @@ var Index;
     function getTextContent(sort) {
         return "<div>\n            <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n            <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n            <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n            <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n            <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n            <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n        </div>";
     }
-    function step(boardList, boxHeight, boxWidth) {
-        var _loop_1 = function (i) {
-            var currentNodes = void 0;
+    function renderBoard(i, sort, board, boxHeight, boxWidth) {
+        var currentNodes;
+        var boardElement = document.getElementsByClassName('board')[i];
+        var pointElements = boardElement.getElementsByClassName('point');
+        removeCurrentNodes(boardElement);
+        removeShadow(boardElement);
+        var points = Array.prototype.range(sort.length);
+        points.forEach(function (point) {
+            reRenderPoint(pointElements, board, point, boxHeight, boxWidth);
+        });
+        currentNodes = sort.currentNodes();
+        setCurrentNodes(currentNodes, pointElements, sort);
+        boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].innerHTML = getTextContent(sort);
+        renderShadow(sort, board, boardElement, boxHeight, boxWidth);
+    }
+    Index.renderBoard = renderBoard;
+    function step(boardList, boxHeight, boxWidth, noStep) {
+        for (var i = 0; i < boardList.length; i++) {
+            // update all points
             var boardData = boardList[i];
             var sort = boardData.sort;
             var board = boardData.board;
-            var boardElement = document.getElementsByClassName('board')[i];
-            var pointElements = boardElement.getElementsByClassName('point');
-            currentNodes = sort.currentNodes();
-            removeCurrentNodes(currentNodes, pointElements);
-            removeShadow(boardElement);
-            // update all points
             if (!sort.done) {
                 for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
                     sort.next();
                 }
-                var points = Array.prototype.range(sort.length);
-                points.forEach(function (point) {
-                    reRenderPoint(pointElements, board, point, boxHeight, boxWidth);
-                });
-                currentNodes = sort.currentNodes();
-                setCurrentNodes(currentNodes, pointElements, sort);
-                boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].innerHTML = getTextContent(sort);
-                renderShadow(sort, board, boardElement, boxHeight, boxWidth);
+                renderBoard(i, sort, board, boxHeight, boxWidth);
             }
-        };
-        for (var i = 0; i < boardList.length; i++) {
-            _loop_1(i);
         }
     }
     Index.step = step;

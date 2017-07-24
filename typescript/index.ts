@@ -62,10 +62,11 @@ namespace Index {
         }
     }
 
-    function removeCurrentNodes(currentNodes, pointElements) {
-        currentNodes.forEach(function (index) {
-            pointElements[index].classList.remove("active")
-        })
+    function removeCurrentNodes(boardElement) {
+        let currentNodes = Array.prototype.slice.call(boardElement.getElementsByClassName('active'))
+        for (let i = 0; i < currentNodes.length; i++) {
+            currentNodes[i].classList.remove("active")
+        }
     }
 
     function centers(heightSpread, widthSpread, boxHeight, boxWidth, value,
@@ -97,37 +98,38 @@ namespace Index {
         </div>`
     }
 
-    export function step (boardList, boxHeight, boxWidth) {
+    export function renderBoard (i, sort, board, boxHeight, boxWidth) {
+        let currentNodes
+        let boardElement = document.getElementsByClassName('board')[i]
+        let pointElements = boardElement.getElementsByClassName('point')
+        removeCurrentNodes(boardElement)
+        removeShadow(boardElement)
+        let points = Array.prototype.range(sort.length)
+        points.forEach(function (point) {
+            reRenderPoint(pointElements, board, point, boxHeight, boxWidth)
+        })
+        currentNodes = sort.currentNodes()
+        setCurrentNodes(currentNodes, pointElements, sort)
+        boardElement.closest(
+            '.wrapper'
+        ).getElementsByClassName(
+            'step-count'
+        )[0].innerHTML = getTextContent(sort)
+
+        renderShadow(sort, board, boardElement, boxHeight, boxWidth)
+    }
+
+    export function step (boardList, boxHeight, boxWidth, noStep?) {
         for (let i = 0; i < boardList.length; i++) {
-            let currentNodes
+            // update all points
             let boardData = boardList[i]
             let sort = boardData.sort
             let board = boardData.board
-            let boardElement = document.getElementsByClassName('board')[i]
-            let pointElements = boardElement.getElementsByClassName('point')
-
-            currentNodes = sort.currentNodes()
-            removeCurrentNodes(currentNodes, pointElements)
-            removeShadow(boardElement)
-
-            // update all points
             if (!sort.done) {
                 for (let i = 0; i < board.size.elemCount / 100; i++) {
                     sort.next()
                 }
-                let points = Array.prototype.range(sort.length)
-                points.forEach(function (point) {
-                    reRenderPoint(pointElements, board, point, boxHeight, boxWidth)
-                })
-                currentNodes = sort.currentNodes()
-                setCurrentNodes(currentNodes, pointElements, sort)
-                boardElement.closest(
-                    '.wrapper'
-                ).getElementsByClassName(
-                    'step-count'
-                )[0].innerHTML = getTextContent(sort)
-
-                renderShadow(sort, board, boardElement, boxHeight, boxWidth)
+                renderBoard(i, sort, board, boxHeight, boxWidth)
             }
         }
     }

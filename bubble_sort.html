@@ -3,8 +3,71 @@
     <head>
         <meta charset="utf-8">
         <title>Bubble Sort</title>
+        <link rel="stylesheet" href="lib/highlight.default.css">
+        <link rel="stylesheet" type="text/css" href="css/index2.css">
+        <script src="lib/highlight.js"></script>
     </head>
     <body>
-        Coming soon!
+        <h2>Bubble Sort</h2>
+
+        <p>
+            Bubble sort is one of the most controversial sorting algorithms.
+            It's extremely inefficent, and it has been argued, that it shouldn't be taught in CS courses.
+            This is discussed more fully in <a href='https://users.cs.duke.edu/~ola/bubble/bubble.html'>Bubble Sort: An Archaeological Algorithmic Analysis</a>.
+        </p>
+
+        <h4>How Bubble Sort Works</h4>
+
+        <p>
+            Bubble Sort is an exchange sort.
+            It is named for the way that larger elements bubble up to the end of the list.
+            The algorithm is very simple, but it is also very inefficent.
+            There are various optimizations that can make bubble sort extremely efficient for almost sorted lists.
+            However, other sorts exist have similar performance on ordered lists,
+            and better performance on other orders.
+        </p>
+
+        <h4>Performance</h4>
+
+        <p>
+            Bubble sort has a worst-case complexity of O(n<sup>2</sup>) and an average case complexity of О(n<sup>2</sup>).
+            If the sort is implemented with a short circuit for a presorted list there is a best case complexity of Ω(n).
+        </p>
+
+        <h4>Code Sample</h4>
+
+        <h5>Python</h5>
+
+        <pre><code class="python">
+    def bubble_sort(nums):
+        # Repeat the sort up to n - 1 times
+        # if there are 5 elements. It will run the sort 4 times.
+        # At minimum this will put 4 of the 5 elements in place.
+        # And the array will become sorted.
+        for i in range(1, len(nums)):
+            # set a variable to check if the array is ordered
+            ordered = True
+            # For each round look at every number up to the second to last that has not been sorted.
+            # We do not need to reconsider the final number of the previous round
+            # because bubble sort always puts the highest number in the last position each round.
+            for index in range(len(nums) - i):
+                # compare each value to the next value in the array.
+                # if the next value is smaller swap the values
+                value = nums[index]
+                next_value = nums[index + 1]
+                if next_value < value:
+                    nums[index], nums[index + 1] = next_value, value
+                    # if you had to swap change the ordered variable
+                    ordered = False
+            # if the array was ordered break out of the loop
+            if ordered:
+                break
+        # return the sorted array
+        return nums
+        </code></pre>
+
+        <p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Bubble_sort">See more</a></p>
+
+        <script>hljs.initHighlightingOnLoad();</script>
     </body>
 </html>

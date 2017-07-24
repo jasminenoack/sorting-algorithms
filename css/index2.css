@@ -20,6 +20,20 @@ figcaption {
     font-size: 10px;
 }
 
+video {
+    padding: 10px;
+}
+
+.left {
+    float: left;
+}
+
+.clear:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .background {
     position: fixed;
     top: 0;
@@ -45,9 +59,9 @@ figcaption {
     background: floralwhite;
 }
 
-p, h2, h3, h4, h5, pre {
+p, h2, h3, h4, h5, pre, .normal {
     padding: 10px;
-    width: 1080px;
+    max-width: 1080px;
     margin: auto;
 }
 

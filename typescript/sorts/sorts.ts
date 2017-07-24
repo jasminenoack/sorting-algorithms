@@ -435,6 +435,42 @@ namespace Sorts {
         static title = "Comb & Gnome(at gap 10)"
     }
 
+    export class CombGnomeLargeShrink5 extends CombGnome5 {
+        static title = "Comb & Gnome(gap 5, shrink 2)"
+        gnomeSwitchValue: number = 5
+        setUp() {
+            this.comb = new CombEvenLarger(this.board)
+            this.gnome = new Gnome(this.board)
+        }
+    }
+
+    export class CombGnomeLargeShrink2 extends CombGnomeLargeShrink5 {
+        static title = "Comb & Gnome(gap 2, shrink 2)"
+        gnomeSwitchValue: number = 2
+        setUp() {
+            this.comb = new CombEvenLarger(this.board)
+            this.gnome = new Gnome(this.board)
+        }
+    }
+
+    export class CombGnomeLargeShrink3 extends CombGnomeLargeShrink5 {
+        static title = "Comb & Gnome(gap 3, shrink 2)"
+        gnomeSwitchValue: number = 3
+        setUp() {
+            this.comb = new CombEvenLarger(this.board)
+            this.gnome = new Gnome(this.board)
+        }
+    }
+
+    export class CombGnomeLargeShrink10 extends CombGnomeLargeShrink5 {
+        static title = "Comb & Gnome(gap 10, shrink 2)"
+        gnomeSwitchValue: number = 10
+        setUp() {
+            this.comb = new CombEvenLarger(this.board)
+            this.gnome = new Gnome(this.board)
+        }
+    }
+
     // try there with large shrink
 
     // comb and insertion
@@ -1367,9 +1403,13 @@ namespace Sorts {
         CombLargeShrink,
         CombEvenLarger,
         CombGnome2,
+        CombGnomeLargeShrink2,
         CombGnome3,
+        CombGnomeLargeShrink3,
         CombGnome5,
+        CombGnomeLargeShrink5,
         CombGnome10,
+        CombGnomeLargeShrink10,
         Cycle,
         Gnome,
         Heap,

@@ -489,6 +489,66 @@ var Sorts;
     }(CombGnome5));
     CombGnome10.title = "Comb & Gnome(at gap 10)";
     Sorts.CombGnome10 = CombGnome10;
+    var CombGnomeLargeShrink5 = (function (_super) {
+        __extends(CombGnomeLargeShrink5, _super);
+        function CombGnomeLargeShrink5() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.gnomeSwitchValue = 5;
+            return _this;
+        }
+        CombGnomeLargeShrink5.prototype.setUp = function () {
+            this.comb = new CombEvenLarger(this.board);
+            this.gnome = new Gnome(this.board);
+        };
+        return CombGnomeLargeShrink5;
+    }(CombGnome5));
+    CombGnomeLargeShrink5.title = "Comb & Gnome(gap 5, shrink 2)";
+    Sorts.CombGnomeLargeShrink5 = CombGnomeLargeShrink5;
+    var CombGnomeLargeShrink2 = (function (_super) {
+        __extends(CombGnomeLargeShrink2, _super);
+        function CombGnomeLargeShrink2() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.gnomeSwitchValue = 2;
+            return _this;
+        }
+        CombGnomeLargeShrink2.prototype.setUp = function () {
+            this.comb = new CombEvenLarger(this.board);
+            this.gnome = new Gnome(this.board);
+        };
+        return CombGnomeLargeShrink2;
+    }(CombGnomeLargeShrink5));
+    CombGnomeLargeShrink2.title = "Comb & Gnome(gap 2, shrink 2)";
+    Sorts.CombGnomeLargeShrink2 = CombGnomeLargeShrink2;
+    var CombGnomeLargeShrink3 = (function (_super) {
+        __extends(CombGnomeLargeShrink3, _super);
+        function CombGnomeLargeShrink3() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.gnomeSwitchValue = 3;
+            return _this;
+        }
+        CombGnomeLargeShrink3.prototype.setUp = function () {
+            this.comb = new CombEvenLarger(this.board);
+            this.gnome = new Gnome(this.board);
+        };
+        return CombGnomeLargeShrink3;
+    }(CombGnomeLargeShrink5));
+    CombGnomeLargeShrink3.title = "Comb & Gnome(gap 3, shrink 2)";
+    Sorts.CombGnomeLargeShrink3 = CombGnomeLargeShrink3;
+    var CombGnomeLargeShrink10 = (function (_super) {
+        __extends(CombGnomeLargeShrink10, _super);
+        function CombGnomeLargeShrink10() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.gnomeSwitchValue = 10;
+            return _this;
+        }
+        CombGnomeLargeShrink10.prototype.setUp = function () {
+            this.comb = new CombEvenLarger(this.board);
+            this.gnome = new Gnome(this.board);
+        };
+        return CombGnomeLargeShrink10;
+    }(CombGnomeLargeShrink5));
+    CombGnomeLargeShrink10.title = "Comb & Gnome(gap 10, shrink 2)";
+    Sorts.CombGnomeLargeShrink10 = CombGnomeLargeShrink10;
     // try there with large shrink
     // comb and insertion
     // comb shrink faster if no switching???
@@ -1408,9 +1468,13 @@ var Sorts;
         CombLargeShrink,
         CombEvenLarger,
         CombGnome2,
+        CombGnomeLargeShrink2,
         CombGnome3,
+        CombGnomeLargeShrink3,
         CombGnome5,
+        CombGnomeLargeShrink5,
         CombGnome10,
+        CombGnomeLargeShrink10,
         Cycle,
         Gnome,
         Heap,

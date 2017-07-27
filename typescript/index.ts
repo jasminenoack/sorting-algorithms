@@ -116,7 +116,9 @@ namespace Index {
             'step-count'
         )[0].innerHTML = getTextContent(sort)
 
-        renderShadow(sort, board, boardElement, boxHeight, boxWidth)
+        if (!sort.done) {
+            renderShadow(sort, board, boardElement, boxHeight, boxWidth)
+        }
     }
 
     export function step (boardList, boxHeight, boxWidth, noStep?) {

@@ -154,6 +154,50 @@
             each step is extremely computation heavy.
         </p>
 
+        <h5>Considering Algorithmic Issues</h5>
+
+        <p>
+            One thing that we do as developers is consider what might be causing a
+            problem in an algorithm. When I look at Bubble Sort I see something
+            relatively obvious. If I'm trying to sort things. I can only fix the largest number
+            each round then I have to go back to the beginning and start over.
+            So I might try to think of a solution for this. Wouldn't it be better for
+            example if I didn't have to go back to the beginning. If maybe instead I could go back
+            to where I picked up the current number and start there? I do want to be clear.
+            This is not a suggestion for a great varient of Bubble Sort as much
+            as it is an example of an attempt to think through a problem.
+            As I write this I haven't implemented it yet, I haven't thought through
+            a case, I haven't proved it's better. But a lot of times as a developer
+            if I'm trying to solve a problem I will come up with something that may be the problem
+            then I will write code to fix it and benchmark it to see if it's better.
+            That's what I want to do here. I want to look at what happens in code that
+            attempts to not constantly restart a Bubble Sort is it more efficent?
+        </p>
+
+        <video src="https://d3vv6lp55qjaqc.cloudfront.net/items/1j2x0t2X2o0O163Q0e2H/Screen%20Recording%202017-07-27%20at%2001.50%20AM.mov" width="100%" controls></video>
+
+        <p>
+            Now that we have an implemented version of this algorithm we can compare it to traditional
+            Bubble Sort. One thing that we see here is that it's not that much more effective. We feel a
+            bit better when we watch it because it looks much more effective. But if you look at the number
+            of steps it's not doing a ton. It seems to cut the step count by between 10 and 20 percent.
+            Which is okay, but doesn't fix the O(n<sup>2</sup>) nature of Bubble Sort. The important
+            thing to recognize is that as we said it makes us feel better. A lot of times as a
+            developer you build something you like. Maybe it looks good. Maybe it looks like it works
+            really well. Maybe the code is beautiful. But we have to remember that we need to objectively test
+            if our implementation is actually any better. We need to benchmark it. That's what we are doing here
+            when we are comparing the algorithms. And what we end up seeing is neither is really all that great
+            unfortunately. But we do start to understand the logic behind some of the other algorithms. Gnome and
+            Insertion Sorts work similarly to what we are doing here, but instead they try to create a sorted
+            sub array and move objects into it in the correct place. As opposed to here where we are guessing where
+            we should place an object based on current context. These sorts are trying to optimize the number of steps.
+            While in worst case they can hit O(n<sup>2</sup>) they tend to have a better best case and average case.
+            Selection and Cycle Sorts look at all the elements to determine where a particular element should be placed
+            in the array. This will still take O(n<sup>2</sup>) steps but will lower the number of insertions.
+        </p>
+
+        <video src="https://d3vv6lp55qjaqc.cloudfront.net/items/1u1v3P1Y0g3h2B1k3d38/Screen%20Recording%202017-07-27%20at%2002.13%20AM.mov" width="100%" controls></video>
+
         <script>hljs.initHighlightingOnLoad();</script>
     </body>
 </html>

@@ -405,6 +405,49 @@ namespace Sorts {
         static numberConcurrent = 10
     }
 
+    export class BubbleSortDontRestart extends Bubble {
+        static title = "Bubble(Don't restart)"
+        looking: boolean
+
+        swapValues(index1, index2) {
+            this.looking = false
+            this.swaps++
+            let baseValue = this.board.get(this.baseNode).value
+            let newValues = this.board.values().slice()
+            newValues.splice(index1, 1)
+            newValues.splice(index2 - 1, 0, baseValue)
+            this.board.setPoints(newValues)
+            this.baseNode = Math.max(index1 - 1, 0)
+            this.comparisonNode = this.baseNode + 1
+        }
+
+        next() {
+            if (this.done) {
+                return []
+            }
+            this.steps++
+            let currentNodes = this.currentNodes()
+
+            let values = this.board.values()
+            if (!this.nodesInOrder(values)) {
+                this.looking = true
+                this.comparisonNode++
+                if (this.comparisonNode === this.length) {
+                    this.swapValues(this.baseNode, this.comparisonNode)
+                }
+            } else if (this.looking) {
+                this.swapValues(this.baseNode, this.comparisonNode)
+            } else {
+                this.baseNode++
+                this.comparisonNode++
+                if (this.comparisonNode === this.length) {
+                    this.done = true
+                }
+            }
+            return currentNodes
+        }
+    }
+
     /*
         -- Bucket Sort
 
@@ -1523,6 +1566,7 @@ namespace Sorts {
         BubbleSortConcurrent,
         BubbleSortConcurrent5,
         BubbleSortConcurrent10,
+        BubbleSortDontRestart,
         Cocktail,
         CombSmallShrink,
         Comb,

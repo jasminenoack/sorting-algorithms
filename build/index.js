@@ -86,7 +86,9 @@ var Index;
         currentNodes = sort.currentNodes();
         setCurrentNodes(currentNodes, pointElements, sort);
         boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].innerHTML = getTextContent(sort);
-        renderShadow(sort, board, boardElement, boxHeight, boxWidth);
+        if (!sort.done) {
+            renderShadow(sort, board, boardElement, boxHeight, boxWidth);
+        }
     }
     Index.renderBoard = renderBoard;
     function step(boardList, boxHeight, boxWidth, noStep) {

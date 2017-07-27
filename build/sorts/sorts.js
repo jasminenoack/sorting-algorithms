@@ -431,6 +431,52 @@ var Sorts;
     BubbleSortConcurrent10.title = "Bubble Sort(Concurrent 10)";
     BubbleSortConcurrent10.numberConcurrent = 10;
     Sorts.BubbleSortConcurrent10 = BubbleSortConcurrent10;
+    var BubbleSortDontRestart = (function (_super) {
+        __extends(BubbleSortDontRestart, _super);
+        function BubbleSortDontRestart() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        BubbleSortDontRestart.prototype.swapValues = function (index1, index2) {
+            this.looking = false;
+            this.swaps++;
+            var baseValue = this.board.get(this.baseNode).value;
+            var newValues = this.board.values().slice();
+            newValues.splice(index1, 1);
+            newValues.splice(index2 - 1, 0, baseValue);
+            this.board.setPoints(newValues);
+            this.baseNode = Math.max(index1 - 1, 0);
+            this.comparisonNode = this.baseNode + 1;
+        };
+        BubbleSortDontRestart.prototype.next = function () {
+            if (this.done) {
+                return [];
+            }
+            this.steps++;
+            var currentNodes = this.currentNodes();
+            var values = this.board.values();
+            if (!this.nodesInOrder(values)) {
+                this.looking = true;
+                this.comparisonNode++;
+                if (this.comparisonNode === this.length) {
+                    this.swapValues(this.baseNode, this.comparisonNode);
+                }
+            }
+            else if (this.looking) {
+                this.swapValues(this.baseNode, this.comparisonNode);
+            }
+            else {
+                this.baseNode++;
+                this.comparisonNode++;
+                if (this.comparisonNode === this.length) {
+                    this.done = true;
+                }
+            }
+            return currentNodes;
+        };
+        return BubbleSortDontRestart;
+    }(Bubble));
+    BubbleSortDontRestart.title = "Bubble(Don't restart)";
+    Sorts.BubbleSortDontRestart = BubbleSortDontRestart;
     /*
         -- Bucket Sort
 
@@ -1597,6 +1643,7 @@ var Sorts;
         BubbleSortConcurrent,
         BubbleSortConcurrent5,
         BubbleSortConcurrent10,
+        BubbleSortDontRestart,
         Cocktail,
         CombSmallShrink,
         Comb,

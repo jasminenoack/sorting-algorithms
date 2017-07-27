@@ -282,6 +282,115 @@ namespace Sorts {
         static readonly title = "Bubble(Skip Sorted)"
     }
 
+    export class BubbleSortConcurrent extends Bubble {
+        static title = "Bubble Sort(Concurrent)"
+        static numberConcurrent = 2
+        numberConcurrent: number
+        baseNodes: number[]
+        orderedSets: boolean[]
+        fullRound: boolean[]
+
+        setUp() {
+            super.setUp()
+            this.numberConcurrent = (this.constructor as any).numberConcurrent
+            this.setUpBaseNodes()
+        }
+
+        setUpBaseNodes(base: number = 0) {
+            // sets up base nodes with a minimum diff of 2
+            let numberConcurrent = this.numberConcurrent
+            let nodeDiffs = Math.floor(this.length / numberConcurrent)
+            if (nodeDiffs < 2) {
+                nodeDiffs = 2
+                numberConcurrent = Math.floor(this.length / 2)
+            }
+            this.baseNodes = []
+            this.orderedSets = []
+            this.fullRound = []
+            for(let i = 0; i < numberConcurrent; i++) {
+                this.baseNodes.push(0 + i * nodeDiffs)
+                if (i === 0) {
+                    this.orderedSets.push(true)
+                    this.fullRound.push(true)
+                } else {
+                    this.orderedSets.push(false)
+                    this.fullRound.push(false)
+                }
+            }
+        }
+
+        currentNodes() {
+            return this.baseNodes
+        }
+
+        setUpNext() {
+            let indexToRemove
+            this.baseNodes.forEach((node, index) => {
+                this.baseNodes[index] += 1
+            });
+            this.baseNodes.forEach((node, index) => {
+                if (node == this.end) {
+                    if (this.fullRound[index]) {
+                        this.end--
+                        this.maxRounds--
+                        if (this.maxRounds === 0) {
+                            this.done = true
+                        }
+                    }
+                    if (this.end === 0) {
+                        this.done = true
+                    }
+                    if (this.orderedSets[index]) {
+                        this.done = true
+                    }
+
+                    let nextIndex
+                    if (index < this.baseNodes.length - 1) {
+                        nextIndex = index + 1
+                    } else {
+                        nextIndex = 0
+                    }
+
+                    if (this.baseNodes[nextIndex] <= 1 && this.fullRound[index]) {
+                        indexToRemove = index
+                    } else {
+                        this.baseNodes[index] = 0
+                    }
+                    this.orderedSets[index] = true
+                    this.fullRound[index] = true
+                }
+            })
+            if (indexToRemove !== undefined) {
+                this.baseNodes.splice(indexToRemove, 1)
+                this.orderedSets.splice(indexToRemove, 1)
+                this.fullRound.splice(indexToRemove, 1)
+            }
+        }
+
+        nodesInOrder(values, firstIndex, secondIndex) {
+            this.comparisons++
+            return values[firstIndex] < values[secondIndex]
+        }
+
+        next() {
+            if (this.done) {
+                return []
+            }
+            this.steps++
+            let currentNodes = this.currentNodes().slice()
+            let values = this.board.values()
+            let nodes = currentNodes
+            currentNodes.forEach((node, index) => {
+                if(!this.nodesInOrder(values, node, node + 1)) {
+                    this.orderedSets[index] = false
+                    this.swap([node, node + 1])
+                }
+            })
+            this.setUpNext()
+            return currentNodes
+        }
+    }
+
     /*
         -- Bucket Sort
 
@@ -1397,6 +1506,7 @@ namespace Sorts {
         Bubble,
         BubbleSkipNoShortCircuit,
         BubbleSkipsSorted,
+        BubbleSortConcurrent,
         Cocktail,
         CombSmallShrink,
         Comb,

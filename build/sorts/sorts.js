@@ -299,6 +299,114 @@ var Sorts;
     }(Bubble));
     BubbleSkipNoShortCircuit.title = "Bubble(Skip Sorted)";
     Sorts.BubbleSkipNoShortCircuit = BubbleSkipNoShortCircuit;
+    var BubbleSortConcurrent = (function (_super) {
+        __extends(BubbleSortConcurrent, _super);
+        function BubbleSortConcurrent() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        BubbleSortConcurrent.prototype.setUp = function () {
+            _super.prototype.setUp.call(this);
+            this.numberConcurrent = this.constructor.numberConcurrent;
+            this.setUpBaseNodes();
+        };
+        BubbleSortConcurrent.prototype.setUpBaseNodes = function (base) {
+            if (base === void 0) { base = 0; }
+            // sets up base nodes with a minimum diff of 2
+            var numberConcurrent = this.numberConcurrent;
+            var nodeDiffs = Math.floor(this.length / numberConcurrent);
+            if (nodeDiffs < 2) {
+                nodeDiffs = 2;
+                numberConcurrent = Math.floor(this.length / 2);
+            }
+            this.baseNodes = [];
+            this.orderedSets = [];
+            this.fullRound = [];
+            for (var i = 0; i < numberConcurrent; i++) {
+                this.baseNodes.push(0 + i * nodeDiffs);
+                if (i === 0) {
+                    this.orderedSets.push(true);
+                    this.fullRound.push(true);
+                }
+                else {
+                    this.orderedSets.push(false);
+                    this.fullRound.push(false);
+                }
+            }
+        };
+        BubbleSortConcurrent.prototype.currentNodes = function () {
+            return this.baseNodes;
+        };
+        BubbleSortConcurrent.prototype.setUpNext = function () {
+            var _this = this;
+            var indexToRemove;
+            this.baseNodes.forEach(function (node, index) {
+                _this.baseNodes[index] += 1;
+            });
+            this.baseNodes.forEach(function (node, index) {
+                if (node == _this.end) {
+                    if (_this.fullRound[index]) {
+                        _this.end--;
+                        _this.maxRounds--;
+                        if (_this.maxRounds === 0) {
+                            _this.done = true;
+                        }
+                    }
+                    if (_this.end === 0) {
+                        _this.done = true;
+                    }
+                    if (_this.orderedSets[index]) {
+                        _this.done = true;
+                    }
+                    var nextIndex = void 0;
+                    if (index < _this.baseNodes.length - 1) {
+                        nextIndex = index + 1;
+                    }
+                    else {
+                        nextIndex = 0;
+                    }
+                    if (_this.baseNodes[nextIndex] <= 1 && _this.fullRound[index]) {
+                        indexToRemove = index;
+                    }
+                    else {
+                        _this.baseNodes[index] = 0;
+                    }
+                    _this.orderedSets[index] = true;
+                    _this.fullRound[index] = true;
+                }
+            });
+            if (indexToRemove !== undefined) {
+                this.baseNodes.splice(indexToRemove, 1);
+                this.orderedSets.splice(indexToRemove, 1);
+                this.fullRound.splice(indexToRemove, 1);
+            }
+        };
+        BubbleSortConcurrent.prototype.nodesInOrder = function (values, firstIndex, secondIndex) {
+            this.comparisons++;
+            return values[firstIndex] < values[secondIndex];
+        };
+        BubbleSortConcurrent.prototype.next = function () {
+            var _this = this;
+            if (this.done) {
+                return [];
+            }
+            this.steps++;
+            var currentNodes = this.currentNodes().slice();
+            var values = this.board.values();
+            var nodes = currentNodes;
+            currentNodes.forEach(function (node, index) {
+                if (!_this.nodesInOrder(values, node, node + 1)) {
+                    _this.orderedSets[index] = false;
+                    _this.swap([node, node + 1]);
+                }
+            });
+            this.setUpNext();
+            return currentNodes;
+        };
+        return BubbleSortConcurrent;
+    }(Bubble));
+    BubbleSortConcurrent.title = "Bubble Sort(Concurrent)";
+    BubbleSortConcurrent.numberConcurrent = 2;
+    Sorts.BubbleSortConcurrent = BubbleSortConcurrent;
     /*
         -- Bucket Sort
 
@@ -1462,6 +1570,7 @@ var Sorts;
         Bubble,
         BubbleSkipNoShortCircuit,
         BubbleSkipsSorted,
+        BubbleSortConcurrent,
         Cocktail,
         CombSmallShrink,
         Comb,

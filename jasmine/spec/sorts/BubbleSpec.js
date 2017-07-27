@@ -446,7 +446,7 @@ describe("Bubble Sorts", function() {
 
         describe("create", function () {
             it("it has a title", () => {
-                expect(Sort.title).toEqual('Bubble Sort(Concurrent)')
+                expect(Sort.title).toEqual('Bubble Sort(Concurrent 2)')
             })
         })
 

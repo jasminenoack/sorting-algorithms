@@ -223,7 +223,7 @@ namespace Sorts {
     */
 
     export class Bubble extends BaseSort {
-        static readonly title: string = "Bubble(Short Circuit)"
+        static title: string = "Bubble(Short Circuit)"
         ordered: boolean
         skipSorted: boolean = false
         shortCircuit: boolean = true
@@ -283,7 +283,7 @@ namespace Sorts {
     }
 
     export class BubbleSortConcurrent extends Bubble {
-        static title = "Bubble Sort(Concurrent)"
+        static title = "Bubble Sort(Concurrent 2)"
         static numberConcurrent = 2
         numberConcurrent: number
         baseNodes: number[]
@@ -320,6 +320,9 @@ namespace Sorts {
         }
 
         currentNodes() {
+            if (this.done) {
+                return []
+            }
             return this.baseNodes
         }
 
@@ -331,6 +334,7 @@ namespace Sorts {
             this.baseNodes.forEach((node, index) => {
                 if (node == this.end) {
                     if (this.fullRound[index]) {
+                        this.placed.push(this.end)
                         this.end--
                         this.maxRounds--
                         if (this.maxRounds === 0) {
@@ -367,7 +371,7 @@ namespace Sorts {
             }
         }
 
-        nodesInOrder(values, firstIndex, secondIndex) {
+        specificNodesInOrder(values, firstIndex, secondIndex) {
             this.comparisons++
             return values[firstIndex] < values[secondIndex]
         }
@@ -381,7 +385,7 @@ namespace Sorts {
             let values = this.board.values()
             let nodes = currentNodes
             currentNodes.forEach((node, index) => {
-                if(!this.nodesInOrder(values, node, node + 1)) {
+                if(!this.specificNodesInOrder(values, node, node + 1)) {
                     this.orderedSets[index] = false
                     this.swap([node, node + 1])
                 }
@@ -389,6 +393,16 @@ namespace Sorts {
             this.setUpNext()
             return currentNodes
         }
+    }
+
+    export class BubbleSortConcurrent5 extends BubbleSortConcurrent {
+        static title = "Bubble Sort(Concurrent 5)"
+        static numberConcurrent = 5
+    }
+
+    export class BubbleSortConcurrent10 extends BubbleSortConcurrent {
+        static title = "Bubble Sort(Concurrent 10)"
+        static numberConcurrent = 10
     }
 
     /*
@@ -1507,6 +1521,8 @@ namespace Sorts {
         BubbleSkipNoShortCircuit,
         BubbleSkipsSorted,
         BubbleSortConcurrent,
+        BubbleSortConcurrent5,
+        BubbleSortConcurrent10,
         Cocktail,
         CombSmallShrink,
         Comb,

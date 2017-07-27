@@ -130,6 +130,30 @@
             be a good solution to the problem of effeciency.
         </p>
 
+        <video src="videos/concur-bubble.mov" width="100%" controls></video>
+
+        <p>
+            Here we see our optimized Bubble Sort compared with several different
+            concurrency levels in Bubble Sort. And we see that concurrency will
+            in fact speed up the sort. However, we do of course see that although
+            in time the concurrent sorts finish faster they actually perform more
+            comparisons. This is due mostly to the implementation that we are using
+            where we start all the concurrent locations simultaneously. So several
+            have to get to the end before they can implement the optimizations for
+            the sort more generally. We are able to see here why someone may want to
+            use concurrency for any task. It does not save us actions or space,
+            but it can have an intense effect on the overall time that something takes.
+            You see this when people use asynchronous tasks on websites. It allows them
+            to perform a lot of computations simultaneously by spreading them
+            out across multiple systems. So we are using more power for each step,
+            but we can finish much faster. If you have the resources this can
+            be a good way to perform some heavy duty processes such as data aggregation
+            or analysis. The Odd-Even Sort which is available on the comparison page is
+            an extension of this concept. It compares all the even nodes to the next node,
+            then all the odd nodes to the next node. This is very quick in time, but
+            each step is extremely computation heavy.
+        </p>
+
         <script>hljs.initHighlightingOnLoad();</script>
     </body>
 </html>

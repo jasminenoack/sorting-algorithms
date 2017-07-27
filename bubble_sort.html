@@ -105,7 +105,30 @@
 
         <p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Bubble_sort">See more</a></p>
 
-        <p><a href="sort_comparison.html">Compare Yourself</s>
+        <p><a href="sort_comparison.html">Compare Yourself</a>
+
+        <h4>Further Optimization</h4>
+
+        <p>
+            As I stated before Bubble Sort is an exceptionally poor sorting algorithm.
+            It is not at all optimized and is problematic at best.
+            But the simplicity of the algorithm does give some freedom to attempt
+            new tactics and changes without a large issue.
+            This may allow us to think about things that could improve the sort and
+            may event help us to understand how alternative sorts might be derived from
+            thinking about Bubble Sort.
+        </p>
+
+        <h5>Concurrency</h5>
+
+        <p>
+            One simple way to optimize is to process things concurrently.
+            We will see other optimized sorts attempt this same method to
+            speed up the sort.
+            While there can be problems with concurrency in various languages
+            we can see by simulating concurrency in javaScript why it seems to
+            be a good solution to the problem of effeciency.
+        </p>
 
         <script>hljs.initHighlightingOnLoad();</script>
     </body>

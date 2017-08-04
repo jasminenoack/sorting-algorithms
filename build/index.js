@@ -124,6 +124,7 @@ var Index;
         var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
         boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index]);
     }
+    Index.reRenderBoard = reRenderBoard;
     function createDelegatedEvent(eventNode, eventType, fun, selector) {
         var listener = eventNode.addEventListener(eventType, function (event) {
             var currentTarget = event.target;

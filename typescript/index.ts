@@ -153,7 +153,7 @@ namespace Index {
         boardsElement.appendChild(wrapperElement)
     }
 
-    function reRenderBoard (index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+    export function reRenderBoard (index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
         const wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement)
         boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index])
     }

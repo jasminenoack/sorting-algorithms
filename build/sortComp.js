@@ -82,7 +82,7 @@ var SortComp;
         }
         var item = boardList[wrapperIndex];
         item.sort.reset();
-        Index.renderBoard(wrapperIndex, item.sort, item.board, boxHeight, boxWidth);
+        Index.reRenderBoard(wrapperIndex, item.sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
     }, '.reset');
     var autoElement = document.getElementById("auto");
     autoElement.addEventListener('click', function (event) {

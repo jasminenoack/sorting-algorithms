@@ -91,7 +91,7 @@ namespace SortComp {
         }
         let item = boardList[wrapperIndex]
         item.sort.reset()
-        Index.renderBoard(wrapperIndex, item.sort, item.board, boxHeight, boxWidth)
+        Index.reRenderBoard(wrapperIndex, item.sort.constructor, boardList, boxHeight, boxWidth, boardsElement)
     }, '.reset')
 
     let autoElement = document.getElementById("auto")

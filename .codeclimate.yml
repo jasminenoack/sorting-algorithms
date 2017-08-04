@@ -1,0 +1,8 @@
+exclude_paths:
+- "node_modules/"
+- "dist/"
+- "jasmine/"
+- "js/"
+- "images/"
+- "lib/"
+- "videos/"

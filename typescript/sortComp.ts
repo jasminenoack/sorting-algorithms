@@ -2,7 +2,7 @@ import {Sizes} from './sizes'
 import {Shuffles} from './shuffles'
 import {Index} from './index'
 import {ValueTypes} from './valueTypes'
-import {Sorts} from './sorts/sorts'
+import * as Sorts from './sorts/sorts'
 import {Boards} from './board'
 
 namespace SortComp {
@@ -45,7 +45,7 @@ namespace SortComp {
         valueTypeSelect.appendChild(optionElement)
     })
 
-    let sorts = Sorts.sortList
+    let sorts = Object.values(Sorts);
     let sortElement = document.getElementById("sort")
     sorts.forEach((sort, index) => {
         let optionElement = document.createElement('option')

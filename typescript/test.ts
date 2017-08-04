@@ -2,7 +2,7 @@ import {Sizes} from './sizes'
 import {Shuffles} from './shuffles'
 import {Index} from './index'
 import {ValueTypes} from './valueTypes'
-import {Sorts} from './sorts/sorts'
+import * as Sorts from './sorts/sorts'
 import {Boards} from './board'
 import {Points} from './point'
 

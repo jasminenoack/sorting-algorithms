@@ -1,4 +1,7 @@
 import {Points} from './point'
+import {Shuffles} from './shuffles'
+import {ValueTypes} from './ValueTypes'
+import {Sizes} from './sizes'
 
 export namespace Boards {
     export class Board {
@@ -8,7 +11,7 @@ export namespace Boards {
         private _min: number
         private _max: number
         constructor(
-            size, public shuffle: Shuffles.Shuffle = new Shuffles.RandomShuffle(),
+            size: Sizes.Size, public shuffle: Shuffles.Shuffle = new Shuffles.RandomShuffle(),
             public valueType: ValueTypes.ValueType = new ValueTypes.Integer()
         ) {
             this.setSize(size)

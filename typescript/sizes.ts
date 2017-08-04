@@ -1,4 +1,4 @@
-namespace Sizes {
+export namespace Sizes {
     export interface Size {
         elemCount: number;
         label: string;

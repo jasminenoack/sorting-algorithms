@@ -1,4 +1,6 @@
-namespace Boards {
+import {Points} from './point'
+
+export namespace Boards {
     export class Board {
         points: Points.Point[] = [];
         size: Sizes.Size;

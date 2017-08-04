@@ -1,4 +1,4 @@
-namespace Sorts {
+export namespace Sorts {
     class BaseSort {
         steps: number
         static readonly title: string

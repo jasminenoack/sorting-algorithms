@@ -1,4 +1,4 @@
-namespace ValueTypes {
+export namespace ValueTypes {
     export interface ValueType {
         generate(n: number): any[]
         title: string

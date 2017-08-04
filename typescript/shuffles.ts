@@ -1,4 +1,4 @@
-namespace Shuffles {
+export namespace Shuffles {
     export class Shuffle {
         // this is the max distance we move a number
         k: number

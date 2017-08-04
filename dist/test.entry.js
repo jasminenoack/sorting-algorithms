@@ -1,3 +1,144 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */,
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Sizes;
+(function (Sizes) {
+    Sizes.speedTest = {
+        elemCount: 9000,
+        label: "9000"
+    };
+    Sizes.stupidNumber = {
+        elemCount: 1000,
+        label: "1000"
+    };
+    Sizes.manyMany = {
+        elemCount: 300,
+        label: "300"
+    };
+    Sizes.xXSmall = {
+        elemCount: 70,
+        label: "70"
+    };
+    Sizes.xSmall = {
+        elemCount: 60,
+        label: "60"
+    };
+    Sizes.small = {
+        elemCount: 50,
+        label: "50"
+    };
+    Sizes.medium = {
+        elemCount: 40,
+        label: "40"
+    };
+    Sizes.large = {
+        elemCount: 30,
+        label: "30"
+    };
+    Sizes.xLarge = {
+        elemCount: 20,
+        label: "20"
+    };
+    Sizes.xXLarge = {
+        elemCount: 10,
+        label: "10"
+    };
+    Sizes.fewFew = {
+        elemCount: 5,
+        label: '5'
+    };
+    Sizes.sizeList = [
+        Sizes.fewFew,
+        Sizes.xXLarge,
+        Sizes.xLarge,
+        Sizes.large,
+        Sizes.medium,
+        Sizes.small,
+        Sizes.xSmall,
+        Sizes.xXSmall,
+        Sizes.manyMany,
+        Sizes.stupidNumber,
+        Sizes.speedTest
+    ];
+})(Sizes = exports.Sizes || (exports.Sizes = {}));
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -8,6 +149,534 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Shuffles;
+(function (Shuffles) {
+    var Shuffle = (function () {
+        function Shuffle() {
+        }
+        Shuffle.prototype.shuffle = function (array) {
+            array.sortNumbers();
+            if (this.k === null) {
+                array.shuffle();
+            }
+            else if (this.k) {
+                array.kShuffle(this.k);
+            }
+            if (this.reversed) {
+                array.reverse();
+            }
+            return array;
+        };
+        return Shuffle;
+    }());
+    Shuffles.Shuffle = Shuffle;
+    var OrderedShuffle = (function (_super) {
+        __extends(OrderedShuffle, _super);
+        function OrderedShuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = 0;
+            _this.reversed = false;
+            _this.title = "Ordered";
+            return _this;
+        }
+        return OrderedShuffle;
+    }(Shuffle));
+    Shuffles.OrderedShuffle = OrderedShuffle;
+    var RandomShuffle = (function (_super) {
+        __extends(RandomShuffle, _super);
+        function RandomShuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = null;
+            _this.reversed = false;
+            _this.title = "Random";
+            return _this;
+        }
+        return RandomShuffle;
+    }(Shuffle));
+    Shuffles.RandomShuffle = RandomShuffle;
+    var K1Shuffle = (function (_super) {
+        __extends(K1Shuffle, _super);
+        function K1Shuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = 1;
+            _this.reversed = false;
+            _this.title = "K1";
+            return _this;
+        }
+        return K1Shuffle;
+    }(Shuffle));
+    Shuffles.K1Shuffle = K1Shuffle;
+    var K3Shuffle = (function (_super) {
+        __extends(K3Shuffle, _super);
+        function K3Shuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = 3;
+            _this.reversed = false;
+            _this.title = "K3";
+            return _this;
+        }
+        return K3Shuffle;
+    }(Shuffle));
+    Shuffles.K3Shuffle = K3Shuffle;
+    var K5Shuffle = (function (_super) {
+        __extends(K5Shuffle, _super);
+        function K5Shuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = 5;
+            _this.reversed = false;
+            _this.title = "K5";
+            return _this;
+        }
+        return K5Shuffle;
+    }(Shuffle));
+    Shuffles.K5Shuffle = K5Shuffle;
+    var K5ReversedShuffle = (function (_super) {
+        __extends(K5ReversedShuffle, _super);
+        function K5ReversedShuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = 5;
+            _this.reversed = true;
+            _this.title = "K5 Reversed";
+            return _this;
+        }
+        return K5ReversedShuffle;
+    }(Shuffle));
+    Shuffles.K5ReversedShuffle = K5ReversedShuffle;
+    var K3ReversedShuffle = (function (_super) {
+        __extends(K3ReversedShuffle, _super);
+        function K3ReversedShuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = 3;
+            _this.reversed = true;
+            _this.title = "K3 Reversed";
+            return _this;
+        }
+        return K3ReversedShuffle;
+    }(Shuffle));
+    Shuffles.K3ReversedShuffle = K3ReversedShuffle;
+    var K1ReversedShuffle = (function (_super) {
+        __extends(K1ReversedShuffle, _super);
+        function K1ReversedShuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = 1;
+            _this.reversed = true;
+            _this.title = "K1 Reversed";
+            return _this;
+        }
+        return K1ReversedShuffle;
+    }(Shuffle));
+    Shuffles.K1ReversedShuffle = K1ReversedShuffle;
+    var ReversedShuffle = (function (_super) {
+        __extends(ReversedShuffle, _super);
+        function ReversedShuffle() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.k = 0;
+            _this.reversed = true;
+            _this.title = "Reversed";
+            return _this;
+        }
+        return ReversedShuffle;
+    }(Shuffle));
+    Shuffles.ReversedShuffle = ReversedShuffle;
+    Shuffles.ShuffleList = [
+        new OrderedShuffle(),
+        new K1Shuffle(),
+        new K3Shuffle(),
+        new K5Shuffle(),
+        new RandomShuffle(),
+        new K5ReversedShuffle(),
+        new K3ReversedShuffle(),
+        new K1ReversedShuffle(),
+        new ReversedShuffle()
+    ];
+})(Shuffles = exports.Shuffles || (exports.Shuffles = {}));
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Index;
+(function (Index) {
+    function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
+        var valueMin = board.min();
+        var valueMax = board.max();
+        var widthSpread = board.values().length - 1;
+        var heightSpread = valueMax - valueMin;
+        var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
+        var shadow = sort.shadow;
+        if (shadow.length) {
+            shadow.forEach(function (obj) {
+                var index = obj.index;
+                var value = obj.value;
+                var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin), xCenter = _a[0], yCenter = _a[1];
+                var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', xCenter + '');
+                circle.setAttribute('cy', yCenter + '');
+                circle.setAttribute('r', radius + '');
+                circle.setAttribute('class', 'point shadow');
+                boardElement.appendChild(circle);
+            });
+        }
+    }
+    function centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin) {
+        var yCenter;
+        if (heightSpread) {
+            yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
+        }
+        else {
+            yCenter = boxHeight / 2;
+        }
+        var xCenter = (index) / widthSpread * boxWidth;
+        return [xCenter, yCenter];
+    }
+    function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
+        return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
+    }
+    function getTextContent(sort) {
+        return "<div>\n            <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n            <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n            <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n            <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n            <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n            <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n        </div>";
+    }
+    function step(boardList, boxHeight, boxWidth, boardsElement, noStep) {
+        for (var i = 0; i < boardList.length; i++) {
+            // update all points
+            var boardData = boardList[i];
+            var sort = boardData.sort;
+            var board = boardData.board;
+            if (!sort.done) {
+                for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
+                    sort.next();
+                }
+                reRenderBoard(i, sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
+            }
+        }
+    }
+    Index.step = step;
+    function addPoint(board, xCenter, yCenter, radius, currentNodes, i) {
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', xCenter + '');
+        circle.setAttribute('cy', yCenter + '');
+        circle.setAttribute('r', radius + '');
+        circle.setAttribute('class', 'point');
+        circle.setAttribute('class', 'point');
+        if (currentNodes.indexOf(i) !== -1) {
+            circle.classList.add('active');
+        }
+        board.appendChild(circle);
+    }
+    function createWrapper(Sort, sort) {
+        var wrapperElement = document.createElement('div');
+        wrapperElement.className = 'wrapper';
+        var headerElement = document.createElement('h1');
+        headerElement.textContent = Sort.title;
+        wrapperElement.appendChild(headerElement);
+        var textElement = document.createElement('span');
+        textElement.innerHTML = getTextContent(sort);
+        textElement.className = 'step-count';
+        wrapperElement.appendChild(textElement);
+        var removeElement = document.createElement('button');
+        removeElement.textContent = 'X';
+        removeElement.className = 'remove';
+        wrapperElement.appendChild(removeElement);
+        var resetElement = document.createElement('button');
+        resetElement.textContent = 'Reset';
+        resetElement.className = 'reset';
+        wrapperElement.appendChild(resetElement);
+        return wrapperElement;
+    }
+    function createBoardElements(boxWidth, boxHeight) {
+        var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
+        var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
+        gElement.setAttribute('class', 'board');
+        boardElement.appendChild(gElement);
+        return [boardElement, gElement];
+    }
+    function buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        var board = boardList[index].board;
+        var sort = boardList[index].sort;
+        var values = board.values();
+        var valueMin = board.min();
+        var valueMax = board.max();
+        var widthSpread = values.length - 1;
+        var heightSpread = valueMax - valueMin;
+        var radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread);
+        var _a = createBoardElements(boxWidth, boxHeight), boardElement = _a[0], gElement = _a[1];
+        var currentNodes = sort.currentNodes();
+        for (var i = 0; i < values.length; i++) {
+            var value = values[i];
+            var _b = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, i, valueMin), xCenter = _b[0], yCenter = _b[1];
+            addPoint(gElement, xCenter, yCenter, radius, currentNodes, i);
+        }
+        renderShadow(sort, board, gElement, boxHeight, boxWidth);
+        var wrapperElement = createWrapper(Sort, sort);
+        wrapperElement.appendChild(boardElement);
+        return wrapperElement;
+    }
+    function createBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+        boardsElement.appendChild(wrapperElement);
+    }
+    Index.createBoard = createBoard;
+    function reRenderBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+        boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index]);
+    }
+    Index.reRenderBoard = reRenderBoard;
+    function createDelegatedEvent(eventNode, eventType, fun, selector) {
+        var listener = eventNode.addEventListener(eventType, function (event) {
+            var currentTarget = event.target;
+            if (event.target.matches(selector)) {
+                fun(event, event.target);
+            }
+        });
+        return listener;
+    }
+    Index.createDelegatedEvent = createDelegatedEvent;
+    function closestParent(node, selector) {
+        if (node.matches(selector)) {
+            return node;
+        }
+        else if (!node.parentElement) {
+            return null;
+        }
+        else {
+            return closestParent(node.parentElement, selector);
+        }
+    }
+    Index.closestParent = closestParent;
+})(Index = exports.Index || (exports.Index = {}));
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ValueTypes;
+(function (ValueTypes) {
+    var Random = (function () {
+        function Random() {
+            this.title = "Random";
+        }
+        Random.prototype.generate = function (n) {
+            var spread = n * 2;
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                values.push(Math.floor(Math.random() * spread));
+            }
+            return values;
+        };
+        return Random;
+    }());
+    ValueTypes.Random = Random;
+    var Integer = (function () {
+        function Integer() {
+            this.title = "Range";
+        }
+        Integer.prototype.generate = function (n) {
+            return Array.prototype.range(n);
+        };
+        return Integer;
+    }());
+    ValueTypes.Integer = Integer;
+    var FewUnique = (function () {
+        function FewUnique() {
+            this.title = "Few Values";
+        }
+        FewUnique.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                values.push(i % 5);
+            }
+            return values;
+        };
+        return FewUnique;
+    }());
+    ValueTypes.FewUnique = FewUnique;
+    var AllBut2Equal = (function () {
+        function AllBut2Equal() {
+            this.title = "All But 2 Equal";
+        }
+        AllBut2Equal.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n - 2; i++) {
+                values.push(n / 2);
+            }
+            values.push(2);
+            values.push(n - 2);
+            values.sort();
+            return values;
+        };
+        return AllBut2Equal;
+    }());
+    ValueTypes.AllBut2Equal = AllBut2Equal;
+    var Equal = (function () {
+        function Equal() {
+            this.title = "Equal";
+        }
+        Equal.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                values.push(n / 2);
+            }
+            return values;
+        };
+        return Equal;
+    }());
+    ValueTypes.Equal = Equal;
+    var Logarithmic = (function () {
+        function Logarithmic() {
+            this.title = "Logarithmic";
+        }
+        Logarithmic.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                var j = (i + 1) / 8;
+                var num = Math.log(j);
+                values.push(Math.floor(num * 10));
+            }
+            return values;
+        };
+        return Logarithmic;
+    }());
+    ValueTypes.Logarithmic = Logarithmic;
+    var Quadratic = (function () {
+        function Quadratic() {
+            this.title = "Quadratic";
+        }
+        Quadratic.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                var j = 10 * (i / n) - 5;
+                var num = j * j;
+                values.push(Math.floor(num * 2));
+            }
+            return values;
+        };
+        return Quadratic;
+    }());
+    ValueTypes.Quadratic = Quadratic;
+    var Exponential = (function () {
+        function Exponential() {
+            this.title = "Exponential";
+        }
+        Exponential.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                var j = 10 * (i / n) - 5;
+                var num = Math.pow(2, j);
+                values.push(Math.floor(num * 2));
+            }
+            return values;
+        };
+        return Exponential;
+    }());
+    ValueTypes.Exponential = Exponential;
+    var Cubic = (function () {
+        function Cubic() {
+            this.title = "Cubic";
+        }
+        Cubic.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                var j = 4 * (i / n) - 2;
+                var num = j * j * j;
+                values.push(Math.floor(num * 3));
+            }
+            return values;
+        };
+        return Cubic;
+    }());
+    ValueTypes.Cubic = Cubic;
+    var Quintic = (function () {
+        function Quintic() {
+            this.title = "Quintic";
+        }
+        Quintic.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                var j = 2 * (i / n) - 1;
+                var num = j * j * j * j * j;
+                values.push(Math.floor(num * 30));
+            }
+            return values;
+        };
+        return Quintic;
+    }());
+    ValueTypes.Quintic = Quintic;
+    var Sin = (function () {
+        function Sin() {
+            this.title = "Sin";
+        }
+        Sin.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                var j = 12 * (i / n) - 6;
+                var num = Math.sin(j);
+                values.push(Math.floor(num * 30));
+            }
+            return values;
+        };
+        return Sin;
+    }());
+    ValueTypes.Sin = Sin;
+    var Root = (function () {
+        function Root() {
+            this.title = "Root";
+        }
+        Root.prototype.generate = function (n) {
+            var values = [];
+            for (var i = 0; i < n; i++) {
+                var j = 5 * (i / n);
+                var num = Math.sqrt(j);
+                values.push(Math.floor(num * 15));
+            }
+            return values;
+        };
+        return Root;
+    }());
+    ValueTypes.Root = Root;
+    ValueTypes.valueTypeList = [
+        new Integer(),
+        new Random(),
+        new FewUnique(),
+        new Equal(),
+        new AllBut2Equal(),
+        new Logarithmic(),
+        new Quadratic(),
+        new Exponential(),
+        new Cubic(),
+        new Quintic(),
+        new Sin(),
+        new Root()
+    ];
+})(ValueTypes = exports.ValueTypes || (exports.ValueTypes = {}));
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var Sorts;
 (function (Sorts) {
     var BaseSort = (function () {
@@ -147,9 +816,9 @@ var Sorts;
             this.checkSorted();
             return currentNodes;
         };
+        Bogo.title = 'Bogo';
         return Bogo;
     }(BaseSort));
-    Bogo.title = 'Bogo';
     Sorts.Bogo = Bogo;
     var BogoSingle = (function (_super) {
         __extends(BogoSingle, _super);
@@ -187,9 +856,9 @@ var Sorts;
             this.checkSorted();
             return currentNodes;
         };
+        BogoSingle.title = "Bogo(Single Swap)";
         return BogoSingle;
     }(BaseSort));
-    BogoSingle.title = "Bogo(Single Swap)";
     Sorts.BogoSingle = BogoSingle;
     var BogoSingleCompare = (function (_super) {
         __extends(BogoSingleCompare, _super);
@@ -205,9 +874,9 @@ var Sorts;
             this.comparisons++;
             return inOrder;
         };
+        BogoSingleCompare.title = 'Bogo(Compare & Single Swap)';
         return BogoSingleCompare;
     }(BogoSingle));
-    BogoSingleCompare.title = 'Bogo(Compare & Single Swap)';
     Sorts.BogoSingleCompare = BogoSingleCompare;
     /*
         -- fast bogo sort (https://xkcd.com/1185/)
@@ -255,15 +924,15 @@ var Sorts;
             this.maxRounds = this.length;
             this.ordered = true;
         };
+        Bubble.title = "Bubble(Short Circuit)";
+        Bubble.links = [
+            {
+                url: 'https://users.cs.duke.edu/~ola/bubble/bubble.pdf',
+                name: 'Bubble Sort: An Archaeological Algorithmic Analysis'
+            }
+        ];
         return Bubble;
     }(BaseSort));
-    Bubble.title = "Bubble(Short Circuit)";
-    Bubble.links = [
-        {
-            url: 'https://users.cs.duke.edu/~ola/bubble/bubble.pdf',
-            name: 'Bubble Sort: An Archaeological Algorithmic Analysis'
-        }
-    ];
     Sorts.Bubble = Bubble;
     var BubbleNonOptimized = (function (_super) {
         __extends(BubbleNonOptimized, _super);
@@ -272,9 +941,9 @@ var Sorts;
             _this.shortCircuit = false;
             return _this;
         }
+        BubbleNonOptimized.title = 'Bubble Sort';
         return BubbleNonOptimized;
     }(Bubble));
-    BubbleNonOptimized.title = 'Bubble Sort';
     Sorts.BubbleNonOptimized = BubbleNonOptimized;
     var BubbleSkipsSorted = (function (_super) {
         __extends(BubbleSkipsSorted, _super);
@@ -283,9 +952,9 @@ var Sorts;
             _this.skipSorted = true;
             return _this;
         }
+        BubbleSkipsSorted.title = "Bubble(Short Circuit & Skip Sorted)";
         return BubbleSkipsSorted;
     }(Bubble));
-    BubbleSkipsSorted.title = "Bubble(Short Circuit & Skip Sorted)";
     Sorts.BubbleSkipsSorted = BubbleSkipsSorted;
     var BubbleSkipNoShortCircuit = (function (_super) {
         __extends(BubbleSkipNoShortCircuit, _super);
@@ -295,9 +964,9 @@ var Sorts;
             _this.shortCircuit = false;
             return _this;
         }
+        BubbleSkipNoShortCircuit.title = "Bubble(Skip Sorted)";
         return BubbleSkipNoShortCircuit;
     }(Bubble));
-    BubbleSkipNoShortCircuit.title = "Bubble(Skip Sorted)";
     Sorts.BubbleSkipNoShortCircuit = BubbleSkipNoShortCircuit;
     var BubbleSortConcurrent = (function (_super) {
         __extends(BubbleSortConcurrent, _super);
@@ -406,30 +1075,30 @@ var Sorts;
             this.setUpNext();
             return currentNodes;
         };
+        BubbleSortConcurrent.title = "Bubble Sort(Concurrent 2)";
+        BubbleSortConcurrent.numberConcurrent = 2;
         return BubbleSortConcurrent;
     }(Bubble));
-    BubbleSortConcurrent.title = "Bubble Sort(Concurrent 2)";
-    BubbleSortConcurrent.numberConcurrent = 2;
     Sorts.BubbleSortConcurrent = BubbleSortConcurrent;
     var BubbleSortConcurrent5 = (function (_super) {
         __extends(BubbleSortConcurrent5, _super);
         function BubbleSortConcurrent5() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        BubbleSortConcurrent5.title = "Bubble Sort(Concurrent 5)";
+        BubbleSortConcurrent5.numberConcurrent = 5;
         return BubbleSortConcurrent5;
     }(BubbleSortConcurrent));
-    BubbleSortConcurrent5.title = "Bubble Sort(Concurrent 5)";
-    BubbleSortConcurrent5.numberConcurrent = 5;
     Sorts.BubbleSortConcurrent5 = BubbleSortConcurrent5;
     var BubbleSortConcurrent10 = (function (_super) {
         __extends(BubbleSortConcurrent10, _super);
         function BubbleSortConcurrent10() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        BubbleSortConcurrent10.title = "Bubble Sort(Concurrent 10)";
+        BubbleSortConcurrent10.numberConcurrent = 10;
         return BubbleSortConcurrent10;
     }(BubbleSortConcurrent));
-    BubbleSortConcurrent10.title = "Bubble Sort(Concurrent 10)";
-    BubbleSortConcurrent10.numberConcurrent = 10;
     Sorts.BubbleSortConcurrent10 = BubbleSortConcurrent10;
     var BubbleSortDontRestart = (function (_super) {
         __extends(BubbleSortDontRestart, _super);
@@ -473,9 +1142,9 @@ var Sorts;
             }
             return currentNodes;
         };
+        BubbleSortDontRestart.title = "Bubble(Don't restart)";
         return BubbleSortDontRestart;
     }(Bubble));
-    BubbleSortDontRestart.title = "Bubble(Don't restart)";
     Sorts.BubbleSortDontRestart = BubbleSortDontRestart;
     /*
         -- Bucket Sort
@@ -533,9 +1202,9 @@ var Sorts;
                 this.done = true;
             }
         };
+        Cocktail.title = "Cocktail Sort";
         return Cocktail;
     }(BaseSort));
-    Cocktail.title = "Cocktail Sort";
     Sorts.Cocktail = Cocktail;
     var Comb = (function (_super) {
         __extends(Comb, _super);
@@ -560,42 +1229,42 @@ var Sorts;
                 this.ordered = true;
             }
         };
+        // test different shrinks
+        // test ceil over floor
+        Comb.title = "Comb Sort";
+        Comb.shrink = 1.3;
         return Comb;
     }(BaseSort));
-    // test different shrinks
-    // test ceil over floor
-    Comb.title = "Comb Sort";
-    Comb.shrink = 1.3;
     Sorts.Comb = Comb;
     var CombSmallShrink = (function (_super) {
         __extends(CombSmallShrink, _super);
         function CombSmallShrink() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        CombSmallShrink.shrink = 1.1;
+        CombSmallShrink.title = "Comb(Small Shrink: 1.1)";
         return CombSmallShrink;
     }(Comb));
-    CombSmallShrink.shrink = 1.1;
-    CombSmallShrink.title = "Comb(Small Shrink: 1.1)";
     Sorts.CombSmallShrink = CombSmallShrink;
     var CombLargeShrink = (function (_super) {
         __extends(CombLargeShrink, _super);
         function CombLargeShrink() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        CombLargeShrink.shrink = 1.5;
+        CombLargeShrink.title = "Comb(Large Shrink: 1.5)";
         return CombLargeShrink;
     }(Comb));
-    CombLargeShrink.shrink = 1.5;
-    CombLargeShrink.title = "Comb(Large Shrink: 1.5)";
     Sorts.CombLargeShrink = CombLargeShrink;
     var CombEvenLarger = (function (_super) {
         __extends(CombEvenLarger, _super);
         function CombEvenLarger() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        CombEvenLarger.title = "Comb(Shrink: 2.0)";
+        CombEvenLarger.shrink = 2.0;
         return CombEvenLarger;
     }(Comb));
-    CombEvenLarger.title = "Comb(Shrink: 2.0)";
-    CombEvenLarger.shrink = 2.0;
     Sorts.CombEvenLarger = CombEvenLarger;
     var CombGnome5 = (function (_super) {
         __extends(CombGnome5, _super);
@@ -630,9 +1299,9 @@ var Sorts;
             this.comparisons = this.comb.comparisons + this.gnome.comparisons;
             return currentNodes;
         };
+        CombGnome5.title = "Comb & Gnome(at gap 5)";
         return CombGnome5;
     }(BaseSort));
-    CombGnome5.title = "Comb & Gnome(at gap 5)";
     Sorts.CombGnome5 = CombGnome5;
     var CombGnome3 = (function (_super) {
         __extends(CombGnome3, _super);
@@ -641,9 +1310,9 @@ var Sorts;
             _this.gnomeSwitchValue = 3;
             return _this;
         }
+        CombGnome3.title = "Comb & Gnome(at gap 3)";
         return CombGnome3;
     }(CombGnome5));
-    CombGnome3.title = "Comb & Gnome(at gap 3)";
     Sorts.CombGnome3 = CombGnome3;
     var CombGnome2 = (function (_super) {
         __extends(CombGnome2, _super);
@@ -652,9 +1321,9 @@ var Sorts;
             _this.gnomeSwitchValue = 2;
             return _this;
         }
+        CombGnome2.title = "Comb & Gnome(at gap 2)";
         return CombGnome2;
     }(CombGnome5));
-    CombGnome2.title = "Comb & Gnome(at gap 2)";
     Sorts.CombGnome2 = CombGnome2;
     var CombGnome10 = (function (_super) {
         __extends(CombGnome10, _super);
@@ -663,9 +1332,9 @@ var Sorts;
             _this.gnomeSwitchValue = 10;
             return _this;
         }
+        CombGnome10.title = "Comb & Gnome(at gap 10)";
         return CombGnome10;
     }(CombGnome5));
-    CombGnome10.title = "Comb & Gnome(at gap 10)";
     Sorts.CombGnome10 = CombGnome10;
     var CombGnomeLargeShrink5 = (function (_super) {
         __extends(CombGnomeLargeShrink5, _super);
@@ -678,9 +1347,9 @@ var Sorts;
             this.comb = new CombEvenLarger(this.board);
             this.gnome = new Gnome(this.board);
         };
+        CombGnomeLargeShrink5.title = "Comb & Gnome(gap 5, shrink 2)";
         return CombGnomeLargeShrink5;
     }(CombGnome5));
-    CombGnomeLargeShrink5.title = "Comb & Gnome(gap 5, shrink 2)";
     Sorts.CombGnomeLargeShrink5 = CombGnomeLargeShrink5;
     var CombGnomeLargeShrink2 = (function (_super) {
         __extends(CombGnomeLargeShrink2, _super);
@@ -693,9 +1362,9 @@ var Sorts;
             this.comb = new CombEvenLarger(this.board);
             this.gnome = new Gnome(this.board);
         };
+        CombGnomeLargeShrink2.title = "Comb & Gnome(gap 2, shrink 2)";
         return CombGnomeLargeShrink2;
     }(CombGnomeLargeShrink5));
-    CombGnomeLargeShrink2.title = "Comb & Gnome(gap 2, shrink 2)";
     Sorts.CombGnomeLargeShrink2 = CombGnomeLargeShrink2;
     var CombGnomeLargeShrink3 = (function (_super) {
         __extends(CombGnomeLargeShrink3, _super);
@@ -708,9 +1377,9 @@ var Sorts;
             this.comb = new CombEvenLarger(this.board);
             this.gnome = new Gnome(this.board);
         };
+        CombGnomeLargeShrink3.title = "Comb & Gnome(gap 3, shrink 2)";
         return CombGnomeLargeShrink3;
     }(CombGnomeLargeShrink5));
-    CombGnomeLargeShrink3.title = "Comb & Gnome(gap 3, shrink 2)";
     Sorts.CombGnomeLargeShrink3 = CombGnomeLargeShrink3;
     var CombGnomeLargeShrink10 = (function (_super) {
         __extends(CombGnomeLargeShrink10, _super);
@@ -723,9 +1392,9 @@ var Sorts;
             this.comb = new CombEvenLarger(this.board);
             this.gnome = new Gnome(this.board);
         };
+        CombGnomeLargeShrink10.title = "Comb & Gnome(gap 10, shrink 2)";
         return CombGnomeLargeShrink10;
     }(CombGnomeLargeShrink5));
-    CombGnomeLargeShrink10.title = "Comb & Gnome(gap 10, shrink 2)";
     Sorts.CombGnomeLargeShrink10 = CombGnomeLargeShrink10;
     // try there with large shrink
     // comb and insertion
@@ -802,15 +1471,15 @@ var Sorts;
                 }
             }
         };
+        Cycle.title = "Cycle Sort";
+        Cycle.links = [
+            {
+                url: 'https://corte.si/posts/code/cyclesort/index.html',
+                name: 'Cyclesort - a curious little sorting algorithm'
+            }
+        ];
         return Cycle;
     }(BaseSort));
-    Cycle.title = "Cycle Sort";
-    Cycle.links = [
-        {
-            url: 'https://corte.si/posts/code/cyclesort/index.html',
-            name: 'Cyclesort - a curious little sorting algorithm'
-        }
-    ];
     Sorts.Cycle = Cycle;
     /*
         -- demonsort
@@ -847,9 +1516,9 @@ var Sorts;
         Gnome.prototype.setUp = function () {
             this.currentGnome = 1;
         };
+        Gnome.title = "Gnome Sort";
         return Gnome;
     }(BaseSort));
-    Gnome.title = "Gnome Sort";
     Sorts.Gnome = Gnome;
     /*
         -- goro sort https://code.google.com/codejam/contest/dashboard?c=975485#s=p3
@@ -937,9 +1606,9 @@ var Sorts;
             }
             return currentNodes;
         };
+        Heap.title = "Heap Sort";
         return Heap;
     }(BaseSort));
-    Heap.title = "Heap Sort";
     Sorts.Heap = Heap;
     /*
         -- index sort http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.403.2955&rep=rep1&type=pdf
@@ -996,9 +1665,9 @@ var Sorts;
             }
             return nodes;
         };
+        Insertion.title = "Insertion Sort";
         return Insertion;
     }(BaseSort));
-    Insertion.title = "Insertion Sort";
     Sorts.Insertion = Insertion;
     /*
         -- intelligent design sort https://motherboard.vice.com/en_us/article/4xad8b/a-real-sorting-algorithm-based-on-the-fake-theory-of-intelligent-design
@@ -1085,9 +1754,9 @@ var Sorts;
             }
             return this.baseNodes;
         };
+        OddEven.title = "Odd Even(Single Processor)";
         return OddEven;
     }(BaseSort));
-    OddEven.title = "Odd Even(Single Processor)";
     Sorts.OddEven = OddEven;
     var OddEvenConcurrent = (function (_super) {
         __extends(OddEvenConcurrent, _super);
@@ -1113,9 +1782,9 @@ var Sorts;
             this.setUpNext();
             return currentNodes;
         };
+        OddEvenConcurrent.title = "Odd Even(Concurrent)";
         return OddEvenConcurrent;
     }(OddEven));
-    OddEvenConcurrent.title = "Odd Even(Concurrent)";
     Sorts.OddEvenConcurrent = OddEvenConcurrent;
     /*
         -- oscillating merge sort
@@ -1250,9 +1919,9 @@ var Sorts;
             this.setUpNext();
             return valuesToUpdate;
         };
+        QuickSort2.title = "Quick Sort(Left Partition)";
         return QuickSort2;
     }(BaseSort));
-    QuickSort2.title = "Quick Sort(Left Partition)";
     Sorts.QuickSort2 = QuickSort2;
     var QuickSort2RightPartition = (function (_super) {
         __extends(QuickSort2RightPartition, _super);
@@ -1266,9 +1935,9 @@ var Sorts;
             this.board.set(this.partition, temp);
             this.addToUpdate = [this.lower, this.partitionEnd];
         };
+        QuickSort2RightPartition.title = "Quick Sort(Right Partition)";
         return QuickSort2RightPartition;
     }(QuickSort2));
-    QuickSort2RightPartition.title = "Quick Sort(Right Partition)";
     Sorts.QuickSort2RightPartition = QuickSort2RightPartition;
     var QuickSort2Random = (function (_super) {
         __extends(QuickSort2Random, _super);
@@ -1284,9 +1953,9 @@ var Sorts;
             this.board.set(this.partition, temp);
             this.addToUpdate = [this.lower, index];
         };
+        QuickSort2Random.title = "Quick Sort(Random Partition)";
         return QuickSort2Random;
     }(QuickSort2));
-    QuickSort2Random.title = "Quick Sort(Random Partition)";
     Sorts.QuickSort2Random = QuickSort2Random;
     var QuickSort3 = (function (_super) {
         __extends(QuickSort3, _super);
@@ -1295,9 +1964,9 @@ var Sorts;
             _this.threeWay = true;
             return _this;
         }
+        QuickSort3.title = "Quick Sort 3(Left Partition)";
         return QuickSort3;
     }(QuickSort2));
-    QuickSort3.title = "Quick Sort 3(Left Partition)";
     Sorts.QuickSort3 = QuickSort3;
     var QuickSort3RightPartition = (function (_super) {
         __extends(QuickSort3RightPartition, _super);
@@ -1306,9 +1975,9 @@ var Sorts;
             _this.threeWay = true;
             return _this;
         }
+        QuickSort3RightPartition.title = "Quick Sort 3(Right Partition)";
         return QuickSort3RightPartition;
     }(QuickSort2RightPartition));
-    QuickSort3RightPartition.title = "Quick Sort 3(Right Partition)";
     Sorts.QuickSort3RightPartition = QuickSort3RightPartition;
     var QuickSort3Random = (function (_super) {
         __extends(QuickSort3Random, _super);
@@ -1317,9 +1986,9 @@ var Sorts;
             _this.threeWay = true;
             return _this;
         }
+        QuickSort3Random.title = "Quick Sort 3(Random Partition)";
         return QuickSort3Random;
     }(QuickSort2Random));
-    QuickSort3Random.title = "Quick Sort 3(Random Partition)";
     Sorts.QuickSort3Random = QuickSort3Random;
     /*
         -- quora sort
@@ -1373,9 +2042,9 @@ var Sorts;
             this.setUpNext();
             return currentNodes;
         };
+        SelectionSort.title = "Selection Sort";
         return SelectionSort;
     }(BaseSort));
-    SelectionSort.title = "Selection Sort";
     Sorts.SelectionSort = SelectionSort;
     // select highest and lowest
     /*
@@ -1566,16 +2235,16 @@ var Sorts;
             }
             return nodes;
         };
+        Smooth.title = "Smooth Sort";
+        Smooth.links = [
+            {
+                url: 'http://scidok.sulb.uni-saarland.de/volltexte/2011/4062/pdf/fb14_1982_11.pdf',
+                name: "Smoothsort's Behavior on Presorted Sequences"
+            }
+        ];
+        Smooth.fromBottom = false;
         return Smooth;
     }(BaseSort));
-    Smooth.title = "Smooth Sort";
-    Smooth.links = [
-        {
-            url: 'http://scidok.sulb.uni-saarland.de/volltexte/2011/4062/pdf/fb14_1982_11.pdf',
-            name: "Smoothsort's Behavior on Presorted Sequences"
-        }
-    ];
-    Smooth.fromBottom = false;
     Sorts.Smooth = Smooth;
     var SmoothSetUpBottom = (function (_super) {
         __extends(SmoothSetUpBottom, _super);
@@ -1588,10 +2257,10 @@ var Sorts;
             this.treeSizes = [1];
             this.roots = [0];
         };
+        SmoothSetUpBottom.title = 'Smooth Sort(Set up from bottom)';
+        SmoothSetUpBottom.fromBottom = true;
         return SmoothSetUpBottom;
     }(Smooth));
-    SmoothSetUpBottom.title = 'Smooth Sort(Set up from bottom)';
-    SmoothSetUpBottom.fromBottom = true;
     Sorts.SmoothSetUpBottom = SmoothSetUpBottom;
     /*
         -- solar bitflip
@@ -1673,4 +2342,142 @@ var Sorts;
         Smooth,
         SmoothSetUpBottom
     ];
-})(Sorts || (Sorts = {}));
+})(Sorts = exports.Sorts || (exports.Sorts = {}));
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var point_1 = __webpack_require__(7);
+var Boards;
+(function (Boards) {
+    var Board = (function () {
+        function Board(size, shuffle, valueType) {
+            if (shuffle === void 0) { shuffle = new Shuffles.RandomShuffle(); }
+            if (valueType === void 0) { valueType = new ValueTypes.Integer(); }
+            this.shuffle = shuffle;
+            this.valueType = valueType;
+            this.points = [];
+            this.setSize(size);
+            this.createValues();
+            this.shuffleBoard();
+        }
+        Board.prototype.createValues = function () {
+            var values = this.valueType.generate(this.length);
+            this.setPoints(values);
+            this._min = Math.min.apply(Math, values);
+            this._max = Math.max.apply(Math, values);
+        };
+        Board.prototype.shuffleBoard = function () {
+            var values = this.values();
+            this.shuffle.shuffle(values);
+            this.setPoints(values);
+        };
+        Board.prototype.setPoints = function (values) {
+            var that = this;
+            values.forEach(function (value, index) {
+                that.set(index, value);
+            });
+            this._min = Math.min.apply(Math, values);
+            this._max = Math.max.apply(Math, values);
+        };
+        Board.prototype.set = function (index, value) {
+            this.points[index].value = value;
+        };
+        Board.prototype.swap = function (index1, index2) {
+            var temp = this.get(index1);
+            this.points[index1] = this.get(index2);
+            this.points[index2] = temp;
+        };
+        Board.prototype.values = function () {
+            var items = [];
+            for (var i = 0; i < this.length; i++) {
+                items.push(this.points[i].value);
+            }
+            return items;
+        };
+        Board.prototype.setSize = function (size) {
+            this.size = size;
+            this.length = this.size.elemCount;
+            this.points = [];
+            for (var i = 0; i < this.length; i++) {
+                this.points.push(new point_1.Points.Point(i));
+            }
+        };
+        Board.prototype.get = function (index) {
+            return this.points[index];
+        };
+        Board.prototype.min = function () {
+            return this._min;
+        };
+        Board.prototype.max = function () {
+            return this._max;
+        };
+        Board.prototype.distribution = function () {
+            var dist = {};
+            var values = this.values();
+            values.forEach(function (value) {
+                dist[value] = (dist[value] || 0) + 1;
+            });
+            return dist;
+        };
+        return Board;
+    }());
+    Boards.Board = Board;
+})(Boards = exports.Boards || (exports.Boards = {}));
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Points;
+(function (Points) {
+    var Point = (function () {
+        function Point(index, value, color) {
+            if (value === void 0) { value = 0; }
+            if (color === void 0) { color = "aliceblue"; }
+            this.index = index;
+            this.value = value;
+            // TODO maybe color should be type and type should have color?
+            this.color = color;
+        }
+        return Point;
+    }());
+    Points.Point = Point;
+})(Points = exports.Points || (exports.Points = {}));
+
+
+/***/ }),
+/* 8 */,
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var sizes_1 = __webpack_require__(1);
+var shuffles_1 = __webpack_require__(2);
+var index_1 = __webpack_require__(3);
+var valueTypes_1 = __webpack_require__(4);
+var sorts_1 = __webpack_require__(5);
+var board_1 = __webpack_require__(6);
+var point_1 = __webpack_require__(7);
+window.Sizes = sizes_1.Sizes;
+window.Shuffles = shuffles_1.Shuffles;
+window.Index = index_1.Index;
+window.ValueTypes = valueTypes_1.ValueTypes;
+window.Sorts = sorts_1.Sorts;
+window.Boards = board_1.Boards;
+window.Points = point_1.Points;
+
+
+/***/ })
+/******/ ]);

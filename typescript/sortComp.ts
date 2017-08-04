@@ -1,12 +1,19 @@
+import {Sizes} from './sizes'
+import {Shuffles} from './shuffles'
+import {Index} from './index'
+import {ValueTypes} from './valueTypes'
+import {Sorts} from './sorts/sorts'
+import {Boards} from './board'
+
 namespace SortComp {
     let boardsElement = document.getElementById("boards")
     let createButton = document.getElementById("create")
     let boxHeight = 500
     let boxWidth = 500
-    let autoInterval = null
+    let autoInterval: any = null
     let delay = 100
 
-    let boardList = []
+    let boardList: Boards.Board[] = []
 
     // setup size dropdown
     let sizes = Sizes.sizeList

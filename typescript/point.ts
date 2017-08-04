@@ -1,4 +1,4 @@
-namespace Points {
+export namespace Points {
     export class Point {
         index: number;
         value: number;

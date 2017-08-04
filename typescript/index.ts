@@ -1,4 +1,4 @@
-namespace Index {
+export namespace Index {
     function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
         let valueMin = board.min()
         let valueMax = board.max()

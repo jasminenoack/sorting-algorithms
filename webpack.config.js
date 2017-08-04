@@ -1,7 +1,13 @@
 module.exports = {
-    entry: "./typescript/exports.ts",
+    entry: {
+        sortComp: "./typescript/sortComp.ts",
+        queens: "./typescript/queensBackground.ts",
+        test: "./typescript/test.ts",
+        utils: './typescript/utils.ts'
+    },
     output: {
-        filename: "dist/exports.js"
+        path: __dirname + "/dist",
+        filename: "[name].entry.js"
     },
     resolve: {
         // Add '.ts' and '.tsx' as a resolvable extension.

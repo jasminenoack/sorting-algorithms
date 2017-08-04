@@ -2,7 +2,7 @@ import {Boards} from '../board'
 
 export abstract class BaseSort {
     steps: number
-    static readonly title: string
+    static title: string = ''
     baseNode: number
     comparisonNode: number
     // used for sorts that short circuit

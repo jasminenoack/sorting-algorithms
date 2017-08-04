@@ -71,66 +71,63 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Sizes;
-(function (Sizes) {
-    Sizes.speedTest = {
-        elemCount: 9000,
-        label: "9000"
-    };
-    Sizes.stupidNumber = {
-        elemCount: 1000,
-        label: "1000"
-    };
-    Sizes.manyMany = {
-        elemCount: 300,
-        label: "300"
-    };
-    Sizes.xXSmall = {
-        elemCount: 70,
-        label: "70"
-    };
-    Sizes.xSmall = {
-        elemCount: 60,
-        label: "60"
-    };
-    Sizes.small = {
-        elemCount: 50,
-        label: "50"
-    };
-    Sizes.medium = {
-        elemCount: 40,
-        label: "40"
-    };
-    Sizes.large = {
-        elemCount: 30,
-        label: "30"
-    };
-    Sizes.xLarge = {
-        elemCount: 20,
-        label: "20"
-    };
-    Sizes.xXLarge = {
-        elemCount: 10,
-        label: "10"
-    };
-    Sizes.fewFew = {
-        elemCount: 5,
-        label: '5'
-    };
-    Sizes.sizeList = [
-        Sizes.fewFew,
-        Sizes.xXLarge,
-        Sizes.xLarge,
-        Sizes.large,
-        Sizes.medium,
-        Sizes.small,
-        Sizes.xSmall,
-        Sizes.xXSmall,
-        Sizes.manyMany,
-        Sizes.stupidNumber,
-        Sizes.speedTest
-    ];
-})(Sizes = exports.Sizes || (exports.Sizes = {}));
+exports.speedTest = {
+    elemCount: 9000,
+    label: "9000"
+};
+exports.stupidNumber = {
+    elemCount: 1000,
+    label: "1000"
+};
+exports.manyMany = {
+    elemCount: 300,
+    label: "300"
+};
+exports.xXSmall = {
+    elemCount: 70,
+    label: "70"
+};
+exports.xSmall = {
+    elemCount: 60,
+    label: "60"
+};
+exports.small = {
+    elemCount: 50,
+    label: "50"
+};
+exports.medium = {
+    elemCount: 40,
+    label: "40"
+};
+exports.large = {
+    elemCount: 30,
+    label: "30"
+};
+exports.xLarge = {
+    elemCount: 20,
+    label: "20"
+};
+exports.xXLarge = {
+    elemCount: 10,
+    label: "10"
+};
+exports.fewFew = {
+    elemCount: 5,
+    label: '5'
+};
+exports.sizeList = [
+    exports.fewFew,
+    exports.xXLarge,
+    exports.xLarge,
+    exports.large,
+    exports.medium,
+    exports.small,
+    exports.xSmall,
+    exports.xXSmall,
+    exports.manyMany,
+    exports.stupidNumber,
+    exports.speedTest
+];
 
 
 /***/ }),
@@ -150,147 +147,144 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Shuffles;
-(function (Shuffles) {
-    var Shuffle = (function () {
-        function Shuffle() {
+var Shuffle = (function () {
+    function Shuffle() {
+    }
+    Shuffle.prototype.shuffle = function (array) {
+        array.sortNumbers();
+        if (this.k === null) {
+            array.shuffle();
         }
-        Shuffle.prototype.shuffle = function (array) {
-            array.sortNumbers();
-            if (this.k === null) {
-                array.shuffle();
-            }
-            else if (this.k) {
-                array.kShuffle(this.k);
-            }
-            if (this.reversed) {
-                array.reverse();
-            }
-            return array;
-        };
-        return Shuffle;
-    }());
-    Shuffles.Shuffle = Shuffle;
-    var OrderedShuffle = (function (_super) {
-        __extends(OrderedShuffle, _super);
-        function OrderedShuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = 0;
-            _this.reversed = false;
-            _this.title = "Ordered";
-            return _this;
+        else if (this.k) {
+            array.kShuffle(this.k);
         }
-        return OrderedShuffle;
-    }(Shuffle));
-    Shuffles.OrderedShuffle = OrderedShuffle;
-    var RandomShuffle = (function (_super) {
-        __extends(RandomShuffle, _super);
-        function RandomShuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = null;
-            _this.reversed = false;
-            _this.title = "Random";
-            return _this;
+        if (this.reversed) {
+            array.reverse();
         }
-        return RandomShuffle;
-    }(Shuffle));
-    Shuffles.RandomShuffle = RandomShuffle;
-    var K1Shuffle = (function (_super) {
-        __extends(K1Shuffle, _super);
-        function K1Shuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = 1;
-            _this.reversed = false;
-            _this.title = "K1";
-            return _this;
-        }
-        return K1Shuffle;
-    }(Shuffle));
-    Shuffles.K1Shuffle = K1Shuffle;
-    var K3Shuffle = (function (_super) {
-        __extends(K3Shuffle, _super);
-        function K3Shuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = 3;
-            _this.reversed = false;
-            _this.title = "K3";
-            return _this;
-        }
-        return K3Shuffle;
-    }(Shuffle));
-    Shuffles.K3Shuffle = K3Shuffle;
-    var K5Shuffle = (function (_super) {
-        __extends(K5Shuffle, _super);
-        function K5Shuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = 5;
-            _this.reversed = false;
-            _this.title = "K5";
-            return _this;
-        }
-        return K5Shuffle;
-    }(Shuffle));
-    Shuffles.K5Shuffle = K5Shuffle;
-    var K5ReversedShuffle = (function (_super) {
-        __extends(K5ReversedShuffle, _super);
-        function K5ReversedShuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = 5;
-            _this.reversed = true;
-            _this.title = "K5 Reversed";
-            return _this;
-        }
-        return K5ReversedShuffle;
-    }(Shuffle));
-    Shuffles.K5ReversedShuffle = K5ReversedShuffle;
-    var K3ReversedShuffle = (function (_super) {
-        __extends(K3ReversedShuffle, _super);
-        function K3ReversedShuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = 3;
-            _this.reversed = true;
-            _this.title = "K3 Reversed";
-            return _this;
-        }
-        return K3ReversedShuffle;
-    }(Shuffle));
-    Shuffles.K3ReversedShuffle = K3ReversedShuffle;
-    var K1ReversedShuffle = (function (_super) {
-        __extends(K1ReversedShuffle, _super);
-        function K1ReversedShuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = 1;
-            _this.reversed = true;
-            _this.title = "K1 Reversed";
-            return _this;
-        }
-        return K1ReversedShuffle;
-    }(Shuffle));
-    Shuffles.K1ReversedShuffle = K1ReversedShuffle;
-    var ReversedShuffle = (function (_super) {
-        __extends(ReversedShuffle, _super);
-        function ReversedShuffle() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.k = 0;
-            _this.reversed = true;
-            _this.title = "Reversed";
-            return _this;
-        }
-        return ReversedShuffle;
-    }(Shuffle));
-    Shuffles.ReversedShuffle = ReversedShuffle;
-    Shuffles.ShuffleList = [
-        new OrderedShuffle(),
-        new K1Shuffle(),
-        new K3Shuffle(),
-        new K5Shuffle(),
-        new RandomShuffle(),
-        new K5ReversedShuffle(),
-        new K3ReversedShuffle(),
-        new K1ReversedShuffle(),
-        new ReversedShuffle()
-    ];
-})(Shuffles = exports.Shuffles || (exports.Shuffles = {}));
+        return array;
+    };
+    return Shuffle;
+}());
+exports.Shuffle = Shuffle;
+var OrderedShuffle = (function (_super) {
+    __extends(OrderedShuffle, _super);
+    function OrderedShuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 0;
+        _this.reversed = false;
+        _this.title = "Ordered";
+        return _this;
+    }
+    return OrderedShuffle;
+}(Shuffle));
+exports.OrderedShuffle = OrderedShuffle;
+var RandomShuffle = (function (_super) {
+    __extends(RandomShuffle, _super);
+    function RandomShuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = null;
+        _this.reversed = false;
+        _this.title = "Random";
+        return _this;
+    }
+    return RandomShuffle;
+}(Shuffle));
+exports.RandomShuffle = RandomShuffle;
+var K1Shuffle = (function (_super) {
+    __extends(K1Shuffle, _super);
+    function K1Shuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 1;
+        _this.reversed = false;
+        _this.title = "K1";
+        return _this;
+    }
+    return K1Shuffle;
+}(Shuffle));
+exports.K1Shuffle = K1Shuffle;
+var K3Shuffle = (function (_super) {
+    __extends(K3Shuffle, _super);
+    function K3Shuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 3;
+        _this.reversed = false;
+        _this.title = "K3";
+        return _this;
+    }
+    return K3Shuffle;
+}(Shuffle));
+exports.K3Shuffle = K3Shuffle;
+var K5Shuffle = (function (_super) {
+    __extends(K5Shuffle, _super);
+    function K5Shuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 5;
+        _this.reversed = false;
+        _this.title = "K5";
+        return _this;
+    }
+    return K5Shuffle;
+}(Shuffle));
+exports.K5Shuffle = K5Shuffle;
+var K5ReversedShuffle = (function (_super) {
+    __extends(K5ReversedShuffle, _super);
+    function K5ReversedShuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 5;
+        _this.reversed = true;
+        _this.title = "K5 Reversed";
+        return _this;
+    }
+    return K5ReversedShuffle;
+}(Shuffle));
+exports.K5ReversedShuffle = K5ReversedShuffle;
+var K3ReversedShuffle = (function (_super) {
+    __extends(K3ReversedShuffle, _super);
+    function K3ReversedShuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 3;
+        _this.reversed = true;
+        _this.title = "K3 Reversed";
+        return _this;
+    }
+    return K3ReversedShuffle;
+}(Shuffle));
+exports.K3ReversedShuffle = K3ReversedShuffle;
+var K1ReversedShuffle = (function (_super) {
+    __extends(K1ReversedShuffle, _super);
+    function K1ReversedShuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 1;
+        _this.reversed = true;
+        _this.title = "K1 Reversed";
+        return _this;
+    }
+    return K1ReversedShuffle;
+}(Shuffle));
+exports.K1ReversedShuffle = K1ReversedShuffle;
+var ReversedShuffle = (function (_super) {
+    __extends(ReversedShuffle, _super);
+    function ReversedShuffle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 0;
+        _this.reversed = true;
+        _this.title = "Reversed";
+        return _this;
+    }
+    return ReversedShuffle;
+}(Shuffle));
+exports.ReversedShuffle = ReversedShuffle;
+exports.ShuffleList = [
+    new OrderedShuffle(),
+    new K1Shuffle(),
+    new K3Shuffle(),
+    new K5Shuffle(),
+    new RandomShuffle(),
+    new K5ReversedShuffle(),
+    new K3ReversedShuffle(),
+    new K1ReversedShuffle(),
+    new ReversedShuffle()
+];
 
 
 /***/ }),
@@ -300,156 +294,153 @@ var Shuffles;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Index;
-(function (Index) {
-    function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
-        var valueMin = board.min();
-        var valueMax = board.max();
-        var widthSpread = board.values().length - 1;
-        var heightSpread = valueMax - valueMin;
-        var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
-        var shadow = sort.shadow;
-        if (shadow.length) {
-            shadow.forEach(function (obj) {
-                var index = obj.index;
-                var value = obj.value;
-                var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin), xCenter = _a[0], yCenter = _a[1];
-                var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                circle.setAttribute('cx', xCenter + '');
-                circle.setAttribute('cy', yCenter + '');
-                circle.setAttribute('r', radius + '');
-                circle.setAttribute('class', 'point shadow');
-                boardElement.appendChild(circle);
-            });
-        }
-    }
-    function centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin) {
-        var yCenter;
-        if (heightSpread) {
-            yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
-        }
-        else {
-            yCenter = boxHeight / 2;
-        }
-        var xCenter = (index) / widthSpread * boxWidth;
-        return [xCenter, yCenter];
-    }
-    function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
-        return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
-    }
-    function getTextContent(sort) {
-        return "<div>\n            <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n            <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n            <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n            <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n            <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n            <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n        </div>";
-    }
-    function step(boardList, boxHeight, boxWidth, boardsElement, noStep) {
-        for (var i = 0; i < boardList.length; i++) {
-            // update all points
-            var boardData = boardList[i];
-            var sort = boardData.sort;
-            var board = boardData.board;
-            if (!sort.done) {
-                for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
-                    sort.next();
-                }
-                reRenderBoard(i, sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
-            }
-        }
-    }
-    Index.step = step;
-    function addPoint(board, xCenter, yCenter, radius, currentNodes, i) {
-        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', xCenter + '');
-        circle.setAttribute('cy', yCenter + '');
-        circle.setAttribute('r', radius + '');
-        circle.setAttribute('class', 'point');
-        circle.setAttribute('class', 'point');
-        if (currentNodes.indexOf(i) !== -1) {
-            circle.classList.add('active');
-        }
-        board.appendChild(circle);
-    }
-    function createWrapper(Sort, sort) {
-        var wrapperElement = document.createElement('div');
-        wrapperElement.className = 'wrapper';
-        var headerElement = document.createElement('h1');
-        headerElement.textContent = Sort.title;
-        wrapperElement.appendChild(headerElement);
-        var textElement = document.createElement('span');
-        textElement.innerHTML = getTextContent(sort);
-        textElement.className = 'step-count';
-        wrapperElement.appendChild(textElement);
-        var removeElement = document.createElement('button');
-        removeElement.textContent = 'X';
-        removeElement.className = 'remove';
-        wrapperElement.appendChild(removeElement);
-        var resetElement = document.createElement('button');
-        resetElement.textContent = 'Reset';
-        resetElement.className = 'reset';
-        wrapperElement.appendChild(resetElement);
-        return wrapperElement;
-    }
-    function createBoardElements(boxWidth, boxHeight) {
-        var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
-        var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
-        gElement.setAttribute('class', 'board');
-        boardElement.appendChild(gElement);
-        return [boardElement, gElement];
-    }
-    function buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
-        var board = boardList[index].board;
-        var sort = boardList[index].sort;
-        var values = board.values();
-        var valueMin = board.min();
-        var valueMax = board.max();
-        var widthSpread = values.length - 1;
-        var heightSpread = valueMax - valueMin;
-        var radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread);
-        var _a = createBoardElements(boxWidth, boxHeight), boardElement = _a[0], gElement = _a[1];
-        var currentNodes = sort.currentNodes();
-        for (var i = 0; i < values.length; i++) {
-            var value = values[i];
-            var _b = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, i, valueMin), xCenter = _b[0], yCenter = _b[1];
-            addPoint(gElement, xCenter, yCenter, radius, currentNodes, i);
-        }
-        renderShadow(sort, board, gElement, boxHeight, boxWidth);
-        var wrapperElement = createWrapper(Sort, sort);
-        wrapperElement.appendChild(boardElement);
-        return wrapperElement;
-    }
-    function createBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
-        var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
-        boardsElement.appendChild(wrapperElement);
-    }
-    Index.createBoard = createBoard;
-    function reRenderBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
-        var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
-        boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index]);
-    }
-    Index.reRenderBoard = reRenderBoard;
-    function createDelegatedEvent(eventNode, eventType, fun, selector) {
-        var listener = eventNode.addEventListener(eventType, function (event) {
-            var currentTarget = event.target;
-            if (event.target.matches(selector)) {
-                fun(event, event.target);
-            }
+function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
+    var valueMin = board.min();
+    var valueMax = board.max();
+    var widthSpread = board.values().length - 1;
+    var heightSpread = valueMax - valueMin;
+    var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
+    var shadow = sort.shadow;
+    if (shadow.length) {
+        shadow.forEach(function (obj) {
+            var index = obj.index;
+            var value = obj.value;
+            var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin), xCenter = _a[0], yCenter = _a[1];
+            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', xCenter + '');
+            circle.setAttribute('cy', yCenter + '');
+            circle.setAttribute('r', radius + '');
+            circle.setAttribute('class', 'point shadow');
+            boardElement.appendChild(circle);
         });
-        return listener;
     }
-    Index.createDelegatedEvent = createDelegatedEvent;
-    function closestParent(node, selector) {
-        if (node.matches(selector)) {
-            return node;
-        }
-        else if (!node.parentElement) {
-            return null;
-        }
-        else {
-            return closestParent(node.parentElement, selector);
+}
+function centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin) {
+    var yCenter;
+    if (heightSpread) {
+        yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
+    }
+    else {
+        yCenter = boxHeight / 2;
+    }
+    var xCenter = (index) / widthSpread * boxWidth;
+    return [xCenter, yCenter];
+}
+function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
+    return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
+}
+function getTextContent(sort) {
+    return "<div>\n        <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n        <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n        <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n        <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n        <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n        <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n    </div>";
+}
+function step(boardList, boxHeight, boxWidth, boardsElement, noStep) {
+    for (var i = 0; i < boardList.length; i++) {
+        // update all points
+        var boardData = boardList[i];
+        var sort = boardData.sort;
+        var board = boardData.board;
+        if (!sort.done) {
+            for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
+                sort.next();
+            }
+            reRenderBoard(i, sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
         }
     }
-    Index.closestParent = closestParent;
-})(Index = exports.Index || (exports.Index = {}));
+}
+exports.step = step;
+function addPoint(board, xCenter, yCenter, radius, currentNodes, i) {
+    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', xCenter + '');
+    circle.setAttribute('cy', yCenter + '');
+    circle.setAttribute('r', radius + '');
+    circle.setAttribute('class', 'point');
+    circle.setAttribute('class', 'point');
+    if (currentNodes.indexOf(i) !== -1) {
+        circle.classList.add('active');
+    }
+    board.appendChild(circle);
+}
+function createWrapper(Sort, sort) {
+    var wrapperElement = document.createElement('div');
+    wrapperElement.className = 'wrapper';
+    var headerElement = document.createElement('h1');
+    headerElement.textContent = Sort.title;
+    wrapperElement.appendChild(headerElement);
+    var textElement = document.createElement('span');
+    textElement.innerHTML = getTextContent(sort);
+    textElement.className = 'step-count';
+    wrapperElement.appendChild(textElement);
+    var removeElement = document.createElement('button');
+    removeElement.textContent = 'X';
+    removeElement.className = 'remove';
+    wrapperElement.appendChild(removeElement);
+    var resetElement = document.createElement('button');
+    resetElement.textContent = 'Reset';
+    resetElement.className = 'reset';
+    wrapperElement.appendChild(resetElement);
+    return wrapperElement;
+}
+function createBoardElements(boxWidth, boxHeight) {
+    var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
+    var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
+    gElement.setAttribute('class', 'board');
+    boardElement.appendChild(gElement);
+    return [boardElement, gElement];
+}
+function buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+    var board = boardList[index].board;
+    var sort = boardList[index].sort;
+    var values = board.values();
+    var valueMin = board.min();
+    var valueMax = board.max();
+    var widthSpread = values.length - 1;
+    var heightSpread = valueMax - valueMin;
+    var radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread);
+    var _a = createBoardElements(boxWidth, boxHeight), boardElement = _a[0], gElement = _a[1];
+    var currentNodes = sort.currentNodes();
+    for (var i = 0; i < values.length; i++) {
+        var value = values[i];
+        var _b = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, i, valueMin), xCenter = _b[0], yCenter = _b[1];
+        addPoint(gElement, xCenter, yCenter, radius, currentNodes, i);
+    }
+    renderShadow(sort, board, gElement, boxHeight, boxWidth);
+    var wrapperElement = createWrapper(Sort, sort);
+    wrapperElement.appendChild(boardElement);
+    return wrapperElement;
+}
+function createBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+    var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+    boardsElement.appendChild(wrapperElement);
+}
+exports.createBoard = createBoard;
+function reRenderBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+    var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+    boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index]);
+}
+exports.reRenderBoard = reRenderBoard;
+function createDelegatedEvent(eventNode, eventType, fun, selector) {
+    var listener = eventNode.addEventListener(eventType, function (event) {
+        var currentTarget = event.target;
+        if (event.target.matches(selector)) {
+            fun(event, event.target);
+        }
+    });
+    return listener;
+}
+exports.createDelegatedEvent = createDelegatedEvent;
+function closestParent(node, selector) {
+    if (node.matches(selector)) {
+        return node;
+    }
+    else if (!node.parentElement) {
+        return null;
+    }
+    else {
+        return closestParent(node.parentElement, selector);
+    }
+}
+exports.closestParent = closestParent;
 
 
 /***/ }),
@@ -459,205 +450,202 @@ var Index;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ValueTypes;
-(function (ValueTypes) {
-    var Random = (function () {
-        function Random() {
-            this.title = "Random";
+var Random = (function () {
+    function Random() {
+        this.title = "Random";
+    }
+    Random.prototype.generate = function (n) {
+        var spread = n * 2;
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            values.push(Math.floor(Math.random() * spread));
         }
-        Random.prototype.generate = function (n) {
-            var spread = n * 2;
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                values.push(Math.floor(Math.random() * spread));
-            }
-            return values;
-        };
-        return Random;
-    }());
-    ValueTypes.Random = Random;
-    var Integer = (function () {
-        function Integer() {
-            this.title = "Range";
+        return values;
+    };
+    return Random;
+}());
+exports.Random = Random;
+var Integer = (function () {
+    function Integer() {
+        this.title = "Range";
+    }
+    Integer.prototype.generate = function (n) {
+        return Array.prototype.range(n);
+    };
+    return Integer;
+}());
+exports.Integer = Integer;
+var FewUnique = (function () {
+    function FewUnique() {
+        this.title = "Few Values";
+    }
+    FewUnique.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            values.push(i % 5);
         }
-        Integer.prototype.generate = function (n) {
-            return Array.prototype.range(n);
-        };
-        return Integer;
-    }());
-    ValueTypes.Integer = Integer;
-    var FewUnique = (function () {
-        function FewUnique() {
-            this.title = "Few Values";
+        return values;
+    };
+    return FewUnique;
+}());
+exports.FewUnique = FewUnique;
+var AllBut2Equal = (function () {
+    function AllBut2Equal() {
+        this.title = "All But 2 Equal";
+    }
+    AllBut2Equal.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n - 2; i++) {
+            values.push(n / 2);
         }
-        FewUnique.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                values.push(i % 5);
-            }
-            return values;
-        };
-        return FewUnique;
-    }());
-    ValueTypes.FewUnique = FewUnique;
-    var AllBut2Equal = (function () {
-        function AllBut2Equal() {
-            this.title = "All But 2 Equal";
+        values.push(2);
+        values.push(n - 2);
+        values.sort();
+        return values;
+    };
+    return AllBut2Equal;
+}());
+exports.AllBut2Equal = AllBut2Equal;
+var Equal = (function () {
+    function Equal() {
+        this.title = "Equal";
+    }
+    Equal.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            values.push(n / 2);
         }
-        AllBut2Equal.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n - 2; i++) {
-                values.push(n / 2);
-            }
-            values.push(2);
-            values.push(n - 2);
-            values.sort();
-            return values;
-        };
-        return AllBut2Equal;
-    }());
-    ValueTypes.AllBut2Equal = AllBut2Equal;
-    var Equal = (function () {
-        function Equal() {
-            this.title = "Equal";
+        return values;
+    };
+    return Equal;
+}());
+exports.Equal = Equal;
+var Logarithmic = (function () {
+    function Logarithmic() {
+        this.title = "Logarithmic";
+    }
+    Logarithmic.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = (i + 1) / 8;
+            var num = Math.log(j);
+            values.push(Math.floor(num * 10));
         }
-        Equal.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                values.push(n / 2);
-            }
-            return values;
-        };
-        return Equal;
-    }());
-    ValueTypes.Equal = Equal;
-    var Logarithmic = (function () {
-        function Logarithmic() {
-            this.title = "Logarithmic";
+        return values;
+    };
+    return Logarithmic;
+}());
+exports.Logarithmic = Logarithmic;
+var Quadratic = (function () {
+    function Quadratic() {
+        this.title = "Quadratic";
+    }
+    Quadratic.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 10 * (i / n) - 5;
+            var num = j * j;
+            values.push(Math.floor(num * 2));
         }
-        Logarithmic.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = (i + 1) / 8;
-                var num = Math.log(j);
-                values.push(Math.floor(num * 10));
-            }
-            return values;
-        };
-        return Logarithmic;
-    }());
-    ValueTypes.Logarithmic = Logarithmic;
-    var Quadratic = (function () {
-        function Quadratic() {
-            this.title = "Quadratic";
+        return values;
+    };
+    return Quadratic;
+}());
+exports.Quadratic = Quadratic;
+var Exponential = (function () {
+    function Exponential() {
+        this.title = "Exponential";
+    }
+    Exponential.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 10 * (i / n) - 5;
+            var num = Math.pow(2, j);
+            values.push(Math.floor(num * 2));
         }
-        Quadratic.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 10 * (i / n) - 5;
-                var num = j * j;
-                values.push(Math.floor(num * 2));
-            }
-            return values;
-        };
-        return Quadratic;
-    }());
-    ValueTypes.Quadratic = Quadratic;
-    var Exponential = (function () {
-        function Exponential() {
-            this.title = "Exponential";
+        return values;
+    };
+    return Exponential;
+}());
+exports.Exponential = Exponential;
+var Cubic = (function () {
+    function Cubic() {
+        this.title = "Cubic";
+    }
+    Cubic.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 4 * (i / n) - 2;
+            var num = j * j * j;
+            values.push(Math.floor(num * 3));
         }
-        Exponential.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 10 * (i / n) - 5;
-                var num = Math.pow(2, j);
-                values.push(Math.floor(num * 2));
-            }
-            return values;
-        };
-        return Exponential;
-    }());
-    ValueTypes.Exponential = Exponential;
-    var Cubic = (function () {
-        function Cubic() {
-            this.title = "Cubic";
+        return values;
+    };
+    return Cubic;
+}());
+exports.Cubic = Cubic;
+var Quintic = (function () {
+    function Quintic() {
+        this.title = "Quintic";
+    }
+    Quintic.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 2 * (i / n) - 1;
+            var num = j * j * j * j * j;
+            values.push(Math.floor(num * 30));
         }
-        Cubic.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 4 * (i / n) - 2;
-                var num = j * j * j;
-                values.push(Math.floor(num * 3));
-            }
-            return values;
-        };
-        return Cubic;
-    }());
-    ValueTypes.Cubic = Cubic;
-    var Quintic = (function () {
-        function Quintic() {
-            this.title = "Quintic";
+        return values;
+    };
+    return Quintic;
+}());
+exports.Quintic = Quintic;
+var Sin = (function () {
+    function Sin() {
+        this.title = "Sin";
+    }
+    Sin.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 12 * (i / n) - 6;
+            var num = Math.sin(j);
+            values.push(Math.floor(num * 30));
         }
-        Quintic.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 2 * (i / n) - 1;
-                var num = j * j * j * j * j;
-                values.push(Math.floor(num * 30));
-            }
-            return values;
-        };
-        return Quintic;
-    }());
-    ValueTypes.Quintic = Quintic;
-    var Sin = (function () {
-        function Sin() {
-            this.title = "Sin";
+        return values;
+    };
+    return Sin;
+}());
+exports.Sin = Sin;
+var Root = (function () {
+    function Root() {
+        this.title = "Root";
+    }
+    Root.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 5 * (i / n);
+            var num = Math.sqrt(j);
+            values.push(Math.floor(num * 15));
         }
-        Sin.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 12 * (i / n) - 6;
-                var num = Math.sin(j);
-                values.push(Math.floor(num * 30));
-            }
-            return values;
-        };
-        return Sin;
-    }());
-    ValueTypes.Sin = Sin;
-    var Root = (function () {
-        function Root() {
-            this.title = "Root";
-        }
-        Root.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 5 * (i / n);
-                var num = Math.sqrt(j);
-                values.push(Math.floor(num * 15));
-            }
-            return values;
-        };
-        return Root;
-    }());
-    ValueTypes.Root = Root;
-    ValueTypes.valueTypeList = [
-        new Integer(),
-        new Random(),
-        new FewUnique(),
-        new Equal(),
-        new AllBut2Equal(),
-        new Logarithmic(),
-        new Quadratic(),
-        new Exponential(),
-        new Cubic(),
-        new Quintic(),
-        new Sin(),
-        new Root()
-    ];
-})(ValueTypes = exports.ValueTypes || (exports.ValueTypes = {}));
+        return values;
+    };
+    return Root;
+}());
+exports.Root = Root;
+exports.valueTypeList = [
+    new Integer(),
+    new Random(),
+    new FewUnique(),
+    new Equal(),
+    new AllBut2Equal(),
+    new Logarithmic(),
+    new Quadratic(),
+    new Exponential(),
+    new Cubic(),
+    new Quintic(),
+    new Sin(),
+    new Root()
+];
 
 
 /***/ }),
@@ -670,8 +658,8 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(12));
 __export(__webpack_require__(14));
+__export(__webpack_require__(12));
 __export(__webpack_require__(20));
 __export(__webpack_require__(16));
 __export(__webpack_require__(22));
@@ -893,85 +881,82 @@ __export(__webpack_require__(19));
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var point_1 = __webpack_require__(7);
-var shuffles_1 = __webpack_require__(2);
-var ValueTypes_1 = __webpack_require__(13);
-var Boards;
-(function (Boards) {
-    var Board = (function () {
-        function Board(size, shuffle, valueType) {
-            if (shuffle === void 0) { shuffle = new shuffles_1.Shuffles.RandomShuffle(); }
-            if (valueType === void 0) { valueType = new ValueTypes_1.ValueTypes.Integer(); }
-            this.shuffle = shuffle;
-            this.valueType = valueType;
-            this.points = [];
-            this.setSize(size);
-            this.createValues();
-            this.shuffleBoard();
+var Points = __webpack_require__(7);
+var Shuffles = __webpack_require__(2);
+var ValueTypes = __webpack_require__(13);
+var Board = (function () {
+    function Board(size, shuffle, valueType) {
+        if (shuffle === void 0) { shuffle = new Shuffles.RandomShuffle(); }
+        if (valueType === void 0) { valueType = new ValueTypes.Integer(); }
+        this.shuffle = shuffle;
+        this.valueType = valueType;
+        this.points = [];
+        this.setSize(size);
+        this.createValues();
+        this.shuffleBoard();
+    }
+    Board.prototype.createValues = function () {
+        var values = this.valueType.generate(this.length);
+        this.setPoints(values);
+        this._min = Math.min.apply(Math, values);
+        this._max = Math.max.apply(Math, values);
+    };
+    Board.prototype.shuffleBoard = function () {
+        var values = this.values();
+        this.shuffle.shuffle(values);
+        this.setPoints(values);
+    };
+    Board.prototype.setPoints = function (values) {
+        var that = this;
+        values.forEach(function (value, index) {
+            that.set(index, value);
+        });
+        this._min = Math.min.apply(Math, values);
+        this._max = Math.max.apply(Math, values);
+    };
+    Board.prototype.set = function (index, value) {
+        this.points[index].value = value;
+    };
+    Board.prototype.swap = function (index1, index2) {
+        var temp = this.get(index1);
+        this.points[index1] = this.get(index2);
+        this.points[index2] = temp;
+    };
+    Board.prototype.values = function () {
+        var items = [];
+        for (var i = 0; i < this.length; i++) {
+            items.push(this.points[i].value);
         }
-        Board.prototype.createValues = function () {
-            var values = this.valueType.generate(this.length);
-            this.setPoints(values);
-            this._min = Math.min.apply(Math, values);
-            this._max = Math.max.apply(Math, values);
-        };
-        Board.prototype.shuffleBoard = function () {
-            var values = this.values();
-            this.shuffle.shuffle(values);
-            this.setPoints(values);
-        };
-        Board.prototype.setPoints = function (values) {
-            var that = this;
-            values.forEach(function (value, index) {
-                that.set(index, value);
-            });
-            this._min = Math.min.apply(Math, values);
-            this._max = Math.max.apply(Math, values);
-        };
-        Board.prototype.set = function (index, value) {
-            this.points[index].value = value;
-        };
-        Board.prototype.swap = function (index1, index2) {
-            var temp = this.get(index1);
-            this.points[index1] = this.get(index2);
-            this.points[index2] = temp;
-        };
-        Board.prototype.values = function () {
-            var items = [];
-            for (var i = 0; i < this.length; i++) {
-                items.push(this.points[i].value);
-            }
-            return items;
-        };
-        Board.prototype.setSize = function (size) {
-            this.size = size;
-            this.length = this.size.elemCount;
-            this.points = [];
-            for (var i = 0; i < this.length; i++) {
-                this.points.push(new point_1.Points.Point(i));
-            }
-        };
-        Board.prototype.get = function (index) {
-            return this.points[index];
-        };
-        Board.prototype.min = function () {
-            return this._min;
-        };
-        Board.prototype.max = function () {
-            return this._max;
-        };
-        Board.prototype.distribution = function () {
-            var dist = {};
-            var values = this.values();
-            values.forEach(function (value) {
-                dist[value] = (dist[value] || 0) + 1;
-            });
-            return dist;
-        };
-        return Board;
-    }());
-    Boards.Board = Board;
-})(Boards = exports.Boards || (exports.Boards = {}));
+        return items;
+    };
+    Board.prototype.setSize = function (size) {
+        this.size = size;
+        this.length = this.size.elemCount;
+        this.points = [];
+        for (var i = 0; i < this.length; i++) {
+            this.points.push(new Points.Point(i));
+        }
+    };
+    Board.prototype.get = function (index) {
+        return this.points[index];
+    };
+    Board.prototype.min = function () {
+        return this._min;
+    };
+    Board.prototype.max = function () {
+        return this._max;
+    };
+    Board.prototype.distribution = function () {
+        var dist = {};
+        var values = this.values();
+        values.forEach(function (value) {
+            dist[value] = (dist[value] || 0) + 1;
+        });
+        return dist;
+    };
+    return Board;
+}());
+exports.Board = Board;
 
 
 /***/ }),
@@ -981,21 +966,18 @@ var Boards;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Points;
-(function (Points) {
-    var Point = (function () {
-        function Point(index, value, color) {
-            if (value === void 0) { value = 0; }
-            if (color === void 0) { color = "aliceblue"; }
-            this.index = index;
-            this.value = value;
-            // TODO maybe color should be type and type should have color?
-            this.color = color;
-        }
-        return Point;
-    }());
-    Points.Point = Point;
-})(Points = exports.Points || (exports.Points = {}));
+var Point = (function () {
+    function Point(index, value, color) {
+        if (value === void 0) { value = 0; }
+        if (color === void 0) { color = "aliceblue"; }
+        this.index = index;
+        this.value = value;
+        // TODO maybe color should be type and type should have color?
+        this.color = color;
+    }
+    return Point;
+}());
+exports.Point = Point;
 
 
 /***/ }),
@@ -1006,20 +988,20 @@ var Points;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var sizes_1 = __webpack_require__(1);
-var shuffles_1 = __webpack_require__(2);
-var index_1 = __webpack_require__(3);
-var valueTypes_1 = __webpack_require__(4);
+var Sizes = __webpack_require__(1);
+var Shuffles = __webpack_require__(2);
+var Index = __webpack_require__(3);
+var ValueTypes = __webpack_require__(4);
 var Sorts = __webpack_require__(5);
-var board_1 = __webpack_require__(6);
-var point_1 = __webpack_require__(7);
-window.Sizes = sizes_1.Sizes;
-window.Shuffles = shuffles_1.Shuffles;
-window.Index = index_1.Index;
-window.ValueTypes = valueTypes_1.ValueTypes;
+var Boards = __webpack_require__(6);
+var Points = __webpack_require__(7);
+window.Sizes = Sizes;
+window.Shuffles = Shuffles;
+window.Index = Index;
+window.ValueTypes = ValueTypes;
 window.Sorts = Sorts;
-window.Boards = board_1.Boards;
-window.Points = point_1.Points;
+window.Boards = Boards;
+window.Points = Points;
 
 
 /***/ }),
@@ -1099,6 +1081,7 @@ var BaseSort = (function () {
         console.log("not implemented");
         console.log(this);
     };
+    BaseSort.title = '';
     return BaseSort;
 }());
 exports.BaseSort = BaseSort;
@@ -1392,205 +1375,202 @@ exports.BubbleSortDontRestart = BubbleSortDontRestart;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ValueTypes;
-(function (ValueTypes) {
-    var Random = (function () {
-        function Random() {
-            this.title = "Random";
+var Random = (function () {
+    function Random() {
+        this.title = "Random";
+    }
+    Random.prototype.generate = function (n) {
+        var spread = n * 2;
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            values.push(Math.floor(Math.random() * spread));
         }
-        Random.prototype.generate = function (n) {
-            var spread = n * 2;
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                values.push(Math.floor(Math.random() * spread));
-            }
-            return values;
-        };
-        return Random;
-    }());
-    ValueTypes.Random = Random;
-    var Integer = (function () {
-        function Integer() {
-            this.title = "Range";
+        return values;
+    };
+    return Random;
+}());
+exports.Random = Random;
+var Integer = (function () {
+    function Integer() {
+        this.title = "Range";
+    }
+    Integer.prototype.generate = function (n) {
+        return Array.prototype.range(n);
+    };
+    return Integer;
+}());
+exports.Integer = Integer;
+var FewUnique = (function () {
+    function FewUnique() {
+        this.title = "Few Values";
+    }
+    FewUnique.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            values.push(i % 5);
         }
-        Integer.prototype.generate = function (n) {
-            return Array.prototype.range(n);
-        };
-        return Integer;
-    }());
-    ValueTypes.Integer = Integer;
-    var FewUnique = (function () {
-        function FewUnique() {
-            this.title = "Few Values";
+        return values;
+    };
+    return FewUnique;
+}());
+exports.FewUnique = FewUnique;
+var AllBut2Equal = (function () {
+    function AllBut2Equal() {
+        this.title = "All But 2 Equal";
+    }
+    AllBut2Equal.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n - 2; i++) {
+            values.push(n / 2);
         }
-        FewUnique.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                values.push(i % 5);
-            }
-            return values;
-        };
-        return FewUnique;
-    }());
-    ValueTypes.FewUnique = FewUnique;
-    var AllBut2Equal = (function () {
-        function AllBut2Equal() {
-            this.title = "All But 2 Equal";
+        values.push(2);
+        values.push(n - 2);
+        values.sort();
+        return values;
+    };
+    return AllBut2Equal;
+}());
+exports.AllBut2Equal = AllBut2Equal;
+var Equal = (function () {
+    function Equal() {
+        this.title = "Equal";
+    }
+    Equal.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            values.push(n / 2);
         }
-        AllBut2Equal.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n - 2; i++) {
-                values.push(n / 2);
-            }
-            values.push(2);
-            values.push(n - 2);
-            values.sort();
-            return values;
-        };
-        return AllBut2Equal;
-    }());
-    ValueTypes.AllBut2Equal = AllBut2Equal;
-    var Equal = (function () {
-        function Equal() {
-            this.title = "Equal";
+        return values;
+    };
+    return Equal;
+}());
+exports.Equal = Equal;
+var Logarithmic = (function () {
+    function Logarithmic() {
+        this.title = "Logarithmic";
+    }
+    Logarithmic.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = (i + 1) / 8;
+            var num = Math.log(j);
+            values.push(Math.floor(num * 10));
         }
-        Equal.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                values.push(n / 2);
-            }
-            return values;
-        };
-        return Equal;
-    }());
-    ValueTypes.Equal = Equal;
-    var Logarithmic = (function () {
-        function Logarithmic() {
-            this.title = "Logarithmic";
+        return values;
+    };
+    return Logarithmic;
+}());
+exports.Logarithmic = Logarithmic;
+var Quadratic = (function () {
+    function Quadratic() {
+        this.title = "Quadratic";
+    }
+    Quadratic.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 10 * (i / n) - 5;
+            var num = j * j;
+            values.push(Math.floor(num * 2));
         }
-        Logarithmic.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = (i + 1) / 8;
-                var num = Math.log(j);
-                values.push(Math.floor(num * 10));
-            }
-            return values;
-        };
-        return Logarithmic;
-    }());
-    ValueTypes.Logarithmic = Logarithmic;
-    var Quadratic = (function () {
-        function Quadratic() {
-            this.title = "Quadratic";
+        return values;
+    };
+    return Quadratic;
+}());
+exports.Quadratic = Quadratic;
+var Exponential = (function () {
+    function Exponential() {
+        this.title = "Exponential";
+    }
+    Exponential.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 10 * (i / n) - 5;
+            var num = Math.pow(2, j);
+            values.push(Math.floor(num * 2));
         }
-        Quadratic.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 10 * (i / n) - 5;
-                var num = j * j;
-                values.push(Math.floor(num * 2));
-            }
-            return values;
-        };
-        return Quadratic;
-    }());
-    ValueTypes.Quadratic = Quadratic;
-    var Exponential = (function () {
-        function Exponential() {
-            this.title = "Exponential";
+        return values;
+    };
+    return Exponential;
+}());
+exports.Exponential = Exponential;
+var Cubic = (function () {
+    function Cubic() {
+        this.title = "Cubic";
+    }
+    Cubic.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 4 * (i / n) - 2;
+            var num = j * j * j;
+            values.push(Math.floor(num * 3));
         }
-        Exponential.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 10 * (i / n) - 5;
-                var num = Math.pow(2, j);
-                values.push(Math.floor(num * 2));
-            }
-            return values;
-        };
-        return Exponential;
-    }());
-    ValueTypes.Exponential = Exponential;
-    var Cubic = (function () {
-        function Cubic() {
-            this.title = "Cubic";
+        return values;
+    };
+    return Cubic;
+}());
+exports.Cubic = Cubic;
+var Quintic = (function () {
+    function Quintic() {
+        this.title = "Quintic";
+    }
+    Quintic.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 2 * (i / n) - 1;
+            var num = j * j * j * j * j;
+            values.push(Math.floor(num * 30));
         }
-        Cubic.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 4 * (i / n) - 2;
-                var num = j * j * j;
-                values.push(Math.floor(num * 3));
-            }
-            return values;
-        };
-        return Cubic;
-    }());
-    ValueTypes.Cubic = Cubic;
-    var Quintic = (function () {
-        function Quintic() {
-            this.title = "Quintic";
+        return values;
+    };
+    return Quintic;
+}());
+exports.Quintic = Quintic;
+var Sin = (function () {
+    function Sin() {
+        this.title = "Sin";
+    }
+    Sin.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 12 * (i / n) - 6;
+            var num = Math.sin(j);
+            values.push(Math.floor(num * 30));
         }
-        Quintic.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 2 * (i / n) - 1;
-                var num = j * j * j * j * j;
-                values.push(Math.floor(num * 30));
-            }
-            return values;
-        };
-        return Quintic;
-    }());
-    ValueTypes.Quintic = Quintic;
-    var Sin = (function () {
-        function Sin() {
-            this.title = "Sin";
+        return values;
+    };
+    return Sin;
+}());
+exports.Sin = Sin;
+var Root = (function () {
+    function Root() {
+        this.title = "Root";
+    }
+    Root.prototype.generate = function (n) {
+        var values = [];
+        for (var i = 0; i < n; i++) {
+            var j = 5 * (i / n);
+            var num = Math.sqrt(j);
+            values.push(Math.floor(num * 15));
         }
-        Sin.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 12 * (i / n) - 6;
-                var num = Math.sin(j);
-                values.push(Math.floor(num * 30));
-            }
-            return values;
-        };
-        return Sin;
-    }());
-    ValueTypes.Sin = Sin;
-    var Root = (function () {
-        function Root() {
-            this.title = "Root";
-        }
-        Root.prototype.generate = function (n) {
-            var values = [];
-            for (var i = 0; i < n; i++) {
-                var j = 5 * (i / n);
-                var num = Math.sqrt(j);
-                values.push(Math.floor(num * 15));
-            }
-            return values;
-        };
-        return Root;
-    }());
-    ValueTypes.Root = Root;
-    ValueTypes.valueTypeList = [
-        new Integer(),
-        new Random(),
-        new FewUnique(),
-        new Equal(),
-        new AllBut2Equal(),
-        new Logarithmic(),
-        new Quadratic(),
-        new Exponential(),
-        new Cubic(),
-        new Quintic(),
-        new Sin(),
-        new Root()
-    ];
-})(ValueTypes = exports.ValueTypes || (exports.ValueTypes = {}));
+        return values;
+    };
+    return Root;
+}());
+exports.Root = Root;
+exports.valueTypeList = [
+    new Integer(),
+    new Random(),
+    new FewUnique(),
+    new Equal(),
+    new AllBut2Equal(),
+    new Logarithmic(),
+    new Quadratic(),
+    new Exponential(),
+    new Cubic(),
+    new Quintic(),
+    new Sin(),
+    new Root()
+];
 
 
 /***/ }),

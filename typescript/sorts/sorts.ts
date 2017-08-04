@@ -1,5 +1,5 @@
-export * from './bubble'
 export * from './bogo'
+export * from './bubble'
 export * from './cocktail'
 export * from './comb'
 export * from './cycle'

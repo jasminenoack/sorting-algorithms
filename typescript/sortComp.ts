@@ -1,9 +1,10 @@
-import {Sizes} from './sizes'
-import {Shuffles} from './shuffles'
-import {Index} from './index'
-import {ValueTypes} from './valueTypes'
+import * as Sizes from './sizes'
+import * as Shuffles from './shuffles'
+import * as Index from './index'
+import * as ValueTypes from './valueTypes'
 import * as Sorts from './sorts/sorts'
-import {Boards} from './board'
+import * as Boards from './board'
+import {BaseSort} from './sorts/baseSort'
 
 namespace SortComp {
     let boardsElement = document.getElementById("boards")
@@ -13,7 +14,7 @@ namespace SortComp {
     let autoInterval: any = null
     let delay = 100
 
-    let boardList: Boards.Board[] = []
+    let boardList: any[] = []
 
     // setup size dropdown
     let sizes = Sizes.sizeList
@@ -45,12 +46,12 @@ namespace SortComp {
         valueTypeSelect.appendChild(optionElement)
     })
 
-    let sorts = Object.values(Sorts);
+    let sorts = (Object as any).values(Sorts);
     let sortElement = document.getElementById("sort")
-    sorts.forEach((sort, index) => {
+    sorts.forEach((sort: BaseSort, index: number) => {
         let optionElement = document.createElement('option')
         optionElement.value = index + ''
-        optionElement.textContent = sort.title
+        optionElement.textContent = (sort as any).title
         sortElement.appendChild(optionElement)
     })
 

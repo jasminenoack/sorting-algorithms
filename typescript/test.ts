@@ -1,10 +1,10 @@
-import {Sizes} from './sizes'
-import {Shuffles} from './shuffles'
-import {Index} from './index'
-import {ValueTypes} from './valueTypes'
+import * as Sizes from './sizes'
+import * as Shuffles from './shuffles'
+import * as Index from './index'
+import * as ValueTypes from './valueTypes'
 import * as Sorts from './sorts/sorts'
-import {Boards} from './board'
-import {Points} from './point'
+import * as Boards from './board'
+import * as Points from './point'
 
 (window as any).Sizes = Sizes;
 (window as any).Shuffles = Shuffles;

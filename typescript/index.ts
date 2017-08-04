@@ -63,6 +63,7 @@ export function step (boardList: any[], boxHeight: number, boxWidth: number, boa
         let sort = boardData.sort
         let board = boardData.board
         if (!sort.done) {
+            let times = Math.min(board.size.elemCount / 100, 100)
             for (let i = 0; i < board.size.elemCount / 100; i++) {
                 sort.next()
             }

@@ -86,7 +86,7 @@ var SortComp;
     var delay = 100;
     var boardList = [];
     // setup size dropdown
-    var sizes = Sizes.sizeList;
+    var sizes = Object.values(Sizes);
     var sizeElement = document.getElementById("size");
     sizes.forEach(function (size, index) {
         var optionElement = document.createElement('option');
@@ -189,13 +189,53 @@ exports.speedTest = {
     elemCount: 9000,
     label: "9000"
 };
+exports._7500 = {
+    elemCount: 7500,
+    label: "7500"
+};
+exports._5000 = {
+    elemCount: 5000,
+    label: "5000"
+};
+exports._4000 = {
+    elemCount: 4000,
+    label: "4000"
+};
+exports._3000 = {
+    elemCount: 3000,
+    label: "3000"
+};
+exports._2000 = {
+    elemCount: 2000,
+    label: "2000"
+};
 exports.stupidNumber = {
     elemCount: 1000,
     label: "1000"
 };
+exports._750 = {
+    elemCount: 750,
+    label: "750"
+};
+exports._500 = {
+    elemCount: 500,
+    label: "500"
+};
 exports.manyMany = {
     elemCount: 300,
     label: "300"
+};
+exports._250 = {
+    elemCount: 250,
+    label: "250"
+};
+exports._100 = {
+    elemCount: 100,
+    label: "100"
+};
+exports._75 = {
+    elemCount: 75,
+    label: "75"
 };
 exports.xXSmall = {
     elemCount: 70,
@@ -217,6 +257,10 @@ exports.large = {
     elemCount: 30,
     label: "30"
 };
+exports._25 = {
+    elemCount: 25,
+    label: "25"
+};
 exports.xLarge = {
     elemCount: 20,
     label: "20"
@@ -229,19 +273,6 @@ exports.fewFew = {
     elemCount: 5,
     label: '5'
 };
-exports.sizeList = [
-    exports.fewFew,
-    exports.xXLarge,
-    exports.xLarge,
-    exports.large,
-    exports.medium,
-    exports.small,
-    exports.xSmall,
-    exports.xXSmall,
-    exports.manyMany,
-    exports.stupidNumber,
-    exports.speedTest
-];
 
 
 /***/ }),
@@ -453,6 +484,7 @@ function step(boardList, boxHeight, boxWidth, boardsElement, noStep) {
         var sort = boardData.sort;
         var board = boardData.board;
         if (!sort.done) {
+            var times = Math.min(board.size.elemCount / 100, 100);
             for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
                 sort.next();
             }
@@ -2698,7 +2730,7 @@ var Heap = (function (_super) {
         this.comparisons += 2;
         if (((left || left === 0) && left > comparison) || ((right || right === 0) && right > comparison)) {
             this.comparisons++;
-            if ((right || (!!right !== false && right !== undefined)) && right > left) {
+            if ((right || right === 0) && right > left) {
                 swapNode = rightChild;
             }
             else {

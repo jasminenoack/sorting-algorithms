@@ -35,7 +35,7 @@ export class Heap extends BaseSort {
         this.comparisons += 2
         if (((left || left === 0) && left > comparison) || ((right || right === 0) && right > comparison)) {
             this.comparisons++
-            if ((right || (!!right !== false && right !== undefined)) && right > left) {
+            if ((right || right === 0) && right > left) {
                 swapNode = rightChild
             } else {
                 swapNode = leftChild

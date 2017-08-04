@@ -17,9 +17,9 @@ namespace SortComp {
     let boardList: any[] = []
 
     // setup size dropdown
-    let sizes = Sizes.sizeList
+    let sizes = (Object as any).values(Sizes)
     let sizeElement = document.getElementById("size")
-    sizes.forEach((size, index) => {
+    sizes.forEach((size: Sizes.Size, index: number) => {
         let optionElement = document.createElement('option')
         optionElement.value = index + ''
         optionElement.textContent = size.label

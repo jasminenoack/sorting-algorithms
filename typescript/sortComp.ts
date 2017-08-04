@@ -23,6 +23,9 @@ namespace SortComp {
         let optionElement = document.createElement('option')
         optionElement.value = index + ''
         optionElement.textContent = size.label
+        if (optionElement.label === "250") {
+            optionElement.setAttribute('selected', '1')
+        }
         sizeElement.appendChild(optionElement)
     })
 
@@ -33,6 +36,9 @@ namespace SortComp {
         let optionElement = document.createElement('option')
         optionElement.value = index + ''
         optionElement.textContent = shuffle.title
+        if (shuffle.title === "Random") {
+            optionElement.setAttribute('selected', '1')
+        }
         orderSelect.appendChild(optionElement)
     })
 
@@ -43,7 +49,11 @@ namespace SortComp {
         let optionElement = document.createElement('option')
         optionElement.value = index + ''
         optionElement.textContent = valueType.title
+        if (valueType.title === "Range") {
+            optionElement.setAttribute('selected', '1')
+        }
         valueTypeSelect.appendChild(optionElement)
+
     })
 
     let sorts = (Object as any).values(Sorts);
@@ -52,6 +62,9 @@ namespace SortComp {
         let optionElement = document.createElement('option')
         optionElement.value = index + ''
         optionElement.textContent = (sort as any).title
+        if ((sort as any).title === "Comb Sort") {
+            optionElement.setAttribute('selected', '1')
+        }
         sortElement.appendChild(optionElement)
     })
 

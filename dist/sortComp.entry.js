@@ -92,6 +92,9 @@ var SortComp;
         var optionElement = document.createElement('option');
         optionElement.value = index + '';
         optionElement.textContent = size.label;
+        if (optionElement.label === "250") {
+            optionElement.setAttribute('selected', '1');
+        }
         sizeElement.appendChild(optionElement);
     });
     // set up shuffles
@@ -101,6 +104,9 @@ var SortComp;
         var optionElement = document.createElement('option');
         optionElement.value = index + '';
         optionElement.textContent = shuffle.title;
+        if (shuffle.title === "Random") {
+            optionElement.setAttribute('selected', '1');
+        }
         orderSelect.appendChild(optionElement);
     });
     // set up value types
@@ -110,6 +116,9 @@ var SortComp;
         var optionElement = document.createElement('option');
         optionElement.value = index + '';
         optionElement.textContent = valueType.title;
+        if (valueType.title === "Range") {
+            optionElement.setAttribute('selected', '1');
+        }
         valueTypeSelect.appendChild(optionElement);
     });
     var sorts = Object.values(Sorts);
@@ -118,6 +127,9 @@ var SortComp;
         var optionElement = document.createElement('option');
         optionElement.value = index + '';
         optionElement.textContent = sort.title;
+        if (sort.title === "Comb Sort") {
+            optionElement.setAttribute('selected', '1');
+        }
         sortElement.appendChild(optionElement);
     });
     // when click create

@@ -57,7 +57,7 @@ var SortComp;
         Index.createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement);
     });
     var stepElement = document.getElementById("step");
-    var boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth);
+    var boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
     stepElement.addEventListener('click', boundStep);
     Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
         var wrapperElement = Index.closestParent(target, '.wrapper');
@@ -92,7 +92,7 @@ var SortComp;
             event.currentTarget.classList.remove('active');
         }
         else {
-            var boundStep_1 = Index.step.bind(null, boardList, boxHeight, boxWidth);
+            var boundStep_1 = Index.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
             autoInterval = setInterval(boundStep_1, delay);
             event.currentTarget.classList.add('active');
         }

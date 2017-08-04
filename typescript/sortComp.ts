@@ -49,10 +49,10 @@ namespace SortComp {
 
     // when click create
     createButton.addEventListener('click', function () {
-        let size = sizes[sizeElement.value]
-        let value = valueTypes[valueTypeSelect.value]
-        let order = orders[orderSelect.value]
-        let Sort = sorts[sortElement.value]
+        let size = sizes[(sizeElement as any).value]
+        let value = valueTypes[(valueTypeSelect as any).value]
+        let order = orders[(orderSelect as any).value]
+        let Sort = sorts[(sortElement as any).value]
 
         // let board = new Boards.Board(size)
         let board = new Boards.Board(size, order, value)
@@ -64,7 +64,7 @@ namespace SortComp {
     })
 
     let stepElement = document.getElementById("step")
-    let boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth)
+    let boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth, boardsElement)
     stepElement.addEventListener('click', boundStep)
 
     Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
@@ -98,12 +98,12 @@ namespace SortComp {
     autoElement.addEventListener('click', function (event) {
         if (autoInterval) {
             clearInterval(autoInterval)
-            autoInterval = null
-            event.currentTarget.classList.remove('active')
+            autoInterval = null;
+            (event.currentTarget as HTMLElement).classList.remove('active');
         } else {
-            let boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth)
-            autoInterval = setInterval(boundStep, delay)
-            event.currentTarget.classList.add('active')
+            let boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth, boardsElement)
+            autoInterval = setInterval(boundStep, delay);
+            (event.currentTarget as HTMLElement).classList.add('active')
         }
     })
 }

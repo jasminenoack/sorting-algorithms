@@ -21,41 +21,6 @@ var Index;
             });
         }
     }
-    function removeShadow(boardElement) {
-        var shadowElements = boardElement.getElementsByClassName('shadow');
-        for (var i = 0; i < shadowElements.length; i++) {
-            shadowElements[i].remove();
-        }
-    }
-    function reRenderPoint(pointElements, board, index, boxHeight, boxWidth) {
-        var value = board.get(index).value;
-        var valueMin = board.min();
-        var valueMax = board.max();
-        var widthSpread = board.values().length - 1;
-        var heightSpread = valueMax - valueMin;
-        var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
-        var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin), xCenter = _a[0], yCenter = _a[1];
-        var point = pointElements[index];
-        point.setAttribute('cx', xCenter + '');
-        point.setAttribute('cy', yCenter + '');
-    }
-    function setCurrentNodes(currentNodes, pointElements, sort) {
-        currentNodes.forEach(function (index) {
-            pointElements[index].classList.add("active");
-        });
-        var placed = sort.placed;
-        if (placed.length) {
-            for (var i = 0; i < placed.length; i++) {
-                pointElements[placed[i]].classList.add("placed");
-            }
-        }
-    }
-    function removeCurrentNodes(boardElement) {
-        var currentNodes = Array.prototype.slice.call(boardElement.getElementsByClassName('active'));
-        for (var i = 0; i < currentNodes.length; i++) {
-            currentNodes[i].classList.remove("active");
-        }
-    }
     function centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin) {
         var yCenter;
         if (heightSpread) {
@@ -73,25 +38,7 @@ var Index;
     function getTextContent(sort) {
         return "<div>\n            <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n            <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n            <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n            <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n            <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n            <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n        </div>";
     }
-    function renderBoard(i, sort, board, boxHeight, boxWidth) {
-        var currentNodes;
-        var boardElement = document.getElementsByClassName('board')[i];
-        var pointElements = boardElement.getElementsByClassName('point');
-        removeCurrentNodes(boardElement);
-        removeShadow(boardElement);
-        var points = Array.prototype.range(sort.length);
-        points.forEach(function (point) {
-            reRenderPoint(pointElements, board, point, boxHeight, boxWidth);
-        });
-        currentNodes = sort.currentNodes();
-        setCurrentNodes(currentNodes, pointElements, sort);
-        boardElement.closest('.wrapper').getElementsByClassName('step-count')[0].innerHTML = getTextContent(sort);
-        if (!sort.done) {
-            renderShadow(sort, board, boardElement, boxHeight, boxWidth);
-        }
-    }
-    Index.renderBoard = renderBoard;
-    function step(boardList, boxHeight, boxWidth, noStep) {
+    function step(boardList, boxHeight, boxWidth, boardsElement, noStep) {
         for (var i = 0; i < boardList.length; i++) {
             // update all points
             var boardData = boardList[i];
@@ -101,40 +48,24 @@ var Index;
                 for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
                     sort.next();
                 }
-                renderBoard(i, sort, board, boxHeight, boxWidth);
+                reRenderBoard(i, sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
             }
         }
     }
     Index.step = step;
-    function createBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
-        var board = boardList[index].board;
-        var sort = boardList[index].sort;
-        var values = board.values();
-        var valueMin = board.min();
-        var valueMax = board.max();
-        var widthSpread = values.length - 1;
-        var heightSpread = valueMax - valueMin;
-        var radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread);
-        var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
-        var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
-        gElement.setAttribute('class', 'board');
-        boardElement.appendChild(gElement);
-        var currentNodes = sort.currentNodes();
-        for (var i = 0; i < values.length; i++) {
-            var value = values[i];
-            var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, i, valueMin), xCenter = _a[0], yCenter = _a[1];
-            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('cx', xCenter + '');
-            circle.setAttribute('cy', yCenter + '');
-            circle.setAttribute('r', radius + '');
-            circle.setAttribute('class', 'point');
-            if (currentNodes.indexOf(i) !== -1) {
-                circle.classList.add('active');
-            }
-            gElement.appendChild(circle);
+    function addPoint(board, xCenter, yCenter, radius, currentNodes, i) {
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', xCenter + '');
+        circle.setAttribute('cy', yCenter + '');
+        circle.setAttribute('r', radius + '');
+        circle.setAttribute('class', 'point');
+        circle.setAttribute('class', 'point');
+        if (currentNodes.indexOf(i) !== -1) {
+            circle.classList.add('active');
         }
+        board.appendChild(circle);
+    }
+    function createWrapper(Sort, sort) {
         var wrapperElement = document.createElement('div');
         wrapperElement.className = 'wrapper';
         var headerElement = document.createElement('h1');
@@ -152,11 +83,47 @@ var Index;
         resetElement.textContent = 'Reset';
         resetElement.className = 'reset';
         wrapperElement.appendChild(resetElement);
-        wrapperElement.appendChild(boardElement);
-        boardsElement.appendChild(wrapperElement);
+        return wrapperElement;
+    }
+    function createBoardElements(boxWidth, boxHeight) {
+        var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
+        var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
+        gElement.setAttribute('class', 'board');
+        boardElement.appendChild(gElement);
+        return [boardElement, gElement];
+    }
+    function buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        var board = boardList[index].board;
+        var sort = boardList[index].sort;
+        var values = board.values();
+        var valueMin = board.min();
+        var valueMax = board.max();
+        var widthSpread = values.length - 1;
+        var heightSpread = valueMax - valueMin;
+        var radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread);
+        var _a = createBoardElements(boxWidth, boxHeight), boardElement = _a[0], gElement = _a[1];
+        var currentNodes = sort.currentNodes();
+        for (var i = 0; i < values.length; i++) {
+            var value = values[i];
+            var _b = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, i, valueMin), xCenter = _b[0], yCenter = _b[1];
+            addPoint(gElement, xCenter, yCenter, radius, currentNodes, i);
+        }
         renderShadow(sort, board, gElement, boxHeight, boxWidth);
+        var wrapperElement = createWrapper(Sort, sort);
+        wrapperElement.appendChild(boardElement);
+        return wrapperElement;
+    }
+    function createBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+        boardsElement.appendChild(wrapperElement);
     }
     Index.createBoard = createBoard;
+    function reRenderBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+        boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index]);
+    }
     function createDelegatedEvent(eventNode, eventType, fun, selector) {
         var listener = eventNode.addEventListener(eventType, function (event) {
             var currentTarget = event.target;

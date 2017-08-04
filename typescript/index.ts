@@ -25,50 +25,6 @@ namespace Index {
         }
     }
 
-    function removeShadow(boardElement) {
-        let shadowElements = boardElement.getElementsByClassName('shadow')
-        for(let i = 0; i < shadowElements.length; i++) {
-            shadowElements[i].remove()
-        }
-    }
-
-    function reRenderPoint(pointElements, board, index, boxHeight, boxWidth) {
-        let value = board.get(index).value
-        let valueMin = board.min()
-        let valueMax = board.max()
-        let widthSpread = board.values().length - 1
-        let heightSpread = valueMax - valueMin
-        let radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread)
-
-        let [xCenter, yCenter] = centers(
-                heightSpread, widthSpread, boxHeight, boxWidth, value,
-                index, valueMin
-        )
-
-        let point = pointElements[index]
-        point.setAttribute('cx', xCenter + '')
-        point.setAttribute('cy', yCenter + '')
-    }
-
-    function setCurrentNodes(currentNodes, pointElements, sort) {
-        currentNodes.forEach(function (index) {
-            pointElements[index].classList.add("active")
-        })
-        let placed = sort.placed
-        if (placed.length) {
-            for (let i = 0; i < placed.length; i++) {
-                pointElements[placed[i]].classList.add("placed")
-            }
-        }
-    }
-
-    function removeCurrentNodes(boardElement) {
-        let currentNodes = Array.prototype.slice.call(boardElement.getElementsByClassName('active'))
-        for (let i = 0; i < currentNodes.length; i++) {
-            currentNodes[i].classList.remove("active")
-        }
-    }
-
     function centers(heightSpread, widthSpread, boxHeight, boxWidth, value,
                      index, valueMin) {
         let yCenter
@@ -98,30 +54,7 @@ namespace Index {
         </div>`
     }
 
-    export function renderBoard (i, sort, board, boxHeight, boxWidth) {
-        let currentNodes
-        let boardElement = document.getElementsByClassName('board')[i]
-        let pointElements = boardElement.getElementsByClassName('point')
-        removeCurrentNodes(boardElement)
-        removeShadow(boardElement)
-        let points = Array.prototype.range(sort.length)
-        points.forEach(function (point) {
-            reRenderPoint(pointElements, board, point, boxHeight, boxWidth)
-        })
-        currentNodes = sort.currentNodes()
-        setCurrentNodes(currentNodes, pointElements, sort)
-        boardElement.closest(
-            '.wrapper'
-        ).getElementsByClassName(
-            'step-count'
-        )[0].innerHTML = getTextContent(sort)
-
-        if (!sort.done) {
-            renderShadow(sort, board, boardElement, boxHeight, boxWidth)
-        }
-    }
-
-    export function step (boardList, boxHeight, boxWidth, noStep?) {
+    export function step (boardList, boxHeight, boxWidth, boardsElement, noStep?) {
         for (let i = 0; i < boardList.length; i++) {
             // update all points
             let boardData = boardList[i]
@@ -131,61 +64,37 @@ namespace Index {
                 for (let i = 0; i < board.size.elemCount / 100; i++) {
                     sort.next()
                 }
-                renderBoard(i, sort, board, boxHeight, boxWidth)
+                reRenderBoard(i, sort.constructor, boardList, boxHeight, boxWidth, boardsElement)
             }
         }
     }
 
-    export function createBoard (index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
-        let board = boardList[index].board
-        let sort = boardList[index].sort
-        let values = board.values()
-        let valueMin = board.min()
-        let valueMax = board.max()
-        let widthSpread = values.length - 1
-        let heightSpread = valueMax - valueMin
-        let radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread)
-
-        let boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-        boardElement.setAttribute('viewBox', `0 0 ${boxWidth + 40} ${boxHeight + 40}`)
-
-        let gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g')
-        gElement.setAttribute('transform', `translate(${20}, ${20})`)
-        gElement.setAttribute('class', 'board')
-
-        boardElement.appendChild(gElement)
-
-        let currentNodes = sort.currentNodes()
-        for (let i = 0; i < values.length; i++) {
-            let value = values[i]
-
-            let [xCenter, yCenter] = centers(
-                    heightSpread, widthSpread, boxHeight, boxWidth, value,
-                    i, valueMin
-            )
-
-            let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
-            circle.setAttribute('cx', xCenter + '')
-            circle.setAttribute('cy', yCenter + '')
-            circle.setAttribute('r', radius + '')
-
-            circle.setAttribute('class', 'point')
-            if (currentNodes.indexOf(i) !== -1) {
-                circle.classList.add('active')
-            }
-
-            gElement.appendChild(circle)
+    function addPoint (board, xCenter, yCenter, radius, currentNodes, i) {
+        let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+        circle.setAttribute('cx', xCenter + '')
+        circle.setAttribute('cy', yCenter + '')
+        circle.setAttribute('r', radius + '')
+        circle.setAttribute('class', 'point')
+        circle.setAttribute('class', 'point')
+        if (currentNodes.indexOf(i) !== -1) {
+            circle.classList.add('active')
         }
+        board.appendChild(circle)
+    }
 
+    function createWrapper (Sort, sort) {
         let wrapperElement = document.createElement('div')
         wrapperElement.className = 'wrapper'
+
         let headerElement = document.createElement('h1')
         headerElement.textContent = Sort.title
         wrapperElement.appendChild(headerElement)
+
         let textElement = document.createElement('span')
         textElement.innerHTML = getTextContent(sort)
         textElement.className = 'step-count'
         wrapperElement.appendChild(textElement)
+
         let removeElement = document.createElement('button')
         removeElement.textContent = 'X'
         removeElement.className = 'remove'
@@ -196,10 +105,57 @@ namespace Index {
         resetElement.className = 'reset'
         wrapperElement.appendChild(resetElement)
 
-        wrapperElement.appendChild(boardElement)
-        boardsElement.appendChild(wrapperElement)
+        return wrapperElement
+    }
+
+    function createBoardElements (boxWidth, boxHeight) {
+        let boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        boardElement.setAttribute('viewBox', `0 0 ${boxWidth + 40} ${boxHeight + 40}`)
+
+        let gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+        gElement.setAttribute('transform', `translate(${20}, ${20})`)
+        gElement.setAttribute('class', 'board')
+
+        boardElement.appendChild(gElement)
+        return [boardElement, gElement]
+    }
+
+    function buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        let board = boardList[index].board
+        let sort = boardList[index].sort
+        let values = board.values()
+        let valueMin = board.min()
+        let valueMax = board.max()
+        let widthSpread = values.length - 1
+        let heightSpread = valueMax - valueMin
+        let radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread)
+
+        const [boardElement, gElement] = createBoardElements(boxWidth, boxHeight)
+
+        let currentNodes = sort.currentNodes()
+        for (let i = 0; i < values.length; i++) {
+            let value = values[i]
+            let [xCenter, yCenter] = centers(
+                    heightSpread, widthSpread, boxHeight, boxWidth, value,
+                    i, valueMin
+            )
+            addPoint (gElement, xCenter, yCenter, radius, currentNodes, i)
+        }
 
         renderShadow(sort, board, gElement, boxHeight, boxWidth)
+        const wrapperElement = createWrapper(Sort, sort)
+        wrapperElement.appendChild(boardElement)
+        return wrapperElement
+    }
+
+    export function createBoard (index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        const wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement)
+        boardsElement.appendChild(wrapperElement)
+    }
+
+    function reRenderBoard (index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+        const wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement)
+        boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index])
     }
 
     export function createDelegatedEvent(eventNode, eventType, fun, selector) {

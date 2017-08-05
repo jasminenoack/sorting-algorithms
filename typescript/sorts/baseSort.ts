@@ -19,6 +19,7 @@ export abstract class BaseSort {
     shadow: any[]
     lastSwapped: boolean
     static links: any[]
+    profile: {[step: number]: {[key: string]: number}} = {};
 
     constructor(public board: Boards.Board) {
         this.baseSetUp()
@@ -60,7 +61,15 @@ export abstract class BaseSort {
             this.swap(currentNodes)
         }
         this.setUpNext()
+        this.trackProfile()
         return currentNodes
+    }
+
+    trackProfile() {
+        this.profile[this.steps] = {
+            swaps: this.swaps,
+            comparisons: this.comparisons,
+        }
     }
 
     reset() {

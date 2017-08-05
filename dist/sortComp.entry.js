@@ -73,6 +73,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var BaseSort = (function () {
     function BaseSort(board) {
         this.board = board;
+        this.profile = {};
         this.baseSetUp();
     }
     BaseSort.prototype.setUpNext = function () { };
@@ -110,7 +111,14 @@ var BaseSort = (function () {
             this.swap(currentNodes);
         }
         this.setUpNext();
+        this.trackProfile();
         return currentNodes;
+    };
+    BaseSort.prototype.trackProfile = function () {
+        this.profile[this.steps] = {
+            swaps: this.swaps,
+            comparisons: this.comparisons,
+        };
     };
     BaseSort.prototype.reset = function () {
         this.board.shuffleBoard();

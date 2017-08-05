@@ -960,7 +960,7 @@ function autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, fin
         else {
             setTimeout(function () {
                 boardList.forEach(function (board) { return board.sort.reset(); });
-                autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, finishDelay);
+                autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, finishDelay, check);
             }, finishDelay);
         }
     };

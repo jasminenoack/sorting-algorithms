@@ -208,7 +208,7 @@ export function autoRunBoards(boardList: any[], boxHeight: number,
             setTimeout(() => {
                 boardList.forEach((board) => board.sort.reset())
                 autoRunBoards(boardList, boxHeight, boxWidth, boardsElement,
-                    delay, finishDelay)
+                    delay, finishDelay, check)
             }, finishDelay)
         }
     }

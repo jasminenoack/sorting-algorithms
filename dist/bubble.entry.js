@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2713,7 +2713,11 @@ exports.Board = Board;
 
 
 /***/ }),
-/* 20 */
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2725,115 +2729,195 @@ var Index = __webpack_require__(6);
 var ValueTypes = __webpack_require__(2);
 var Sorts = __webpack_require__(7);
 var Boards = __webpack_require__(19);
-var boardsElement = document.getElementById("boards");
-var createButton = document.getElementById("create");
-var boxHeight = 500;
-var boxWidth = 500;
-var autoInterval = null;
-var delay = 100;
-var boardList = [];
-// setup size dropdown
-var sizes = Object.values(Sizes);
-var sizeElement = document.getElementById("size");
-sizes.forEach(function (size, index) {
-    var optionElement = document.createElement('option');
-    optionElement.value = index + '';
-    optionElement.textContent = size.label;
-    if (optionElement.label === "250") {
-        optionElement.setAttribute('selected', '1');
-    }
-    sizeElement.appendChild(optionElement);
-});
-// set up shuffles
-var orders = Shuffles.ShuffleList;
-var orderSelect = document.getElementById('order');
-orders.forEach(function (shuffle, index) {
-    var optionElement = document.createElement('option');
-    optionElement.value = index + '';
-    optionElement.textContent = shuffle.title;
-    if (shuffle.title === "Random") {
-        optionElement.setAttribute('selected', '1');
-    }
-    orderSelect.appendChild(optionElement);
-});
-// set up value types
-var valueTypes = ValueTypes.valueTypeList;
-var valueTypeSelect = document.getElementById('value-type');
-valueTypes.forEach(function (valueType, index) {
-    var optionElement = document.createElement('option');
-    optionElement.value = index + '';
-    optionElement.textContent = valueType.title;
-    if (valueType.title === "Range") {
-        optionElement.setAttribute('selected', '1');
-    }
-    valueTypeSelect.appendChild(optionElement);
-});
-var sorts = Object.values(Sorts);
-var sortElement = document.getElementById("sort");
-sorts.forEach(function (sort, index) {
-    var optionElement = document.createElement('option');
-    optionElement.value = index + '';
-    optionElement.textContent = sort.title;
-    if (sort.title === "Comb Sort") {
-        optionElement.setAttribute('selected', '1');
-    }
-    sortElement.appendChild(optionElement);
-});
-// when click create
-createButton.addEventListener('click', function () {
-    var size = sizes[sizeElement.value];
-    var value = valueTypes[valueTypeSelect.value];
-    var order = orders[orderSelect.value];
-    var Sort = sorts[sortElement.value];
-    // let board = new Boards.Board(size)
-    var board = new Boards.Board(size, order, value);
+// import { BaseSort } from '../sorts/baseSort'
+console.debug("Set up top level bubble");
+var Bubble = Sorts.BubbleNonOptimized;
+var BubbleShortCircuit = Sorts.Bubble;
+var BubbleSkipLast = Sorts.BubbleSkipNoShortCircuit;
+var BubbleFullyOptimized = Sorts.BubbleSkipsSorted;
+var SimpleBubbleElement;
+(function (SimpleBubbleElement) {
+    var simpleBubbleElement = document.getElementById('bubble-example');
+    var boxHeight = 500;
+    var boxWidth = 500;
+    var delay = 100;
+    var delayOnComplete = 2000;
+    var boardList = [];
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var shuffle = new Shuffles.RandomShuffle();
+    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
+    var sort = new Bubble(board);
     boardList.push({
         board: board,
-        sort: new Sort(board)
+        sort: sort
     });
-    Index.createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement);
-});
-var stepElement = document.getElementById("step");
-var boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
-stepElement.addEventListener('click', boundStep);
-Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
-    var wrapperElement = Index.closestParent(target, '.wrapper');
-    var wrappers = document.getElementsByClassName('wrapper');
-    for (var i = 0; i < wrappers.length; i++) {
-        if (wrappers[i] === wrapperElement) {
-            boardList.splice(i, 1);
-            break;
+    Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, simpleBubbleElement);
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, simpleBubbleElement, delay, delayOnComplete);
+})(SimpleBubbleElement || (SimpleBubbleElement = {}));
+var BubbleOptimizations;
+(function (BubbleOptimizations) {
+    var OptimizationsElement = document.getElementById('bubble-optimizations');
+    var boxHeight = 500;
+    var boxWidth = 500;
+    var delay = 100;
+    var delayOnComplete = 2000;
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var shuffle = new Shuffles.RandomShuffle();
+    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort1 = new Bubble(board1);
+    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort2 = new BubbleShortCircuit(board2);
+    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort3 = new BubbleSkipLast(board3);
+    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort4 = new BubbleFullyOptimized(board4);
+    var boardList = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
         }
-    }
-    wrapperElement.remove();
-}, '.remove');
-Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
-    var wrapperElement = Index.closestParent(target, '.wrapper');
-    var wrappers = document.getElementsByClassName('wrapper');
-    var wrapperIndex;
-    for (var i = 0; i < wrappers.length; i++) {
-        if (wrappers[i] === wrapperElement) {
-            wrapperIndex = i;
-            break;
+    ];
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, OptimizationsElement);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, OptimizationsElement, delay, delayOnComplete);
+})(BubbleOptimizations || (BubbleOptimizations = {}));
+var BubbleShuffles;
+(function (BubbleShuffles) {
+    var ShufflesElement = document.getElementById('bubble-shuffles');
+    var boxHeight = 500;
+    var boxWidth = 500;
+    var delay = 100;
+    var delayOnComplete = 2000;
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info);
+    var sort1 = new BubbleFullyOptimized(board1);
+    var board2 = new Boards.Board(size, new Shuffles.K1Shuffle(), valueType, Boards.Verbosity.Info);
+    var sort2 = new BubbleFullyOptimized(board2);
+    var board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info);
+    var sort3 = new BubbleFullyOptimized(board3);
+    var board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info);
+    var sort4 = new BubbleFullyOptimized(board4);
+    var boardList = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
         }
-    }
-    var item = boardList[wrapperIndex];
-    item.sort.reset();
-    Index.reRenderBoard(wrapperIndex, item.sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
-}, '.reset');
-var autoElement = document.getElementById("auto");
-autoElement.addEventListener('click', function (event) {
-    if (autoInterval) {
-        clearInterval(autoInterval);
-        autoInterval = null;
-        event.currentTarget.classList.remove('active');
-    }
-    else {
-        var boundStep_1 = Index.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
-        autoInterval = setInterval(boundStep_1, delay);
-        event.currentTarget.classList.add('active');
-    }
-});
+    ];
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ShufflesElement);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, ShufflesElement, delay, delayOnComplete);
+})(BubbleShuffles || (BubbleShuffles = {}));
+var BubbleConCur;
+(function (BubbleConCur) {
+    var ConcurElement = document.getElementById('bubble-concur');
+    var boxHeight = 500;
+    var boxWidth = 500;
+    var delay = 100;
+    var delayOnComplete = 2000;
+    var size = Sizes._25;
+    var shuffle = new Shuffles.RandomShuffle();
+    var valueType = new ValueTypes.Integer();
+    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort1 = new Sorts.BubbleSortConcurrent(board1);
+    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort2 = new Sorts.BubbleSortConcurrent5(board2);
+    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort3 = new Sorts.BubbleSortConcurrent10(board3);
+    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort4 = new Sorts.OddEvenConcurrent(board4);
+    var boardList = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
+        }
+    ];
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ConcurElement);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, ConcurElement, delay, delayOnComplete);
+})(BubbleConCur || (BubbleConCur = {}));
+var BubbleDontRestart;
+(function (BubbleDontRestart) {
+    var RestartElement = document.getElementById('bubble-dont-restart');
+    var boxHeight = 500;
+    var boxWidth = 500;
+    var delay = 100;
+    var delayOnComplete = 2000;
+    var size = Sizes._25;
+    var shuffle = new Shuffles.RandomShuffle();
+    var valueType = new ValueTypes.Integer();
+    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort1 = new BubbleFullyOptimized(board1);
+    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort2 = new Sorts.BubbleSortDontRestart(board2);
+    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort3 = new Sorts.Gnome(board3);
+    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort4 = new Sorts.Cocktail(board4);
+    var boardList = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
+        }
+    ];
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, RestartElement);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, RestartElement, delay, delayOnComplete);
+})(BubbleDontRestart || (BubbleDontRestart = {}));
 
 
 /***/ })

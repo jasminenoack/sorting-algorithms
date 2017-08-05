@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -308,327 +308,6 @@ exports.ShuffleList = [
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(0);
-var Gnome = (function (_super) {
-    __extends(Gnome, _super);
-    function Gnome() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Gnome.prototype.setUpNext = function () {
-        if (this.baseNode === 0 || !this.lastSwapped) {
-            this.currentGnome++;
-            this.comparisonNode = this.currentGnome;
-            this.baseNode = this.currentGnome - 1;
-        }
-        else if (this.lastSwapped) {
-            this.baseNode--;
-            this.comparisonNode--;
-        }
-        if (this.comparisonNode >= this.length) {
-            this.done = true;
-        }
-    };
-    Gnome.prototype.setUp = function () {
-        this.currentGnome = 1;
-    };
-    Gnome.title = "Gnome Sort";
-    return Gnome;
-}(baseSort_1.BaseSort));
-exports.Gnome = Gnome;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Point = (function () {
-    function Point(index, value, color) {
-        if (value === void 0) { value = 0; }
-        if (color === void 0) { color = "aliceblue"; }
-        this.index = index;
-        this.value = value;
-        // TODO maybe color should be type and type should have color?
-        this.color = color;
-    }
-    return Point;
-}());
-exports.Point = Point;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.speedTest = {
-    elemCount: 9000,
-    label: "9000"
-};
-exports._7500 = {
-    elemCount: 7500,
-    label: "7500"
-};
-exports._5000 = {
-    elemCount: 5000,
-    label: "5000"
-};
-exports._4000 = {
-    elemCount: 4000,
-    label: "4000"
-};
-exports._3000 = {
-    elemCount: 3000,
-    label: "3000"
-};
-exports._2000 = {
-    elemCount: 2000,
-    label: "2000"
-};
-exports.stupidNumber = {
-    elemCount: 1000,
-    label: "1000"
-};
-exports._750 = {
-    elemCount: 750,
-    label: "750"
-};
-exports._500 = {
-    elemCount: 500,
-    label: "500"
-};
-exports.manyMany = {
-    elemCount: 300,
-    label: "300"
-};
-exports._250 = {
-    elemCount: 250,
-    label: "250"
-};
-exports._100 = {
-    elemCount: 100,
-    label: "100"
-};
-exports._75 = {
-    elemCount: 75,
-    label: "75"
-};
-exports.xXSmall = {
-    elemCount: 70,
-    label: "70"
-};
-exports.xSmall = {
-    elemCount: 60,
-    label: "60"
-};
-exports.small = {
-    elemCount: 50,
-    label: "50"
-};
-exports.medium = {
-    elemCount: 40,
-    label: "40"
-};
-exports.large = {
-    elemCount: 30,
-    label: "30"
-};
-exports._25 = {
-    elemCount: 25,
-    label: "25"
-};
-exports.xLarge = {
-    elemCount: 20,
-    label: "20"
-};
-exports.xXLarge = {
-    elemCount: 10,
-    label: "10"
-};
-exports.fewFew = {
-    elemCount: 5,
-    label: '5'
-};
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
-    var valueMin = board.min();
-    var valueMax = board.max();
-    var widthSpread = board.values().length - 1;
-    var heightSpread = valueMax - valueMin;
-    var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
-    var shadow = sort.shadow;
-    if (shadow.length) {
-        shadow.forEach(function (obj) {
-            var index = obj.index;
-            var value = obj.value;
-            var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin), xCenter = _a[0], yCenter = _a[1];
-            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('cx', xCenter + '');
-            circle.setAttribute('cy', yCenter + '');
-            circle.setAttribute('r', radius + '');
-            circle.setAttribute('class', 'point shadow');
-            boardElement.appendChild(circle);
-        });
-    }
-}
-function centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin) {
-    var yCenter;
-    if (heightSpread) {
-        yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
-    }
-    else {
-        yCenter = boxHeight / 2;
-    }
-    var xCenter = (index) / widthSpread * boxWidth;
-    return [xCenter, yCenter];
-}
-function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
-    return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
-}
-function getTextContent(sort) {
-    return "<div>\n        <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n        <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n        <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n        <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n        <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n        <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n    </div>";
-}
-function step(boardList, boxHeight, boxWidth, boardsElement, noStep) {
-    for (var i = 0; i < boardList.length; i++) {
-        // update all points
-        var boardData = boardList[i];
-        var sort = boardData.sort;
-        var board = boardData.board;
-        if (!sort.done) {
-            var times = Math.min(board.size.elemCount / 100, 100);
-            for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
-                sort.next();
-            }
-            reRenderBoard(i, sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
-        }
-    }
-}
-exports.step = step;
-function addPoint(board, xCenter, yCenter, radius, currentNodes, i) {
-    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', xCenter + '');
-    circle.setAttribute('cy', yCenter + '');
-    circle.setAttribute('r', radius + '');
-    circle.setAttribute('class', 'point');
-    circle.setAttribute('class', 'point');
-    if (currentNodes.indexOf(i) !== -1) {
-        circle.classList.add('active');
-    }
-    board.appendChild(circle);
-}
-function createWrapper(Sort, sort) {
-    var wrapperElement = document.createElement('div');
-    wrapperElement.className = 'wrapper';
-    var headerElement = document.createElement('h1');
-    headerElement.textContent = Sort.title;
-    wrapperElement.appendChild(headerElement);
-    var textElement = document.createElement('span');
-    textElement.innerHTML = getTextContent(sort);
-    textElement.className = 'step-count';
-    wrapperElement.appendChild(textElement);
-    var removeElement = document.createElement('button');
-    removeElement.textContent = 'X';
-    removeElement.className = 'remove';
-    wrapperElement.appendChild(removeElement);
-    var resetElement = document.createElement('button');
-    resetElement.textContent = 'Reset';
-    resetElement.className = 'reset';
-    wrapperElement.appendChild(resetElement);
-    return wrapperElement;
-}
-function createBoardElements(boxWidth, boxHeight) {
-    var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
-    var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
-    gElement.setAttribute('class', 'board');
-    boardElement.appendChild(gElement);
-    return [boardElement, gElement];
-}
-function buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
-    var board = boardList[index].board;
-    var sort = boardList[index].sort;
-    var values = board.values();
-    var valueMin = board.min();
-    var valueMax = board.max();
-    var widthSpread = values.length - 1;
-    var heightSpread = valueMax - valueMin;
-    var radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread);
-    var _a = createBoardElements(boxWidth, boxHeight), boardElement = _a[0], gElement = _a[1];
-    var currentNodes = sort.currentNodes();
-    for (var i = 0; i < values.length; i++) {
-        var value = values[i];
-        var _b = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, i, valueMin), xCenter = _b[0], yCenter = _b[1];
-        addPoint(gElement, xCenter, yCenter, radius, currentNodes, i);
-    }
-    renderShadow(sort, board, gElement, boxHeight, boxWidth);
-    var wrapperElement = createWrapper(Sort, sort);
-    wrapperElement.appendChild(boardElement);
-    return wrapperElement;
-}
-function createBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
-    var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
-    boardsElement.appendChild(wrapperElement);
-}
-exports.createBoard = createBoard;
-function reRenderBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
-    var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
-    boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index]);
-}
-exports.reRenderBoard = reRenderBoard;
-function createDelegatedEvent(eventNode, eventType, fun, selector) {
-    var listener = eventNode.addEventListener(eventType, function (event) {
-        var currentTarget = event.target;
-        if (event.target.matches(selector)) {
-            fun(event, event.target);
-        }
-    });
-    return listener;
-}
-exports.createDelegatedEvent = createDelegatedEvent;
-function closestParent(node, selector) {
-    if (node.matches(selector)) {
-        return node;
-    }
-    else if (!node.parentElement) {
-        return null;
-    }
-    else {
-        return closestParent(node.parentElement, selector);
-    }
-}
-exports.closestParent = closestParent;
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
 Object.defineProperty(exports, "__esModule", { value: true });
 var Random = (function () {
     function Random() {
@@ -829,6 +508,352 @@ exports.valueTypeList = [
 
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var Gnome = (function (_super) {
+    __extends(Gnome, _super);
+    function Gnome() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Gnome.prototype.setUpNext = function () {
+        if (this.baseNode === 0 || !this.lastSwapped) {
+            this.currentGnome++;
+            this.comparisonNode = this.currentGnome;
+            this.baseNode = this.currentGnome - 1;
+        }
+        else if (this.lastSwapped) {
+            this.baseNode--;
+            this.comparisonNode--;
+        }
+        if (this.comparisonNode >= this.length) {
+            this.done = true;
+        }
+    };
+    Gnome.prototype.setUp = function () {
+        this.currentGnome = 1;
+    };
+    Gnome.title = "Gnome Sort";
+    return Gnome;
+}(baseSort_1.BaseSort));
+exports.Gnome = Gnome;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Point = (function () {
+    function Point(index, value, color) {
+        if (value === void 0) { value = 0; }
+        if (color === void 0) { color = "aliceblue"; }
+        this.index = index;
+        this.value = value;
+        // TODO maybe color should be type and type should have color?
+        this.color = color;
+    }
+    return Point;
+}());
+exports.Point = Point;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.speedTest = {
+    elemCount: 9000,
+    label: "9000"
+};
+exports._7500 = {
+    elemCount: 7500,
+    label: "7500"
+};
+exports._5000 = {
+    elemCount: 5000,
+    label: "5000"
+};
+exports._4000 = {
+    elemCount: 4000,
+    label: "4000"
+};
+exports._3000 = {
+    elemCount: 3000,
+    label: "3000"
+};
+exports._2000 = {
+    elemCount: 2000,
+    label: "2000"
+};
+exports.stupidNumber = {
+    elemCount: 1000,
+    label: "1000"
+};
+exports._750 = {
+    elemCount: 750,
+    label: "750"
+};
+exports._500 = {
+    elemCount: 500,
+    label: "500"
+};
+exports.manyMany = {
+    elemCount: 300,
+    label: "300"
+};
+exports._250 = {
+    elemCount: 250,
+    label: "250"
+};
+exports._100 = {
+    elemCount: 100,
+    label: "100"
+};
+exports._75 = {
+    elemCount: 75,
+    label: "75"
+};
+exports.xXSmall = {
+    elemCount: 70,
+    label: "70"
+};
+exports.xSmall = {
+    elemCount: 60,
+    label: "60"
+};
+exports.small = {
+    elemCount: 50,
+    label: "50"
+};
+exports.medium = {
+    elemCount: 40,
+    label: "40"
+};
+exports.large = {
+    elemCount: 30,
+    label: "30"
+};
+exports._25 = {
+    elemCount: 25,
+    label: "25"
+};
+exports.xLarge = {
+    elemCount: 20,
+    label: "20"
+};
+exports.xXLarge = {
+    elemCount: 10,
+    label: "10"
+};
+exports.fewFew = {
+    elemCount: 5,
+    label: '5'
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var board_1 = __webpack_require__(19);
+function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
+    var valueMin = board.min();
+    var valueMax = board.max();
+    var widthSpread = board.values().length - 1;
+    var heightSpread = valueMax - valueMin;
+    var radius = getRadius(boxHeight, heightSpread, boxWidth, widthSpread);
+    var shadow = sort.shadow;
+    if (shadow.length) {
+        shadow.forEach(function (obj) {
+            var index = obj.index;
+            var value = obj.value;
+            var _a = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin), xCenter = _a[0], yCenter = _a[1];
+            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', xCenter + '');
+            circle.setAttribute('cy', yCenter + '');
+            circle.setAttribute('r', radius + '');
+            circle.setAttribute('class', 'point shadow');
+            boardElement.appendChild(circle);
+        });
+    }
+}
+function centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin) {
+    var yCenter;
+    if (heightSpread) {
+        yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
+    }
+    else {
+        yCenter = boxHeight / 2;
+    }
+    var xCenter = (index) / widthSpread * boxWidth;
+    return [xCenter, yCenter];
+}
+function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
+    return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
+}
+function getTextContent(sort) {
+    return "<div>\n        <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n        <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n        <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n        <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n        <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n        <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n    </div>";
+}
+function step(boardList, boxHeight, boxWidth, boardsElement, noStep) {
+    for (var i = 0; i < boardList.length; i++) {
+        // update all points
+        var boardData = boardList[i];
+        var sort = boardData.sort;
+        var board = boardData.board;
+        if (!sort.done) {
+            var times = Math.min(board.size.elemCount / 100, 100);
+            for (var i_1 = 0; i_1 < board.size.elemCount / 100; i_1++) {
+                sort.next();
+            }
+            reRenderBoard(i, sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
+        }
+    }
+}
+exports.step = step;
+function addPoint(board, xCenter, yCenter, radius, currentNodes, i, sort) {
+    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', xCenter + '');
+    circle.setAttribute('cy', yCenter + '');
+    circle.setAttribute('r', radius + '');
+    circle.setAttribute('class', 'point');
+    circle.setAttribute('class', 'point');
+    if (currentNodes.indexOf(i) !== -1) {
+        circle.classList.add('active');
+    }
+    if (sort.placed.indexOf(i) !== -1) {
+        circle.classList.add('placed');
+    }
+    board.appendChild(circle);
+}
+function createWrapper(Sort, sort, board) {
+    var wrapperElement = document.createElement('div');
+    wrapperElement.className = 'wrapper';
+    if (board.verbosity !== board_1.Verbosity.None) {
+        var headerElement = document.createElement('h1');
+        headerElement.textContent = Sort.title;
+        wrapperElement.appendChild(headerElement);
+    }
+    if (board.verbosity === board_1.Verbosity.Debug) {
+        var textElement = document.createElement('span');
+        textElement.innerHTML = getTextContent(sort);
+        textElement.className = 'step-count';
+        wrapperElement.appendChild(textElement);
+        var removeElement = document.createElement('button');
+        removeElement.textContent = 'X';
+        removeElement.className = 'remove';
+        wrapperElement.appendChild(removeElement);
+        var resetElement = document.createElement('button');
+        resetElement.textContent = 'Reset';
+        resetElement.className = 'reset';
+        wrapperElement.appendChild(resetElement);
+    }
+    return wrapperElement;
+}
+function createBoardElements(boxWidth, boxHeight) {
+    var boardElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    boardElement.setAttribute('viewBox', "0 0 " + (boxWidth + 40) + " " + (boxHeight + 40));
+    var gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    gElement.setAttribute('transform', "translate(" + 20 + ", " + 20 + ")");
+    gElement.setAttribute('class', 'board');
+    boardElement.appendChild(gElement);
+    return [boardElement, gElement];
+}
+function buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+    var board = boardList[index].board;
+    var sort = boardList[index].sort;
+    var values = board.values();
+    var valueMin = board.min();
+    var valueMax = board.max();
+    var widthSpread = values.length - 1;
+    var heightSpread = valueMax - valueMin;
+    var radius = getRadius(boxHeight, heightSpread, boxHeight, widthSpread);
+    var _a = createBoardElements(boxWidth, boxHeight), boardElement = _a[0], gElement = _a[1];
+    var currentNodes = sort.currentNodes();
+    for (var i = 0; i < values.length; i++) {
+        var value = values[i];
+        var _b = centers(heightSpread, widthSpread, boxHeight, boxWidth, value, i, valueMin), xCenter = _b[0], yCenter = _b[1];
+        addPoint(gElement, xCenter, yCenter, radius, currentNodes, i, sort);
+    }
+    if (!sort.done) {
+        renderShadow(sort, board, gElement, boxHeight, boxWidth);
+    }
+    var wrapperElement = createWrapper(Sort, sort, board);
+    wrapperElement.appendChild(boardElement);
+    return wrapperElement;
+}
+function createBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+    var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+    boardsElement.appendChild(wrapperElement);
+}
+exports.createBoard = createBoard;
+function reRenderBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement) {
+    var wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+    boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index]);
+}
+exports.reRenderBoard = reRenderBoard;
+function createDelegatedEvent(eventNode, eventType, fun, selector) {
+    var listener = eventNode.addEventListener(eventType, function (event) {
+        var currentTarget = event.target;
+        if (event.target.matches(selector)) {
+            fun(event, event.target);
+        }
+    });
+    return listener;
+}
+exports.createDelegatedEvent = createDelegatedEvent;
+function closestParent(node, selector) {
+    if (node.matches(selector)) {
+        return node;
+    }
+    else if (!node.parentElement) {
+        return null;
+    }
+    else {
+        return closestParent(node.parentElement, selector);
+    }
+}
+exports.closestParent = closestParent;
+function autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, finishDelay) {
+    var interval = setInterval(function () {
+        if (boardList.any(function (board) { return !board.sort.done; })) {
+            step(boardList, boxHeight, boxWidth, boardsElement);
+        }
+        else {
+            clearInterval(interval);
+            setTimeout(function () {
+                boardList.forEach(function (board) { return board.sort.reset(); });
+                autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, finishDelay);
+            }, finishDelay);
+        }
+    }, delay);
+}
+exports.autoRunBoards = autoRunBoards;
+
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -843,7 +868,7 @@ __export(__webpack_require__(9));
 __export(__webpack_require__(10));
 __export(__webpack_require__(11));
 __export(__webpack_require__(12));
-__export(__webpack_require__(2));
+__export(__webpack_require__(3));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
@@ -1543,7 +1568,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var baseSort_1 = __webpack_require__(0);
-var gnome_1 = __webpack_require__(2);
+var gnome_1 = __webpack_require__(3);
 var Comb = (function (_super) {
     __extends(Comb, _super);
     function Comb() {
@@ -2601,15 +2626,23 @@ exports.SmoothSetUpBottom = SmoothSetUpBottom;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Points = __webpack_require__(3);
+var Points = __webpack_require__(4);
 var Shuffles = __webpack_require__(1);
-var ValueTypes = __webpack_require__(6);
+var ValueTypes = __webpack_require__(2);
+var Verbosity;
+(function (Verbosity) {
+    Verbosity[Verbosity["None"] = 0] = "None";
+    Verbosity[Verbosity["Info"] = 1] = "Info";
+    Verbosity[Verbosity["Debug"] = 5] = "Debug";
+})(Verbosity = exports.Verbosity || (exports.Verbosity = {}));
 var Board = (function () {
-    function Board(size, shuffle, valueType) {
+    function Board(size, shuffle, valueType, verbosity) {
         if (shuffle === void 0) { shuffle = new Shuffles.RandomShuffle(); }
         if (valueType === void 0) { valueType = new ValueTypes.Integer(); }
+        if (verbosity === void 0) { verbosity = Verbosity.Debug; }
         this.shuffle = shuffle;
         this.valueType = valueType;
+        this.verbosity = verbosity;
         this.points = [];
         this.setSize(size);
         this.createValues();
@@ -2682,20 +2715,19 @@ exports.Board = Board;
 /***/ }),
 /* 20 */,
 /* 21 */,
-/* 22 */,
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Sizes = __webpack_require__(4);
+var Sizes = __webpack_require__(5);
 var Shuffles = __webpack_require__(1);
-var Index = __webpack_require__(5);
-var ValueTypes = __webpack_require__(6);
+var Index = __webpack_require__(6);
+var ValueTypes = __webpack_require__(2);
 var Sorts = __webpack_require__(7);
 var Boards = __webpack_require__(19);
-var Points = __webpack_require__(3);
+var Points = __webpack_require__(4);
 window.Sizes = Sizes;
 window.Shuffles = Shuffles;
 window.Index = Index;

@@ -4,201 +4,167 @@
         <meta charset="utf-8">
         <title>Bubble Sort</title>
         <link rel="stylesheet" href="lib/highlight.default.css">
-        <link rel="stylesheet" type="text/css" href="css/index2.css">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/colorSet1.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
         <script src="lib/highlight.js"></script>
     </head>
     <body>
-        <h2>Bubble Sort</h2>
+        <content>
+            <header>Bubble Sort</header>
+            <article>
+                <h1>Summary</h1>
+                <div class="clear normal">
+                    <p>
+                        <a target="_blank" href="https://en.wikipedia.org/wiki/Bubble_sort">Bubble Sort</a> is one of the simpilest sorting algorithms. 
+                        It pops up commonly in interviews, introductory textbooks, and bootcamp tests. It is a comparison sort. A comparison sort is a sort that reads the list by comparing 2 elements at a time.  
+                    </p> 
 
-        <p>
-            Bubble sort is one of the most controversial sorting algorithms.
-            It's extremely inefficent, and it has been argued, that it shouldn't be taught in CS courses.
-            This is discussed more fully in <a href='https://users.cs.duke.edu/~ola/bubble/bubble.html'>Bubble Sort: An Archaeological Algorithmic Analysis</a>.
-        </p>
+                    <p>
+                        <div class="left paddingRight10 one" id="bubble-example"></div>
+                        One positive of Bubble Sort is that it can help us understand how a computer thinks. A person is able to look at a problem and come up with a solution on the fly. For example, if given the list [3, 1, 4, 2, 5] a person may look at that and say "Well it's the integers 1 through 5 so I'll just write those in order." However, a computer needs more specific steps than that. Bubble Sort shows one set of steps. These steps have to work across any dataset. For example, the actions above wouldn't work for the list [2, 1, 1, 6, 2]. We want to teach a computer a method to solve either of these problems.
+                    </p>
 
-        <div class="clear normal">
-            <div class="left"><video src="videos/bubble-sort-base.mov" controls height=300 width=300></video></div>
-            <p class="padding">
-                This is a simple example of a bubble sort using a small random array.
-                As you can see the sort compares each point to the point after it and swaps them if the second is smaller than the first.
-                You can also see that this is a non-optimized version of the sort that continues attempting to sort after the array is already in order.
-                This algorithm will always run at O(n<sup>2</sup>).
-            </p>
-        </div>
+                    <p class="padding">
+                        A Bubble Sort is completed by iterating over the elements and comparing each element to the element after it. If the element after it is smaller the elements are swapped. This allows the highest values to Bubble up to the top of the array. In simple implementations a Bubble sort will iterate over an array n - 1 times doing a comparison for n - 1 elements. This means of course that the simple function takes (n - 1) * (n - 1) time or O(n<sup>2</sup>) in all cases.
+                    </p>
 
-        <div class="normal">
-            <video src="videos/bubble-sort-optimizations.mov" width="100%" controls></video>
-            <p>
-                This video shows a comparison of various optimizations of bubble sort.
-                There are two common optimizations for Bubble Sort.
-                One is called a short circuit.
-                This means that if the array becomes ordered the sort will end.
-                The second is to skip the sorted elements.
-                Because of the way bubble sort works each round moves the highest value into the last position.
-                The next round we do not have to recheck this final position.
-                This video shows an unoptimized version, followed by a version using a short circuit,
-                followed by a version that skips sorted elements, and lastly a version with both optimizations.
-                Black nodes are nodes marked as sorted. Blue nodes are the nodes being compared.
-            </p>
-        </div>
+                    <p>
+                        Bubble sort is one of the most controversial sorting algorithms. 
+                        It's extremely inefficent, and it has been argued, that
+                        it shouldn't be taught in CS courses. This is discussed more fully in <a href='https://users.cs.duke.edu/~ola/bubble/bubble.html'>Bubble Sort: An Archaeological Algorithmic Analysis</a>. 
+                    </p>
+                </div>
+            </article>
 
-        <div>
-            <video src="videos/bubble-orders.mov" width="100%" controls></video>
-            <p>
-                This video compares Bubble Sort on different orders of points.
-                These all use the most optimized version of the sort from above.
-                It shows that the Sort is reasonably efficent on partially ordered sets,
-                but on a reversed ordered set it has to run every comparison.
-            </p>
-        </div>
+            <article>
+                <h1>Common Optimizations</h1>
+                <div class="normal">
+                    <p>
+                        There are a couple common optimizations for Bubble Sort.
+                    </p>
 
+                    <div id="bubble-optimizations" class="two"></div>
 
-        <h4>How Bubble Sort Works</h4>
+                    <ol>
+                        <li>Short Circuit: A short circuit stops the sort once it determines that the array is not in order. This is determined by tracking if it swaped any elements in the last iteration. If it hasn't the array is already in order.</li>
+                        <li>Skip: When you run an iteration of Bubble Sort the highest element is moved to the final location. This means that you don't have to check that location again. This optimization will assume that the last element in each iteration is now in the correct position and will skip it in the following round.</li>
+                    </ol>
 
-        <p>
-            Bubble Sort is an exchange sort.
-            It is named for the way that larger elements bubble up to the end of the list.
-            The algorithm is very simple, but it is also very inefficent.
-            There are various optimizations that can make bubble sort extremely efficient for almost sorted lists.
-            However, other sorts exist have similar performance on ordered lists,
-            and better performance on other orders.
-        </p>
+                    <p>
+                        Each of these optimizations speeds up the sort. And both can make the sort much more efficent than the simple function, although it can still be extremely inefficent.
+                    </p>
 
-        <h4>Performance</h4>
+                    <p>
+                         Coming Soon: graph of function profiling.
+                    </p>
+                </div>
 
-        <p>
-            Bubble sort has a worst-case complexity of O(n<sup>2</sup>) and an average case complexity of О(n<sup>2</sup>).
-            If the sort is implemented with a short circuit for a presorted list there is a best case complexity of Ω(n).
-        </p>
+                <p><a href="sort_comparison.html">Compare Yourself</a></p>
+            </article>
 
-        <h4>Code Sample</h4>
+            <article>
+                <h1>Comparing Efficency Among Orderings</h1>
 
-        <h5>Python</h5>
+                <p>The effiency of Bubble Sort varies greatly by the order of the elements to start with when an optimized sort is used. This is because in an ordered list a short circuit can take O(n) while a reversed list will take O(n<sup>2</sup>) as it has to compare every element to every other element.</p>
 
-        <pre><code class="python">
-    def bubble_sort(nums):
-        # Repeat the sort up to n - 1 times
-        # if there are 5 elements. It will run the sort 4 times.
-        # At minimum this will put 4 of the 5 elements in place.
-        # And the array will become sorted.
-        for i in range(1, len(nums)):
-            # set a variable to check if the array is ordered
-            ordered = True
-            # For each round look at every number up to the second to last that has not been sorted.
-            # We do not need to reconsider the final number of the previous round
-            # because bubble sort always puts the highest number in the last position each round.
-            for index in range(len(nums) - i):
-                # compare each value to the next value in the array.
-                # if the next value is smaller swap the values
-                value = nums[index]
-                next_value = nums[index + 1]
-                if next_value < value:
-                    nums[index], nums[index + 1] = next_value, value
-                    # if you had to swap change the ordered variable
-                    ordered = False
-            # if the array was ordered break out of the loop
-            if ordered:
-                break
-        # return the sorted array
-        return nums
-        </code></pre>
+                <div id="bubble-shuffles" class="two"></div>
 
-        <p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Bubble_sort">See more</a></p>
+                <p>We see that the ordered and almost ordered lists both finish very quickly. While the reversed and randomized lists take much longer. This is an important fact about comparison sorts in general. They tend to work best on mostly sorted lists(with a couple exceptions). This is because if they are able to determine a short circuit on a sorted or almost sorted list they are likely to go through the list few times.</p>
 
-        <p><a href="sort_comparison.html">Compare Yourself</a>
+                <p>
+                    Coming Soon: graph of function profiling.
+                </p>
 
-        <h4>Further Optimization</h4>
+                <p><a href="sort_comparison.html">Compare Yourself</a></p>
+            </article>
 
-        <p>
-            As I stated before Bubble Sort is an exceptionally poor sorting algorithm.
-            It is not at all optimized and is problematic at best.
-            But the simplicity of the algorithm does give some freedom to attempt
-            new tactics and changes without a large issue.
-            This may allow us to think about things that could improve the sort and
-            may event help us to understand how alternative sorts might be derived from
-            thinking about Bubble Sort.
-        </p>
+            <article>
+                <h1>Code</h1>
 
-        <h5>Concurrency</h5>
+                <h5>Python</h5>
 
-        <p>
-            One simple way to optimize is to process things concurrently.
-            We will see other optimized sorts attempt this same method to
-            speed up the sort.
-            While there can be problems with concurrency in various languages
-            we can see by simulating concurrency in javaScript why it seems to
-            be a good solution to the problem of effeciency.
-        </p>
+                <pre><code class="python">
+def bubble_sort(nums):
+    # Repeat the sort up to n - 1 times
+    # if there are 5 elements. It will run the sort 4 times.
+    # At minimum this will put 4 of the 5 elements in place.
+    # And the array will become sorted.
+    for i in range(1, len(nums)):
+        # set a variable to check if the array is ordered
+        ordered = True
+        # For each round look at every number up to the second to last that has not been sorted.
+        # We do not need to reconsider the final number of the previous round
+        # because bubble sort always puts the highest number in the last position each round.
+        for index in range(len(nums) - i):
+            # compare each value to the next value in the array.
+            # if the next value is smaller swap the values
+            value = nums[index]
+            next_value = nums[index + 1]
+            if next_value < value:
+                nums[index], nums[index + 1] = next_value, value
+                # if you had to swap change the ordered variable
+                ordered = False
+        # if the array was ordered break out of the loop
+        if ordered:
+            break
+    # return the sorted array
+    return nums
+                </code></pre>
 
-        <video src="videos/concur-bubble.mov" width="100%" controls></video>
+                <p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Bubble_sort">Other Languages</a></p>
+            </article>
 
-        <p>
-            Here we see our optimized Bubble Sort compared with several different
-            concurrency levels in Bubble Sort. And we see that concurrency will
-            in fact speed up the sort. However, we do of course see that although
-            in time the concurrent sorts finish faster they actually perform more
-            comparisons. This is due mostly to the implementation that we are using
-            where we start all the concurrent locations simultaneously. So several
-            have to get to the end before they can implement the optimizations for
-            the sort more generally. We are able to see here why someone may want to
-            use concurrency for any task. It does not save us actions or space,
-            but it can have an intense effect on the overall time that something takes.
-            You see this when people use asynchronous tasks on websites. It allows them
-            to perform a lot of computations simultaneously by spreading them
-            out across multiple systems. So we are using more power for each step,
-            but we can finish much faster. If you have the resources this can
-            be a good way to perform some heavy duty processes such as data aggregation
-            or analysis. The Odd-Even Sort which is available on the comparison page is
-            an extension of this concept. It compares all the even nodes to the next node,
-            then all the odd nodes to the next node. This is very quick in time, but
-            each step is extremely computation heavy.
-        </p>
+            <article>
+                <h1>Further Optimization</h1>
 
-        <h5>Considering Algorithmic Issues</h5>
+                <p>
+                    As I stated before Bubble Sort is an exceptionally poor sorting algorithm. It is not at all optimized and is problematic at best. But the simplicity of the algorithm does give some freedom to test optimizations on it. This may allow us to think about things that could improve the sort and may event help us to understand how alternative sorts might be derived from thinking about Bubble Sort.
+                </p>
 
-        <p>
-            One thing that we do as developers is consider what might be causing a
-            problem in an algorithm. When I look at Bubble Sort I see something
-            relatively obvious. If I'm trying to sort things. I can only fix the largest number
-            each round then I have to go back to the beginning and start over.
-            So I might try to think of a solution for this. Wouldn't it be better for
-            example if I didn't have to go back to the beginning. If maybe instead I could go back
-            to where I picked up the current number and start there? I do want to be clear.
-            This is not a suggestion for a great varient of Bubble Sort as much
-            as it is an example of an attempt to think through a problem.
-            As I write this I haven't implemented it yet, I haven't thought through
-            a case, I haven't proved it's better. But a lot of times as a developer
-            if I'm trying to solve a problem I will come up with something that may be the problem
-            then I will write code to fix it and benchmark it to see if it's better.
-            That's what I want to do here. I want to look at what happens in code that
-            attempts to not constantly restart a Bubble Sort is it more efficent?
-        </p>
+                <h2>Concurrency</h2>
 
-        <video src="https://d3vv6lp55qjaqc.cloudfront.net/items/1j2x0t2X2o0O163Q0e2H/Screen%20Recording%202017-07-27%20at%2001.50%20AM.mov" width="100%" controls></video>
+                <p>
+                    One simple way to optimize is to process things concurrently.
+                </p>
 
-        <p>
-            Now that we have an implemented version of this algorithm we can compare it to traditional
-            Bubble Sort. One thing that we see here is that it's not that much more effective. We feel a
-            bit better when we watch it because it looks much more effective. But if you look at the number
-            of steps it's not doing a ton. It seems to cut the step count by between 10 and 20 percent.
-            Which is okay, but doesn't fix the O(n<sup>2</sup>) nature of Bubble Sort. The important
-            thing to recognize is that as we said it makes us feel better. A lot of times as a
-            developer you build something you like. Maybe it looks good. Maybe it looks like it works
-            really well. Maybe the code is beautiful. But we have to remember that we need to objectively test
-            if our implementation is actually any better. We need to benchmark it. That's what we are doing here
-            when we are comparing the algorithms. And what we end up seeing is neither is really all that great
-            unfortunately. But we do start to understand the logic behind some of the other algorithms. Gnome and
-            Insertion Sorts work similarly to what we are doing here, but instead they try to create a sorted
-            sub array and move objects into it in the correct place. As opposed to here where we are guessing where
-            we should place an object based on current context. These sorts are trying to optimize the number of steps.
-            While in worst case they can hit O(n<sup>2</sup>) they tend to have a better best case and average case.
-            Selection and Cycle Sorts look at all the elements to determine where a particular element should be placed
-            in the array. This will still take O(n<sup>2</sup>) steps but will lower the number of insertions.
-        </p>
+                <div id="bubble-concur" class="two"></div>
 
-        <video src="https://d3vv6lp55qjaqc.cloudfront.net/items/1u1v3P1Y0g3h2B1k3d38/Screen%20Recording%202017-07-27%20at%2002.13%20AM.mov" width="100%" controls></video>
+                <p>
+                    It becomes very obvious upon observation that the concurrent sorts are much fast in time. They do not, however, change the actual number of swaps or comparisons that need to be made. Instead they use additional resources to complete faster by doing things at the same time. The last sort show here is an Odd-Even Sort. This is technically not a Bubble Sort but is a clear extension of this concurrency idea. 
+                </p>
+
+                <p>
+                    Coming Soon: graph of function profiling.
+                </p>
+
+                <h2>Considering Algorithmic Issues</h2>
+
+                <p>
+                    One thing that developers do is look for fixable problems in algorithms. Looking at Bubble Sort something jumps out at me. If I need to move a number back 4 places I have to iterate 4 times to do that. This seems inefficent. Would it be faster if I didn't have to do that? 
+                </p>
+
+                <div id="bubble-dont-restart" class="two"></div>
+
+                <p>
+                    Here we see a test of that function against other functions, and it doesn't seem to be much better than the original Bubble Sort. however, by watching the visualization we can see why. It's still making a lot of comparisons. It moves large sets of unordered data around. Then when it finally orders it, it still looks at it all again as it moves up. So we can assume that we can optimize it further. Examples of this are shown in the second 2 examples. Gnome sort creates a "sorted list" as a sub list of the full list and moves each element into that list. Cocktail sort sorts both upwards and downwards to move elements faster(although this implementation does not include a short circuit, but it could).
+                </p>
+
+                <p>We can start to see from these examples how we move from a simple sort like Bubble to increasingly more complex sorts to optimize different aspects of a sort.</p>
+
+                <p>
+                    Coming Soon: graph of function profiling.
+                </p>
+
+                <p><a href="sort_comparison.html">Compare Yourself</a></p>
+            </article>
+
+        
 
         <script>hljs.initHighlightingOnLoad();</script>
+        <script src="dist/utils.entry.js"></script>
         <script src="dist/queens.entry.js"></script>
+        <script src="dist/bubble.entry.js"></script>
+        </content>
     </body>
 </html>

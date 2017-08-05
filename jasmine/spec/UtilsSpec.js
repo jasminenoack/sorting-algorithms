@@ -48,5 +48,15 @@ describe("Utils", function() {
                 )
             })
         })
+
+        it("any", () => {
+            const x = [1, 2, 3, 4, 5]
+            expect(x.any((num) => num === 6)).toBeFalsy()
+            expect(x.any((num) => num === 1)).toBeTruthy()
+            expect(x.any((num) => num === 2)).toBeTruthy()
+            expect(x.any((num) => num === 3)).toBeTruthy()
+            expect(x.any((num) => num === 4)).toBeTruthy()
+            expect(x.any((num) => num === 5)).toBeTruthy()
+        })
     })
 });

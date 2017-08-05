@@ -3,6 +3,8 @@ import * as Shuffles from './shuffles'
 import * as ValueTypes from './valueTypes'
 import * as Sizes from './sizes'
 
+export enum Verbosity {None = 0, Info = 1, Debug = 5}
+
 export class Board {
     points: Points.Point[] = [];
     size: Sizes.Size;
@@ -11,7 +13,8 @@ export class Board {
     private _max: number
     constructor(
         size: Sizes.Size, public shuffle: Shuffles.Shuffle = new Shuffles.RandomShuffle(),
-        public valueType: ValueTypes.ValueType = new ValueTypes.Integer()
+        public valueType: ValueTypes.ValueType = new ValueTypes.Integer(), 
+        public verbosity: Verbosity = Verbosity.Debug
     ) {
         this.setSize(size)
         this.createValues()

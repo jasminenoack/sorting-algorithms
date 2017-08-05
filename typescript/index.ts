@@ -1,5 +1,5 @@
 import {BaseSort} from './sorts/baseSort'
-import {Board} from './board'
+import {Board, Verbosity} from './board'
 
 function renderShadow(sort: BaseSort, board: Board, boardElement: SVGElement, boxHeight: number, boxWidth: number) {
     let valueMin = board.min()
@@ -72,7 +72,7 @@ export function step (boardList: any[], boxHeight: number, boxWidth: number, boa
     }
 }
 
-function addPoint (board: SVGElement, xCenter: number, yCenter: number, radius: number, currentNodes: number[], i: number) {
+function addPoint (board: SVGElement, xCenter: number, yCenter: number, radius: number, currentNodes: number[], i: number, sort: BaseSort) {
     let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
     circle.setAttribute('cx', xCenter + '')
     circle.setAttribute('cy', yCenter + '')
@@ -82,31 +82,38 @@ function addPoint (board: SVGElement, xCenter: number, yCenter: number, radius: 
     if (currentNodes.indexOf(i) !== -1) {
         circle.classList.add('active')
     }
+    if (sort.placed.indexOf(i) !== -1) {
+        circle.classList.add('placed')
+    }
     board.appendChild(circle)
 }
 
-function createWrapper (Sort: BaseSort, sort: BaseSort) {
+function createWrapper (Sort: BaseSort, sort: BaseSort, board: Board) {
     let wrapperElement = document.createElement('div')
     wrapperElement.className = 'wrapper'
 
-    let headerElement = document.createElement('h1')
-    headerElement.textContent = (Sort as any).title
-    wrapperElement.appendChild(headerElement)
+    if (board.verbosity !== Verbosity.None) {
+        let headerElement = document.createElement('h1')
+        headerElement.textContent = (Sort as any).title
+        wrapperElement.appendChild(headerElement)
+    }
 
-    let textElement = document.createElement('span')
-    textElement.innerHTML = getTextContent(sort)
-    textElement.className = 'step-count'
-    wrapperElement.appendChild(textElement)
+    if (board.verbosity === Verbosity.Debug) {
+        let textElement = document.createElement('span')
+        textElement.innerHTML = getTextContent(sort)
+        textElement.className = 'step-count'
+        wrapperElement.appendChild(textElement)
 
-    let removeElement = document.createElement('button')
-    removeElement.textContent = 'X'
-    removeElement.className = 'remove'
-    wrapperElement.appendChild(removeElement)
+        let removeElement = document.createElement('button')
+        removeElement.textContent = 'X'
+        removeElement.className = 'remove'
+        wrapperElement.appendChild(removeElement)
 
-    let resetElement = document.createElement('button')
-    resetElement.textContent = 'Reset'
-    resetElement.className = 'reset'
-    wrapperElement.appendChild(resetElement)
+        let resetElement = document.createElement('button')
+        resetElement.textContent = 'Reset'
+        resetElement.className = 'reset'
+        wrapperElement.appendChild(resetElement)
+    }
 
     return wrapperElement
 }
@@ -142,11 +149,12 @@ function buildBoard(index: number, Sort: BaseSort, boardList: any[], boxHeight: 
                 heightSpread, widthSpread, boxHeight, boxWidth, value,
                 i, valueMin
         )
-        addPoint (gElement, xCenter, yCenter, radius, currentNodes, i)
+        addPoint (gElement, xCenter, yCenter, radius, currentNodes, i, sort)
     }
-
-    renderShadow(sort, board, gElement, boxHeight, boxWidth)
-    const wrapperElement = createWrapper(Sort, sort)
+    if (!sort.done) {
+        renderShadow(sort, board, gElement, boxHeight, boxWidth)
+    }
+    const wrapperElement = createWrapper(Sort, sort, board)
     wrapperElement.appendChild(boardElement)
     return wrapperElement
 }
@@ -179,4 +187,24 @@ export function closestParent(node: HTMLElement, selector: string): HTMLElement 
     } else {
         return closestParent(node.parentElement, selector)
     }
+}
+
+export function autoRunBoards(boardList: any[], boxHeight: number, 
+                              boxWidth: number, boardsElement: HTMLElement,
+                              delay: number, finishDelay: number
+                             ) {
+    let interval = setInterval(() => {
+        if ((boardList as any).any((board: {[key: string]: Board | BaseSort}[]) => !(board.sort as any).done)) {
+            step(boardList, boxHeight, boxWidth, boardsElement)
+        } else {
+            clearInterval(interval)
+            setTimeout(() => {
+                boardList.forEach((board) => board.sort.reset())
+                autoRunBoards(boardList, boxHeight, boxWidth, boardsElement,
+                              delay, finishDelay)
+            }, finishDelay)
+        }
+        
+    }, delay)
+
 }

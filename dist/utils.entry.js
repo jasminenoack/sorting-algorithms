@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ 	return __webpack_require__(__webpack_require__.s = 23);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 24:
+/***/ 23:
 /***/ (function(module, exports) {
 
 Array.prototype.shuffle = function () {
@@ -148,6 +148,14 @@ Array.prototype.sorted = function () {
         }
     }
     return true;
+};
+Array.prototype.any = function (fun) {
+    for (var i = 0; i < this.length; i++) {
+        if (fun(this[i])) {
+            return true;
+        }
+    }
+    return false;
 };
 
 

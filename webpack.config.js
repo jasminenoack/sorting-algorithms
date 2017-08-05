@@ -3,7 +3,8 @@ module.exports = {
         sortComp: "./typescript/page_runners/sortComp.ts",
         queens: "./typescript/page_runners/queensBackground.ts",
         test: "./typescript/page_runners/test.ts",
-        utils: './typescript/page_runners/utils.ts'
+        utils: './typescript/page_runners/utils.ts',
+        bubble: './typescript/page_runners/bubblePage.ts'
     },
     output: {
         path: __dirname + "/dist",

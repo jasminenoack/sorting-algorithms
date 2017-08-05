@@ -6,6 +6,7 @@ interface Array<T> {
     kShuffle(k: number): T[];
     distribution(): {};
     sorted(): boolean;
+    any(func: (item: any) => boolean): boolean;
 }
 
 Array.prototype.shuffle = function (): any[] {
@@ -94,4 +95,13 @@ Array.prototype.sorted = function (): boolean {
         }
     }
     return true
+}
+
+Array.prototype.any = function (fun): boolean {
+    for(let i = 0; i < this.length; i++) {
+        if (fun(this[i])) {
+            return true
+        }
+    }
+    return false
 }

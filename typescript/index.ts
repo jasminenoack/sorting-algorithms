@@ -211,19 +211,23 @@ export function autoRunBoards(boardList: any[], boxHeight: number,
     }, delay)
 }
 
+function graphName(type: string, index: number, board: {[key: string]: any}) {
+    return `${index + 1}-${type} ${board.sort.constructor.title}`.substring(0, 20) + '...'
+}
+
 export function manageAutoRunCharts(boardList: any[], delay: number, id: string) {
     const strokeWidth = 3
     let data: any[] = [];
     boardList.forEach((board, index) => {
         data.push({
             values: board.sort.profile.swaps,
-            key: `${index + 1} - swaps`,
+            key: graphName('swaps', index, board),
             strokeWidth: strokeWidth,
         })
 
         data.push({
             values: board.sort.profile.comparisons,
-            key: `${index + 1} - comparisons`,
+            key: graphName('comparisons', index, board),
             strokeWidth: strokeWidth
         })
     })
@@ -253,12 +257,12 @@ export function manageAutoRunCharts(boardList: any[], delay: number, id: string)
             boardList.forEach((board, index) => {
                 data.push({
                     values: board.sort.profile.swaps,
-                    key: `${index + 1} - swaps`,
+                    key: graphName('swaps', index, board),
                     strokeWidth: strokeWidth
                 })
                 data.push({
                     values: board.sort.profile.comparisons,
-                    key: `${index + 1} - comparisons`,
+                    key: graphName('comparisons', index, board),
                     strokeWidth: strokeWidth
                 })
             })

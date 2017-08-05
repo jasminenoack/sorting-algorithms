@@ -76,7 +76,7 @@ export abstract class BaseSort {
                 x: this.steps,
                 y: this.comparisons
             })
-            this.nextItemToAdd = Math.ceil(this.nextItemToAdd * 1.2)
+            this.nextItemToAdd = Math.ceil(Math.min(this.nextItemToAdd * 1.2, this.nextItemToAdd + 16))
         }
     }
 

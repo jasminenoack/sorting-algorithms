@@ -1,0 +1,62 @@
+body {
+    color: #16FFBD;
+}
+
+a {
+    color:#12c998
+}
+
+.square {
+    background: #F070A1;
+}
+
+.queen {
+    background: #439f76;
+}
+
+.point.shadow {
+    fill: #bccbde
+}
+
+svg {
+    background: rgba(224, 89, 21, 0.5);
+}
+
+.wrapper {
+    background: rgba(230, 233, 240, 0.15);
+}
+
+.point.active {
+    fill: #431c5d;
+}
+.point.placed {
+    fill: #cdd422;
+}
+
+article {
+    padding: 10px;
+    background-color: rgba(195, 66, 113, 0.50);
+    margin: 10px;
+}   
+
+/* 
+Not currently used so not considered. 
+
+button {
+    background: #cb4e4e;
+    color: #fff;
+    box-shadow: 0 6px #ab3c3c;
+}
+
+button.active {
+    background: #ab3c3c;
+    box-shadow: 0 6px #cb4e4e;
+}
+
+select {
+    border: 1px solid #ab3c3c;
+    color: #fff;
+    background-color: #cb4e4e;
+} 
+*/
+

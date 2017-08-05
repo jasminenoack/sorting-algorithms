@@ -3,41 +3,55 @@
     <head>
         <meta charset="utf-8">
         <title>Algorithms</title>
+        <link rel="stylesheet" type="text/css" href="lib/nvd3.css">
         <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/colorSet2.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+        <script src="lib/d3.min.js"></script>
+        <script src="lib/nvd3.js"></script>
     </head>
     <body>
-        <h2>Algorithms</h2>
-        <h3>Why We Visualize Data</h3>
-        <p>
-            This is a site mostly built for me. Why build it? Well I find the best way to understand how things work is to really look at them.
-            To change them, to play with them, to implement them, and to edit them. I love algorithms. I do things with them on a daily basis.
-            I love to consider them to read about them, and to think about them. And although we do not as programmers implement many kinds algorithms on a daily basis.
-            (I'm not going to implement a sort when the language has a perfectly good one built it.) I believe it's important to know what the language is doing under the hood.
-            So I spend a lot of time playing with algorithms. How can we make them better? How can we understand them better?
-            To do this I very much believe that one important step is to understand what data looks like. How it behaves. How algorithms move and manipulate patterns.
-            To do this I use <a href="https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0" target='blank'>visualizations</a> This site is a collection of those visualizations.
-            They exist in many formats, orientations and settings because data dictates patterns. The result of running a sort of reversed data is
-            very different then the result of running the same code on ordered data. In these patterns we can find beauty and insight, and if we are lucky we
-            can begin to understand the magic. But I make no promises.
-        </p>
+        <content>
+            <Header>Algorithms</Header>
+            <article>
+                <h1>Why We Visualize Data</h1>
+                <p>
+                    This is a site mostly built for me. Why build it? Well I find the best way to understand how things work is to really look at them.
+                    To change them, to play with them, to implement them, and to edit them. I love algorithms. I do things with them on a daily basis.
+                    I love to consider them to read about them, and to think about them. And although we do not as programmers implement many kinds algorithms on a daily basis.
+                    (I'm not going to implement a sort when the language has a perfectly good one built it.) I believe it's important to know what the language is doing under the hood.
+                    So I spend a lot of time playing with algorithms. How can we make them better? How can we understand them better?
+                    To do this I very much believe that one important step is to understand what data looks like. How it behaves. How algorithms move and manipulate patterns.
+                    To do this I use <a href="https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0" target='blank'>visualizations</a> This site is a collection of those visualizations.
+                    They exist in many formats, orientations and settings because data dictates patterns. The result of running a sort of reversed data is
+                    very different then the result of running the same code on ordered data. In these patterns we can find beauty and insight, and if we are lucky we
+                    can begin to understand the magic. But I make no promises.
+                </p>
+            </article>
 
-        <h3>Sorting Algorithms</h3>
+            <article>
+                <h1>Sorting Algorithms</h1>
 
-        <h4><a href="bubble_sort.html">Bubble Sort</a></h4>
-        <p>
-            Bubble sort is a very inefficent exchange sort.
-        </p>
+                <h4><a href="bubble_sort.html">Bubble Sort</a></h4>
+                <p>
+                    Bubble sort is a very inefficent exchange sort.
+                </p>
 
-        <h4><a href="sort_comparison.html">Sort Comparisons</a></h4>
-        <p>
-            The sort comparison page allows the use to test data patterns for various sorting algorithms on various data configurations.
-            This allows the user to check behavior of sorts in a sandbox area.
-            <figure>
-                <img src='images/reverse_sorts.png'/>
-                <figcaption>Data patterns for sorts on a reversed array.</figcaption>
-            </figure>
-        </p>
+                <h4><a href="sort_comparison.html">Sort Comparisons</a></h4>
+                <p>
+                    The sort comparison page allows the use to test data patterns for various sorting algorithms on various data configurations.
+                    This allows the user to check behavior of sorts in a sandbox area.
+                    <figure>
+                        <div id="reverse-sorts"></div>
+                        <img src='images/reverse_sorts.png'/>
+                        <figcaption>Data patterns for sorts on a reversed array.</figcaption>
+                    </figure>
+                </p>
+            </article>
+        </content>
 
+        <script src="dist/utils.entry.js"></script>
         <script src="dist/queens.entry.js"></script>
+        <script src="dist/sortIndex.entry.js"></script>
     </body>
 </html>

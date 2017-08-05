@@ -124,7 +124,7 @@ var BaseSort = (function () {
                 x: this.steps,
                 y: this.comparisons
             });
-            this.nextItemToAdd = Math.ceil(this.nextItemToAdd * 1.2);
+            this.nextItemToAdd = Math.ceil(Math.min(this.nextItemToAdd * 1.2, this.nextItemToAdd + 16));
         }
     };
     BaseSort.prototype.reset = function () {
@@ -323,6 +323,99 @@ exports.ShuffleList = [
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Points = __webpack_require__(5);
+var Shuffles = __webpack_require__(1);
+var ValueTypes = __webpack_require__(3);
+var Verbosity;
+(function (Verbosity) {
+    Verbosity[Verbosity["None"] = 0] = "None";
+    Verbosity[Verbosity["Info"] = 1] = "Info";
+    Verbosity[Verbosity["Debug"] = 5] = "Debug";
+})(Verbosity = exports.Verbosity || (exports.Verbosity = {}));
+var Board = (function () {
+    function Board(size, shuffle, valueType, verbosity) {
+        if (shuffle === void 0) { shuffle = new Shuffles.RandomShuffle(); }
+        if (valueType === void 0) { valueType = new ValueTypes.Integer(); }
+        if (verbosity === void 0) { verbosity = Verbosity.Debug; }
+        this.shuffle = shuffle;
+        this.valueType = valueType;
+        this.verbosity = verbosity;
+        this.points = [];
+        this.setSize(size);
+        this.createValues();
+        this.shuffleBoard();
+    }
+    Board.prototype.createValues = function () {
+        var values = this.valueType.generate(this.length);
+        this.setPoints(values);
+        this._min = Math.min.apply(Math, values);
+        this._max = Math.max.apply(Math, values);
+    };
+    Board.prototype.shuffleBoard = function () {
+        var values = this.values();
+        this.shuffle.shuffle(values);
+        this.setPoints(values);
+    };
+    Board.prototype.setPoints = function (values) {
+        var that = this;
+        values.forEach(function (value, index) {
+            that.set(index, value);
+        });
+        this._min = Math.min.apply(Math, values);
+        this._max = Math.max.apply(Math, values);
+    };
+    Board.prototype.set = function (index, value) {
+        this.points[index].value = value;
+    };
+    Board.prototype.swap = function (index1, index2) {
+        var temp = this.get(index1);
+        this.points[index1] = this.get(index2);
+        this.points[index2] = temp;
+    };
+    Board.prototype.values = function () {
+        var items = [];
+        for (var i = 0; i < this.length; i++) {
+            items.push(this.points[i].value);
+        }
+        return items;
+    };
+    Board.prototype.setSize = function (size) {
+        this.size = size;
+        this.length = this.size.elemCount;
+        this.points = [];
+        for (var i = 0; i < this.length; i++) {
+            this.points.push(new Points.Point(i));
+        }
+    };
+    Board.prototype.get = function (index) {
+        return this.points[index];
+    };
+    Board.prototype.min = function () {
+        return this._min;
+    };
+    Board.prototype.max = function () {
+        return this._max;
+    };
+    Board.prototype.distribution = function () {
+        var dist = {};
+        var values = this.values();
+        values.forEach(function (value) {
+            dist[value] = (dist[value] || 0) + 1;
+        });
+        return dist;
+    };
+    return Board;
+}());
+exports.Board = Board;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -527,7 +620,7 @@ exports.valueTypeList = [
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -573,7 +666,7 @@ exports.Gnome = Gnome;
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -594,7 +687,7 @@ exports.Point = Point;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -691,13 +784,13 @@ exports.fewFew = {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var board_1 = __webpack_require__(19);
+var board_1 = __webpack_require__(2);
 function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
     var valueMin = board.min();
     var valueMax = board.max();
@@ -870,18 +963,21 @@ function autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, fin
     }, delay);
 }
 exports.autoRunBoards = autoRunBoards;
+function graphName(type, index, board) {
+    return (index + 1 + "-" + type + " " + board.sort.constructor.title).substring(0, 20) + '...';
+}
 function manageAutoRunCharts(boardList, delay, id) {
     var strokeWidth = 3;
     var data = [];
     boardList.forEach(function (board, index) {
         data.push({
             values: board.sort.profile.swaps,
-            key: index + 1 + " - swaps",
+            key: graphName('swaps', index, board),
             strokeWidth: strokeWidth,
         });
         data.push({
             values: board.sort.profile.comparisons,
-            key: index + 1 + " - comparisons",
+            key: graphName('comparisons', index, board),
             strokeWidth: strokeWidth
         });
     });
@@ -907,12 +1003,12 @@ function manageAutoRunCharts(boardList, delay, id) {
             boardList.forEach(function (board, index) {
                 data.push({
                     values: board.sort.profile.swaps,
-                    key: index + 1 + " - swaps",
+                    key: graphName('swaps', index, board),
                     strokeWidth: strokeWidth
                 });
                 data.push({
                     values: board.sort.profile.comparisons,
-                    key: index + 1 + " - comparisons",
+                    key: graphName('comparisons', index, board),
                     strokeWidth: strokeWidth
                 });
             });
@@ -929,7 +1025,7 @@ exports.manageAutoRunCharts = manageAutoRunCharts;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -938,18 +1034,18 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(8));
 __export(__webpack_require__(9));
 __export(__webpack_require__(10));
 __export(__webpack_require__(11));
 __export(__webpack_require__(12));
-__export(__webpack_require__(3));
 __export(__webpack_require__(13));
+__export(__webpack_require__(4));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
+__export(__webpack_require__(19));
 /*
     -- AA - sort http://www.dia.eui.upm.es/asignatu/pro_par/articulos/AASort.pdf
 
@@ -1155,7 +1251,7 @@ __export(__webpack_require__(18));
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1280,7 +1376,7 @@ exports.BogoSingleCompare = BogoSingleCompare;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1563,7 +1659,7 @@ exports.BubbleSortDontRestart = BubbleSortDontRestart;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1628,7 +1724,7 @@ exports.Cocktail = Cocktail;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1645,7 +1741,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var baseSort_1 = __webpack_require__(0);
-var gnome_1 = __webpack_require__(3);
+var gnome_1 = __webpack_require__(4);
 var Comb = (function (_super) {
     __extends(Comb, _super);
     function Comb() {
@@ -1839,7 +1935,7 @@ exports.CombGnomeLargeShrink10 = CombGnomeLargeShrink10;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1932,7 +2028,7 @@ exports.Cycle = Cycle;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2029,7 +2125,7 @@ exports.Heap = Heap;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2105,7 +2201,7 @@ exports.Insertion = Insertion;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2218,7 +2314,7 @@ exports.OddEvenConcurrent = OddEvenConcurrent;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2419,7 +2515,7 @@ exports.QuickSort3Random = QuickSort3Random;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2478,7 +2574,7 @@ exports.SelectionSort = SelectionSort;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2698,111 +2794,18 @@ exports.SmoothSetUpBottom = SmoothSetUpBottom;
 
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Points = __webpack_require__(4);
-var Shuffles = __webpack_require__(1);
-var ValueTypes = __webpack_require__(2);
-var Verbosity;
-(function (Verbosity) {
-    Verbosity[Verbosity["None"] = 0] = "None";
-    Verbosity[Verbosity["Info"] = 1] = "Info";
-    Verbosity[Verbosity["Debug"] = 5] = "Debug";
-})(Verbosity = exports.Verbosity || (exports.Verbosity = {}));
-var Board = (function () {
-    function Board(size, shuffle, valueType, verbosity) {
-        if (shuffle === void 0) { shuffle = new Shuffles.RandomShuffle(); }
-        if (valueType === void 0) { valueType = new ValueTypes.Integer(); }
-        if (verbosity === void 0) { verbosity = Verbosity.Debug; }
-        this.shuffle = shuffle;
-        this.valueType = valueType;
-        this.verbosity = verbosity;
-        this.points = [];
-        this.setSize(size);
-        this.createValues();
-        this.shuffleBoard();
-    }
-    Board.prototype.createValues = function () {
-        var values = this.valueType.generate(this.length);
-        this.setPoints(values);
-        this._min = Math.min.apply(Math, values);
-        this._max = Math.max.apply(Math, values);
-    };
-    Board.prototype.shuffleBoard = function () {
-        var values = this.values();
-        this.shuffle.shuffle(values);
-        this.setPoints(values);
-    };
-    Board.prototype.setPoints = function (values) {
-        var that = this;
-        values.forEach(function (value, index) {
-            that.set(index, value);
-        });
-        this._min = Math.min.apply(Math, values);
-        this._max = Math.max.apply(Math, values);
-    };
-    Board.prototype.set = function (index, value) {
-        this.points[index].value = value;
-    };
-    Board.prototype.swap = function (index1, index2) {
-        var temp = this.get(index1);
-        this.points[index1] = this.get(index2);
-        this.points[index2] = temp;
-    };
-    Board.prototype.values = function () {
-        var items = [];
-        for (var i = 0; i < this.length; i++) {
-            items.push(this.points[i].value);
-        }
-        return items;
-    };
-    Board.prototype.setSize = function (size) {
-        this.size = size;
-        this.length = this.size.elemCount;
-        this.points = [];
-        for (var i = 0; i < this.length; i++) {
-            this.points.push(new Points.Point(i));
-        }
-    };
-    Board.prototype.get = function (index) {
-        return this.points[index];
-    };
-    Board.prototype.min = function () {
-        return this._min;
-    };
-    Board.prototype.max = function () {
-        return this._max;
-    };
-    Board.prototype.distribution = function () {
-        var dist = {};
-        var values = this.values();
-        values.forEach(function (value) {
-            dist[value] = (dist[value] || 0) + 1;
-        });
-        return dist;
-    };
-    return Board;
-}());
-exports.Board = Board;
-
-
-/***/ }),
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Sizes = __webpack_require__(5);
+var Sizes = __webpack_require__(6);
 var Shuffles = __webpack_require__(1);
-var Index = __webpack_require__(6);
-var ValueTypes = __webpack_require__(2);
-var Sorts = __webpack_require__(7);
-var Boards = __webpack_require__(19);
+var Index = __webpack_require__(7);
+var ValueTypes = __webpack_require__(3);
+var Sorts = __webpack_require__(8);
+var Boards = __webpack_require__(2);
 var boardsElement = document.getElementById("boards");
 var createButton = document.getElementById("create");
 var boxHeight = 500;

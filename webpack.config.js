@@ -4,7 +4,8 @@ module.exports = {
         queens: "./typescript/page_runners/queensBackground.ts",
         test: "./typescript/page_runners/test.ts",
         utils: './typescript/page_runners/utils.ts',
-        bubble: './typescript/page_runners/bubblePage.ts'
+        bubble: './typescript/page_runners/bubblePage.ts',
+        sortIndex: './typescript/page_runners/sortIndex.ts'
     },
     output: {
         path: __dirname + "/dist",

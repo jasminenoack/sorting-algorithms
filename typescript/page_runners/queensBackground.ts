@@ -93,7 +93,7 @@ namespace QueensBackground {
         [null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null],
         [null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null],
     ]
-    let queensIndex
+    let queensIndex: number
 
     let body = document.getElementsByTagName('body')[0]
     let ul = document.createElement("ul")

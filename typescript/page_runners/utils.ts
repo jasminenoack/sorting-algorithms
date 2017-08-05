@@ -27,7 +27,7 @@ Array.prototype.range = function (length): any[] {
 }
 
 Array.prototype.sortNumbers = function(): any[] {
-    this.sort(function(x, y) {
+    this.sort(function(x: number, y: number) {
         if (x < y) {
             return -1
         } else if (y < x) {
@@ -77,10 +77,10 @@ Array.prototype.kShuffle = function(k): any[] {
 }
 
 Array.prototype.distribution = function (): {} {
-    let dist = {}
+    let dist: { [value: number]: number }  = {}
     let values = this
-    values.forEach((value) => {
-        dist[value] = (dist[value] || 0) + 1
+    values.forEach((value: number) => {
+        dist[value]= (dist[value] || 0) + 1
     })
     return dist
 }

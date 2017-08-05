@@ -1,6 +1,6 @@
 import * as Points from './point'
 import * as Shuffles from './shuffles'
-import * as ValueTypes from './ValueTypes'
+import * as ValueTypes from './valueTypes'
 import * as Sizes from './sizes'
 
 export class Board {
@@ -28,7 +28,7 @@ export class Board {
         this.shuffle.shuffle(values)
         this.setPoints(values)
     }
-    setPoints(values) {
+    setPoints(values: number[]) {
         let that = this
         values.forEach(function(value, index) {
             that.set(index, value)
@@ -36,10 +36,10 @@ export class Board {
         this._min = Math.min(...values)
         this._max = Math.max(...values)
     }
-    set(index, value) {
+    set(index: number, value: number) {
         this.points[index].value = value
     }
-    swap(index1, index2) {
+    swap(index1: number, index2: number) {
         let temp = this.get(index1)
         this.points[index1] = this.get(index2)
         this.points[index2] = temp
@@ -51,7 +51,7 @@ export class Board {
         }
         return items
     }
-    setSize(size) {
+    setSize(size: Sizes.Size) {
         this.size = size
         this.length = this.size.elemCount
         this.points = []
@@ -59,7 +59,7 @@ export class Board {
             this.points.push(new Points.Point(i))
         }
     }
-    get(index) {
+    get(index: number) {
         return this.points[index]
     }
     min() {
@@ -69,7 +69,7 @@ export class Board {
         return this._max
     }
     distribution() {
-        let dist = {}
+        let dist: {[value: number]: number} = {}
         let values = this.values()
         values.forEach((value) => {
             dist[value] = (dist[value] || 0) + 1

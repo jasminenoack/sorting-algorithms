@@ -1,4 +1,4 @@
-import {Boards} from '../board'
+import * as Boards from '../board'
 
 export abstract class BaseSort {
     steps: number

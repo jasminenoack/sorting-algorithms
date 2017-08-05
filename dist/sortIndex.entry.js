@@ -71,9 +71,10 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseSort = (function () {
-    function BaseSort(board) {
+    function BaseSort(board, trackAll) {
+        if (trackAll === void 0) { trackAll = false; }
         this.board = board;
-        this.nextItemToAdd = 1;
+        this.trackAll = trackAll;
         this.baseSetUp();
     }
     BaseSort.prototype.setUpNext = function () { };
@@ -124,7 +125,12 @@ var BaseSort = (function () {
                 x: this.steps,
                 y: this.comparisons
             });
-            this.nextItemToAdd = Math.ceil(Math.min(this.nextItemToAdd * 1.2, this.nextItemToAdd + 16));
+            if (this.trackAll) {
+                this.nextItemToAdd++;
+            }
+            else {
+                this.nextItemToAdd = Math.ceil(Math.min(this.nextItemToAdd * 1.1, this.nextItemToAdd + 16));
+            }
         }
     };
     BaseSort.prototype.reset = function () {
@@ -152,6 +158,7 @@ var BaseSort = (function () {
         this.ordered = true;
         this.placed = [];
         this.shadow = [];
+        this.nextItemToAdd = 1;
         this.setUp();
     };
     BaseSort.prototype.setUp = function () {
@@ -826,6 +833,21 @@ function centers(heightSpread, widthSpread, boxHeight, boxWidth, value, index, v
 function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
     return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
 }
+function getSortString(sort, index) {
+    return index + "-" + sort.constructor.title + ". <b>Order Type</b>: " + sort.board.shuffle.title + ". <b>Value Type</b>: " + sort.board.valueType.title + ". <b>Point Count</b>: " + sort.board.size.label + ".";
+}
+function createBoardList(boardList, element) {
+    var wrapper = document.createElement('div');
+    boardList.forEach(function (board, index) {
+        var p = document.createElement('p');
+        p.classList.add('list-wrapper');
+        p.innerHTML = getSortString(board.sort, index + 1) + ' <span class="remove"><u>Remove</u></button>';
+        wrapper.appendChild(p);
+    });
+    element.innerHTML = '';
+    element.appendChild(wrapper);
+}
+exports.createBoardList = createBoardList;
 function getTextContent(sort) {
     return "<div>\n        <span class=\"nowrap\">Order Type: " + sort.board.shuffle.title + ".</span>\n        <span class=\"nowrap\">Value Type: " + sort.board.valueType.title + ".</span>\n        <span class=\"nowrap\">Point Count: " + sort.board.size.label + ".</span>\n        <span class=\"nowrap\">Steps: " + sort.steps + ".</span>\n        <span class=\"nowrap\">Comparisons: " + sort.comparisons + ".</span>\n        <span class=\"nowrap\">Moves: " + sort.swaps + ".</span>\n    </div>";
 }
@@ -926,16 +948,6 @@ function reRenderBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElemen
     boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index]);
 }
 exports.reRenderBoard = reRenderBoard;
-function createDelegatedEvent(eventNode, eventType, fun, selector) {
-    var listener = eventNode.addEventListener(eventType, function (event) {
-        var currentTarget = event.target;
-        if (event.target.matches(selector)) {
-            fun(event, event.target);
-        }
-    });
-    return listener;
-}
-exports.createDelegatedEvent = createDelegatedEvent;
 function closestParent(node, selector) {
     if (node.matches(selector)) {
         return node;
@@ -948,6 +960,38 @@ function closestParent(node, selector) {
     }
 }
 exports.closestParent = closestParent;
+function createDelegatedEvent(eventNode, eventType, fun, selector) {
+    var listener = eventNode.addEventListener(eventType, function (event) {
+        var currentTarget = event.target;
+        var foundClosestParent = closestParent(currentTarget, selector);
+        if (foundClosestParent) {
+            fun(event, event.target);
+        }
+    });
+    return listener;
+}
+exports.createDelegatedEvent = createDelegatedEvent;
+function functionRunBoardsWithoutRender(boardList, delay, finishDelay) {
+    var autoRun = function () {
+        if (boardList.any(function (board) { return !board.sort.done; })) {
+            for (var i = 0; i < boardList.length; i++) {
+                // update all points
+                var boardData = boardList[i];
+                var sort = boardData.sort;
+                var board = boardData.board;
+                if (!sort.done) {
+                    var times = Math.min(board.size.elemCount / 100, 100);
+                    for (var i_2 = 0; i_2 < board.size.elemCount / 100; i_2++) {
+                        sort.next();
+                    }
+                }
+            }
+            setTimeout(autoRun, delay);
+        }
+    };
+    setTimeout(autoRun, delay);
+}
+exports.functionRunBoardsWithoutRender = functionRunBoardsWithoutRender;
 function autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, finishDelay, check) {
     if (!check) {
         check = function (board) { return !board.sort.done; };
@@ -970,20 +1014,25 @@ exports.autoRunBoards = autoRunBoards;
 function graphName(type, index, board) {
     return (index + 1 + "-" + type + " " + board.sort.constructor.title).substring(0, 20) + '...';
 }
-function manageAutoRunCharts(boardList, delay, id) {
+function manageAutoRunCharts(boardList, delay, id, names, callback) {
+    if (names === void 0) { names = ['swaps', 'comps']; }
     var strokeWidth = 3;
     var data = [];
     boardList.forEach(function (board, index) {
-        data.push({
-            values: board.sort.profile.swaps,
-            key: graphName('swaps', index, board),
-            strokeWidth: strokeWidth,
-        });
-        data.push({
-            values: board.sort.profile.comparisons,
-            key: graphName('comps', index, board),
-            strokeWidth: strokeWidth
-        });
+        if (names.indexOf("swaps") !== -1) {
+            data.push({
+                values: board.sort.profile.swaps,
+                key: graphName('swaps', index, board),
+                strokeWidth: strokeWidth
+            });
+        }
+        if (names.indexOf("comps") !== -1) {
+            data.push({
+                values: board.sort.profile.comparisons,
+                key: graphName('comps', index, board),
+                strokeWidth: strokeWidth
+            });
+        }
     });
     var chart = nv.models.lineChart();
     chart.options({
@@ -997,7 +1046,8 @@ function manageAutoRunCharts(boardList, delay, id) {
     chart.yAxis
         .axisLabel('Count')
         .tickFormat(d3.format(',.0f'));
-    d3.select('#' + id).append('svg')
+    document.getElementById(id).innerHTML = '<svg class="graph"></svg>';
+    d3.select('#' + id).select('svg')
         .datum(data)
         .call(chart);
     nv.utils.windowResize(chart.update);
@@ -1005,21 +1055,30 @@ function manageAutoRunCharts(boardList, delay, id) {
         if (boardList.any(function (board) { return !board.sort.done; })) {
             data = [];
             boardList.forEach(function (board, index) {
-                data.push({
-                    values: board.sort.profile.swaps,
-                    key: graphName('swaps', index, board),
-                    strokeWidth: strokeWidth
-                });
-                data.push({
-                    values: board.sort.profile.comparisons,
-                    key: graphName('comps', index, board),
-                    strokeWidth: strokeWidth
-                });
+                if (names.indexOf("swaps") !== -1) {
+                    data.push({
+                        values: board.sort.profile.swaps,
+                        key: graphName('swaps', index, board),
+                        strokeWidth: strokeWidth
+                    });
+                }
+                if (names.indexOf("comps") !== -1) {
+                    data.push({
+                        values: board.sort.profile.comparisons,
+                        key: graphName('comps', index, board),
+                        strokeWidth: strokeWidth
+                    });
+                }
             });
             d3.select('#' + id).select('svg')
                 .datum(data)
                 .call(chart);
             setTimeout(processNext, delay);
+        }
+        else {
+            if (callback) {
+                callback();
+            }
         }
     };
     var interval = setTimeout(processNext, delay);
@@ -1312,6 +1371,7 @@ var Bogo = (function (_super) {
         }
         this.swaps += difference / 2;
         this.checkSorted();
+        this.trackProfile();
         return currentNodes;
     };
     Bogo.title = 'Bogo';
@@ -1352,6 +1412,7 @@ var BogoSingle = (function (_super) {
         var currentNodes = this.currentNodes();
         _super.prototype.next.call(this);
         this.checkSorted();
+        this.trackProfile();
         return currentNodes;
     };
     BogoSingle.title = "Bogo(Single Swap)";
@@ -1824,7 +1885,14 @@ var CombGnome5 = (function (_super) {
             return this.gnome.currentNodes();
         }
     };
+    CombGnome5.prototype.reset = function () {
+        _super.prototype.reset.call(this);
+        this.gnome.done = false;
+    };
     CombGnome5.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
         var currentNodes;
         if (this.comb.gap >= this.gnomeSwitchValue) {
             currentNodes = this.comb.currentNodes();
@@ -1836,6 +1904,8 @@ var CombGnome5 = (function (_super) {
         this.steps = this.comb.steps + this.gnome.steps;
         this.swaps = this.comb.swaps + this.gnome.swaps;
         this.comparisons = this.comb.comparisons + this.gnome.comparisons;
+        this.done = this.gnome.done;
+        this.trackProfile();
         return currentNodes;
     };
     CombGnome5.title = "Comb & Gnome(at gap 5)";
@@ -1980,6 +2050,7 @@ var Cycle = (function (_super) {
         var values = this.board.values();
         this.lesserThanComparison(values);
         this.setUpNext();
+        this.trackProfile();
         return currentNodes;
     };
     Cycle.prototype.lesserThanComparison = function (values) {
@@ -2119,6 +2190,7 @@ var Heap = (function (_super) {
         if (this.comparisonNode === 0) {
             this.done = true;
         }
+        this.trackProfile();
         return currentNodes;
     };
     Heap.title = "Heap Sort";
@@ -2195,6 +2267,7 @@ var Insertion = (function (_super) {
         if (this.baseNode === this.length) {
             this.done = true;
         }
+        this.trackProfile();
         return nodes;
     };
     Insertion.title = "Insertion Sort";
@@ -2442,6 +2515,7 @@ var QuickSort2 = (function (_super) {
             this.addToUpdate = [];
         }
         this.setUpNext();
+        this.trackProfile();
         return valuesToUpdate;
     };
     QuickSort2.title = "Quick Sort(Left Partition)";
@@ -2568,6 +2642,7 @@ var SelectionSort = (function (_super) {
             this.baseNode = this.comparisonNode;
         }
         this.setUpNext();
+        this.trackProfile();
         return currentNodes;
     };
     SelectionSort.title = "Selection Sort";
@@ -2682,6 +2757,7 @@ var Smooth = (function (_super) {
         if (!this.roots.length && !(this.fromBottom && this.baseNode < this.length)) {
             this.done = true;
         }
+        this.trackProfile();
         return nodes;
     };
     Smooth.prototype.addNextNode = function (index) {

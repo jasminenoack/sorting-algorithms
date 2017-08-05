@@ -48,6 +48,22 @@ function getRadius(boxHeight: number, heightSpread: number, boxWidth: number, wi
     ), 2)
 }
 
+function getSortString (sort: BaseSort, index: number) {
+    return `${index}-${(sort.constructor as any).title}. <b>Order Type</b>: ${sort.board.shuffle.title}. <b>Value Type</b>: ${sort.board.valueType.title}. <b>Point Count</b>: ${sort.board.size.label}.`
+}
+
+export function createBoardList(boardList: any[], element: HTMLElement) {
+    let wrapper = document.createElement('div');
+    boardList.forEach((board, index) => {
+        const p = document.createElement('p')
+        p.classList.add('list-wrapper')
+        p.innerHTML = getSortString(board.sort, index + 1) + ' <span class="remove"><u>Remove</u></button>'
+        wrapper.appendChild(p)
+    })
+    element.innerHTML = ''
+    element.appendChild(wrapper)
+}
+
 function getTextContent (sort: BaseSort) {
     return `<div>
         <span class="nowrap">Order Type: ${sort.board.shuffle.title}.</span>
@@ -172,16 +188,6 @@ export function reRenderBoard (index: number, Sort: BaseSort, boardList: any[], 
     boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName('wrapper')[index])
 }
 
-export function createDelegatedEvent(eventNode: HTMLElement, eventType: string, fun: (event: Event, target: HTMLElement) => void, selector: string) {
-    let listener = eventNode.addEventListener(eventType, function(event) {
-        let currentTarget = event.target
-        if ((event.target as HTMLElement).matches(selector)) {
-            fun(event, (event.target as HTMLElement))
-        }
-    })
-    return listener
-}
-
 export function closestParent(node: HTMLElement, selector: string): HTMLElement {
     if (node.matches(selector)) {
         return node
@@ -190,6 +196,40 @@ export function closestParent(node: HTMLElement, selector: string): HTMLElement 
     } else {
         return closestParent(node.parentElement, selector)
     }
+}
+
+export function createDelegatedEvent(eventNode: HTMLElement, eventType: string, fun: (event: Event, target: HTMLElement) => void, selector: string) {
+    let listener = eventNode.addEventListener(eventType, function(event) {
+        let currentTarget = event.target
+        let foundClosestParent: HTMLElement = closestParent(currentTarget as HTMLElement, selector)
+        if (foundClosestParent) {
+            fun(event, (event.target as HTMLElement))
+        }
+    })
+    return listener
+}
+
+export function functionRunBoardsWithoutRender(
+    boardList: any[], delay: number, finishDelay: number
+) {
+    let autoRun = () => {
+        if ((boardList as any).any((board: { [key: string]: Board | BaseSort }[]) => !(board.sort as any).done)) {
+            for (let i = 0; i < boardList.length; i++) {
+                // update all points
+                let boardData = boardList[i]
+                let sort = boardData.sort
+                let board = boardData.board
+                if (!sort.done) {
+                    let times = Math.min(board.size.elemCount / 100, 100)
+                    for (let i = 0; i < board.size.elemCount / 100; i++) {
+                        sort.next()
+                    }
+                }
+            }
+            setTimeout(autoRun, delay)
+        }
+    }
+    setTimeout(autoRun, delay)
 }
 
 export function autoRunBoards(boardList: any[], boxHeight: number, 
@@ -219,21 +259,24 @@ function graphName(type: string, index: number, board: {[key: string]: any}) {
     return `${index + 1}-${type} ${board.sort.constructor.title}`.substring(0, 20) + '...'
 }
 
-export function manageAutoRunCharts(boardList: any[], delay: number, id: string) {
+export function manageAutoRunCharts(boardList: any[], delay: number, id: string, names: string[] = ['swaps', 'comps'], callback?: () => void) {
     const strokeWidth = 3
     let data: any[] = [];
     boardList.forEach((board, index) => {
-        data.push({
-            values: board.sort.profile.swaps,
-            key: graphName('swaps', index, board),
-            strokeWidth: strokeWidth,
-        })
-
-        data.push({
-            values: board.sort.profile.comparisons,
-            key: graphName('comps', index, board),
-            strokeWidth: strokeWidth
-        })
+        if (names.indexOf("swaps") !== -1) {
+            data.push({
+                values: board.sort.profile.swaps,
+                key: graphName('swaps', index, board),
+                strokeWidth: strokeWidth
+            })
+        }
+        if (names.indexOf("comps") !== -1) {
+            data.push({
+                values: board.sort.profile.comparisons,
+                key: graphName('comps', index, board),
+                strokeWidth: strokeWidth
+            })
+        }
     })
 
     var chart: any = nv.models.lineChart();
@@ -249,7 +292,9 @@ export function manageAutoRunCharts(boardList: any[], delay: number, id: string)
         .axisLabel('Count')
         .tickFormat(d3.format(',.0f'));
 
-    d3.select('#' + id).append('svg')
+    document.getElementById(id).innerHTML = '<svg class="graph"></svg>'
+
+    d3.select('#' + id).select('svg')
         .datum(data)
         .call(chart);
     nv.utils.windowResize(chart.update);
@@ -259,22 +304,30 @@ export function manageAutoRunCharts(boardList: any[], delay: number, id: string)
             data = [];
 
             boardList.forEach((board, index) => {
-                data.push({
-                    values: board.sort.profile.swaps,
-                    key: graphName('swaps', index, board),
-                    strokeWidth: strokeWidth
-                })
-                data.push({
-                    values: board.sort.profile.comparisons,
-                    key: graphName('comps', index, board),
-                    strokeWidth: strokeWidth
-                })
+                if (names.indexOf("swaps") !== -1) {
+                    data.push({
+                        values: board.sort.profile.swaps,
+                        key: graphName('swaps', index, board),
+                        strokeWidth: strokeWidth
+                    })
+                }
+                if (names.indexOf("comps") !== -1) {
+                    data.push({
+                        values: board.sort.profile.comparisons,
+                        key: graphName('comps', index, board),
+                        strokeWidth: strokeWidth
+                    })
+                }
             })
 
             d3.select('#' + id).select('svg')
                 .datum(data)
                 .call(chart);
             setTimeout(processNext, delay)
+        } else {
+            if(callback) {
+                callback()
+            }
         }
     }
 

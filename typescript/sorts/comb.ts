@@ -65,7 +65,15 @@ export class CombGnome5 extends BaseSort {
         }
     }
 
+    reset() {
+        super.reset()
+        this.gnome.done = false
+    }
+
     next() {
+        if (this.done) {
+            return []
+        }
         let currentNodes
         if (this.comb.gap >= this.gnomeSwitchValue) {
             currentNodes = this.comb.currentNodes()
@@ -76,6 +84,8 @@ export class CombGnome5 extends BaseSort {
         this.steps = this.comb.steps + this.gnome.steps
         this.swaps = this.comb.swaps + this.gnome.swaps
         this.comparisons = this.comb.comparisons + this.gnome.comparisons
+        this.done = this.gnome.done
+        this.trackProfile()
         return currentNodes
     }
 }

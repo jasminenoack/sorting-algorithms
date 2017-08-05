@@ -36,6 +36,7 @@ export class SelectionSort extends BaseSort {
             this.baseNode = this.comparisonNode
         }
         this.setUpNext()
+        this.trackProfile()
         return currentNodes
     }
 }

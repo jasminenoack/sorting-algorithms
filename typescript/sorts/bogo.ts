@@ -40,6 +40,7 @@ export class Bogo extends BaseSort {
         }
         this.swaps += difference / 2
         this.checkSorted()
+        this.trackProfile()
         return currentNodes
     }
 }
@@ -79,6 +80,7 @@ export class BogoSingle extends BaseSort {
         let currentNodes = this.currentNodes()
         super.next()
         this.checkSorted()
+        this.trackProfile()
         return currentNodes
     }
 }

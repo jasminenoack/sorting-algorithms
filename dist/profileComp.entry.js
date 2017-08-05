@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ 	return __webpack_require__(__webpack_require__.s = 26);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2877,7 +2877,9 @@ exports.SmoothSetUpBottom = SmoothSetUpBottom;
 /* 21 */,
 /* 22 */,
 /* 23 */,
-/* 24 */
+/* 24 */,
+/* 25 */,
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2889,198 +2891,126 @@ var Index = __webpack_require__(7);
 var ValueTypes = __webpack_require__(3);
 var Sorts = __webpack_require__(8);
 var Boards = __webpack_require__(2);
-// import { BaseSort } from '../sorts/baseSort'
-var Bubble = Sorts.BubbleNonOptimized;
-var BubbleShortCircuit = Sorts.Bubble;
-var BubbleSkipLast = Sorts.BubbleSkipNoShortCircuit;
-var BubbleFullyOptimized = Sorts.BubbleSkipsSorted;
-var SimpleBubbleElement;
-(function (SimpleBubbleElement) {
-    var simpleBubbleElement = document.getElementById('bubble-example');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
-    var boardList = [];
-    var size = Sizes._25;
-    var valueType = new ValueTypes.Integer();
-    var shuffle = new Shuffles.RandomShuffle();
-    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
-    var sort = new Bubble(board);
+var graphElement = document.getElementById("graph");
+var oldGraphs = document.getElementById('previous');
+var createButton = document.getElementById("create");
+var boxHeight = 500;
+var boxWidth = 500;
+var running = null;
+var delay = 100;
+var listDisplayElement = document.getElementById('sorts');
+var boardList = [];
+// setup size dropdown
+var sizes = Object.values(Sizes);
+var sizeElement = document.getElementById("size");
+sizes.forEach(function (size, index) {
+    var optionElement = document.createElement('option');
+    optionElement.value = index + '';
+    optionElement.textContent = size.label;
+    if (optionElement.label === "25") {
+        optionElement.setAttribute('selected', '1');
+    }
+    sizeElement.appendChild(optionElement);
+});
+// set up shuffles
+var orders = Shuffles.ShuffleList;
+var orderSelect = document.getElementById('order');
+orders.forEach(function (shuffle, index) {
+    var optionElement = document.createElement('option');
+    optionElement.value = index + '';
+    optionElement.textContent = shuffle.title;
+    if (shuffle.title === "Random") {
+        optionElement.setAttribute('selected', '1');
+    }
+    orderSelect.appendChild(optionElement);
+});
+// set up value types
+var valueTypes = ValueTypes.valueTypeList;
+var valueTypeSelect = document.getElementById('value-type');
+valueTypes.forEach(function (valueType, index) {
+    var optionElement = document.createElement('option');
+    optionElement.value = index + '';
+    optionElement.textContent = valueType.title;
+    if (valueType.title === "Range") {
+        optionElement.setAttribute('selected', '1');
+    }
+    valueTypeSelect.appendChild(optionElement);
+});
+var sorts = Object.values(Sorts);
+var sortElement = document.getElementById("sort");
+sorts.forEach(function (sort, index) {
+    var optionElement = document.createElement('option');
+    optionElement.value = index + '';
+    optionElement.textContent = sort.title;
+    if (sort.title === "Comb Sort") {
+        optionElement.setAttribute('selected', '1');
+    }
+    sortElement.appendChild(optionElement);
+});
+// when click create
+createButton.addEventListener('click', function () {
+    var size = sizes[sizeElement.value];
+    var value = valueTypes[valueTypeSelect.value];
+    var order = orders[orderSelect.value];
+    var Sort = sorts[sortElement.value];
+    // let board = new Boards.Board(size)
+    var board = new Boards.Board(size, order, value);
     boardList.push({
         board: board,
-        sort: sort
+        sort: new Sort(board, true)
     });
-    Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, simpleBubbleElement);
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, simpleBubbleElement, delay, delayOnComplete);
-})(SimpleBubbleElement || (SimpleBubbleElement = {}));
-var BubbleOptimizations;
-(function (BubbleOptimizations) {
-    var OptimizationsElement = document.getElementById('bubble-optimizations');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
-    var size = Sizes._25;
-    var valueType = new ValueTypes.Integer();
-    var shuffle = new Shuffles.RandomShuffle();
-    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort1 = new Bubble(board1);
-    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort2 = new BubbleShortCircuit(board2);
-    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort3 = new BubbleSkipLast(board3);
-    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort4 = new BubbleFullyOptimized(board4);
-    var boardList = [
-        {
-            board: board1,
-            sort: sort1
-        },
-        {
-            board: board2,
-            sort: sort2
-        },
-        {
-            board: board3,
-            sort: sort3
-        },
-        {
-            board: board4,
-            sort: sort4
+    Index.createBoardList(boardList, listDisplayElement);
+});
+Index.createDelegatedEvent(listDisplayElement, 'click', function (event, target) {
+    var wrapperElement = Index.closestParent(target, '.list-wrapper');
+    var wrappers = document.getElementsByClassName('list-wrapper');
+    for (var i = 0; i < wrappers.length; i++) {
+        if (wrappers[i] === wrapperElement) {
+            boardList.splice(i, 1);
+            break;
         }
-    ];
-    boardList.forEach(function (board, index) {
-        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, OptimizationsElement);
-    });
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, OptimizationsElement, delay, delayOnComplete);
-    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart');
-})(BubbleOptimizations || (BubbleOptimizations = {}));
-var BubbleShuffles;
-(function (BubbleShuffles) {
-    var ShufflesElement = document.getElementById('bubble-shuffles');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
-    var size = Sizes._25;
-    var valueType = new ValueTypes.Integer();
-    var board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info);
-    var sort1 = new Sorts.BubbleSkipsSorted(board1);
-    var board2 = new Boards.Board(size, new Shuffles.K1Shuffle(), valueType, Boards.Verbosity.Info);
-    var sort2 = new Sorts.BubbleSkipsSorted(board2);
-    var board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info);
-    var sort3 = new Sorts.BubbleSkipsSorted(board3);
-    var board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info);
-    var sort4 = new Sorts.BubbleSkipsSorted(board4);
-    var boardList = [
-        {
-            board: board1,
-            sort: sort1
-        },
-        {
-            board: board2,
-            sort: sort2
-        },
-        {
-            board: board3,
-            sort: sort3
-        },
-        {
-            board: board4,
-            sort: sort4
+    }
+    Index.createBoardList(boardList, listDisplayElement);
+}, '.remove');
+var runElement = document.getElementById("run");
+runElement.addEventListener('click', function (event) {
+    if (!running) {
+        running = true;
+        var dataTypes = [];
+        if (document.getElementById('swaps').checked) {
+            dataTypes.push('swaps');
         }
-    ];
-    boardList.forEach(function (board, index) {
-        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ShufflesElement);
-    });
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, ShufflesElement, delay, delayOnComplete);
-    Index.manageAutoRunCharts(boardList, 1000, 'shuffle-chart');
-})(BubbleShuffles || (BubbleShuffles = {}));
-var BubbleConCur;
-(function (BubbleConCur) {
-    var ConcurElement = document.getElementById('bubble-concur');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
-    var size = Sizes._25;
-    var shuffle = new Shuffles.RandomShuffle();
-    var valueType = new ValueTypes.Integer();
-    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort1 = new Sorts.BubbleSortConcurrent(board1);
-    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort2 = new Sorts.BubbleSortConcurrent5(board2);
-    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort3 = new Sorts.BubbleSortConcurrent10(board3);
-    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort4 = new Sorts.OddEvenConcurrent(board4);
-    var boardList = [
-        {
-            board: board1,
-            sort: sort1
-        },
-        {
-            board: board2,
-            sort: sort2
-        },
-        {
-            board: board3,
-            sort: sort3
-        },
-        {
-            board: board4,
-            sort: sort4
+        if (document.getElementById('comps').checked) {
+            dataTypes.push('comps');
         }
-    ];
-    boardList.forEach(function (board, index) {
-        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ConcurElement);
-    });
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, ConcurElement, delay, delayOnComplete);
-    Index.manageAutoRunCharts(boardList, 1000, 'concur-chart');
-})(BubbleConCur || (BubbleConCur = {}));
-var BubbleDontRestart;
-(function (BubbleDontRestart) {
-    var RestartElement = document.getElementById('bubble-dont-restart');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
-    var size = Sizes._25;
-    var shuffle = new Shuffles.RandomShuffle();
-    var valueType = new ValueTypes.Integer();
-    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort1 = new BubbleFullyOptimized(board1);
-    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort2 = new Sorts.BubbleSortDontRestart(board2);
-    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort3 = new Sorts.Gnome(board3);
-    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort4 = new Sorts.Cocktail(board4);
-    var boardList = [
-        {
-            board: board1,
-            sort: sort1
-        },
-        {
-            board: board2,
-            sort: sort2
-        },
-        {
-            board: board3,
-            sort: sort3
-        },
-        {
-            board: board4,
-            sort: sort4
+        if (!(boardList.length && dataTypes.length)) {
+            running = false;
+            return;
         }
-    ];
-    boardList.forEach(function (board, index) {
-        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, RestartElement);
-    });
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, RestartElement, delay, delayOnComplete);
-    Index.manageAutoRunCharts(boardList, 1000, 'restart-chart');
-})(BubbleDontRestart || (BubbleDontRestart = {}));
+        runElement.disabled = true;
+        createButton.disabled = true;
+        Index.functionRunBoardsWithoutRender(boardList, 100, 1000);
+        Index.manageAutoRunCharts(boardList, 1000, 'graph', dataTypes, function () {
+            boardList.forEach(function (board) {
+                board.sort.reset();
+            });
+            var svg = graphElement.getElementsByTagName('svg')[0];
+            var first = oldGraphs.firstChild;
+            var newsortList = listDisplayElement.cloneNode(true);
+            if (first) {
+                oldGraphs.insertBefore(svg, first);
+            }
+            else {
+                oldGraphs.appendChild(svg);
+            }
+            oldGraphs.insertBefore(newsortList, svg);
+            graphElement.innerHTML = "";
+            runElement.disabled = false;
+            createButton.disabled = false;
+            running = false;
+        });
+    }
+});
 
 
 /***/ })

@@ -34,6 +34,7 @@ export class Cycle extends BaseSort {
         let values = this.board.values()
         this.lesserThanComparison(values)
         this.setUpNext()
+        this.trackProfile()
         return currentNodes
     }
 

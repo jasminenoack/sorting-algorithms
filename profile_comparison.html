@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="lib/nvd3.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/colorSet3.css">
+    <script src="lib/d3.min.js"></script>
+    <script src="lib/nvd3.js"></script>
+</head>
+
+<body>
+    <header>Sorting Profiles</header>
+    <a href="index.html">
+        << Back</a>
+        <article class="sorting">
+            <div class="controls">
+                <div>
+                    <label>
+                        Sort:
+                        <select id="sort">
+                        </select>
+                    </label>
+                        <label>
+                        Point count:
+                        <select id="size">
+                        </select>
+                    <label>
+
+                    <label>
+                        Order:
+                        <select id="order">
+                        </select>
+                    <label>
+
+                    <label>
+                        Values:
+                        <select id="value-type">
+                        </select>
+                    <label>
+                </div>
+                <div>
+                    <label>Swaps<input type="checkbox" id="swaps" checked></label>
+                    <label>Comparisons<input type="checkbox" id="comps"></label>
+                </div>
+                <div>
+                    <button id="create">Create</button>
+                    <button id="run">Run</button>
+                </div>
+                <div>
+                    Sorts: <span id="sorts"></sorts>
+                </div>
+            </div>
+            <div id="graph">
+            </div>
+
+            <div id="previous">
+            </div>
+        </article>
+
+        <script src="dist/utils.entry.js"></script>
+        <script src="dist/ProfileComp.entry.js"></script>
+        <script src="dist/queens.entry.js"></script>
+    </body>
+
+</html>

@@ -124,6 +124,7 @@ export class QuickSort2 extends BaseSort {
             this.addToUpdate = []
         }
         this.setUpNext()
+        this.trackProfile()
         return valuesToUpdate
     }
 }

@@ -20,9 +20,9 @@ export abstract class BaseSort {
     lastSwapped: boolean
     static links: any[]
     profile: { [key: string]: {[key: string]: number}[] }
-    nextItemToAdd: number = 1
+    nextItemToAdd: number
 
-    constructor(public board: Boards.Board) {
+    constructor(public board: Boards.Board, public trackAll: boolean = false) {
         this.baseSetUp()
     }
 
@@ -76,7 +76,11 @@ export abstract class BaseSort {
                 x: this.steps,
                 y: this.comparisons
             })
-            this.nextItemToAdd = Math.ceil(Math.min(this.nextItemToAdd * 1.2, this.nextItemToAdd + 16))
+            if (this.trackAll) {
+                this.nextItemToAdd++
+            } else {
+                this.nextItemToAdd = Math.ceil(Math.min(this.nextItemToAdd * 1.1, this.nextItemToAdd + 16))
+            }
         }
     }
 
@@ -106,6 +110,7 @@ export abstract class BaseSort {
         this.ordered = true
         this.placed = []
         this.shadow = []
+        this.nextItemToAdd = 1
         this.setUp()
     }
 

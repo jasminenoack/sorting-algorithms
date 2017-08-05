@@ -165,6 +165,13 @@ button.active {
     box-shadow: 0 6px #cb4e4e;
 }
 
+.auto button, button:disabled {
+    background: #ccc;
+    box-shadow: 0 6px #aaa;
+    color: #888;
+    opacity: 0.3;
+}
+
 select {
     background: transparent;
     border: none;
@@ -223,5 +230,9 @@ content div.three .wrapper {
 }
 
 .graph {
-    height: 400px
+    height: 400px !important
+}
+
+#previous {
+    border-top: 10px solid #ccc
 }

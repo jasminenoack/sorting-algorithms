@@ -71,6 +71,7 @@ export class Heap extends BaseSort {
         if(this.comparisonNode === 0) {
             this.done = true
         }
+        this.trackProfile()
         return currentNodes
     }
 }

@@ -4,14 +4,16 @@ import * as Index from '../index'
 import * as ValueTypes from '../valueTypes'
 import * as Sorts from '../sorts/sorts'
 import * as Boards from '../board'
-import {BaseSort} from '../sorts/baseSort'
+import { BaseSort } from '../sorts/baseSort'
 
-let boardsElement = document.getElementById("boards")
+let graphElement = document.getElementById("graph")
+let oldGraphs = document.getElementById('previous')
 let createButton = document.getElementById("create")
 let boxHeight = 500
 let boxWidth = 500
-let autoInterval: any = null
+let running: boolean = null
 let delay = 100
+let listDisplayElement = document.getElementById('sorts')
 
 let boardList: any[] = []
 
@@ -22,7 +24,7 @@ sizes.forEach((size: Sizes.Size, index: number) => {
     let optionElement = document.createElement('option')
     optionElement.value = index + ''
     optionElement.textContent = size.label
-    if (optionElement.label === "50") {
+    if (optionElement.label === "25") {
         optionElement.setAttribute('selected', '1')
     }
     sizeElement.appendChild(optionElement)
@@ -78,53 +80,64 @@ createButton.addEventListener('click', function () {
     let board = new Boards.Board(size, order, value)
     boardList.push({
         board: board,
-        sort: new Sort(board)
+        sort: new Sort(board, true)
     })
-    Index.createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement)
+    Index.createBoardList(boardList, listDisplayElement)
 })
 
-let stepElement = document.getElementById("step")
-let boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth, boardsElement)
-stepElement.addEventListener('click', boundStep)
-
-Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
-    let wrapperElement = Index.closestParent(target, '.wrapper')
-    let wrappers = document.getElementsByClassName('wrapper')
+Index.createDelegatedEvent(listDisplayElement, 'click', function (event, target) {
+    let wrapperElement = Index.closestParent(target, '.list-wrapper')
+    let wrappers = document.getElementsByClassName('list-wrapper')
     for (let i = 0; i < wrappers.length; i++) {
         if (wrappers[i] === wrapperElement) {
             boardList.splice(i, 1)
             break
         }
     }
-    wrapperElement.remove()
+    Index.createBoardList(boardList, listDisplayElement)
 }, '.remove')
 
-Index.createDelegatedEvent(boardsElement, 'click', function (event, target) {
-    let wrapperElement = Index.closestParent(target, '.wrapper')
-    let wrappers = document.getElementsByClassName('wrapper')
-    let wrapperIndex
-    for (let i = 0; i < wrappers.length; i++) {
-        if (wrappers[i] === wrapperElement) {
-            wrapperIndex = i
-            break
-        }
-    }
-    let item = boardList[wrapperIndex]
-    item.sort.reset()
-    Index.reRenderBoard(wrapperIndex, item.sort.constructor, boardList, boxHeight, boxWidth, boardsElement)
-}, '.reset')
+let runElement = document.getElementById("run")
+runElement.addEventListener('click', function (event) {
+    if (!running) {
+        running = true;
 
-let autoElement = document.getElementById("auto")
-autoElement.addEventListener('click', function (event) {
-    if (autoInterval) {
-        clearInterval(autoInterval)
-        autoInterval = null;
-        (event.currentTarget as HTMLElement).classList.remove('active');
-        boardsElement.classList.remove("auto")
-    } else {
-        let boundStep = Index.step.bind(null, boardList, boxHeight, boxWidth, boardsElement)
-        autoInterval = setInterval(boundStep, delay);
-        (event.currentTarget as HTMLElement).classList.add('active')
-        boardsElement.classList.add("auto")
+        const dataTypes = [];
+        if ((document.getElementById('swaps') as any).checked) {
+            dataTypes.push('swaps')
+        }
+        if ((document.getElementById('comps') as any).checked) {
+            dataTypes.push('comps')
+        }
+
+        if (!(boardList.length && dataTypes.length)) {
+            running = false
+            return
+        }
+
+        (runElement as any).disabled = true;
+        (createButton as any).disabled = true;
+        Index.functionRunBoardsWithoutRender(boardList, 100, 1000)
+        Index.manageAutoRunCharts(boardList, 1000, 'graph', dataTypes, () => {
+            boardList.forEach((board) => {
+                board.sort.reset();
+            });
+            let svg = graphElement.getElementsByTagName('svg')[0];
+            let first = oldGraphs.firstChild;
+
+            let newsortList = listDisplayElement.cloneNode(true)
+
+            if (first) {
+                oldGraphs.insertBefore(svg, first)
+            } else {
+                oldGraphs.appendChild(svg)
+            }
+            oldGraphs.insertBefore(newsortList, svg)
+            graphElement.innerHTML = "";
+
+            (runElement as any).disabled = false;
+            (createButton as any).disabled = false;
+            running = false;
+        })
     }
 })

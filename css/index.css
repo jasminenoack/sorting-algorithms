@@ -20,7 +20,7 @@ header {
 }
 
 figure {
-    width: 80%;
+    width: 100%;
     margin: auto;
 }
 
@@ -207,6 +207,19 @@ h1 {
 content div.two .wrapper {
     width: 44%;
     margin: 3%;
+    min-width: 0;
+}
+
+content div.four .wrapper {
+    width: 23%;
+    margin: 1%;
+    min-width: 0;
+}
+
+content div.three .wrapper {
+    width: 29%;
+    margin: 2%;
+    min-width: 0;
 }
 
 .graph {

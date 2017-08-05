@@ -194,21 +194,25 @@ export function closestParent(node: HTMLElement, selector: string): HTMLElement 
 
 export function autoRunBoards(boardList: any[], boxHeight: number, 
                               boxWidth: number, boardsElement: HTMLElement,
-                              delay: number, finishDelay: number
+                              delay: number, finishDelay: number, check?: (a: { [key: string]: Board | BaseSort }[]) => boolean
                              ) {
-    let interval = setInterval(() => {
-        if ((boardList as any).any((board: {[key: string]: Board | BaseSort}[]) => !(board.sort as any).done)) {
+    if (!check) {
+        check = (board: { [key: string]: Board | BaseSort }[]) => !(board.sort as any).done
+    }
+                            
+    let autoRun = () => {
+        if((boardList as any).any(check)) {
             step(boardList, boxHeight, boxWidth, boardsElement)
+            setTimeout(autoRun, delay)
         } else {
-            clearInterval(interval)
             setTimeout(() => {
                 boardList.forEach((board) => board.sort.reset())
                 autoRunBoards(boardList, boxHeight, boxWidth, boardsElement,
-                              delay, finishDelay)
+                    delay, finishDelay)
             }, finishDelay)
         }
-        
-    }, delay)
+    }
+    setTimeout(autoRun, delay)
 }
 
 function graphName(type: string, index: number, board: {[key: string]: any}) {
@@ -227,7 +231,7 @@ export function manageAutoRunCharts(boardList: any[], delay: number, id: string)
 
         data.push({
             values: board.sort.profile.comparisons,
-            key: graphName('comparisons', index, board),
+            key: graphName('comps', index, board),
             strokeWidth: strokeWidth
         })
     })
@@ -250,7 +254,7 @@ export function manageAutoRunCharts(boardList: any[], delay: number, id: string)
         .call(chart);
     nv.utils.windowResize(chart.update);
 
-    const interval = setInterval(() => {
+    let processNext = () => {
         if ((boardList as any).any((board: { [key: string]: Board | BaseSort }[]) => !(board.sort as any).done)) {
             data = [];
 
@@ -262,7 +266,7 @@ export function manageAutoRunCharts(boardList: any[], delay: number, id: string)
                 })
                 data.push({
                     values: board.sort.profile.comparisons,
-                    key: graphName('comparisons', index, board),
+                    key: graphName('comps', index, board),
                     strokeWidth: strokeWidth
                 })
             })
@@ -270,9 +274,10 @@ export function manageAutoRunCharts(boardList: any[], delay: number, id: string)
             d3.select('#' + id).select('svg')
                 .datum(data)
                 .call(chart);
-        } else {
-            clearInterval(interval)
+            setTimeout(processNext, delay)
         }
-    }, delay)
+    }
+
+    const interval = setTimeout(processNext, delay)
 }
 

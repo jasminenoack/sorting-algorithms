@@ -948,19 +948,23 @@ function closestParent(node, selector) {
     }
 }
 exports.closestParent = closestParent;
-function autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, finishDelay) {
-    var interval = setInterval(function () {
-        if (boardList.any(function (board) { return !board.sort.done; })) {
+function autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, finishDelay, check) {
+    if (!check) {
+        check = function (board) { return !board.sort.done; };
+    }
+    var autoRun = function () {
+        if (boardList.any(check)) {
             step(boardList, boxHeight, boxWidth, boardsElement);
+            setTimeout(autoRun, delay);
         }
         else {
-            clearInterval(interval);
             setTimeout(function () {
                 boardList.forEach(function (board) { return board.sort.reset(); });
                 autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, finishDelay);
             }, finishDelay);
         }
-    }, delay);
+    };
+    setTimeout(autoRun, delay);
 }
 exports.autoRunBoards = autoRunBoards;
 function graphName(type, index, board) {
@@ -977,7 +981,7 @@ function manageAutoRunCharts(boardList, delay, id) {
         });
         data.push({
             values: board.sort.profile.comparisons,
-            key: graphName('comparisons', index, board),
+            key: graphName('comps', index, board),
             strokeWidth: strokeWidth
         });
     });
@@ -997,7 +1001,7 @@ function manageAutoRunCharts(boardList, delay, id) {
         .datum(data)
         .call(chart);
     nv.utils.windowResize(chart.update);
-    var interval = setInterval(function () {
+    var processNext = function () {
         if (boardList.any(function (board) { return !board.sort.done; })) {
             data = [];
             boardList.forEach(function (board, index) {
@@ -1008,18 +1012,17 @@ function manageAutoRunCharts(boardList, delay, id) {
                 });
                 data.push({
                     values: board.sort.profile.comparisons,
-                    key: graphName('comparisons', index, board),
+                    key: graphName('comps', index, board),
                     strokeWidth: strokeWidth
                 });
             });
             d3.select('#' + id).select('svg')
                 .datum(data)
                 .call(chart);
+            setTimeout(processNext, delay);
         }
-        else {
-            clearInterval(interval);
-        }
-    }, delay);
+    };
+    var interval = setTimeout(processNext, delay);
 }
 exports.manageAutoRunCharts = manageAutoRunCharts;
 

@@ -19,18 +19,18 @@ a {
 }
 
 svg {
-    background: rgba(224, 89, 21, 0.5);
+    background: rgba(22, 255, 189, 0.5);
 }
 
 .wrapper {
-    background: rgba(230, 233, 240, 0.15);
+    background: rgba(18, 201, 152, 0.15);
 }
 
 .point.active {
-    fill: #431c5d;
+    fill: #f070a1;
 }
 .point.placed {
-    fill: #cdd422;
+    fill: #439f76;
 }
 
 article {

@@ -169,6 +169,7 @@ export class BubbleSortConcurrent extends Bubble {
             }
         })
         this.setUpNext()
+        this.trackProfile()
         return currentNodes
     }
 }
@@ -222,6 +223,7 @@ export class BubbleSortDontRestart extends Bubble {
                 this.done = true
             }
         }
+        this.trackProfile()
         return currentNodes
     }
 }

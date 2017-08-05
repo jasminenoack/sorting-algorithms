@@ -3,11 +3,14 @@
     <head>
         <meta charset="utf-8">
         <title>Bubble Sort</title>
+        <link rel="stylesheet" type="text/css" href="lib/nvd3.css">
         <link rel="stylesheet" href="lib/highlight.default.css">
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <link rel="stylesheet" type="text/css" href="css/colorSet1.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
         <script src="lib/highlight.js"></script>
+        <script src="lib/d3.min.js"></script>
+        <script src="lib/nvd3.js"></script>
     </head>
     <body>
         <content>
@@ -56,8 +59,10 @@
                         Each of these optimizations speeds up the sort. And both can make the sort much more efficent than the simple function, although it can still be extremely inefficent.
                     </p>
 
+                    <div class="graph" id="optimize-chart"></div>
+
                     <p>
-                         Coming Soon: graph of function profiling.
+                        The chart above shows the swaps and comparisons for the first run of the graphs above. We see that they all make comparisons at the same rate, but some stop earlier. We also see that those that skip the sorted nodes make more swaps in general. And that the versions that have an implemented short circuit finish much faster than the ones that don't.
                     </p>
                 </div>
 
@@ -73,8 +78,10 @@
 
                 <p>We see that the ordered and almost ordered lists both finish very quickly. While the reversed and randomized lists take much longer. This is an important fact about comparison sorts in general. They tend to work best on mostly sorted lists(with a couple exceptions). This is because if they are able to determine a short circuit on a sorted or almost sorted list they are likely to go through the list few times.</p>
 
+                <div class="graph" id="shuffle-chart"></div>
+
                 <p>
-                    Coming Soon: graph of function profiling.
+                    Here we see the effect of the order. The Ordered list finishes in O(n) time. The almost ordered list in about double that. Whereas the random and reversed lists end up taking a lot of time. And swaps for the reversed list are the same rate as comparisons. 
                 </p>
 
                 <p><a href="sort_comparison.html">Compare Yourself</a></p>
@@ -135,8 +142,10 @@ def bubble_sort(nums):
                     It becomes very obvious upon observation that the concurrent sorts are much fast in time. They do not, however, change the actual number of swaps or comparisons that need to be made. Instead they use additional resources to complete faster by doing things at the same time. The last sort show here is an Odd-Even Sort. This is technically not a Bubble Sort but is a clear extension of this concurrency idea. 
                 </p>
 
+                <div class="graph" id="concur-chart"></div>
+
                 <p>
-                    Coming Soon: graph of function profiling.
+                    The most important thing that is confirmed by this profiling is that we aren't saving ourselves work. We see very large slopes on all of these lines. We are do large amounts of work quickly in order to finish faster not smaller amounts of work.
                 </p>
 
                 <h2>Considering Algorithmic Issues</h2>
@@ -153,8 +162,10 @@ def bubble_sort(nums):
 
                 <p>We can start to see from these examples how we move from a simple sort like Bubble to increasingly more complex sorts to optimize different aspects of a sort.</p>
 
+                <div class="graph" id="restart-chart"></div>
+
                 <p>
-                    Coming Soon: graph of function profiling.
+                    From my testing this isn't the most stable data set. There are a few insights. We see that Gnome's sublist does make it more efficent than the others, and that cocktail's lack of a short circuit makes it less efficient. Sometimes our attempt to improve Bubble Sort will beat the optimized Bubble Sort sometimes it won't. This is how software testing works. You build something you benchmark it then you determine if it's an improvement. Here we have determined that Gnome Sort is the best improvement of this set.
                 </p>
 
                 <p><a href="sort_comparison.html">Compare Yourself</a></p>

@@ -91,14 +91,14 @@ describe("Bubble Sorts", function() {
             it('tracks profile', () => {
                 board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9])
                 sort.next(board)
-                expect(sort.profile[1]).toEqual({
-                    swaps: 1,
-                    comparisons: 1
+                expect(sort.profile).toEqual({
+                    swaps: [{x: 1, y: 1}],
+                    comparisons: [{ x: 1, y: 1 }]
                 })
                 sort.next(board)
-                expect(sort.profile[2]).toEqual({
-                    swaps: 1,
-                    comparisons: 2
+                expect(sort.profile).toEqual({
+                    swaps: [{ x: 1, y: 1 }, { x: 2, y: 1 }],
+                    comparisons: [{ x: 1, y: 1 }, { x: 2, y: 2 }]
                 })
             });
 

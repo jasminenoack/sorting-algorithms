@@ -73,7 +73,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var BaseSort = (function () {
     function BaseSort(board) {
         this.board = board;
-        this.profile = {};
+        this.nextItemToAdd = 1;
         this.baseSetUp();
     }
     BaseSort.prototype.setUpNext = function () { };
@@ -115,16 +115,27 @@ var BaseSort = (function () {
         return currentNodes;
     };
     BaseSort.prototype.trackProfile = function () {
-        this.profile[this.steps] = {
-            swaps: this.swaps,
-            comparisons: this.comparisons,
-        };
+        if (this.steps === this.nextItemToAdd || this.done) {
+            this.profile['swaps'].push({
+                x: this.steps,
+                y: this.swaps
+            });
+            this.profile['comparisons'].push({
+                x: this.steps,
+                y: this.comparisons
+            });
+            this.nextItemToAdd = Math.ceil(this.nextItemToAdd * 1.2);
+        }
     };
     BaseSort.prototype.reset = function () {
         this.board.shuffleBoard();
         this.baseSetUp();
     };
     BaseSort.prototype.baseSetUp = function () {
+        this.profile = {
+            swaps: [],
+            comparisons: [],
+        };
         this.length = this.board.length;
         this.baseNode = 0;
         this.comparisonNode = 1;
@@ -859,6 +870,62 @@ function autoRunBoards(boardList, boxHeight, boxWidth, boardsElement, delay, fin
     }, delay);
 }
 exports.autoRunBoards = autoRunBoards;
+function manageAutoRunCharts(boardList, delay, id) {
+    var strokeWidth = 3;
+    var data = [];
+    boardList.forEach(function (board, index) {
+        data.push({
+            values: board.sort.profile.swaps,
+            key: index + 1 + " - swaps",
+            strokeWidth: strokeWidth,
+        });
+        data.push({
+            values: board.sort.profile.comparisons,
+            key: index + 1 + " - comparisons",
+            strokeWidth: strokeWidth
+        });
+    });
+    var chart = nv.models.lineChart();
+    chart.options({
+        duration: 300,
+        useInteractiveGuideline: true
+    });
+    chart.xAxis
+        .axisLabel("Steps")
+        .tickFormat(d3.format(',.0f'))
+        .staggerLabels(false);
+    chart.yAxis
+        .axisLabel('Count')
+        .tickFormat(d3.format(',.0f'));
+    d3.select('#' + id).append('svg')
+        .datum(data)
+        .call(chart);
+    nv.utils.windowResize(chart.update);
+    var interval = setInterval(function () {
+        if (boardList.any(function (board) { return !board.sort.done; })) {
+            data = [];
+            boardList.forEach(function (board, index) {
+                data.push({
+                    values: board.sort.profile.swaps,
+                    key: index + 1 + " - swaps",
+                    strokeWidth: strokeWidth
+                });
+                data.push({
+                    values: board.sort.profile.comparisons,
+                    key: index + 1 + " - comparisons",
+                    strokeWidth: strokeWidth
+                });
+            });
+            d3.select('#' + id).select('svg')
+                .datum(data)
+                .call(chart);
+        }
+        else {
+            clearInterval(interval);
+        }
+    }, delay);
+}
+exports.manageAutoRunCharts = manageAutoRunCharts;
 
 
 /***/ }),
@@ -1418,6 +1485,7 @@ var BubbleSortConcurrent = (function (_super) {
             }
         });
         this.setUpNext();
+        this.trackProfile();
         return currentNodes;
     };
     BubbleSortConcurrent.title = "Bubble Sort(Concurrent 2)";
@@ -1485,6 +1553,7 @@ var BubbleSortDontRestart = (function (_super) {
                 this.done = true;
             }
         }
+        this.trackProfile();
         return currentNodes;
     };
     BubbleSortDontRestart.title = "Bubble(Don't restart)";
@@ -2139,6 +2208,7 @@ var OddEvenConcurrent = (function (_super) {
             }
         }
         this.setUpNext();
+        this.trackProfile();
         return currentNodes;
     };
     OddEvenConcurrent.title = "Odd Even(Concurrent)";
@@ -2748,7 +2818,7 @@ var SimpleBubbleElement;
     var simpleBubbleElement = document.getElementById('bubble-example');
     var boxHeight = 500;
     var boxWidth = 500;
-    var delay = 100;
+    var delay = 150;
     var delayOnComplete = 2000;
     var boardList = [];
     var size = Sizes._25;
@@ -2768,7 +2838,7 @@ var BubbleOptimizations;
     var OptimizationsElement = document.getElementById('bubble-optimizations');
     var boxHeight = 500;
     var boxWidth = 500;
-    var delay = 100;
+    var delay = 150;
     var delayOnComplete = 2000;
     var size = Sizes._25;
     var valueType = new ValueTypes.Integer();
@@ -2803,24 +2873,25 @@ var BubbleOptimizations;
         Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, OptimizationsElement);
     });
     Index.autoRunBoards(boardList, boxHeight, boxWidth, OptimizationsElement, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart');
 })(BubbleOptimizations || (BubbleOptimizations = {}));
 var BubbleShuffles;
 (function (BubbleShuffles) {
     var ShufflesElement = document.getElementById('bubble-shuffles');
     var boxHeight = 500;
     var boxWidth = 500;
-    var delay = 100;
+    var delay = 150;
     var delayOnComplete = 2000;
     var size = Sizes._25;
     var valueType = new ValueTypes.Integer();
     var board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info);
-    var sort1 = new BubbleFullyOptimized(board1);
+    var sort1 = new Sorts.BubbleSkipsSorted(board1);
     var board2 = new Boards.Board(size, new Shuffles.K1Shuffle(), valueType, Boards.Verbosity.Info);
-    var sort2 = new BubbleFullyOptimized(board2);
+    var sort2 = new Sorts.BubbleSkipsSorted(board2);
     var board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info);
-    var sort3 = new BubbleFullyOptimized(board3);
+    var sort3 = new Sorts.BubbleSkipsSorted(board3);
     var board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info);
-    var sort4 = new BubbleFullyOptimized(board4);
+    var sort4 = new Sorts.BubbleSkipsSorted(board4);
     var boardList = [
         {
             board: board1,
@@ -2843,13 +2914,14 @@ var BubbleShuffles;
         Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ShufflesElement);
     });
     Index.autoRunBoards(boardList, boxHeight, boxWidth, ShufflesElement, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'shuffle-chart');
 })(BubbleShuffles || (BubbleShuffles = {}));
 var BubbleConCur;
 (function (BubbleConCur) {
     var ConcurElement = document.getElementById('bubble-concur');
     var boxHeight = 500;
     var boxWidth = 500;
-    var delay = 100;
+    var delay = 150;
     var delayOnComplete = 2000;
     var size = Sizes._25;
     var shuffle = new Shuffles.RandomShuffle();
@@ -2884,13 +2956,14 @@ var BubbleConCur;
         Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ConcurElement);
     });
     Index.autoRunBoards(boardList, boxHeight, boxWidth, ConcurElement, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'concur-chart');
 })(BubbleConCur || (BubbleConCur = {}));
 var BubbleDontRestart;
 (function (BubbleDontRestart) {
     var RestartElement = document.getElementById('bubble-dont-restart');
     var boxHeight = 500;
     var boxWidth = 500;
-    var delay = 100;
+    var delay = 150;
     var delayOnComplete = 2000;
     var size = Sizes._25;
     var shuffle = new Shuffles.RandomShuffle();
@@ -2925,6 +2998,7 @@ var BubbleDontRestart;
         Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, RestartElement);
     });
     Index.autoRunBoards(boardList, boxHeight, boxWidth, RestartElement, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'restart-chart');
 })(BubbleDontRestart || (BubbleDontRestart = {}));
 
 

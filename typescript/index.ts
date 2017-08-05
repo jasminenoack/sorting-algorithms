@@ -1,6 +1,9 @@
 import {BaseSort} from './sorts/baseSort'
 import {Board, Verbosity} from './board'
 
+declare var d3: any;
+declare var nv: any;
+
 function renderShadow(sort: BaseSort, board: Board, boardElement: SVGElement, boxHeight: number, boxWidth: number) {
     let valueMin = board.min()
     let valueMax = board.max()
@@ -206,5 +209,66 @@ export function autoRunBoards(boardList: any[], boxHeight: number,
         }
         
     }, delay)
-
 }
+
+export function manageAutoRunCharts(boardList: any[], delay: number, id: string) {
+    const strokeWidth = 3
+    let data: any[] = [];
+    boardList.forEach((board, index) => {
+        data.push({
+            values: board.sort.profile.swaps,
+            key: `${index + 1} - swaps`,
+            strokeWidth: strokeWidth,
+        })
+
+        data.push({
+            values: board.sort.profile.comparisons,
+            key: `${index + 1} - comparisons`,
+            strokeWidth: strokeWidth
+        })
+    })
+
+    var chart: any = nv.models.lineChart();
+    chart.options({
+        duration: 300,
+        useInteractiveGuideline: true
+    })
+    chart.xAxis
+        .axisLabel("Steps")
+        .tickFormat(d3.format(',.0f'))
+        .staggerLabels(false);
+    chart.yAxis
+        .axisLabel('Count')
+        .tickFormat(d3.format(',.0f'));
+
+    d3.select('#' + id).append('svg')
+        .datum(data)
+        .call(chart);
+    nv.utils.windowResize(chart.update);
+
+    const interval = setInterval(() => {
+        if ((boardList as any).any((board: { [key: string]: Board | BaseSort }[]) => !(board.sort as any).done)) {
+            data = [];
+
+            boardList.forEach((board, index) => {
+                data.push({
+                    values: board.sort.profile.swaps,
+                    key: `${index + 1} - swaps`,
+                    strokeWidth: strokeWidth
+                })
+                data.push({
+                    values: board.sort.profile.comparisons,
+                    key: `${index + 1} - comparisons`,
+                    strokeWidth: strokeWidth
+                })
+            })
+
+            d3.select('#' + id).select('svg')
+                .datum(data)
+                .call(chart);
+        } else {
+            clearInterval(interval)
+        }
+    }, delay)
+}
+

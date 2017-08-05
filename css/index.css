@@ -208,3 +208,7 @@ content div.two .wrapper {
     width: 44%;
     margin: 3%;
 }
+
+.graph {
+    height: 400px
+}

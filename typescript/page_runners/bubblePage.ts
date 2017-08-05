@@ -17,7 +17,7 @@ namespace SimpleBubbleElement {
     const simpleBubbleElement = document.getElementById('bubble-example');
     const boxHeight = 500
     const boxWidth = 500
-    const delay = 100
+    const delay = 150
     const delayOnComplete = 2000
     const boardList: any[] = []
     const size = Sizes._25
@@ -41,7 +41,7 @@ namespace BubbleOptimizations {
     const OptimizationsElement = document.getElementById('bubble-optimizations');
     const boxHeight = 500
     const boxWidth = 500
-    const delay = 100
+    const delay = 150
     const delayOnComplete = 2000
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
@@ -81,24 +81,25 @@ namespace BubbleOptimizations {
     })
     
     Index.autoRunBoards(boardList, boxHeight, boxWidth, OptimizationsElement, delay, delayOnComplete)
+    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart')
 }
 
 namespace BubbleShuffles {
     const ShufflesElement = document.getElementById('bubble-shuffles');
     const boxHeight = 500
     const boxWidth = 500
-    const delay = 100
+    const delay = 150
     const delayOnComplete = 2000
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
     const board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info)
-    const sort1 = new BubbleFullyOptimized(board1)
+    const sort1 = new Sorts.BubbleSkipsSorted(board1)
     const board2 = new Boards.Board(size, new Shuffles.K1Shuffle(), valueType, Boards.Verbosity.Info)
-    const sort2 = new BubbleFullyOptimized(board2)
+    const sort2 = new Sorts.BubbleSkipsSorted(board2)
     const board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info)
-    const sort3 = new BubbleFullyOptimized(board3)
+    const sort3 = new Sorts.BubbleSkipsSorted(board3)
     const board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info)
-    const sort4 = new BubbleFullyOptimized(board4)
+    const sort4 = new Sorts.BubbleSkipsSorted(board4)
     const boardList: any[] = [
         {
             board: board1,
@@ -126,13 +127,14 @@ namespace BubbleShuffles {
     })
 
     Index.autoRunBoards(boardList, boxHeight, boxWidth, ShufflesElement, delay, delayOnComplete)
+    Index.manageAutoRunCharts(boardList, 1000, 'shuffle-chart')
 }
 
 namespace BubbleConCur {
     const ConcurElement = document.getElementById('bubble-concur');
     const boxHeight = 500
     const boxWidth = 500
-    const delay = 100
+    const delay = 150
     const delayOnComplete = 2000
     const size = Sizes._25
     const shuffle = new Shuffles.RandomShuffle()
@@ -172,13 +174,14 @@ namespace BubbleConCur {
     })
 
     Index.autoRunBoards(boardList, boxHeight, boxWidth, ConcurElement, delay, delayOnComplete)
+    Index.manageAutoRunCharts(boardList, 1000, 'concur-chart')
 }
 
 namespace BubbleDontRestart {
     const RestartElement = document.getElementById('bubble-dont-restart');
     const boxHeight = 500
     const boxWidth = 500
-    const delay = 100
+    const delay = 150
     const delayOnComplete = 2000
     const size = Sizes._25
     const shuffle = new Shuffles.RandomShuffle()
@@ -218,4 +221,5 @@ namespace BubbleDontRestart {
     })
 
     Index.autoRunBoards(boardList, boxHeight, boxWidth, RestartElement, delay, delayOnComplete)
+    Index.manageAutoRunCharts(boardList, 1000, 'restart-chart')
 }

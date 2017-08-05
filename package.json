@@ -4,6 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "dependencies": {
+    "chart.js": "^2.6.0",
     "commonjs": "^0.0.1"
   },
   "devDependencies": {

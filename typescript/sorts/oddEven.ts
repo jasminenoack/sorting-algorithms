@@ -85,6 +85,7 @@ export class OddEvenConcurrent extends OddEven {
             }
         }
         this.setUpNext()
+        this.trackProfile()
         return currentNodes
     }
 }

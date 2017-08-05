@@ -19,7 +19,8 @@ export abstract class BaseSort {
     shadow: any[]
     lastSwapped: boolean
     static links: any[]
-    profile: {[step: number]: {[key: string]: number}} = {};
+    profile: { [key: string]: {[key: string]: number}[] }
+    nextItemToAdd: number = 1
 
     constructor(public board: Boards.Board) {
         this.baseSetUp()
@@ -66,9 +67,16 @@ export abstract class BaseSort {
     }
 
     trackProfile() {
-        this.profile[this.steps] = {
-            swaps: this.swaps,
-            comparisons: this.comparisons,
+        if (this.steps === this.nextItemToAdd || this.done) {
+            this.profile['swaps'].push({
+                x: this.steps,
+                y: this.swaps
+            })
+            this.profile['comparisons'].push({
+                x: this.steps,
+                y: this.comparisons
+            })
+            this.nextItemToAdd = Math.ceil(this.nextItemToAdd * 1.2)
         }
     }
 
@@ -78,6 +86,10 @@ export abstract class BaseSort {
     }
 
     baseSetUp() {
+        this.profile = {
+            swaps: [],
+            comparisons: [],
+        };
         this.length = this.board.length
         this.baseNode = 0
         this.comparisonNode = 1

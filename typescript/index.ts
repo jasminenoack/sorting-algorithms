@@ -52,12 +52,16 @@ function getSortString (sort: BaseSort, index: number) {
     return `${index}-${(sort.constructor as any).title}. <b>Order Type</b>: ${sort.board.shuffle.title}. <b>Value Type</b>: ${sort.board.valueType.title}. <b>Point Count</b>: ${sort.board.size.label}.`
 }
 
-export function createBoardList(boardList: any[], element: HTMLElement) {
+export function createBoardList(boardList: any[], element: HTMLElement, showButton: boolean = true) {
     let wrapper = document.createElement('div');
     boardList.forEach((board, index) => {
         const p = document.createElement('p')
         p.classList.add('list-wrapper')
-        p.innerHTML = getSortString(board.sort, index + 1) + ' <span class="remove"><u>Remove</u></button>'
+        let string = getSortString(board.sort, index + 1)
+        if (showButton) {
+            string += ' <span class="remove"><u>Remove</u></button>'
+        }
+        p.innerHTML = string
         wrapper.appendChild(p)
     })
     element.innerHTML = ''
@@ -210,7 +214,7 @@ export function createDelegatedEvent(eventNode: HTMLElement, eventType: string, 
 }
 
 export function functionRunBoardsWithoutRender(
-    boardList: any[], delay: number, finishDelay: number
+    boardList: any[], delay: number
 ) {
     let autoRun = () => {
         if ((boardList as any).any((board: { [key: string]: Board | BaseSort }[]) => !(board.sort as any).done)) {

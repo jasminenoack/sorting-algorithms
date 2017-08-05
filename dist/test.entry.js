@@ -836,12 +836,17 @@ function getRadius(boxHeight, heightSpread, boxWidth, widthSpread) {
 function getSortString(sort, index) {
     return index + "-" + sort.constructor.title + ". <b>Order Type</b>: " + sort.board.shuffle.title + ". <b>Value Type</b>: " + sort.board.valueType.title + ". <b>Point Count</b>: " + sort.board.size.label + ".";
 }
-function createBoardList(boardList, element) {
+function createBoardList(boardList, element, showButton) {
+    if (showButton === void 0) { showButton = true; }
     var wrapper = document.createElement('div');
     boardList.forEach(function (board, index) {
         var p = document.createElement('p');
         p.classList.add('list-wrapper');
-        p.innerHTML = getSortString(board.sort, index + 1) + ' <span class="remove"><u>Remove</u></button>';
+        var string = getSortString(board.sort, index + 1);
+        if (showButton) {
+            string += ' <span class="remove"><u>Remove</u></button>';
+        }
+        p.innerHTML = string;
         wrapper.appendChild(p);
     });
     element.innerHTML = '';
@@ -971,7 +976,7 @@ function createDelegatedEvent(eventNode, eventType, fun, selector) {
     return listener;
 }
 exports.createDelegatedEvent = createDelegatedEvent;
-function functionRunBoardsWithoutRender(boardList, delay, finishDelay) {
+function functionRunBoardsWithoutRender(boardList, delay) {
     var autoRun = function () {
         if (boardList.any(function (board) { return !board.sort.done; })) {
             for (var i = 0; i < boardList.length; i++) {

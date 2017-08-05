@@ -234,5 +234,6 @@ content div.three .wrapper {
 }
 
 #previous {
+    margin: 10px auto;
     border-top: 10px solid #ccc
 }

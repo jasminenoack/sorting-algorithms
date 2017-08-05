@@ -114,11 +114,12 @@ runElement.addEventListener('click', function (event) {
             running = false
             return
         }
+        Index.createBoardList(boardList, listDisplayElement, false);
 
         (runElement as any).disabled = true;
         (createButton as any).disabled = true;
-        Index.functionRunBoardsWithoutRender(boardList, 100, 1000)
-        Index.manageAutoRunCharts(boardList, 1000, 'graph', dataTypes, () => {
+        Index.functionRunBoardsWithoutRender(boardList, 100)
+        Index.manageAutoRunCharts(boardList, 500, 'graph', dataTypes, () => {
             boardList.forEach((board) => {
                 board.sort.reset();
             });
@@ -138,6 +139,7 @@ runElement.addEventListener('click', function (event) {
             (runElement as any).disabled = false;
             (createButton as any).disabled = false;
             running = false;
+            Index.createBoardList(boardList, listDisplayElement);
         })
     }
 })

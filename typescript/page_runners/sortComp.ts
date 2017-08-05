@@ -22,7 +22,7 @@ sizes.forEach((size: Sizes.Size, index: number) => {
     let optionElement = document.createElement('option')
     optionElement.value = index + ''
     optionElement.textContent = size.label
-    if (optionElement.label === "250") {
+    if (optionElement.label === "50") {
         optionElement.setAttribute('selected', '1')
     }
     sizeElement.appendChild(optionElement)

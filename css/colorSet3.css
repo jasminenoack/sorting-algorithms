@@ -1,0 +1,72 @@
+body {
+    color: #501f3a
+}
+
+body {
+    color: #cccccc
+}
+body {
+    color: #14a098;
+}
+body {
+    color: #0f292f;
+}
+
+body {
+    color: #cb2d6f;
+}
+a {
+    color:#cccccc
+}
+
+.square {
+    background: #0f292f;
+}
+
+.queen {
+    background: #501f3a;
+}
+
+.point.shadow {
+    fill: #cccccc
+}
+
+svg {
+    background: rgba(20, 160, 152, 0.5);
+}
+
+.wrapper {
+    background: rgba(204, 204, 204, 0.15);
+}
+
+.point.active {
+    fill: #cb2d6f;
+}
+.point.placed {
+    fill: #0f292f;
+}
+
+article {
+    padding: 10px;
+    background-color: rgba(20, 160, 152, 0.10);
+    margin: 10px;
+}   
+
+button {
+    background: #cb2d6f;
+    color: #cccccc;
+    box-shadow: 0 6px #791b42;
+}
+
+button.active {
+    background: #791b42;
+    box-shadow: 0 6px #cb2d6f;
+}
+
+select {
+    border: 1px solid #791b42;
+    color: #cccccc;
+    background-color: #cb2d6f;
+} 
+
+

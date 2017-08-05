@@ -1,10 +1,10 @@
-import * as Sizes from './sizes'
-import * as Shuffles from './shuffles'
-import * as Index from './index'
-import * as ValueTypes from './valueTypes'
-import * as Sorts from './sorts/sorts'
-import * as Boards from './board'
-import {BaseSort} from './sorts/baseSort'
+import * as Sizes from '../sizes'
+import * as Shuffles from '../shuffles'
+import * as Index from '../index'
+import * as ValueTypes from '../valueTypes'
+import * as Sorts from '../sorts/sorts'
+import * as Boards from '../board'
+import {BaseSort} from '../sorts/baseSort'
 
 namespace SortComp {
     let boardsElement = document.getElementById("boards")

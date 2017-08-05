@@ -1,9 +1,9 @@
 module.exports = {
     entry: {
-        sortComp: "./typescript/sortComp.ts",
-        queens: "./typescript/queensBackground.ts",
-        test: "./typescript/test.ts",
-        utils: './typescript/utils.ts'
+        sortComp: "./typescript/page_runners/sortComp.ts",
+        queens: "./typescript/page_runners/queensBackground.ts",
+        test: "./typescript/page_runners/test.ts",
+        utils: './typescript/page_runners/utils.ts'
     },
     output: {
         path: __dirname + "/dist",

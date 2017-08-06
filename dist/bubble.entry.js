@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ 	return __webpack_require__(__webpack_require__.s = 27);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2882,7 +2882,10 @@ exports.SmoothSetUpBottom = SmoothSetUpBottom;
 /* 21 */,
 /* 22 */,
 /* 23 */,
-/* 24 */
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2894,18 +2897,17 @@ var Index = __webpack_require__(7);
 var ValueTypes = __webpack_require__(3);
 var Sorts = __webpack_require__(8);
 var Boards = __webpack_require__(2);
-// import { BaseSort } from '../sorts/baseSort'
 var Bubble = Sorts.BubbleNonOptimized;
 var BubbleShortCircuit = Sorts.Bubble;
 var BubbleSkipLast = Sorts.BubbleSkipNoShortCircuit;
 var BubbleFullyOptimized = Sorts.BubbleSkipsSorted;
+var boxHeight = 200;
+var boxWidth = 200;
+var delay = 100;
+var delayOnComplete = 2000;
 var SimpleBubbleElement;
 (function (SimpleBubbleElement) {
     var simpleBubbleElement = document.getElementById('bubble-example');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
     var boardList = [];
     var size = Sizes._25;
     var valueType = new ValueTypes.Integer();
@@ -2922,10 +2924,6 @@ var SimpleBubbleElement;
 var BubbleOptimizations;
 (function (BubbleOptimizations) {
     var OptimizationsElement = document.getElementById('bubble-optimizations');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
     var size = Sizes._25;
     var valueType = new ValueTypes.Integer();
     var shuffle = new Shuffles.RandomShuffle();
@@ -2964,10 +2962,6 @@ var BubbleOptimizations;
 var BubbleShuffles;
 (function (BubbleShuffles) {
     var ShufflesElement = document.getElementById('bubble-shuffles');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
     var size = Sizes._25;
     var valueType = new ValueTypes.Integer();
     var board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info);
@@ -3005,10 +2999,6 @@ var BubbleShuffles;
 var BubbleConCur;
 (function (BubbleConCur) {
     var ConcurElement = document.getElementById('bubble-concur');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
     var size = Sizes._25;
     var shuffle = new Shuffles.RandomShuffle();
     var valueType = new ValueTypes.Integer();
@@ -3047,10 +3037,6 @@ var BubbleConCur;
 var BubbleDontRestart;
 (function (BubbleDontRestart) {
     var RestartElement = document.getElementById('bubble-dont-restart');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 2000;
     var size = Sizes._25;
     var shuffle = new Shuffles.RandomShuffle();
     var valueType = new ValueTypes.Integer();

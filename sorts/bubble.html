@@ -30,11 +30,11 @@
                     </p>
 
                     <p class="padding">
-                        A Bubble Sort is completed by iterating over the elements and comparing each element to the element after it. If the element after it is smaller the elements are swapped. This allows the highest values to Bubble up to the top of the array. In simple implementations a Bubble sort will iterate over an array n - 1 times doing a comparison for n - 1 elements. This means of course that the simple function takes (n - 1) * (n - 1) time or O(n<sup>2</sup>) in all cases.
+                        A Bubble Sort is completed by iterating over the elements and comparing each element to the element after it. If the element after it is smaller the elements are swapped. This allows the highest values to Bubble up to the top of the array. In simple implementations a Bubble Sort will iterate over an array n - 1 times doing a comparison for n - 1 elements. This means of course that the simple function takes (n - 1) * (n - 1) time or O(n<sup>2</sup>) in all cases.
                     </p>
 
                     <p>
-                        Bubble sort is one of the most controversial sorting algorithms. 
+                        Bubble Sort is one of the most controversial sorting algorithms. 
                         It's extremely inefficent, and it has been argued, that
                         it shouldn't be taught in CS courses. This is discussed more fully in <a href='https://users.cs.duke.edu/~ola/bubble/bubble.html'>Bubble Sort: An Archaeological Algorithmic Analysis</a>. 
                     </p>
@@ -142,7 +142,7 @@ def bubble_sort(nums):
                 <div id="bubble-concur" class="two"></div>
 
                 <p>
-                    It becomes very obvious upon observation that the concurrent sorts are much fast in time. They do not, however, change the actual number of swaps or comparisons that need to be made. Instead they use additional resources to complete faster by doing things at the same time. The last sort show here is an Odd-Even Sort. This is technically not a Bubble Sort but is a clear extension of this concurrency idea. 
+                    It becomes very obvious upon observation that the concurrent sorts are much fast in time. They do not, however, change the actual number of swaps or comparisons that need to be made. Instead they use additional resources to complete faster by doing things at the same time. The last sort show here is an <a href="./odd-even.html">Odd-Even Sort</a>. This is technically not a Bubble Sort but is a clear extension of this concurrency idea. 
                 </p>
 
                 <div class="graph" id="concur-chart"></div>
@@ -160,7 +160,7 @@ def bubble_sort(nums):
                 <div id="bubble-dont-restart" class="two"></div>
 
                 <p>
-                    Here we see a test of that function against other functions, and it doesn't seem to be much better than the original Bubble Sort. however, by watching the visualization we can see why. It's still making a lot of comparisons. It moves large sets of unordered data around. Then when it finally orders it, it still looks at it all again as it moves up. So we can assume that we can optimize it further. Examples of this are shown in the second 2 examples. Gnome sort creates a "sorted list" as a sub list of the full list and moves each element into that list. Cocktail sort sorts both upwards and downwards to move elements faster(although this implementation does not include a short circuit, but it could).
+                    Here we see a test of that function against other functions, and it doesn't seem to be much better than the original Bubble Sort. however, by watching the visualization we can see why. It's still making a lot of comparisons. It moves large sets of unordered data around. Then when it finally orders it, it still looks at it all again as it moves up. So we can assume that we can optimize it further. Examples of this are shown in the second 2 examples. <a href="./gnome.html">Gnome Sort</a> creates a "sorted list" as a sub list of the full list and moves each element into that list. <a href="./cocktail.html">Cocktail Sort</a> sorts both upwards and downwards to move elements faster(although this implementation does not include a short circuit, but it could).
                 </p>
 
                 <p>We can start to see from these examples how we move from a simple sort like Bubble to increasingly more complex sorts to optimize different aspects of a sort.</p>
@@ -168,11 +168,16 @@ def bubble_sort(nums):
                 <div class="graph" id="restart-chart"></div>
 
                 <p>
-                    From my testing this isn't the most stable data set. There are a few insights. We see that Gnome's sublist does make it more efficent than the others, and that cocktail's lack of a short circuit makes it less efficient. Sometimes our attempt to improve Bubble Sort will beat the optimized Bubble Sort sometimes it won't. This is how software testing works. You build something you benchmark it then you determine if it's an improvement. Here we have determined that Gnome Sort is the best improvement of this set.
+                    From my testing this isn't the most stable data set. There are a few insights. We see that Gnome's sublist does make it more efficent than the others, and that cocktail's lack of a short circuit makes it less efficient. Sometimes our attempt to improve Bubble Sort will beat the optimized Bubble Sort sometimes it won't. This is how software testing works. You build something you benchmark it then you determine if it's an improvement. Here we have determined that <a href="./gnome.html">Gnome Sort</a> is the best improvement of this set.
                 </p>
 
                 <p><a href="./debug/scatter.html">Compare Yourself</a></p>
                 <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
+            </article>
+
+            <article>
+                <h1>More Links</h1>
+                <p><a href="https://www.youtube.com/watch?v=HfdT_uOqbvA" target="_blank">Sound of Sorting</a></p>
             </article>
 
         

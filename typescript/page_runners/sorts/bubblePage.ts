@@ -1,22 +1,22 @@
-import * as Sizes from '../sizes'
-import * as Shuffles from '../shuffles'
-import * as Index from '../index'
-import * as ValueTypes from '../valueTypes'
-import * as Sorts from '../sorts/sorts'
-import * as Boards from '../board'
-// import { BaseSort } from '../sorts/baseSort'
+import * as Sizes from '../../sizes'
+import * as Shuffles from '../../shuffles'
+import * as Index from '../../index'
+import * as ValueTypes from '../../valueTypes'
+import * as Sorts from '../../sorts/sorts'
+import * as Boards from '../../board'
 
 const Bubble = Sorts.BubbleNonOptimized
 const BubbleShortCircuit = Sorts.Bubble
 const BubbleSkipLast = Sorts.BubbleSkipNoShortCircuit
 const BubbleFullyOptimized = Sorts.BubbleSkipsSorted
 
+const boxHeight = 200
+const boxWidth = 200
+const delay = 100
+const delayOnComplete = 2000
+
 namespace SimpleBubbleElement {
     const simpleBubbleElement = document.getElementById('bubble-example');
-    const boxHeight = 200
-    const boxWidth = 200
-    const delay = 100
-    const delayOnComplete = 2000
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
@@ -37,10 +37,6 @@ namespace SimpleBubbleElement {
     
 namespace BubbleOptimizations {
     const OptimizationsElement = document.getElementById('bubble-optimizations');
-    const boxHeight = 200
-    const boxWidth = 200
-    const delay = 100
-    const delayOnComplete = 2000
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
     const shuffle = new Shuffles.RandomShuffle()
@@ -84,10 +80,6 @@ namespace BubbleOptimizations {
 
 namespace BubbleShuffles {
     const ShufflesElement = document.getElementById('bubble-shuffles');
-    const boxHeight = 200
-    const boxWidth = 200
-    const delay = 100
-    const delayOnComplete = 2000
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
     const board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info)
@@ -130,10 +122,6 @@ namespace BubbleShuffles {
 
 namespace BubbleConCur {
     const ConcurElement = document.getElementById('bubble-concur');
-    const boxHeight = 200
-    const boxWidth = 200
-    const delay = 100
-    const delayOnComplete = 2000
     const size = Sizes._25
     const shuffle = new Shuffles.RandomShuffle()
     const valueType = new ValueTypes.Integer()
@@ -177,10 +165,6 @@ namespace BubbleConCur {
 
 namespace BubbleDontRestart {
     const RestartElement = document.getElementById('bubble-dont-restart');
-    const boxHeight = 200
-    const boxWidth = 200
-    const delay = 100
-    const delayOnComplete = 2000
     const size = Sizes._25
     const shuffle = new Shuffles.RandomShuffle()
     const valueType = new ValueTypes.Integer()

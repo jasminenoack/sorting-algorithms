@@ -4,9 +4,21 @@ module.exports = {
         queens: "./typescript/page_runners/queensBackground.ts",
         test: "./typescript/page_runners/test.ts",
         utils: './typescript/page_runners/utils.ts',
-        bubble: './typescript/page_runners/bubblePage.ts',
         sortIndex: './typescript/page_runners/sortIndex.ts',
-        profileComp: './typescript/page_runners/profileComp.ts'
+        profileComp: './typescript/page_runners/profileComp.ts',
+
+        bogo: './typescript/page_runners/sorts/bogoPage.ts',
+        bubble: './typescript/page_runners/sorts/bubblePage.ts',
+        cocktail: './typescript/page_runners/sorts/cocktailPage.ts',
+        comb: './typescript/page_runners/sorts/combPage.ts',
+        cycle: './typescript/page_runners/sorts/cyclePage.ts',
+        gnome: './typescript/page_runners/sorts/gnomePage.ts',
+        heap: './typescript/page_runners/sorts/heapPage.ts',
+        insertion: './typescript/page_runners/sorts/insertionPage.ts',
+        oddEven: './typescript/page_runners/sorts/oddEvenPage.ts',
+        quick: './typescript/page_runners/sorts/quickPage.ts',
+        selection: './typescript/page_runners/sorts/selectionPage.ts',
+        smooth: './typescript/page_runners/sorts/smoothPage.ts',
     },
     output: {
         path: __dirname + "/dist",

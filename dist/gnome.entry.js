@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ 	return __webpack_require__(__webpack_require__.s = 31);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2882,7 +2882,14 @@ exports.SmoothSetUpBottom = SmoothSetUpBottom;
 /* 21 */,
 /* 22 */,
 /* 23 */,
-/* 24 */
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2894,92 +2901,26 @@ var Index = __webpack_require__(7);
 var ValueTypes = __webpack_require__(3);
 var Sorts = __webpack_require__(8);
 var Boards = __webpack_require__(2);
-var ReversedSorts;
-(function (ReversedSorts) {
-    var ReverseElement = document.getElementById('reverse-sorts');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 100;
-    var size = Sizes._75;
+var boxHeight = 200;
+var boxWidth = 200;
+var delay = 100;
+var delayOnComplete = 2000;
+var Example;
+(function (Example) {
+    var exampleElement = document.getElementById('example');
+    var boardList = [];
+    var size = Sizes._25;
     var valueType = new ValueTypes.Integer();
-    var shuffle = new Shuffles.ReversedShuffle();
-    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort2 = new Sorts.Comb(board2);
-    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort4 = new Sorts.Heap(board4);
-    var board5 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort5 = new Sorts.OddEven(board5);
-    var board7 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort7 = new Sorts.Smooth(board7);
-    var boardList = [
-        {
-            board: board2,
-            sort: sort2
-        },
-        {
-            board: board4,
-            sort: sort4
-        },
-        {
-            board: board5,
-            sort: sort5
-        },
-        {
-            board: board7,
-            sort: sort7
-        }
-    ];
-    boardList.forEach(function (board, index) {
-        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ReverseElement);
+    var shuffle = new Shuffles.RandomShuffle();
+    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
+    var sort = new Sorts.Gnome(board);
+    boardList.push({
+        board: board,
+        sort: sort
     });
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, ReverseElement, delay, delayOnComplete, function (board) {
-        return board.sort.steps < 200 && !board.sort.done;
-    });
-})(ReversedSorts || (ReversedSorts = {}));
-var OrderedSorts;
-(function (OrderedSorts) {
-    var OrderedElement = document.getElementById('ordered-sorts');
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 100;
-    var size = Sizes._75;
-    var valueType = new ValueTypes.Integer();
-    var shuffle = new Shuffles.OrderedShuffle();
-    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort2 = new Sorts.Comb(board2);
-    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort4 = new Sorts.Heap(board4);
-    var board5 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort5 = new Sorts.OddEven(board5);
-    var board7 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort7 = new Sorts.Smooth(board7);
-    var boardList = [
-        {
-            board: board2,
-            sort: sort2
-        },
-        {
-            board: board4,
-            sort: sort4
-        },
-        {
-            board: board5,
-            sort: sort5
-        },
-        {
-            board: board7,
-            sort: sort7
-        }
-    ];
-    boardList.forEach(function (board, index) {
-        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, OrderedElement);
-    });
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, OrderedElement, delay, delayOnComplete, function (board) {
-        return board.sort.steps < 200 && !board.sort.done;
-    });
-})(OrderedSorts || (OrderedSorts = {}));
+    Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
+})(Example || (Example = {}));
 
 
 /***/ })

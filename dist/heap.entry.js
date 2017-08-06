@@ -1865,7 +1865,9 @@ var baseSort_1 = __webpack_require__(0);
 var Cocktail = (function (_super) {
     __extends(Cocktail, _super);
     function Cocktail() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shortCircuit = false;
+        return _this;
     }
     Cocktail.prototype.setUp = function () {
         this.start = 0;
@@ -1880,6 +1882,12 @@ var Cocktail = (function (_super) {
                 this.baseNode--;
                 this.comparisonNode--;
                 this.direction = 0;
+                if (this.ordered && this.shortCircuit) {
+                    this.done = true;
+                }
+                else {
+                    this.ordered = true;
+                }
             }
             else {
                 this.baseNode++;
@@ -1893,6 +1901,12 @@ var Cocktail = (function (_super) {
                 this.start++;
                 this.baseNode++;
                 this.comparisonNode++;
+                if (this.ordered && this.shortCircuit) {
+                    this.done = true;
+                }
+                else {
+                    this.ordered = true;
+                }
             }
             else {
                 this.baseNode--;
@@ -1907,6 +1921,17 @@ var Cocktail = (function (_super) {
     return Cocktail;
 }(baseSort_1.BaseSort));
 exports.Cocktail = Cocktail;
+var CocktailShortCircuit = (function (_super) {
+    __extends(CocktailShortCircuit, _super);
+    function CocktailShortCircuit() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shortCircuit = true;
+        return _this;
+    }
+    CocktailShortCircuit.title = "Cocktail(Short Circuit)";
+    return CocktailShortCircuit;
+}(Cocktail));
+exports.CocktailShortCircuit = CocktailShortCircuit;
 
 
 /***/ }),

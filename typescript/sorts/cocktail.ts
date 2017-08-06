@@ -5,7 +5,8 @@ export class Cocktail extends BaseSort {
     direction: number
     start: number
     end: number
-    static readonly title = "Cocktail Sort"
+    shortCircuit: boolean = false
+    static title = "Cocktail Sort"
 
     setUp() {
         this.start = 0
@@ -21,6 +22,11 @@ export class Cocktail extends BaseSort {
                 this.baseNode--
                 this.comparisonNode--
                 this.direction = 0
+                if (this.ordered && this.shortCircuit) {
+                    this.done = true
+                } else {
+                    this.ordered = true
+                }
             } else {
                 this.baseNode++
                 this.comparisonNode++
@@ -32,6 +38,11 @@ export class Cocktail extends BaseSort {
                 this.start++
                 this.baseNode++
                 this.comparisonNode++
+                if (this.ordered && this.shortCircuit) {
+                    this.done = true
+                } else {
+                    this.ordered = true
+                }
             } else {
                 this.baseNode--
                 this.comparisonNode--
@@ -41,4 +52,9 @@ export class Cocktail extends BaseSort {
             this.done = true
         }
     }
+}
+
+export class CocktailShortCircuit extends Cocktail {
+    shortCircuit: boolean = true
+    static title = "Cocktail(Short Circuit)"
 }

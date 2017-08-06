@@ -1420,7 +1420,7 @@ var BogoSingle = (function (_super) {
         this.trackProfile();
         return currentNodes;
     };
-    BogoSingle.title = "Bogo(Single Swap)";
+    BogoSingle.title = "Bozo(Single Swap)";
     return BogoSingle;
 }(baseSort_1.BaseSort));
 exports.BogoSingle = BogoSingle;
@@ -1438,7 +1438,7 @@ var BogoSingleCompare = (function (_super) {
         this.comparisons++;
         return inOrder;
     };
-    BogoSingleCompare.title = 'Bogo(Compare & Single Swap)';
+    BogoSingleCompare.title = 'Smart Bozo(Compare & Single Swap)';
     return BogoSingleCompare;
 }(BogoSingle));
 exports.BogoSingleCompare = BogoSingleCompare;

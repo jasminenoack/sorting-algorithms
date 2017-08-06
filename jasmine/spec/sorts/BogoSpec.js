@@ -41,21 +41,6 @@ describe("Bogo", function() {
             })
         })
 
-        it("has a reset function", () => {
-            while(!sort.done) {
-                sort.next()
-            }
-            let values = board.values().slice()
-            sort.reset()
-            expect(sort.done).toBeFalsy()
-            expect(sort.steps).toEqual(0)
-            expect(sort.swaps).toEqual(0)
-            expect(sort.comparisons).toEqual(0)
-            expect(values).not.toEqual(board.values())
-            expect(sort.baseNode).toEqual(0)
-            expect(sort.comparisonNode).toEqual(1)
-        })
-
         describe("utils", () => {
             it("it returns all node indexes", () => {
                 expect(sort.currentNodes()).toEqual(
@@ -115,7 +100,7 @@ describe("Bogo", function() {
             })
 
             it("it has a title", () => {
-                expect(Sorts.BogoSingle.title).toEqual('Bogo(Single Swap)')
+                expect(Sorts.BogoSingle.title).toEqual('Bozo(Single Swap)')
             })
 
             it("has a board", () => {
@@ -133,21 +118,6 @@ describe("Bogo", function() {
             it("starts with ordered param", () => {
                 expect(sort.ordered).toEqual(true)
             })
-        })
-
-        it("has a reset function", () => {
-            while(!sort.done) {
-                sort.next()
-            }
-            let values = board.values().slice()
-            let base = sort.baseNode
-            let comparison = sort.comparisonNode
-            sort.reset()
-            expect(sort.done).toBeFalsy()
-            expect(sort.steps).toEqual(0)
-            expect(sort.swaps).toEqual(0)
-            expect(sort.comparisons).toEqual(0)
-            expect(values).not.toEqual(board.values())
         })
 
         describe("utils", () => {
@@ -238,7 +208,7 @@ describe("Bogo", function() {
             })
 
             it("it has a title", () => {
-                expect(Sorts.BogoSingleCompare.title).toEqual('Bogo(Compare & Single Swap)')
+                expect(Sorts.BogoSingleCompare.title).toEqual('Smart Bozo(Compare & Single Swap)')
             })
 
             it("has a board", () => {
@@ -256,21 +226,6 @@ describe("Bogo", function() {
             it("starts with ordered param", () => {
                 expect(sort.ordered).toEqual(true)
             })
-        })
-
-        it("has a reset function", () => {
-            while(!sort.done) {
-                sort.next()
-            }
-            let values = board.values().slice()
-            let base = sort.baseNode
-            let comparison = sort.comparisonNode
-            sort.reset()
-            expect(sort.done).toBeFalsy()
-            expect(sort.steps).toEqual(0)
-            expect(sort.swaps).toEqual(0)
-            expect(sort.comparisons).toEqual(0)
-            expect(values).not.toEqual(board.values())
         })
 
         describe("utils", () => {

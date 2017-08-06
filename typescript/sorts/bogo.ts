@@ -46,7 +46,7 @@ export class Bogo extends BaseSort {
 }
 
 export class BogoSingle extends BaseSort {
-    static title = "Bogo(Single Swap)"
+    static title = "Bozo(Single Swap)"
     setUp() {
         this.checkSorted()
         this.setUpNext()
@@ -86,7 +86,7 @@ export class BogoSingle extends BaseSort {
 }
 
 export class BogoSingleCompare extends BogoSingle {
-    static title = 'Bogo(Compare & Single Swap)'
+    static title = 'Smart Bozo(Compare & Single Swap)'
 
     nodesInOrder(values: number[]) {
         // used to compare nodes

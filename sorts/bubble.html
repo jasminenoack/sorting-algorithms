@@ -49,7 +49,7 @@
                         There are a couple common optimizations for Bubble Sort.
                     </p>
 
-                    <div id="bubble-optimizations" class="two"></div>
+                    <div id="bubble-optimizations" class="four"></div>
 
                     <ol>
                         <li>Short Circuit: A short circuit stops the sort once it determines that the array is not in order. This is determined by tracking if it swaped any elements in the last iteration. If it hasn't the array is already in order.</li>
@@ -77,7 +77,7 @@
 
                 <p>The effiency of Bubble Sort varies greatly by the order of the elements to start with when an optimized sort is used. This is because in an ordered list a short circuit can take O(n) while a reversed list will take O(n<sup>2</sup>) as it has to compare every element to every other element.</p>
 
-                <div id="bubble-shuffles" class="two"></div>
+                <div id="bubble-shuffles" class="four"></div>
 
                 <p>We see that the ordered and almost ordered lists both finish very quickly. While the reversed and randomized lists take much longer. This is an important fact about comparison sorts in general. They tend to work best on mostly sorted lists(with a couple exceptions). This is because if they are able to determine a short circuit on a sorted or almost sorted list they are likely to go through the list few times.</p>
 
@@ -124,7 +124,7 @@ def bubble_sort(nums):
     return nums
                 </code></pre>
 
-                <p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Bubble_sort">Other Languages</a></p>
+                <p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Bubble_sort" target="_blank">Other Languages</a></p>
             </article>
 
             <article>
@@ -140,7 +140,7 @@ def bubble_sort(nums):
                     One simple way to optimize is to process things concurrently.
                 </p>
 
-                <div id="bubble-concur" class="two"></div>
+                <div id="bubble-concur" class="four"></div>
 
                 <p>
                     It becomes very obvious upon observation that the concurrent sorts are much fast in time. They do not, however, change the actual number of swaps or comparisons that need to be made. Instead they use additional resources to complete faster by doing things at the same time. The last sort show here is an <a href="./odd-even.html">Odd-Even Sort</a>. This is technically not a Bubble Sort but is a clear extension of this concurrency idea. 
@@ -158,7 +158,7 @@ def bubble_sort(nums):
                     One thing that developers do is look for fixable problems in algorithms. Looking at Bubble Sort something jumps out at me. If I need to move a number back 4 places I have to iterate 4 times to do that. This seems inefficent. Would it be faster if I didn't have to do that? 
                 </p>
 
-                <div id="bubble-dont-restart" class="two"></div>
+                <div id="bubble-dont-restart" class="four"></div>
 
                 <p>
                     Here we see a test of that function against other functions, and it doesn't seem to be much better than the original Bubble Sort. however, by watching the visualization we can see why. It's still making a lot of comparisons. It moves large sets of unordered data around. Then when it finally orders it, it still looks at it all again as it moves up. So we can assume that we can optimize it further. Examples of this are shown in the second 2 examples. <a href="./gnome.html">Gnome Sort</a> creates a "sorted list" as a sub list of the full list and moves each element into that list. <a href="./cocktail.html">Cocktail Sort</a> sorts both upwards and downwards to move elements faster(although this implementation does not include a short circuit, but it could).

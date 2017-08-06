@@ -3166,6 +3166,43 @@ var FirstLast;
     Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
     Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
 })(FirstLast || (FirstLast = {}));
+var Shuffle;
+(function (Shuffle) {
+    var element = document.getElementById('order');
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info);
+    var sort1 = new Sorts.CocktailShortCircuit(board1);
+    var board2 = new Boards.Board(size, new Shuffles.FirstAndLastSwapped(), valueType, Boards.Verbosity.Info);
+    var sort2 = new Sorts.CocktailShortCircuit(board2);
+    var board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info);
+    var sort3 = new Sorts.CocktailShortCircuit(board3);
+    var board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info);
+    var sort4 = new Sorts.CocktailShortCircuit(board4);
+    var boardList = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
+        }
+    ];
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'order-chart');
+})(Shuffle || (Shuffle = {}));
 
 
 /***/ })

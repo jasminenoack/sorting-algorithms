@@ -92,3 +92,45 @@ namespace FirstLast {
     )
     Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete)
 }
+
+namespace Shuffle {
+    const element = document.getElementById('order');
+    const size = Sizes._25
+    const valueType = new ValueTypes.Integer()
+    const board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info)
+    const sort1 = new Sorts.CocktailShortCircuit(board1)
+    const board2 = new Boards.Board(size, new Shuffles.FirstAndLastSwapped(), valueType, Boards.Verbosity.Info)
+    const sort2 = new Sorts.CocktailShortCircuit(board2)
+    const board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info)
+    const sort3 = new Sorts.CocktailShortCircuit(board3)
+    const board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info)
+    const sort4 = new Sorts.CocktailShortCircuit(board4)
+    const boardList: any[] = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
+        }
+    ]
+
+    boardList.forEach((board, index) => {
+        Index.createBoard(
+            index, (board.sort.constructor as any), boardList,
+            boxHeight, boxWidth, element
+        )
+    })
+
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete)
+    Index.manageAutoRunCharts(boardList, 1000, 'order-chart')
+}

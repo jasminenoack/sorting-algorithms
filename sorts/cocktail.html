@@ -24,7 +24,7 @@
                     <div class="normal clear">
                         <div class="left paddingRight10 one" id="example"></div>
                         <p>
-                            <a href="https://en.wikipedia.org/wiki/Cocktail_shaker_sort" targert="_blank">Cocktail Sort</a> is also known as bidirectional <a href="./bubble.html">Bubble Sort</a>, Cocktail Shaker Sort, Shaker Sort, Ripple Sort, Shuffle Sort, or Shuttle Sort. This sort is named mostly for the way that the data moves. Data is shuttled to either the top or the bottom as the sort works it's way up or down the values. This sort fixes the problem of <a href="https://en.wikipedia.org/wiki/Bubble_sort#Rabbits_and_turtles" target="_blank">turtles</a> in Bubble Sort.
+                            <a href="https://en.wikipedia.org/wiki/Cocktail_shaker_sort" target="_blank">Cocktail Sort</a> is also known as bidirectional <a href="./bubble.html">Bubble Sort</a>, Cocktail Shaker Sort, Shaker Sort, Ripple Sort, Shuffle Sort, or Shuttle Sort. This sort is named mostly for the way that the data moves. Data is shuttled to either the top or the bottom as the sort works it's way up or down the values. This sort fixes the problem of <a href="https://en.wikipedia.org/wiki/Bubble_sort#Rabbits_and_turtles" target="_blank">turtles</a> in Bubble Sort.
                         </p>
                     </div>
                 </article>
@@ -39,7 +39,7 @@
                     <div class="normal clear">
                         <div class="left paddingRight10 one" id="firstlast"></div>
                         <p>
-                            Cocktail without a short circuit takes the same amount of time as a Bubble Sort without a short circuit that skips sorted elements. However, in the case that the array has turtles the Cocktail Sort with a short circuit will be much faster than a Bubble Sort with a short circuit. This is because cocktail can move values down at the same speed it can move values to the top. This allows it to handle more kinds of value sets than Bubble Sort. For example, if only the first and last element of an array have been switched Cocktail can move the last element to the end and the first element to the beginning in one set of moving up and down the array. 
+                            Cocktail without a short circuit takes the same amount of time as a Bubble Sort without a short circuit that skips sorted elements. However, in the case that the array has turtles the Cocktail Sort with a short circuit will be much faster than a Bubble Sort with a short circuit. This is because cocktail can move values down at the same speed it can move values to the top. This allows it to handle more kinds of value sets than Bubble Sort. For example, if only the first and last element of an array have been switched Cocktail can move the last element to the end and the first element to the beginning in one set of moving up and down the array. While Bubble Sort will only be able to move the turtle one index each round.
                         </p>
                     </div>
 
@@ -53,7 +53,11 @@
                 <article>
                     <h1>Comparing Efficency Among Orderings</h1>
 
-                    <p>Coming Soon</p>
+                    <div id="order" class="four"></div>
+
+                    <p>Cocktail like Bubble is very quick on an ordered array. It is also quick on arrays where only a couple elements are out of place. However, unlike bubble we see this efficency in both directions. This allows it to be slightly more efficent on a random list. However, a reversed list will take the max time possible every time. This is because every element has to be moved into position.</p>
+
+                    <div id="order-chart"></div>
 
                     <p><a href="./debug/scatter.html">Compare Yourself</a></p>
                     <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
@@ -67,18 +71,44 @@
                     <h5>Python</h5>
 
                     <pre><code class="python">
+def cocktail(array):
+    # get a list of indices from the start to the index before the last number
+    indicies = range(len(array) - 1)
+    # track the direction up is true
+    direction = 1
+    # track if the array is sorted
+    swapped = True 
+    # while we have made a swap
+    while(swapped):
+        # set the array to have not made any swaps
+        swapped = False
+        # for each index compare the number to the next number 
+        for i in indicies:
+            if (
+                # if direction = 1 and the number is greater than the next number
+                (direction and array[i] > array[i + 1]) or 
+                # or direction = 0 and the number is less than the previous number
+                ( not direction and array[i] < array[i - 1])
+            ):
+                # determine what index to swap based on direction
+                swapIndex = i + 1 if direction else i - 1
+                swapped = True
+                array[i], array[swapIndex] = array[swapIndex], array[i]
+        # if we did not have to make any swaps the array was in order.
+        if not swapped:
+            break
+        # swap the direction of the array
+        direction = 0 if direction else 1
+        # if we are going up remove the highest number from indicies
+        # if we are going down remove the lowest number from the array and reverse it
+        if direction:
+            indicies = list(reversed(indicies))[:-1]
+        else:
+            indicies = list(reversed(indicies[1:]))
+    return array
             </code></pre>
 
-                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Cocktail_sort">Other Languages</a></p> 
-                </article>
-
-                <article>
-                    <h1>Further Optimization</h1>
-
-                    <p>Coming Soon</p>
-
-                    <p><a href="./debug/scatter.html">Compare Yourself</a></p>
-                    <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
+                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Cocktail_sort" target="_blank">Other Languages</a></p> 
                 </article>
 
                 <article>

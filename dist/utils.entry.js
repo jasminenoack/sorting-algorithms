@@ -70,12 +70,27 @@
 
 Array.prototype.shuffle = function () {
     // fisher yates shuffling algorithm
+    if (Object.keys(this.distribution()).length === 1) {
+        return this;
+    }
     var newArr = this.slice();
+    var old = newArr.slice();
     for (var i = 0; i < this.length; i++) {
         var randomInt = Math.floor(Math.random() * newArr.length);
         this[i] = newArr.splice(randomInt, 1)[0];
     }
+    if (this.isEqual(old)) {
+        this.shuffle();
+    }
     return this;
+};
+Array.prototype.isEqual = function (array) {
+    if (this.length !== array.length) {
+        return false;
+    }
+    return !this.any(function (num, i) {
+        return num !== array[i];
+    });
 };
 Array.prototype.range = function (length) {
     var arr = [];
@@ -151,7 +166,7 @@ Array.prototype.sorted = function () {
 };
 Array.prototype.any = function (fun) {
     for (var i = 0; i < this.length; i++) {
-        if (fun(this[i])) {
+        if (fun(this[i], i)) {
             return true;
         }
     }

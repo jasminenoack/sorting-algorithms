@@ -1443,6 +1443,51 @@ var BogoSingleCompare = (function (_super) {
     return BogoSingleCompare;
 }(BogoSingle));
 exports.BogoSingleCompare = BogoSingleCompare;
+var Bogobogo = (function (_super) {
+    __extends(Bogobogo, _super);
+    function Bogobogo() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Bogobogo.prototype.setUp = function () {
+        this.currentTop = 0;
+    };
+    Bogobogo.prototype.currentNodes = function () {
+        return [this.currentTop];
+    };
+    Bogobogo.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        var currentNodes = this.currentNodes();
+        this.steps++;
+        var values = this.board.values();
+        this.comparisons++;
+        if (values[this.currentTop] < values[this.currentTop + 1]) {
+            this.currentTop++;
+        }
+        else {
+            var start = values.slice();
+            var shuffledSubset = values.slice(0, this.currentTop + 2).shuffle();
+            values.splice.apply(values, [0, shuffledSubset.length].concat(shuffledSubset));
+            this.board.setPoints(values);
+            var difference = 0;
+            for (var i = 0; i < values.length; i++) {
+                if (values[i] !== start[i]) {
+                    difference++;
+                }
+            }
+            this.swaps += difference / 2;
+            this.currentTop = 0;
+        }
+        if (this.currentTop === this.length - 1) {
+            this.done = true;
+        }
+        return currentNodes;
+    };
+    Bogobogo.title = 'Bogobogosort';
+    return Bogobogo;
+}(baseSort_1.BaseSort));
+exports.Bogobogo = Bogobogo;
 var Permutation = (function (_super) {
     __extends(Permutation, _super);
     function Permutation() {
@@ -1452,12 +1497,13 @@ var Permutation = (function (_super) {
         this.original = this.board.values().slice();
         this.permutation = Array.prototype.range(this.board.length);
         this.checkSorted();
+        this.changed = [this.length - 1];
     };
     Permutation.prototype.checkSorted = function () {
         Bogo.prototype.checkSorted.call(this);
     };
     Permutation.prototype.currentNodes = function () {
-        return Array.prototype.range(this.board.length);
+        return this.changed;
     };
     Permutation.prototype.getHighestPossible = function (array, highest) {
         while (array.indexOf(highest) !== -1) {
@@ -1470,6 +1516,9 @@ var Permutation = (function (_super) {
         var lastValue = nextPermutation.pop();
         while (lastValue === this.getHighestPossible(nextPermutation, this.length - 1)) {
             lastValue = nextPermutation.pop();
+        }
+        if (this.changed.indexOf(nextPermutation.length) === -1) {
+            this.changed.push(nextPermutation.length);
         }
         var nextNum = lastValue + 1;
         while (nextPermutation.length < this.length) {

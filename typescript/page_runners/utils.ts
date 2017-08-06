@@ -7,16 +7,35 @@ interface Array<T> {
     distribution(): {};
     sorted(): boolean;
     any(func: (item: any) => boolean): boolean;
+    isEqual(array: T[]): boolean;
 }
 
 Array.prototype.shuffle = function (): any[] {
     // fisher yates shuffling algorithm
+    if (Object.keys(this.distribution()).length === 1) {
+        return this
+    }
+
     let newArr = this.slice()
+    let old = newArr.slice()
     for (let i = 0; i < this.length; i++) {
         let randomInt = Math.floor(Math.random() * newArr.length)
         this[i] = newArr.splice(randomInt, 1)[0]
     }
+
+    if (this.isEqual(old)) {
+        this.shuffle()
+    }
     return this
+}
+
+Array.prototype.isEqual = function (array: any[]): boolean {
+    if (this.length !== array.length) {
+        return false
+    }
+    return !this.any((num, i) => {
+        return num !== array[i]
+    })
 }
 
 Array.prototype.range = function (length): any[] {
@@ -97,9 +116,9 @@ Array.prototype.sorted = function (): boolean {
     return true
 }
 
-Array.prototype.any = function (fun): boolean {
+Array.prototype.any = function (fun: (item: any, index?: number) => boolean): boolean {
     for(let i = 0; i < this.length; i++) {
-        if (fun(this[i])) {
+        if (fun(this[i], i)) {
             return true
         }
     }

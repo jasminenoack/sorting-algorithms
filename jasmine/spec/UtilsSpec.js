@@ -58,5 +58,10 @@ describe("Utils", function() {
             expect(x.any((num) => num === 4)).toBeTruthy()
             expect(x.any((num) => num === 5)).toBeTruthy()
         })
+
+        it('isEqual', () => {
+            expect([1, 2, 3].isEqual([1, 2, 3])).toBeTruthy()
+            expect([1, 2, 3].isEqual([1, 4, 3])).toBeFalsy()
+        })
     })
 });

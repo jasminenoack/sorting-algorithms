@@ -323,7 +323,9 @@ describe("Bogo", function() {
         describe("utils", () => {
 
             it("has current nodes", () => {
-                expect(sort.currentNodes()).toEqual([0, 1, 2, 3, 4])
+                expect(sort.currentNodes()).toEqual([4])
+                sort.next()
+                expect(sort.currentNodes()).toEqual([3, 4])
             })
 
             it("it handles ordered group", () => {
@@ -1163,6 +1165,64 @@ describe("Bogo", function() {
 
                 expect(sort.done).toEqual(true)
                 expect(board.values()).toEqual([-2, -1, 0, 1, 2])
+            })
+        })
+    })
+
+    describe("bogobogo", () => {
+        beforeEach(function () {
+            length = 5
+            size = Sizes.fewFew
+            board = new Boards.Board(size)
+            Sort = Sorts.Bogobogo
+            sort = new Sort(board)
+        });
+
+        describe("create", function () {
+            it("it has a title", () => {
+                expect(Sort.title).toEqual('Bogobogosort')
+            })
+
+            it("has current top", () => {
+                expect(sort.currentTop).toEqual(0)
+            })
+        })
+
+        describe('utils', () => {
+            it('handles sorted', () => {
+                board.setPoints([0, 1, 2, 3, 4])
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0])
+                expect(sort.next()).toEqual([1])
+                expect(sort.next()).toEqual([2])
+                expect(sort.next()).toEqual([3])
+
+                expect(sort.done).toEqual(true)
+                for (let i = 0; i < board.length; i++) {
+                    expect(i).toEqual(board.values()[i])
+                }
+            })
+
+            it('shuffles numbers when out of order', () => {
+                let values = [0, 1, 2, 4, 3]
+                board.setPoints(values.slice())
+                sort = new Sort(board)
+
+                expect(sort.next()).toEqual([0])
+                expect(sort.next()).toEqual([1])
+                expect(sort.next()).toEqual([2])
+                expect(sort.next()).toEqual([3])
+
+                expect(sort.currentTop).toEqual(0)
+                expect(sort.done).toEqual(false)
+                expect(values).not.toEqual(board.values())
+            })
+
+            it('returns current top', () => {
+                expect(sort.currentNodes()).toEqual([0])
+                sort.currentTop = 3
+                expect(sort.currentNodes()).toEqual([3])
             })
         })
     })

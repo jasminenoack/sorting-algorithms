@@ -100,15 +100,63 @@ export class BogoSingleCompare extends BogoSingle {
     }
 }
 
+export class Bogobogo extends BaseSort {
+    currentTop: number 
+    static title: string = 'Bogobogosort'
+    setUp() {
+        this.currentTop = 0
+    }
+
+    currentNodes() {
+        return [this.currentTop]
+    }
+
+    next() {
+        if (this.done) {
+            return []
+        }
+        let currentNodes = this.currentNodes()
+        this.steps++
+
+        const values = this.board.values()
+        this.comparisons++
+        if (values[this.currentTop] < values[this.currentTop + 1]) {
+            this.currentTop++
+        } else {
+            let start = values.slice()
+            let shuffledSubset = (values.slice(0, this.currentTop + 2) as any).shuffle()
+            values.splice(0, shuffledSubset.length, ...shuffledSubset)
+            this.board.setPoints(values)
+            let difference = 0
+            for (let i = 0; i < values.length; i++) {
+                if (values[i] !== start[i]) {
+                    difference++
+                }
+            }
+            this.swaps += difference / 2
+
+            this.currentTop = 0
+        }
+
+        if(this.currentTop === this.length - 1) {
+            this.done = true
+        }
+
+        return currentNodes
+    }
+}
+
 export class Permutation extends BaseSort {
     original: number[]
     permutation: number[]
     static title: string = 'Permutation Sort'
+    changed: number[]
 
     setUp() {
         this.original = this.board.values().slice()
         this.permutation = (Array.prototype as any).range(this.board.length)
         this.checkSorted()
+        this.changed = [this.length - 1]
     }
 
     checkSorted() {
@@ -116,7 +164,7 @@ export class Permutation extends BaseSort {
     }
 
     currentNodes() {
-        return (Array.prototype as any).range(this.board.length)
+        return this.changed
     }
 
     getHighestPossible(array: number[], highest: number) {
@@ -132,6 +180,10 @@ export class Permutation extends BaseSort {
 
         while(lastValue === this.getHighestPossible(nextPermutation, this.length - 1)) {
             lastValue = nextPermutation.pop()
+        }
+
+        if (this.changed.indexOf(nextPermutation.length) === -1) {
+            this.changed.push(nextPermutation.length)
         }
 
         let nextNum = lastValue + 1

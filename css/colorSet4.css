@@ -1,0 +1,56 @@
+body {
+    color: #ffccbc;
+}
+a {
+    color:#fff
+}
+
+.square {
+    background: #008871;
+}
+
+.queen {
+    background: #77a6f7;
+}
+
+article {
+    padding: 10px;
+    background-color: rgba(119, 166, 247, 0.25);
+    margin: 10px;
+}   
+
+button {
+    background: #008871;
+    color: #ffccbc;
+    box-shadow: 0 6px #77a6f7;
+}
+
+button.active {
+    background: #77a6f7;
+    box-shadow: 0 6px #008871;
+}
+
+select {
+    border: 1px solid #77a6f7;
+    color: #ffccbc;
+    background-color: #008871;
+} 
+
+.point.shadow {
+    fill: #fff
+}
+
+svg {
+    background: rgba(119, 166, 247, 0.15);
+}
+
+.wrapper {
+    background: rgba(256, 256, 256, 0.25);
+}
+
+.point.active {
+    fill: #008871;
+}
+.point.placed {
+    fill: #77a6f7;
+}

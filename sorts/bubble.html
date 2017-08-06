@@ -3,19 +3,19 @@
     <head>
         <meta charset="utf-8">
         <title>Bubble Sort</title>
-        <link rel="stylesheet" type="text/css" href="lib/nvd3.css">
-        <link rel="stylesheet" href="lib/highlight.default.css">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <link rel="stylesheet" type="text/css" href="css/colorSet1.css">
+        <link rel="stylesheet" type="text/css" href="../lib/nvd3.css">
+        <link rel="stylesheet" href="../lib/highlight.default.css">
+        <link rel="stylesheet" type="text/css" href="../css/index.css">
+        <link rel="stylesheet" type="text/css" href="../css/colorSet1.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
-        <script src="lib/highlight.js"></script>
-        <script src="lib/d3.min.js"></script>
-        <script src="lib/nvd3.js"></script>
+        <script src="../lib/highlight.js"></script>
+        <script src="../lib/d3.min.js"></script>
+        <script src="../lib/nvd3.js"></script>
     </head>
     <body>
         <content>
             <header>Bubble Sort</header>
-            <a href="index.html"><< Back</a>
+            <a href="../index.html"><< Back</a>
             <article>
                 <h1>Summary</h1>
                 <div class="clear normal">
@@ -66,9 +66,9 @@
                     </p>
                 </div>
 
-                <p><a href="sort_comparison.html">Compare Yourself</a></p>
+                <p><a href="./debug/scatter.html">Compare Yourself</a></p>
 
-                <p><a href="profile_comparison.html">See More Detailed Profile</a></p>
+                <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
             </article>
 
             <article>
@@ -86,8 +86,8 @@
                     Here we see the effect of the order. The Ordered list finishes in O(n) time. The almost ordered list in about double that. Whereas the random and reversed lists end up taking a lot of time. And swaps for the reversed list are the same rate as comparisons. 
                 </p>
 
-                <p><a href="sort_comparison.html">Compare Yourself</a></p>
-                <p><a href="profile_comparison.html">See More Detailed Profile</a></p>
+                <p><a href="./debug/scatter.html">Compare Yourself</a></p>
+                <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
             </article>
 
             <article>
@@ -106,7 +106,7 @@ def bubble_sort(nums):
         ordered = True
         # For each round look at every number up to the second to last that has not been sorted.
         # We do not need to reconsider the final number of the previous round
-        # because bubble sort always puts the highest number in the last position each round.
+        # because Bubble Sort always puts the highest number in the last position each round.
         for index in range(len(nums) - i):
             # compare each value to the next value in the array.
             # if the next value is smaller swap the values
@@ -171,16 +171,16 @@ def bubble_sort(nums):
                     From my testing this isn't the most stable data set. There are a few insights. We see that Gnome's sublist does make it more efficent than the others, and that cocktail's lack of a short circuit makes it less efficient. Sometimes our attempt to improve Bubble Sort will beat the optimized Bubble Sort sometimes it won't. This is how software testing works. You build something you benchmark it then you determine if it's an improvement. Here we have determined that Gnome Sort is the best improvement of this set.
                 </p>
 
-                <p><a href="sort_comparison.html">Compare Yourself</a></p>
-                <p><a href="profile_comparison.html">See More Detailed Profile</a></p>
+                <p><a href="./debug/scatter.html">Compare Yourself</a></p>
+                <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
             </article>
 
         
 
         <script>hljs.initHighlightingOnLoad();</script>
-        <script src="dist/utils.entry.js"></script>
-        <script src="dist/queens.entry.js"></script>
-        <script src="dist/bubble.entry.js"></script>
+        <script src="../dist/utils.entry.js"></script>
+        <script src="../dist/queens.entry.js"></script>
+        <script src="../dist/bubble.entry.js"></script>
         </content>
     </body>
 </html>

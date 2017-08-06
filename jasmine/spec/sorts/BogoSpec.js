@@ -325,7 +325,7 @@ describe("Bogo", function() {
             it("has current nodes", () => {
                 expect(sort.currentNodes()).toEqual([4])
                 sort.next()
-                expect(sort.currentNodes()).toEqual([3, 4])
+                expect(sort.currentNodes()).toEqual([4, 3])
             })
 
             it("it handles ordered group", () => {

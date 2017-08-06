@@ -73,6 +73,42 @@ export class ReversedShuffle extends Shuffle {
     title = "Reversed"
 }
 
+export class FirstAndLastSwapped extends Shuffle {
+    k = 0
+    reversed = false
+    title = "First and Last Swapped"
+
+    swap(array: number[]) {
+        [array[0], array[array.length - 1]] = [array[array.length - 1], array[0]]
+    }
+
+    shuffle(array: number[]) {
+        (array as any).sortNumbers()
+        this.swap(array)
+
+        return array
+    }
+}
+
+export class FirstTwoSwapped extends FirstAndLastSwapped {
+    k = 0
+    reversed = false
+    title = "First Two Swapped"
+    swap(array: number[]) {
+        [array[0], array[1]] = [array[1], array[0]]
+    }
+}
+
+export class LastTwoSwapped extends FirstAndLastSwapped {
+    k = 0
+    reversed = false
+    title = "Last Two Swapped"
+
+    swap(array: number[]) {
+        [array[array.length - 2], array[array.length - 1]] = [array[array.length - 1], array[array.length - 2]]
+    }
+}
+
 export let ShuffleList = [
     new OrderedShuffle(),
     new K1Shuffle(),
@@ -82,5 +118,8 @@ export let ShuffleList = [
     new K5ReversedShuffle(),
     new K3ReversedShuffle(),
     new K1ReversedShuffle(),
-    new ReversedShuffle()
+    new ReversedShuffle(),
+    new FirstAndLastSwapped(),
+    new FirstTwoSwapped(),
+    new LastTwoSwapped()
 ]

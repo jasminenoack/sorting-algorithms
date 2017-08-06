@@ -29,3 +29,66 @@ namespace Example {
     )
     Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete)
 }
+
+namespace Optimized {
+    const element = document.getElementById('optimized');
+    const boardList: any[] = []
+    const size = Sizes._25
+    const valueType = new ValueTypes.Integer()
+    const shuffle = new Shuffles.RandomShuffle()
+    const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
+    const sort = new Sorts.BubbleSkipNoShortCircuit(board)
+    const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
+    const sort1 = new Sorts.BubbleSkipsSorted(board1)
+    const board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
+    const sort2 = new Sorts.Cocktail(board2)
+    const board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
+    const sort3 = new Sorts.CocktailShortCircuit(board3)
+    boardList.push(
+        {
+            board: board,
+            sort: sort
+        },
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+    )
+
+    boardList.forEach((board, index) => {
+        Index.createBoard(
+            index, (board.sort.constructor as any), boardList,
+            boxHeight, boxWidth, element
+        )
+    })
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete)
+    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart')
+}
+
+namespace FirstLast {
+    const exampleElement = document.getElementById('firstlast');
+    const boardList: any[] = []
+    const size = Sizes._25
+    const valueType = new ValueTypes.Integer()
+    const shuffle = new Shuffles.FirstAndLastSwapped()
+    const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
+    const sort = new Sorts.CocktailShortCircuit(board)
+    boardList.push({
+        board: board,
+        sort: sort
+    })
+
+    Index.createBoard(
+        boardList.length - 1, (sort.constructor as any), boardList,
+        boxHeight, boxWidth, exampleElement
+    )
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete)
+}

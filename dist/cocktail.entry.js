@@ -315,6 +315,59 @@ var ReversedShuffle = (function (_super) {
     return ReversedShuffle;
 }(Shuffle));
 exports.ReversedShuffle = ReversedShuffle;
+var FirstAndLastSwapped = (function (_super) {
+    __extends(FirstAndLastSwapped, _super);
+    function FirstAndLastSwapped() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 0;
+        _this.reversed = false;
+        _this.title = "First and Last Swapped";
+        return _this;
+    }
+    FirstAndLastSwapped.prototype.swap = function (array) {
+        _a = [array[array.length - 1], array[0]], array[0] = _a[0], array[array.length - 1] = _a[1];
+        var _a;
+    };
+    FirstAndLastSwapped.prototype.shuffle = function (array) {
+        array.sortNumbers();
+        this.swap(array);
+        return array;
+    };
+    return FirstAndLastSwapped;
+}(Shuffle));
+exports.FirstAndLastSwapped = FirstAndLastSwapped;
+var FirstTwoSwapped = (function (_super) {
+    __extends(FirstTwoSwapped, _super);
+    function FirstTwoSwapped() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 0;
+        _this.reversed = false;
+        _this.title = "First Two Swapped";
+        return _this;
+    }
+    FirstTwoSwapped.prototype.swap = function (array) {
+        _a = [array[1], array[0]], array[0] = _a[0], array[1] = _a[1];
+        var _a;
+    };
+    return FirstTwoSwapped;
+}(FirstAndLastSwapped));
+exports.FirstTwoSwapped = FirstTwoSwapped;
+var LastTwoSwapped = (function (_super) {
+    __extends(LastTwoSwapped, _super);
+    function LastTwoSwapped() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 0;
+        _this.reversed = false;
+        _this.title = "Last Two Swapped";
+        return _this;
+    }
+    LastTwoSwapped.prototype.swap = function (array) {
+        _a = [array[array.length - 1], array[array.length - 2]], array[array.length - 2] = _a[0], array[array.length - 1] = _a[1];
+        var _a;
+    };
+    return LastTwoSwapped;
+}(FirstAndLastSwapped));
+exports.LastTwoSwapped = LastTwoSwapped;
 exports.ShuffleList = [
     new OrderedShuffle(),
     new K1Shuffle(),
@@ -324,7 +377,10 @@ exports.ShuffleList = [
     new K5ReversedShuffle(),
     new K3ReversedShuffle(),
     new K1ReversedShuffle(),
-    new ReversedShuffle()
+    new ReversedShuffle(),
+    new FirstAndLastSwapped(),
+    new FirstTwoSwapped(),
+    new LastTwoSwapped()
 ];
 
 
@@ -3060,6 +3116,56 @@ var Example;
     Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
     Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
 })(Example || (Example = {}));
+var Optimized;
+(function (Optimized) {
+    var element = document.getElementById('optimized');
+    var boardList = [];
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var shuffle = new Shuffles.RandomShuffle();
+    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort = new Sorts.BubbleSkipNoShortCircuit(board);
+    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort1 = new Sorts.BubbleSkipsSorted(board1);
+    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort2 = new Sorts.Cocktail(board2);
+    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort3 = new Sorts.CocktailShortCircuit(board3);
+    boardList.push({
+        board: board,
+        sort: sort
+    }, {
+        board: board1,
+        sort: sort1
+    }, {
+        board: board2,
+        sort: sort2
+    }, {
+        board: board3,
+        sort: sort3
+    });
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart');
+})(Optimized || (Optimized = {}));
+var FirstLast;
+(function (FirstLast) {
+    var exampleElement = document.getElementById('firstlast');
+    var boardList = [];
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var shuffle = new Shuffles.FirstAndLastSwapped();
+    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
+    var sort = new Sorts.CocktailShortCircuit(board);
+    boardList.push({
+        board: board,
+        sort: sort
+    });
+    Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
+})(FirstLast || (FirstLast = {}));
 
 
 /***/ })

@@ -192,4 +192,40 @@ describe("Shuffle", function() {
             expect(difference).toEqual(50)
         })
     })
+
+    describe("swaps first and last", () => {
+        beforeEach(function () {
+            shuffle = new Shuffles.FirstAndLastSwapped()
+        })
+
+        it("returns array", function () {
+            expect([9, 1, 2, 3, 4, 5, 6, 7, 8, 0]).toEqual(shuffle.shuffle(orderedArray))
+            expect([9, 1, 2, 3, 4, 5, 6, 7, 8, 0]).toEqual(shuffle.shuffle(nonOrderedArray))
+            expect([9, 1, 2, 3, 4, 5, 6, 7, 8, 0]).toEqual(shuffle.shuffle(reversedArray))
+        })
+    })
+
+    describe("swaps first two", () => {
+        beforeEach(function () {
+            shuffle = new Shuffles.FirstTwoSwapped()
+        })
+
+        it("returns array", function () {
+            expect([1, 0, 2, 3, 4, 5, 6, 7, 8, 9]).toEqual(shuffle.shuffle(orderedArray))
+            expect([1, 0, 2, 3, 4, 5, 6, 7, 8, 9]).toEqual(shuffle.shuffle(nonOrderedArray))
+            expect([1, 0, 2, 3, 4, 5, 6, 7, 8, 9]).toEqual(shuffle.shuffle(reversedArray))
+        })
+    })
+
+    describe("swaps last two", () => {
+        beforeEach(function () {
+            shuffle = new Shuffles.LastTwoSwapped()
+        })
+
+        it("returns array", function () {
+            expect([0, 1, 2, 3, 4, 5, 6, 7, 9, 8]).toEqual(shuffle.shuffle(orderedArray))
+            expect([0, 1, 2, 3, 4, 5, 6, 7, 9, 8]).toEqual(shuffle.shuffle(nonOrderedArray))
+            expect([0, 1, 2, 3, 4, 5, 6, 7, 9, 8]).toEqual(shuffle.shuffle(reversedArray))
+        })
+    })
 });

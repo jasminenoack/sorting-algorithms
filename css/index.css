@@ -237,3 +237,7 @@ content div.three .wrapper {
     margin: 10px auto;
     border-top: 10px solid #ccc
 }
+
+.wrapper h1 {
+    font-size: 14px;
+}

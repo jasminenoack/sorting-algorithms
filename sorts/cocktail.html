@@ -30,8 +30,20 @@
                 </article>
 
                 <article>
-                    <h1>Common Optimizations</h1>
-                    <p>Coming Soon</p>
+                    <h1>Optimization</h1>
+                    <div class="four" id="optimized"></div>
+
+                    <p>As stated above Cocktail Sort is fundamentally an optimization of <a href="./bubble.html">Bubble Sort</a>. So the easiest
+                    way to understand this optimization is to compare the two.</p>
+
+                    <div class="normal clear">
+                        <div class="left paddingRight10 one" id="firstlast"></div>
+                        <p>
+                            Cocktail without a short circuit takes the same amount of time as a Bubble Sort without a short circuit that skips sorted elements. However, in the case that the array has turtles the Cocktail Sort with a short circuit will be much faster than a Bubble Sort with a short circuit. This is because cocktail can move values down at the same speed it can move values to the top. This allows it to handle more kinds of value sets than Bubble Sort. For example, if only the first and last element of an array have been switched Cocktail can move the last element to the end and the first element to the beginning in one set of moving up and down the array. 
+                        </p>
+                    </div>
+
+                    <div id="optimize-chart"></div>
 
                     <p><a href="./debug/scatter.html">Compare Yourself</a></p>
 

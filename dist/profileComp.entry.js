@@ -315,6 +315,59 @@ var ReversedShuffle = (function (_super) {
     return ReversedShuffle;
 }(Shuffle));
 exports.ReversedShuffle = ReversedShuffle;
+var FirstAndLastSwapped = (function (_super) {
+    __extends(FirstAndLastSwapped, _super);
+    function FirstAndLastSwapped() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 0;
+        _this.reversed = false;
+        _this.title = "First and Last Swapped";
+        return _this;
+    }
+    FirstAndLastSwapped.prototype.swap = function (array) {
+        _a = [array[array.length - 1], array[0]], array[0] = _a[0], array[array.length - 1] = _a[1];
+        var _a;
+    };
+    FirstAndLastSwapped.prototype.shuffle = function (array) {
+        array.sortNumbers();
+        this.swap(array);
+        return array;
+    };
+    return FirstAndLastSwapped;
+}(Shuffle));
+exports.FirstAndLastSwapped = FirstAndLastSwapped;
+var FirstTwoSwapped = (function (_super) {
+    __extends(FirstTwoSwapped, _super);
+    function FirstTwoSwapped() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 0;
+        _this.reversed = false;
+        _this.title = "First Two Swapped";
+        return _this;
+    }
+    FirstTwoSwapped.prototype.swap = function (array) {
+        _a = [array[1], array[0]], array[0] = _a[0], array[1] = _a[1];
+        var _a;
+    };
+    return FirstTwoSwapped;
+}(FirstAndLastSwapped));
+exports.FirstTwoSwapped = FirstTwoSwapped;
+var LastTwoSwapped = (function (_super) {
+    __extends(LastTwoSwapped, _super);
+    function LastTwoSwapped() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.k = 0;
+        _this.reversed = false;
+        _this.title = "Last Two Swapped";
+        return _this;
+    }
+    LastTwoSwapped.prototype.swap = function (array) {
+        _a = [array[array.length - 1], array[array.length - 2]], array[array.length - 2] = _a[0], array[array.length - 1] = _a[1];
+        var _a;
+    };
+    return LastTwoSwapped;
+}(FirstAndLastSwapped));
+exports.LastTwoSwapped = LastTwoSwapped;
 exports.ShuffleList = [
     new OrderedShuffle(),
     new K1Shuffle(),
@@ -324,7 +377,10 @@ exports.ShuffleList = [
     new K5ReversedShuffle(),
     new K3ReversedShuffle(),
     new K1ReversedShuffle(),
-    new ReversedShuffle()
+    new ReversedShuffle(),
+    new FirstAndLastSwapped(),
+    new FirstTwoSwapped(),
+    new LastTwoSwapped()
 ];
 
 

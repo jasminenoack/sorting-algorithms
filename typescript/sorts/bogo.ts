@@ -20,6 +20,7 @@ export class Bogo extends BaseSort {
             this.done = true
             return true
         }
+        this.comparisons += this.length - 1
         return false
     }
 
@@ -96,5 +97,76 @@ export class BogoSingleCompare extends BogoSingle {
         }
         this.comparisons++
         return inOrder
+    }
+}
+
+export class Permutation extends BaseSort {
+    original: number[]
+    permutation: number[]
+    static title: string = 'Permutation Sort'
+
+    setUp() {
+        this.original = this.board.values().slice()
+        this.permutation = (Array.prototype as any).range(this.board.length)
+        this.checkSorted()
+    }
+
+    checkSorted() {
+        Bogo.prototype.checkSorted.call(this)
+    }
+
+    currentNodes() {
+        return (Array.prototype as any).range(this.board.length)
+    }
+
+    getHighestPossible(array: number[], highest: number) {
+        while(array.indexOf(highest) !== -1) {
+            highest--
+        }
+        return highest
+    }
+
+    findNextPermutation() {
+        let nextPermutation = this.permutation
+        let lastValue = nextPermutation.pop()
+
+        while(lastValue === this.getHighestPossible(nextPermutation, this.length - 1)) {
+            lastValue = nextPermutation.pop()
+        }
+
+        let nextNum = lastValue + 1
+        while (nextPermutation.length < this.length) {
+            if (nextPermutation.indexOf(nextNum) === -1) {
+                nextPermutation.push(nextNum)
+                nextNum = 0
+            } else {
+                nextNum++
+            }
+        }
+    }
+
+    setValues() {
+        let values: number[] = []
+        const oldValues = this.original
+        const currentBoard = this.board.values()
+        this.permutation.forEach((index, i) => {
+            if (currentBoard[i] !== oldValues[index]) {
+                this.swaps++
+            }
+            values.push(oldValues[index])
+        })
+        this.board.setPoints(values)
+    }
+
+    next() {
+        if (this.done) {
+            return []
+        }
+        this.steps++
+        this.findNextPermutation()
+        this.setValues()
+        this.checkSorted()
+        this.trackProfile()
+        return this.currentNodes()
     }
 }

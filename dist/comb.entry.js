@@ -163,7 +163,7 @@ var BaseSort = (function () {
     };
     BaseSort.prototype.setUp = function () {
         console.log("not implemented");
-        console.log(this);
+        console.log(this.constructor.title);
     };
     BaseSort.title = '';
     return BaseSort;
@@ -1357,6 +1357,7 @@ var Bogo = (function (_super) {
             this.done = true;
             return true;
         }
+        this.comparisons += this.length - 1;
         return false;
     };
     Bogo.prototype.next = function () {
@@ -1442,6 +1443,73 @@ var BogoSingleCompare = (function (_super) {
     return BogoSingleCompare;
 }(BogoSingle));
 exports.BogoSingleCompare = BogoSingleCompare;
+var Permutation = (function (_super) {
+    __extends(Permutation, _super);
+    function Permutation() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Permutation.prototype.setUp = function () {
+        this.original = this.board.values().slice();
+        this.permutation = Array.prototype.range(this.board.length);
+        this.checkSorted();
+    };
+    Permutation.prototype.checkSorted = function () {
+        Bogo.prototype.checkSorted.call(this);
+    };
+    Permutation.prototype.currentNodes = function () {
+        return Array.prototype.range(this.board.length);
+    };
+    Permutation.prototype.getHighestPossible = function (array, highest) {
+        while (array.indexOf(highest) !== -1) {
+            highest--;
+        }
+        return highest;
+    };
+    Permutation.prototype.findNextPermutation = function () {
+        var nextPermutation = this.permutation;
+        var lastValue = nextPermutation.pop();
+        while (lastValue === this.getHighestPossible(nextPermutation, this.length - 1)) {
+            lastValue = nextPermutation.pop();
+        }
+        var nextNum = lastValue + 1;
+        while (nextPermutation.length < this.length) {
+            if (nextPermutation.indexOf(nextNum) === -1) {
+                nextPermutation.push(nextNum);
+                nextNum = 0;
+            }
+            else {
+                nextNum++;
+            }
+        }
+    };
+    Permutation.prototype.setValues = function () {
+        var _this = this;
+        var values = [];
+        var oldValues = this.original;
+        var currentBoard = this.board.values();
+        this.permutation.forEach(function (index, i) {
+            if (currentBoard[i] !== oldValues[index]) {
+                _this.swaps++;
+            }
+            values.push(oldValues[index]);
+        });
+        this.board.setPoints(values);
+    };
+    Permutation.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        this.findNextPermutation();
+        this.setValues();
+        this.checkSorted();
+        this.trackProfile();
+        return this.currentNodes();
+    };
+    Permutation.title = 'Permutation Sort';
+    return Permutation;
+}(baseSort_1.BaseSort));
+exports.Permutation = Permutation;
 
 
 /***/ }),

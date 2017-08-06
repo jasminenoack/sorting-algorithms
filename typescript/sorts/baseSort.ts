@@ -116,6 +116,6 @@ export abstract class BaseSort {
 
     setUp() {
         console.log("not implemented")
-        console.log(this)
+        console.log((this.constructor as any).title)
     }
 }

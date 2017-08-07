@@ -20,26 +20,21 @@
                 <article>
                     <h1>Summary</h1>
                     <div class="normal clear">
-                        <p>
-                            <div class="left paddingRight10 one" id="example"></div>
-                        </p>
-                        <p>Coming Soon</p>
+                        <div class="left paddingRight10 one" id="example"></div>
+                        <p><a href="https://en.wikipedia.org/wiki/Gnome_sort" target="_blank">Gnome Sort</a> also known as Stupid Sort is similar to <a href="./insertion.html">Insertion Sort</a>. The sort is simple to implement as it does not require any nested loops. The sort goes through the elements of the array in order. If it finds an element that is smaller than the element before it it swaps the element downwards until it is correctly placed(unlike insertion sort which waits to place an element until it's found the right position). Then it continues with the next element in the sequence. This like Insertion Sort is a stable sorting algorithm that splits the list into a sorted and unsorted section. Each element is added to the sorted section until the entire array becomes sorted. It runs in O(n<sup>2</sup>) but runs closer to O(n) for an almost sorted list.</p>
                     </div>
-                </article>
-
-                <article>
-                    <h1>Common Optimizations</h1>
-                    <p>Coming Soon</p>
-
-                    <p><a href="./debug/scatter.html">Compare Yourself</a></p>
-
-                    <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
                 </article>
 
                 <article>
                     <h1>Comparing Efficency Among Orderings</h1>
 
-                    <p>Coming Soon</p>
+                    <div id="order" class="four"></div>
+
+                    <p>
+                        From these sets it's easy to see that if an array is in order or a few elements are out of place Gnome Sort is able to quickly sort the array. However, if a lot of elements are out of place or the array is reversed it takes much longer. A reversed array takes the max time possible as every new element has to be moved to the beginning of the sorted section of the array.
+                    </p>
+
+                    <div id="order-chart"></div>
 
                     <p><a href="./debug/scatter.html">Compare Yourself</a></p>
                     <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
@@ -48,21 +43,12 @@
                 <article>
                     <h1>Code</h1>
 
-                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Gnome_sort">Code Examples</a></p>
-                </article>
-
-                <article>
-                    <h1>Further Optimization</h1>
-
-                    <p>Coming Soon</p>
-
-                    <p><a href="./debug/scatter.html">Compare Yourself</a></p>
-                    <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
+                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Gnome_sort" target="_blank">Code Examples</a></p>
                 </article>
 
                 <article>
                     <h1>More Links</h1>
-                    <!-- <p><a href="https://www.youtube.com/watch?v=HfdT_uOqbvA" target="_blank">Sound of Sorting</a></p> -->
+                    <p><a href="https://www.youtube.com/watch?v=_Xq9Z37Ijxk" target="_blank">Sound of Sorting</a></p>
                 </article>
 
                 <script src="../dist/utils.entry.js"></script>

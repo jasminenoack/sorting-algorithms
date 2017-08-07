@@ -93,27 +93,7 @@
         <article>
             <h1>Code</h1>
 
-            <h5>Python</h5>
-
-            <pre><code class="python">
-from random import shuffle
-
-def bogo(array):
-    # check if the array is sorted.
-    # if every number is smaller than the next number it's sorted.
-    def isSorted(array):
-        for index, num in enumerate(array[:-1]):
-            if num > array[index + 1]:
-                return False
-        return True
-    # if the array is sorted return it
-    if isSorted(array):
-        return array
-    else:
-        # if the array is not sorted shuffle it and start over.
-        shuffle(array)
-        return bogo(array)
-            </code></pre>
+            <a href="https://rosettacode.org/wiki/Sorting_algorithms/Bogosort" target="_blank">Code Examples</a>
 
         </article>
 

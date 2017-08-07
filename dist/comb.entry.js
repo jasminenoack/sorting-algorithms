@@ -756,30 +756,6 @@ exports.Point = Point;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.speedTest = {
-    elemCount: 9000,
-    label: "9000"
-};
-exports._7500 = {
-    elemCount: 7500,
-    label: "7500"
-};
-exports._5000 = {
-    elemCount: 5000,
-    label: "5000"
-};
-exports._4000 = {
-    elemCount: 4000,
-    label: "4000"
-};
-exports._3000 = {
-    elemCount: 3000,
-    label: "3000"
-};
-exports._2000 = {
-    elemCount: 2000,
-    label: "2000"
-};
 exports.stupidNumber = {
     elemCount: 1000,
     label: "1000"
@@ -3117,6 +3093,119 @@ var Example;
     Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
     Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
 })(Example || (Example = {}));
+var Shrink;
+(function (Shrink) {
+    var element = document.getElementById('shrink');
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var shuffle = new Shuffles.RandomShuffle();
+    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort1 = new Sorts.CombSmallShrink(board1);
+    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort2 = new Sorts.Comb(board2);
+    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort3 = new Sorts.CombLargeShrink(board3);
+    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort4 = new Sorts.CombEvenLarger(board4);
+    var boardList = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
+        }
+    ];
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'shrink-chart');
+})(Shrink || (Shrink = {}));
+var Shuffle;
+(function (Shuffle) {
+    var element = document.getElementById('order');
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info);
+    var sort1 = new Sorts.Comb(board1);
+    var board2 = new Boards.Board(size, new Shuffles.K1Shuffle(), valueType, Boards.Verbosity.Info);
+    var sort2 = new Sorts.Comb(board2);
+    var board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info);
+    var sort3 = new Sorts.Comb(board3);
+    var board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info);
+    var sort4 = new Sorts.Comb(board4);
+    var boardList = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
+        }
+    ];
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'order-chart');
+})(Shuffle || (Shuffle = {}));
+var Gnome;
+(function (Gnome) {
+    var element = document.getElementById('gnome');
+    var size = Sizes.medium;
+    var valueType = new ValueTypes.Integer();
+    var shuffle = new Shuffles.RandomShuffle();
+    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort1 = new Sorts.Comb(board1);
+    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort2 = new Sorts.CombGnome3(board2);
+    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort3 = new Sorts.CombGnome5(board3);
+    var board4 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort4 = new Sorts.CombGnome10(board4);
+    var boardList = [
+        {
+            board: board1,
+            sort: sort1
+        },
+        {
+            board: board2,
+            sort: sort2
+        },
+        {
+            board: board3,
+            sort: sort3
+        },
+        {
+            board: board4,
+            sort: sort4
+        }
+    ];
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'gnome-chart');
+})(Gnome || (Gnome = {}));
 
 
 /***/ })

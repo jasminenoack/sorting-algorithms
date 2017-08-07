@@ -3,36 +3,6 @@ export interface Size {
     label: string;
 }
 
-export let speedTest = {
-    elemCount: 9000,
-    label: "9000"
-};
-
-export let _7500 = {
-    elemCount: 7500,
-    label: "7500"
-};
-
-export let _5000 = {
-    elemCount: 5000,
-    label: "5000"
-};
-
-export let _4000 = {
-    elemCount: 4000,
-    label: "4000"
-};
-
-export let _3000 = {
-    elemCount: 3000,
-    label: "3000"
-};
-
-export let _2000 = {
-    elemCount: 2000,
-    label: "2000"
-};
-
 export let stupidNumber = {
     elemCount: 1000,
     label: "1000"

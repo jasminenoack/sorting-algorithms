@@ -33,7 +33,7 @@ Array.prototype.isEqual = function (array: any[]): boolean {
     if (this.length !== array.length) {
         return false
     }
-    return !this.any((num, i) => {
+    return !this.any((num: number, i: number) => {
         return num !== array[i]
     })
 }

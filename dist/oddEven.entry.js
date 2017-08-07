@@ -756,30 +756,6 @@ exports.Point = Point;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.speedTest = {
-    elemCount: 9000,
-    label: "9000"
-};
-exports._7500 = {
-    elemCount: 7500,
-    label: "7500"
-};
-exports._5000 = {
-    elemCount: 5000,
-    label: "5000"
-};
-exports._4000 = {
-    elemCount: 4000,
-    label: "4000"
-};
-exports._3000 = {
-    elemCount: 3000,
-    label: "3000"
-};
-exports._2000 = {
-    elemCount: 2000,
-    label: "2000"
-};
 exports.stupidNumber = {
     elemCount: 1000,
     label: "1000"

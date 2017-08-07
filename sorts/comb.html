@@ -22,16 +22,25 @@
                 <article>
                     <h1>Summary</h1>
                     <div class="normal clear">
+                        <div class="left paddingRight10 one" id="example"></div>
+                        <p><a href="https://en.wikipedia.org/wiki/Comb_sort" target="_blank">Comb Sort</a> is an attempt to take advantage of the fact that many sorts are more effective on a partially sorted list. It improves upon sorts like <a href="./bubble.html">Bubble Sort</a> by first attempting to transform the list into a mostly ordered list.</p>
+
                         <p>
-                            <div class="left paddingRight10 one" id="example"></div>
+                            The algorithm works by attempting to eliminate turtles. It does this by comparing values across intervals before descending into a traditional Bubble Sort. Comb uses a "shrink factor" to determine the gap. The recommended shrink is 1.3 which was recommended based on tests of 200,000 lists. This balances between too small values which move slowly down to a gap of 1 and end up making too many comparisons, and large values whose gap falls too quickly and doesn't adequately deal with turtles. There is some similarity with <a href="./shell.html">Shell Sort</a>, but unlike Shell, Comb Sort does not fully sort each gap size before moving on.
                         </p>
-                        <p>Coming Soon</p>
                     </div>
                 </article>
 
                 <article>
-                    <h1>Common Optimizations</h1>
-                    <p>Coming Soon</p>
+                    <h1>Shrinks</h1>
+
+                    <div id="shrink" class="four"></div>
+
+                    <p>
+                        As stated above the suggested ideal shrink is 1.3. There are several versions which are implemented in the sort testers. Above we can see shrinks 1.1, 1.3, 1.5, and 2. We good performance on the 1.5 version in many cases. But we see the problems clearly with 1.1 and 2.0. 
+                    </p>
+
+                    <div id="shrink-chart"></div>
 
                     <p><a href="./debug/scatter.html">Compare Yourself</a></p>
 
@@ -41,7 +50,13 @@
                 <article>
                     <h1>Comparing Efficency Among Orderings</h1>
 
-                    <p>Coming Soon</p>
+                    <div id="order" class="four"></div>
+
+                    <p>
+                        When we look at Comb on different kinds of data we see that there is an efficency loss over sorts like <a href="./bubble.html">Bubble Sort</a>. This is because Comb has to complete enough rounds to get to a gap of 1 before it can short circuit. But on random and reversed orders it is able to quickly get elements close to the array.
+                    </p>
+
+                    <div id="order-chart"></div>
 
                     <p><a href="./debug/scatter.html">Compare Yourself</a></p>
                     <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
@@ -55,15 +70,42 @@
                     <h5>Python</h5>
 
                     <pre><code class="python">
+def comb(array):
+    # create a shrink value
+    shrink = 1.3
+    # set the gap to the length of the array
+    gap = len(array)
+    # create track for ordered state
+    swaps = True
+    while gap > 1 or swaps:
+        # reset the gap to the current gap divided by the shrink
+        gap = max(int(gap / shrink), 1)
+        # change flag to indicate in order
+        swaps = False
+        for index in range(len(array) - gap):
+            # if the current value is greater than the value 
+            # of the element at index + gap 
+            # swap the elements
+            if (array[index] > array[index + gap]):
+                [array[index], array[index + gap]] = [array[index + gap], array[index]]
+                # flag that a swap has been made.
+                swaps = True
+    return array
             </code></pre>
 
-                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Comb_sort">Other Languages</a></p> 
+                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Comb_sort" target="_blank">Other Languages</a></p> 
                 </article>
 
                 <article>
                     <h1>Further Optimization</h1>
 
-                    <p>Coming Soon</p>
+                    <div id="gnome" class="four"></div>
+
+                     <p>
+                        When we look at Comb Sort we see some of the same potential problems as <a href="./bubble.html">Bubble Sort</a>. We can attempt to solve this by not devolving to Bubble Sort but switching to another sort. For example, the last 3 sorts above switch from Comb to <a href="./gnome.html">Gnome Sort</a> at various gaps(3, 5, 10 respectively). All of these tend to work faster than the traditional Comb sort. That is because it saves us from having to run multiple rounds to move items into place if they need to move down.
+                    </p> 
+
+                    <div id="gnome-chart"></div>
 
                     <p><a href="./debug/scatter.html">Compare Yourself</a></p>
                     <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
@@ -71,7 +113,7 @@
 
                 <article>
                     <h1>More Links</h1>
-                    <!-- <p><a href="https://www.youtube.com/watch?v=HfdT_uOqbvA" target="_blank">Sound of Sorting</a></p> -->
+                     <p><a href="https://www.youtube.com/watch?v=ob49RukGnAw" target="_blank">Sound of Sorting</a></p> 
                 </article>
 
 

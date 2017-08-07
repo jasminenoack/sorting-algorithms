@@ -19,7 +19,7 @@ namespace SimpleBubbleElement {
     const simpleBubbleElement = document.getElementById('bubble-example');
     const boardList: any[] = []
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Bubble(board)
@@ -38,7 +38,7 @@ namespace SimpleBubbleElement {
 namespace BubbleOptimizations {
     const OptimizationsElement = document.getElementById('bubble-optimizations');
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Bubble(board1)
@@ -81,7 +81,7 @@ namespace BubbleOptimizations {
 namespace BubbleShuffles {
     const ShufflesElement = document.getElementById('bubble-shuffles');
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const board1 = new Boards.Board(size, Shuffles.OrderedShuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.BubbleSkipsSorted(board1)
     const board2 = new Boards.Board(size, Shuffles.K1Shuffle, valueType, Boards.Verbosity.Info)
@@ -124,7 +124,7 @@ namespace BubbleConCur {
     const ConcurElement = document.getElementById('bubble-concur');
     const size = Sizes._25
     const shuffle = Shuffles.RandomShuffle
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.BubbleSortConcurrent(board1)
     const board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
@@ -167,7 +167,7 @@ namespace BubbleDontRestart {
     const RestartElement = document.getElementById('bubble-dont-restart');
     const size = Sizes._25
     const shuffle = Shuffles.RandomShuffle
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new BubbleFullyOptimized(board1)
     const board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)

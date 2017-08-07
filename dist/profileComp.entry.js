@@ -377,7 +377,7 @@ var Verbosity;
 var Board = (function () {
     function Board(size, shuffle, valueType, verbosity) {
         if (shuffle === void 0) { shuffle = Shuffles.RandomShuffle; }
-        if (valueType === void 0) { valueType = new ValueTypes.Integer(); }
+        if (valueType === void 0) { valueType = ValueTypes.Integer; }
         if (verbosity === void 0) { verbosity = Verbosity.Debug; }
         this.shuffle = shuffle;
         this.valueType = valueType;
@@ -458,11 +458,16 @@ exports.Board = Board;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var ValueType = (function () {
+    function ValueType() {
+    }
+    ValueType.generate = function (n) { return []; };
+    return ValueType;
+}());
 var Random = (function () {
     function Random() {
-        this.title = "Random";
     }
-    Random.prototype.generate = function (n) {
+    Random.generate = function (n) {
         var spread = n * 2;
         var values = [];
         for (var i = 0; i < n; i++) {
@@ -470,38 +475,38 @@ var Random = (function () {
         }
         return values;
     };
+    Random.title = "Random";
     return Random;
 }());
 exports.Random = Random;
 var Integer = (function () {
     function Integer() {
-        this.title = "Range";
     }
-    Integer.prototype.generate = function (n) {
+    Integer.generate = function (n) {
         return Array.prototype.range(n);
     };
+    Integer.title = "Range";
     return Integer;
 }());
 exports.Integer = Integer;
 var FewUnique = (function () {
     function FewUnique() {
-        this.title = "Few Values";
     }
-    FewUnique.prototype.generate = function (n) {
+    FewUnique.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             values.push(i % 5);
         }
         return values;
     };
+    FewUnique.title = "Few Values";
     return FewUnique;
 }());
 exports.FewUnique = FewUnique;
 var AllBut2Equal = (function () {
     function AllBut2Equal() {
-        this.title = "All But 2 Equal";
     }
-    AllBut2Equal.prototype.generate = function (n) {
+    AllBut2Equal.generate = function (n) {
         var values = [];
         for (var i = 0; i < n - 2; i++) {
             values.push(n / 2);
@@ -511,28 +516,28 @@ var AllBut2Equal = (function () {
         values.sort();
         return values;
     };
+    AllBut2Equal.title = "All But 2 Equal";
     return AllBut2Equal;
 }());
 exports.AllBut2Equal = AllBut2Equal;
 var Equal = (function () {
     function Equal() {
-        this.title = "Equal";
     }
-    Equal.prototype.generate = function (n) {
+    Equal.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             values.push(n / 2);
         }
         return values;
     };
+    Equal.title = "Equal";
     return Equal;
 }());
 exports.Equal = Equal;
 var Logarithmic = (function () {
     function Logarithmic() {
-        this.title = "Logarithmic";
     }
-    Logarithmic.prototype.generate = function (n) {
+    Logarithmic.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             var j = (i + 1) / 8;
@@ -541,14 +546,14 @@ var Logarithmic = (function () {
         }
         return values;
     };
+    Logarithmic.title = "Logarithmic";
     return Logarithmic;
 }());
 exports.Logarithmic = Logarithmic;
 var Quadratic = (function () {
     function Quadratic() {
-        this.title = "Quadratic";
     }
-    Quadratic.prototype.generate = function (n) {
+    Quadratic.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             var j = 10 * (i / n) - 5;
@@ -557,14 +562,14 @@ var Quadratic = (function () {
         }
         return values;
     };
+    Quadratic.title = "Quadratic";
     return Quadratic;
 }());
 exports.Quadratic = Quadratic;
 var Exponential = (function () {
     function Exponential() {
-        this.title = "Exponential";
     }
-    Exponential.prototype.generate = function (n) {
+    Exponential.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             var j = 10 * (i / n) - 5;
@@ -573,14 +578,14 @@ var Exponential = (function () {
         }
         return values;
     };
+    Exponential.title = "Exponential";
     return Exponential;
 }());
 exports.Exponential = Exponential;
 var Cubic = (function () {
     function Cubic() {
-        this.title = "Cubic";
     }
-    Cubic.prototype.generate = function (n) {
+    Cubic.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             var j = 4 * (i / n) - 2;
@@ -589,14 +594,14 @@ var Cubic = (function () {
         }
         return values;
     };
+    Cubic.title = "Cubic";
     return Cubic;
 }());
 exports.Cubic = Cubic;
 var Quintic = (function () {
     function Quintic() {
-        this.title = "Quintic";
     }
-    Quintic.prototype.generate = function (n) {
+    Quintic.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             var j = 2 * (i / n) - 1;
@@ -605,14 +610,14 @@ var Quintic = (function () {
         }
         return values;
     };
+    Quintic.title = "Quintic";
     return Quintic;
 }());
 exports.Quintic = Quintic;
 var Sin = (function () {
     function Sin() {
-        this.title = "Sin";
     }
-    Sin.prototype.generate = function (n) {
+    Sin.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             var j = 12 * (i / n) - 6;
@@ -621,14 +626,14 @@ var Sin = (function () {
         }
         return values;
     };
+    Sin.title = "Sin";
     return Sin;
 }());
 exports.Sin = Sin;
 var Root = (function () {
     function Root() {
-        this.title = "Root";
     }
-    Root.prototype.generate = function (n) {
+    Root.generate = function (n) {
         var values = [];
         for (var i = 0; i < n; i++) {
             var j = 5 * (i / n);
@@ -637,23 +642,10 @@ var Root = (function () {
         }
         return values;
     };
+    Root.title = "Root";
     return Root;
 }());
 exports.Root = Root;
-exports.valueTypeList = [
-    new Integer(),
-    new Random(),
-    new FewUnique(),
-    new Equal(),
-    new AllBut2Equal(),
-    new Logarithmic(),
-    new Quadratic(),
-    new Exponential(),
-    new Cubic(),
-    new Quintic(),
-    new Sin(),
-    new Root()
-];
 
 
 /***/ }),
@@ -3095,9 +3087,12 @@ orders.forEach(function (shuffle, index) {
     orderSelect.appendChild(optionElement);
 });
 // set up value types
-var valueTypes = ValueTypes.valueTypeList;
+var valueTypes = Object.values(ValueTypes);
 var valueTypeSelect = document.getElementById('value-type');
 valueTypes.forEach(function (valueType, index) {
+    if (!valueType.title) {
+        return;
+    }
     var optionElement = document.createElement('option');
     optionElement.value = index + '';
     optionElement.textContent = valueType.title;

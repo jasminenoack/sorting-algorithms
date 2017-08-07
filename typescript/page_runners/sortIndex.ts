@@ -12,7 +12,7 @@ namespace ReversedSorts {
     const delay = 100
     const delayOnComplete = 100
     const size = Sizes._75
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.ReversedShuffle
     const board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort2 = new Sorts.Comb(board2)
@@ -63,7 +63,7 @@ namespace OrderedSorts {
     const delay = 100
     const delayOnComplete = 100
     const size = Sizes._75
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.OrderedShuffle
     const board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort2 = new Sorts.Comb(board2)

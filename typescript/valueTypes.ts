@@ -1,11 +1,11 @@
-export interface ValueType {
-    generate(n: number): any[]
-    title: string
+abstract class ValueType {
+    static generate(n: number): any[] {return []}
+    static title: string
 }
 
 export class Random implements ValueType {
-    title = "Random"
-    generate(n: number): number[] {
+    static title = "Random"
+    static generate(n: number): number[] {
         let spread = n * 2
         let values = []
         for (let i = 0; i < n; i++) {
@@ -16,15 +16,15 @@ export class Random implements ValueType {
 }
 
 export class Integer implements ValueType {
-    title = "Range"
-    generate(n: number): number[] {
-        return Array.prototype.range(n)
+    static title = "Range"
+    static generate(n: number): number[] {
+        return (Array.prototype as any).range(n)
     }
 }
 
 export class FewUnique implements ValueType {
-    title = "Few Values"
-    generate(n: number): number[] {
+    static title = "Few Values"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             values.push(i % 5)
@@ -34,8 +34,8 @@ export class FewUnique implements ValueType {
 }
 
 export class AllBut2Equal implements ValueType {
-    title = "All But 2 Equal"
-    generate(n: number): number[] {
+    static title = "All But 2 Equal"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n - 2; i++) {
             values.push(n / 2)
@@ -48,8 +48,8 @@ export class AllBut2Equal implements ValueType {
 }
 
 export class Equal implements ValueType {
-    title = "Equal"
-    generate(n: number): number[] {
+    static title = "Equal"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             values.push(n / 2)
@@ -59,8 +59,8 @@ export class Equal implements ValueType {
 }
 
 export class Logarithmic implements ValueType {
-    title = "Logarithmic"
-    generate(n: number): number[] {
+    static title = "Logarithmic"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             let j = (i + 1) / 8
@@ -72,8 +72,8 @@ export class Logarithmic implements ValueType {
 }
 
 export class Quadratic implements ValueType {
-    title = "Quadratic"
-    generate(n: number): number[] {
+    static title = "Quadratic"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             let j = 10 * (i / n) - 5
@@ -85,8 +85,8 @@ export class Quadratic implements ValueType {
 }
 
 export class Exponential implements ValueType {
-    title = "Exponential"
-    generate(n: number): number[] {
+    static title = "Exponential"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             let j = 10 * (i / n) - 5
@@ -98,8 +98,8 @@ export class Exponential implements ValueType {
 }
 
 export class Cubic implements ValueType {
-    title = "Cubic"
-    generate(n: number): number[] {
+    static title = "Cubic"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             let j = 4 * (i / n) - 2
@@ -111,8 +111,8 @@ export class Cubic implements ValueType {
 }
 
 export class Quintic implements ValueType {
-    title = "Quintic"
-    generate(n: number): number[] {
+    static title = "Quintic"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             let j = 2 * (i / n) - 1
@@ -124,8 +124,8 @@ export class Quintic implements ValueType {
 }
 
 export class Sin implements ValueType {
-    title = "Sin"
-    generate(n: number): number[] {
+    static title = "Sin"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             let j = 12 * (i / n) - 6
@@ -137,8 +137,8 @@ export class Sin implements ValueType {
 }
 
 export class Root implements ValueType {
-    title = "Root"
-    generate(n: number): number[] {
+    static title = "Root"
+    static generate(n: number): number[] {
         let values = []
         for(let i = 0; i < n; i++) {
             let j = 5 * (i / n)
@@ -148,18 +148,3 @@ export class Root implements ValueType {
         return values
     }
 }
-
-export let valueTypeList = [
-    new Integer(),
-    new Random(),
-    new FewUnique(),
-    new Equal(),
-    new AllBut2Equal(),
-    new Logarithmic(),
-    new Quadratic(),
-    new Exponential(),
-    new Cubic(),
-    new Quintic(),
-    new Sin(),
-    new Root()
-]

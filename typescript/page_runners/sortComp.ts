@@ -45,9 +45,12 @@ orders.forEach((shuffle, index) => {
 })
 
 // set up value types
-let valueTypes = ValueTypes.valueTypeList
+let valueTypes = (Object as any).values(ValueTypes)
 let valueTypeSelect = document.getElementById('value-type')
 valueTypes.forEach((valueType, index) => {
+    if (!valueType.title) {
+        return
+    }
     let optionElement = document.createElement('option')
     optionElement.value = index + ''
     optionElement.textContent = valueType.title
@@ -55,7 +58,6 @@ valueTypes.forEach((valueType, index) => {
         optionElement.setAttribute('selected', '1')
     }
     valueTypeSelect.appendChild(optionElement)
-
 })
 
 let sorts = (Object as any).values(Sorts);

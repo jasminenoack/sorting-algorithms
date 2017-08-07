@@ -14,7 +14,7 @@ namespace Example {
     const exampleElement = document.getElementById('example');
     const boardList: any[] = []
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Smooth(board)

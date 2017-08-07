@@ -14,7 +14,7 @@ namespace Example {
     const exampleElement = document.getElementById('example');
     const boardList: any[] = []
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Comb(board)
@@ -33,7 +33,7 @@ namespace Example {
 namespace Shrink {
     const element = document.getElementById('shrink');
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.CombSmallShrink(board1)
@@ -76,7 +76,7 @@ namespace Shrink {
 namespace Shuffle {
     const element = document.getElementById('order');
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const board1 = new Boards.Board(size, Shuffles.OrderedShuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.Comb(board1)
     const board2 = new Boards.Board(size, Shuffles.K1Shuffle, valueType, Boards.Verbosity.Info)
@@ -118,7 +118,7 @@ namespace Shuffle {
 namespace Gnome {
     const element = document.getElementById('gnome');
     const size = Sizes.medium
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.Comb(board1)

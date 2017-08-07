@@ -14,7 +14,7 @@ namespace Example {
     const exampleElement = document.getElementById('example');
     const boardList: any[] = []
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Bogo(board)
@@ -34,7 +34,7 @@ namespace Bozo {
     const element = document.getElementById('bozo');
     const boardList: any[] = []
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.BogoSingle(board)
@@ -54,7 +54,7 @@ namespace Permutation {
     const element = document.getElementById('permutation');
     const boardList: any[] = []
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Permutation(board)
@@ -74,7 +74,7 @@ namespace Smart {
     const element = document.getElementById('smart-bozo');
     const boardList: any[] = []
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.BogoSingleCompare(board)
@@ -94,7 +94,7 @@ namespace Bogobogo {
     const element = document.getElementById('bogobogo');
     const boardList: any[] = []
     const size = Sizes._25
-    const valueType = new ValueTypes.Integer()
+    const valueType = ValueTypes.Integer
     const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Bogobogo(board)

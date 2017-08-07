@@ -29,3 +29,34 @@ namespace Example {
     )
     Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete)
 }
+
+namespace Optimized {
+    const element = document.getElementById('optimized');
+    const boardList: any[] = []
+    const size = Sizes._25
+    const valueType = new ValueTypes.Integer()
+    const shuffle = new Shuffles.RandomShuffle()
+    const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
+    const sort = new Sorts.Cycle(board)
+    const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
+    const sort1 = new Sorts.CycleOptimized(board1)
+    boardList.push(
+        {
+            board: board,
+            sort: sort
+        },
+        {
+            board: board1,
+            sort: sort1
+        },
+    )
+
+    boardList.forEach((board, index) => {
+        Index.createBoard(
+            index, (board.sort.constructor as any), boardList,
+            boxHeight, boxWidth, element
+        )
+    })
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete)
+    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart')
+}

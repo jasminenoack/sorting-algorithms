@@ -4,11 +4,9 @@
         <meta charset="utf-8">
         <title>Bubble Sort</title>
         <link rel="stylesheet" type="text/css" href="../lib/nvd3.css">
-        <link rel="stylesheet" href="../lib/highlight.default.css">
         <link rel="stylesheet" type="text/css" href="../css/index.css">
         <link rel="stylesheet" type="text/css" href="../css/colorSet1.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
-        <script src="../lib/highlight.js"></script>
         <script src="../lib/d3.min.js"></script>
         <script src="../lib/nvd3.js"></script>
     </head>
@@ -21,9 +19,9 @@
                 <h1>Summary</h1>
                 <div class="clear normal">
                     <p>
-                        <a target="_blank" href="https://en.wikipedia.org/wiki/Bubble_sort">Bubble Sort</a> is one of the simpilest sorting algorithms. 
-                        It pops up commonly in interviews, introductory textbooks, and bootcamp tests. It is a comparison sort. A comparison sort is a sort that reads the list by comparing 2 elements at a time.  
-                    </p> 
+                        <a target="_blank" href="https://en.wikipedia.org/wiki/Bubble_sort">Bubble Sort</a> is one of the simpilest sorting algorithms.
+                        It pops up commonly in interviews, introductory textbooks, and bootcamp tests. It is a comparison sort. A comparison sort is a sort that reads the list by comparing 2 elements at a time.
+                    </p>
 
                     <p>
                         <div class="left paddingRight10 one" id="bubble-example"></div>
@@ -35,9 +33,9 @@
                     </p>
 
                     <p>
-                        Bubble Sort is one of the most controversial sorting algorithms. 
+                        Bubble Sort is one of the most controversial sorting algorithms.
                         It's extremely inefficent, and it has been argued, that
-                        it shouldn't be taught in CS courses. This is discussed more fully in <a href='https://users.cs.duke.edu/~ola/bubble/bubble.html'>Bubble Sort: An Archaeological Algorithmic Analysis</a>. 
+                        it shouldn't be taught in CS courses. This is discussed more fully in <a href='https://users.cs.duke.edu/~ola/bubble/bubble.html'>Bubble Sort: An Archaeological Algorithmic Analysis</a>.
                     </p>
                 </div>
             </article>
@@ -84,7 +82,7 @@
                 <div class="graph" id="shuffle-chart"></div>
 
                 <p>
-                    Here we see the effect of the order. The Ordered list finishes in O(n) time. The almost ordered list in about double that. Whereas the random and reversed lists end up taking a lot of time. And swaps for the reversed list are the same rate as comparisons. 
+                    Here we see the effect of the order. The Ordered list finishes in O(n) time. The almost ordered list in about double that. Whereas the random and reversed lists end up taking a lot of time. And swaps for the reversed list are the same rate as comparisons.
                 </p>
 
                 <p><a href="./debug/scatter.html">Compare Yourself</a></p>
@@ -94,37 +92,7 @@
             <article>
                 <h1>Code</h1>
 
-                <h5>Python</h5>
-
-                <pre><code class="python">
-def bubble_sort(nums):
-    # Repeat the sort up to n - 1 times
-    # if there are 5 elements. It will run the sort 4 times.
-    # At minimum this will put 4 of the 5 elements in place.
-    # And the array will become sorted.
-    for i in range(1, len(nums)):
-        # set a variable to check if the array is ordered
-        ordered = True
-        # For each round look at every number up to the second to last that has not been sorted.
-        # We do not need to reconsider the final number of the previous round
-        # because Bubble Sort always puts the highest number in the last position each round.
-        for index in range(len(nums) - i):
-            # compare each value to the next value in the array.
-            # if the next value is smaller swap the values
-            value = nums[index]
-            next_value = nums[index + 1]
-            if next_value < value:
-                nums[index], nums[index + 1] = next_value, value
-                # if you had to swap change the ordered variable
-                ordered = False
-        # if the array was ordered break out of the loop
-        if ordered:
-            break
-    # return the sorted array
-    return nums
-                </code></pre>
-
-                <p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Bubble_sort" target="_blank">Other Languages</a></p>
+                <p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Bubble_sort" target="_blank">Code Examples</a></p>
             </article>
 
             <article>
@@ -143,7 +111,7 @@ def bubble_sort(nums):
                 <div id="bubble-concur" class="four"></div>
 
                 <p>
-                    It becomes very obvious upon observation that the concurrent sorts are much fast in time. They do not, however, change the actual number of swaps or comparisons that need to be made. Instead they use additional resources to complete faster by doing things at the same time. The last sort show here is an <a href="./odd-even.html">Odd-Even Sort</a>. This is technically not a Bubble Sort but is a clear extension of this concurrency idea. 
+                    It becomes very obvious upon observation that the concurrent sorts are much fast in time. They do not, however, change the actual number of swaps or comparisons that need to be made. Instead they use additional resources to complete faster by doing things at the same time. The last sort show here is an <a href="./odd-even.html">Odd-Even Sort</a>. This is technically not a Bubble Sort but is a clear extension of this concurrency idea.
                 </p>
 
                 <div class="graph" id="concur-chart"></div>
@@ -155,7 +123,7 @@ def bubble_sort(nums):
                 <h2>Considering Algorithmic Issues</h2>
 
                 <p>
-                    One thing that developers do is look for fixable problems in algorithms. Looking at Bubble Sort something jumps out at me. If I need to move a number back 4 places I have to iterate 4 times to do that. This seems inefficent. Would it be faster if I didn't have to do that? 
+                    One thing that developers do is look for fixable problems in algorithms. Looking at Bubble Sort something jumps out at me. If I need to move a number back 4 places I have to iterate 4 times to do that. This seems inefficent. Would it be faster if I didn't have to do that?
                 </p>
 
                 <div id="bubble-dont-restart" class="four"></div>
@@ -181,9 +149,8 @@ def bubble_sort(nums):
                 <p><a href="https://www.youtube.com/watch?v=HfdT_uOqbvA" target="_blank">Sound of Sorting</a></p>
             </article>
 
-        
 
-        <script>hljs.initHighlightingOnLoad();</script>
+
         <script src="../dist/utils.entry.js"></script>
         <script src="../dist/queens.entry.js"></script>
         <script src="../dist/bubble.entry.js"></script>

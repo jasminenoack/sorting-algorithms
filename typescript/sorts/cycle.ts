@@ -2,6 +2,7 @@ import {BaseSort} from './baseSort'
 
 export class Cycle extends BaseSort {
     static title = "Cycle Sort"
+    skipPlaced: boolean = false
     currentValue: number
     numberLess: number
     static links = [
@@ -52,6 +53,7 @@ export class Cycle extends BaseSort {
             this.comparisonNode++
         }
         if (this.comparisonNode === this.length) {
+            this.placed.push(index)
             if (
                 index !== this.baseNode ||
                 this.currentValue !== this.board.values()[this.baseNode]
@@ -66,17 +68,24 @@ export class Cycle extends BaseSort {
                 this.swaps++
             }
             if (this.baseNode === index) {
-                this.placed.push(this.baseNode)
                 this.baseNode++
+                while (this.skipPlaced && this.placed.indexOf(this.baseNode) !== -1) {
+                    this.baseNode++
+                }
                 this.setCurrentValue(this.baseNode)
             }
 
             this.comparisonNode = this.baseNode + 1
             this.numberLess = 0
 
-            if (this.baseNode === this.length - 1) {
+            if (this.baseNode >= this.length - 1) {
                 this.done = true
             }
         }
     }
+}
+
+export class CycleOptimized extends Cycle {
+    skipPlaced: boolean = true
+    static title: string = "Cycle Optimized"
 }

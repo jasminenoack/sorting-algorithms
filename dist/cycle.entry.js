@@ -2207,7 +2207,9 @@ var baseSort_1 = __webpack_require__(0);
 var Cycle = (function (_super) {
     __extends(Cycle, _super);
     function Cycle() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipPlaced = false;
+        return _this;
     }
     Cycle.prototype.setUp = function () {
         this.setCurrentValue(this.baseNode);
@@ -2245,6 +2247,7 @@ var Cycle = (function (_super) {
             this.comparisonNode++;
         }
         if (this.comparisonNode === this.length) {
+            this.placed.push(index);
             if (index !== this.baseNode ||
                 this.currentValue !== this.board.values()[this.baseNode]) {
                 var values = this.board.values();
@@ -2257,13 +2260,15 @@ var Cycle = (function (_super) {
                 this.swaps++;
             }
             if (this.baseNode === index) {
-                this.placed.push(this.baseNode);
                 this.baseNode++;
+                while (this.skipPlaced && this.placed.indexOf(this.baseNode) !== -1) {
+                    this.baseNode++;
+                }
                 this.setCurrentValue(this.baseNode);
             }
             this.comparisonNode = this.baseNode + 1;
             this.numberLess = 0;
-            if (this.baseNode === this.length - 1) {
+            if (this.baseNode >= this.length - 1) {
                 this.done = true;
             }
         }
@@ -2278,6 +2283,17 @@ var Cycle = (function (_super) {
     return Cycle;
 }(baseSort_1.BaseSort));
 exports.Cycle = Cycle;
+var CycleOptimized = (function (_super) {
+    __extends(CycleOptimized, _super);
+    function CycleOptimized() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipPlaced = true;
+        return _this;
+    }
+    CycleOptimized.title = "Cycle Optimized";
+    return CycleOptimized;
+}(Cycle));
+exports.CycleOptimized = CycleOptimized;
 
 
 /***/ }),
@@ -3094,6 +3110,30 @@ var Example;
     Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
     Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
 })(Example || (Example = {}));
+var Optimized;
+(function (Optimized) {
+    var element = document.getElementById('optimized');
+    var boardList = [];
+    var size = Sizes._25;
+    var valueType = new ValueTypes.Integer();
+    var shuffle = new Shuffles.RandomShuffle();
+    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort = new Sorts.Cycle(board);
+    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort1 = new Sorts.CycleOptimized(board1);
+    boardList.push({
+        board: board,
+        sort: sort
+    }, {
+        board: board1,
+        sort: sort1
+    });
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart');
+})(Optimized || (Optimized = {}));
 
 
 /***/ })

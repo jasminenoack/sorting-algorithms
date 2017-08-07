@@ -5,11 +5,9 @@
     <meta charset="utf-8">
     <title>Bogosort && Bozosort</title>
     <link rel="stylesheet" type="text/css" href="../lib/nvd3.css">
-    <link rel="stylesheet" href="../lib/highlight.default.css">
     <link rel="stylesheet" type="text/css" href="../css/index.css">
     <link rel="stylesheet" type="text/css" href="../css/colorSet1.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
-    <script src="../lib/highlight.js"></script>
     <script src="../lib/d3.min.js"></script>
     <script src="../lib/nvd3.js"></script>
 </head>
@@ -84,7 +82,7 @@
             </div>
 
             <p>
-                Quantum Bogosort sorts the list in O(1). It works as follows. Randomize the list so that you can't know the order without observing it. This divides the universe into O(n!) universes. This is fine due to the fact that all these universes exist anyway(<a href="https://en.wikipedia.org/wiki/Many-worlds_interpretation" target="_blank">Many-worlds interpretation</a>). If the list is not sorted destroy the universe(this is an exercise for the reader). All remaining universes contain a list which is sorted. It should be noted this is not by default a stable sort. 
+                Quantum Bogosort sorts the list in O(1). It works as follows. Randomize the list so that you can't know the order without observing it. This divides the universe into O(n!) universes. This is fine due to the fact that all these universes exist anyway(<a href="https://en.wikipedia.org/wiki/Many-worlds_interpretation" target="_blank">Many-worlds interpretation</a>). If the list is not sorted destroy the universe(this is an exercise for the reader). All remaining universes contain a list which is sorted. It should be noted this is not by default a stable sort.
             </p>
 
             <p><a href="./debug/scatter.html">Compare Yourself</a></p>
@@ -98,22 +96,22 @@
             <h5>Python</h5>
 
             <pre><code class="python">
-from random import shuffle 
+from random import shuffle
 
-def bogo(array): 
-    # check if the array is sorted. 
-    # if every number is smaller than the next number it's sorted. 
-    def isSorted(array): 
-        for index, num in enumerate(array[:-1]): 
-            if num > array[index + 1]: 
-                return False 
-        return True 
-    # if the array is sorted return it 
-    if isSorted(array): 
-        return array 
-    else: 
-        # if the array is not sorted shuffle it and start over. 
-        shuffle(array) 
+def bogo(array):
+    # check if the array is sorted.
+    # if every number is smaller than the next number it's sorted.
+    def isSorted(array):
+        for index, num in enumerate(array[:-1]):
+            if num > array[index + 1]:
+                return False
+        return True
+    # if the array is sorted return it
+    if isSorted(array):
+        return array
+    else:
+        # if the array is not sorted shuffle it and start over.
+        shuffle(array)
         return bogo(array)
             </code></pre>
 
@@ -126,13 +124,9 @@ def bogo(array):
             <p><a href="http://www.cs.loyola.edu/~kbg/MonkeySort.pdf" target="_blank">Discussion of Monkeysort</a></p>
         </article>
 
-
-        <script>
-            hljs.initHighlightingOnLoad();
-        </script>
         <script src="../dist/utils.entry.js"></script>
         <script src="../dist/queens.entry.js"></script>
-         <script src="../dist/bogo.entry.js"></script> 
+         <script src="../dist/bogo.entry.js"></script>
     </content>
 </body>
 

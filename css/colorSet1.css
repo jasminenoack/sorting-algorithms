@@ -25,13 +25,13 @@ svg {
 .wrapper {
     background: rgba(230, 233, 240, 0.15);
 }
-
-.point.active {
-    fill: #431c5d;
-}
 .point.placed {
     fill: #cdd422;
 }
+.point.active {
+    fill: #431c5d;
+}
+
 
 article {
     padding: 10px;

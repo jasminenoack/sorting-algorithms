@@ -5,11 +5,9 @@
     <meta charset="utf-8">
     <title>Cocktail Sort</title>
     <link rel="stylesheet" type="text/css" href="../lib/nvd3.css">
-    <link rel="stylesheet" href="../lib/highlight.default.css">
     <link rel="stylesheet" type="text/css" href="../css/index.css">
     <link rel="stylesheet" type="text/css" href="../css/colorSet1.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
-    <script src="../lib/highlight.js"></script>
     <script src="../lib/d3.min.js"></script>
     <script src="../lib/nvd3.js"></script>
 </head>
@@ -66,62 +64,17 @@
                 <article>
                     <h1>Code</h1>
 
-                    <h5>Python</h5>
-
-                    <pre><code class="python">
-def cocktail(array):
-    # get a list of indices from the start to the index before the last number
-    indicies = range(len(array) - 1)
-    # track the direction up is true
-    direction = 1
-    # track if the array is sorted
-    swapped = True 
-    # while we have made a swap
-    while(swapped):
-        # set the array to have not made any swaps
-        swapped = False
-        # for each index compare the number to the next number 
-        for i in indicies:
-            if (
-                # if direction = 1 and the number is greater than the next number
-                (direction and array[i] > array[i + 1]) or 
-                # or direction = 0 and the number is less than the previous number
-                ( not direction and array[i] < array[i - 1])
-            ):
-                # determine what index to swap based on direction
-                swapIndex = i + 1 if direction else i - 1
-                swapped = True
-                array[i], array[swapIndex] = array[swapIndex], array[i]
-        # if we did not have to make any swaps the array was in order.
-        if not swapped:
-            break
-        # swap the direction of the array
-        direction = 0 if direction else 1
-        # if we are going up remove the highest number from indicies
-        # if we are going down remove the lowest number from the array and reverse it
-        if direction:
-            indicies = list(reversed(indicies))[:-1]
-        else:
-            indicies = list(reversed(indicies[1:]))
-    return array
-            </code></pre>
-
-                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Cocktail_sort" target="_blank">Other Languages</a></p> 
+                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Cocktail_sort" target="_blank">Code Examples</a></p>
                 </article>
 
                 <article>
                     <h1>More Links</h1>
-                     <p><a href="https://www.youtube.com/watch?v=njClLBoEbfI" target="_blank">Sound of Sorting</a></p> 
+                     <p><a href="https://www.youtube.com/watch?v=njClLBoEbfI" target="_blank">Sound of Sorting</a></p>
                 </article>
 
-
-
-                <script>
-                    hljs.initHighlightingOnLoad();
-                </script>
                 <script src="../dist/utils.entry.js"></script>
                 <script src="../dist/queens.entry.js"></script>
-                 <script src="../dist/cocktail.entry.js"></script> 
+                 <script src="../dist/cocktail.entry.js"></script>
     </content>
 </body>
 

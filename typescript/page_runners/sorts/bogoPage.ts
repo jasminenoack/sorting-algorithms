@@ -15,7 +15,7 @@ namespace Example {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Bogo(board)
     boardList.push({
@@ -35,7 +35,7 @@ namespace Bozo {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.BogoSingle(board)
     boardList.push({
@@ -55,7 +55,7 @@ namespace Permutation {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Permutation(board)
     boardList.push({
@@ -75,7 +75,7 @@ namespace Smart {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.BogoSingleCompare(board)
     boardList.push({
@@ -95,7 +95,7 @@ namespace Bogobogo {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Bogobogo(board)
     boardList.push({

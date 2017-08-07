@@ -12,7 +12,7 @@ export class Board {
     private _min: number
     private _max: number
     constructor(
-        size: Sizes.Size, public shuffle: Shuffles.Shuffle = new Shuffles.RandomShuffle(),
+        size: Sizes.Size, public shuffle: Shuffles.Shuffle = Shuffles.RandomShuffle,
         public valueType: ValueTypes.ValueType = new ValueTypes.Integer(), 
         public verbosity: Verbosity = Verbosity.Debug
     ) {

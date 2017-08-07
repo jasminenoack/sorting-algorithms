@@ -30,10 +30,12 @@ sizes.forEach((size: Sizes.Size, index: number) => {
     sizeElement.appendChild(optionElement)
 })
 
-// set up shuffles
-let orders = Shuffles.ShuffleList
+let orders = Object.values(Shuffles)
 let orderSelect = document.getElementById('order')
 orders.forEach((shuffle, index) => {
+    if (!shuffle.title) {
+        return
+    }
     let optionElement = document.createElement('option')
     optionElement.value = index + ''
     optionElement.textContent = shuffle.title

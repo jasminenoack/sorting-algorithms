@@ -48,7 +48,7 @@ describe("Board", function() {
         })
 
         it("create few unique board", () => {
-            let secondBoard = new Boards.Board(size, new Shuffles.OrderedShuffle(),
+            let secondBoard = new Boards.Board(size, Shuffles.OrderedShuffle,
                                                new ValueTypes.FewUnique())
             expect(secondBoard.distribution()).toEqual({
                 0: 4,
@@ -60,7 +60,7 @@ describe("Board", function() {
         })
 
         it("creates a random numbers board", () => {
-            let secondBoard = new Boards.Board(size, new Shuffles.OrderedShuffle(),
+            let secondBoard = new Boards.Board(size, Shuffles.OrderedShuffle,
                                                new ValueTypes.FewUnique())
             let values = secondBoard.values()
             expect(values).not.toEqual(Array.prototype.range(secondBoard.length))
@@ -76,28 +76,28 @@ describe("Board", function() {
         })
 
         it("creates a mostly sorted board", () => {
-            let secondBoard = new Boards.Board(size, new Shuffles.K3Shuffle(),
+            let secondBoard = new Boards.Board(size, Shuffles.K3Shuffle,
                                                new ValueTypes.Integer())
             expect(secondBoard.values().differenceFromOrdered()).toBeLessThan(65)
             expect(secondBoard.values().differenceFromOrdered()).toBeGreaterThan(1)
         })
 
         it("creates a sorted board", () => {
-            let secondBoard = new Boards.Board(size, new Shuffles.OrderedShuffle(),
+            let secondBoard = new Boards.Board(size, Shuffles.OrderedShuffle,
                                                new ValueTypes.Integer())
             let values = secondBoard.values()
             expect(values).toEqual(Array.prototype.range(secondBoard.length))
         })
 
         it("creates a reversed board", () => {
-            let secondBoard = new Boards.Board(size, new Shuffles.ReversedShuffle(),
+            let secondBoard = new Boards.Board(size, Shuffles.ReversedShuffle,
                                                new ValueTypes.Integer())
             expect(secondBoard.values().differenceFromOrdered()).toEqual(200)
         })
 
         it("creates a mostly reversed board", () => {
             let secondBoard = new Boards.Board(size,
-                                               new Shuffles.K3ReversedShuffle(),
+                                               Shuffles.K3ReversedShuffle,
                                                new ValueTypes.Integer())
            expect(secondBoard.values().differenceFromOrdered()).toBeGreaterThan(140)
            expect(secondBoard.values()).not.toEqual(
@@ -235,26 +235,26 @@ describe("Board", function() {
             })
 
             it("shuffles to a mostly sorted board", () => {
-                board.shuffle = new Shuffles.K3Shuffle()
+                board.shuffle = Shuffles.K3Shuffle
                 board.shuffleBoard()
                 expect(board.values().differenceFromOrdered()).toBeLessThan(24)
                 expect(board.values().differenceFromOrdered()).toBeGreaterThan(1)
             })
 
             it("shuffles to a sorted board", () => {
-                board.shuffle = new Shuffles.OrderedShuffle()
+                board.shuffle = Shuffles.OrderedShuffle
                 board.shuffleBoard()
                 expect(board.values().differenceFromOrdered()).toEqual(0)
             })
 
             it("shuffles to a reversed board", () => {
-                board.shuffle = new Shuffles.ReversedShuffle()
+                board.shuffle = Shuffles.ReversedShuffle
                 board.shuffleBoard()
                 expect(board.values().differenceFromOrdered()).toEqual(200)
             })
 
             it("shuffles to a mostly reversed board", () => {
-                board.shuffle = new Shuffles.K3ReversedShuffle()
+                board.shuffle = Shuffles.K3ReversedShuffle
                 board.shuffleBoard()
                 expect(board.values().differenceFromOrdered()).toBeGreaterThan(140)
                 expect(board.values()).not.toEqual(

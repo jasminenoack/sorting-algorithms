@@ -191,7 +191,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Shuffle = (function () {
     function Shuffle() {
     }
-    Shuffle.prototype.shuffle = function (array) {
+    Shuffle.shuffle = function (array) {
         array.sortNumbers();
         if (this.k === null) {
             array.shuffle();
@@ -210,178 +210,152 @@ exports.Shuffle = Shuffle;
 var OrderedShuffle = (function (_super) {
     __extends(OrderedShuffle, _super);
     function OrderedShuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 0;
-        _this.reversed = false;
-        _this.title = "Ordered";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    OrderedShuffle.k = 0;
+    OrderedShuffle.reversed = false;
+    OrderedShuffle.title = "Ordered";
     return OrderedShuffle;
 }(Shuffle));
 exports.OrderedShuffle = OrderedShuffle;
 var RandomShuffle = (function (_super) {
     __extends(RandomShuffle, _super);
     function RandomShuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = null;
-        _this.reversed = false;
-        _this.title = "Random";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    RandomShuffle.k = null;
+    RandomShuffle.reversed = false;
+    RandomShuffle.title = "Random";
     return RandomShuffle;
 }(Shuffle));
 exports.RandomShuffle = RandomShuffle;
 var K1Shuffle = (function (_super) {
     __extends(K1Shuffle, _super);
     function K1Shuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 1;
-        _this.reversed = false;
-        _this.title = "K1";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    K1Shuffle.k = 1;
+    K1Shuffle.reversed = false;
+    K1Shuffle.title = "K1";
     return K1Shuffle;
 }(Shuffle));
 exports.K1Shuffle = K1Shuffle;
 var K3Shuffle = (function (_super) {
     __extends(K3Shuffle, _super);
     function K3Shuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 3;
-        _this.reversed = false;
-        _this.title = "K3";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    K3Shuffle.k = 3;
+    K3Shuffle.reversed = false;
+    K3Shuffle.title = "K3";
     return K3Shuffle;
 }(Shuffle));
 exports.K3Shuffle = K3Shuffle;
 var K5Shuffle = (function (_super) {
     __extends(K5Shuffle, _super);
     function K5Shuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 5;
-        _this.reversed = false;
-        _this.title = "K5";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    K5Shuffle.k = 5;
+    K5Shuffle.reversed = false;
+    K5Shuffle.title = "K5";
     return K5Shuffle;
 }(Shuffle));
 exports.K5Shuffle = K5Shuffle;
 var K5ReversedShuffle = (function (_super) {
     __extends(K5ReversedShuffle, _super);
     function K5ReversedShuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 5;
-        _this.reversed = true;
-        _this.title = "K5 Reversed";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    K5ReversedShuffle.k = 5;
+    K5ReversedShuffle.reversed = true;
+    K5ReversedShuffle.title = "K5 Reversed";
     return K5ReversedShuffle;
 }(Shuffle));
 exports.K5ReversedShuffle = K5ReversedShuffle;
 var K3ReversedShuffle = (function (_super) {
     __extends(K3ReversedShuffle, _super);
     function K3ReversedShuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 3;
-        _this.reversed = true;
-        _this.title = "K3 Reversed";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    K3ReversedShuffle.k = 3;
+    K3ReversedShuffle.reversed = true;
+    K3ReversedShuffle.title = "K3 Reversed";
     return K3ReversedShuffle;
 }(Shuffle));
 exports.K3ReversedShuffle = K3ReversedShuffle;
 var K1ReversedShuffle = (function (_super) {
     __extends(K1ReversedShuffle, _super);
     function K1ReversedShuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 1;
-        _this.reversed = true;
-        _this.title = "K1 Reversed";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    K1ReversedShuffle.k = 1;
+    K1ReversedShuffle.reversed = true;
+    K1ReversedShuffle.title = "K1 Reversed";
     return K1ReversedShuffle;
 }(Shuffle));
 exports.K1ReversedShuffle = K1ReversedShuffle;
 var ReversedShuffle = (function (_super) {
     __extends(ReversedShuffle, _super);
     function ReversedShuffle() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 0;
-        _this.reversed = true;
-        _this.title = "Reversed";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    ReversedShuffle.k = 0;
+    ReversedShuffle.reversed = true;
+    ReversedShuffle.title = "Reversed";
     return ReversedShuffle;
 }(Shuffle));
 exports.ReversedShuffle = ReversedShuffle;
 var FirstAndLastSwapped = (function (_super) {
     __extends(FirstAndLastSwapped, _super);
     function FirstAndLastSwapped() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 0;
-        _this.reversed = false;
-        _this.title = "First and Last Swapped";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    FirstAndLastSwapped.prototype.swap = function (array) {
+    FirstAndLastSwapped.swap = function (array) {
         _a = [array[array.length - 1], array[0]], array[0] = _a[0], array[array.length - 1] = _a[1];
         var _a;
     };
-    FirstAndLastSwapped.prototype.shuffle = function (array) {
+    FirstAndLastSwapped.shuffle = function (array) {
         array.sortNumbers();
         this.swap(array);
         return array;
     };
+    FirstAndLastSwapped.k = 0;
+    FirstAndLastSwapped.reversed = false;
+    FirstAndLastSwapped.title = "First and Last Swapped";
     return FirstAndLastSwapped;
 }(Shuffle));
 exports.FirstAndLastSwapped = FirstAndLastSwapped;
 var FirstTwoSwapped = (function (_super) {
     __extends(FirstTwoSwapped, _super);
     function FirstTwoSwapped() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 0;
-        _this.reversed = false;
-        _this.title = "First Two Swapped";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    FirstTwoSwapped.prototype.swap = function (array) {
+    FirstTwoSwapped.swap = function (array) {
         _a = [array[1], array[0]], array[0] = _a[0], array[1] = _a[1];
         var _a;
     };
+    FirstTwoSwapped.k = 0;
+    FirstTwoSwapped.reversed = false;
+    FirstTwoSwapped.title = "First Two Swapped";
     return FirstTwoSwapped;
 }(FirstAndLastSwapped));
 exports.FirstTwoSwapped = FirstTwoSwapped;
 var LastTwoSwapped = (function (_super) {
     __extends(LastTwoSwapped, _super);
     function LastTwoSwapped() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.k = 0;
-        _this.reversed = false;
-        _this.title = "Last Two Swapped";
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    LastTwoSwapped.prototype.swap = function (array) {
+    LastTwoSwapped.swap = function (array) {
         _a = [array[array.length - 1], array[array.length - 2]], array[array.length - 2] = _a[0], array[array.length - 1] = _a[1];
         var _a;
     };
+    LastTwoSwapped.k = 0;
+    LastTwoSwapped.reversed = false;
+    LastTwoSwapped.title = "Last Two Swapped";
     return LastTwoSwapped;
 }(FirstAndLastSwapped));
 exports.LastTwoSwapped = LastTwoSwapped;
-exports.ShuffleList = [
-    new OrderedShuffle(),
-    new K1Shuffle(),
-    new K3Shuffle(),
-    new K5Shuffle(),
-    new RandomShuffle(),
-    new K5ReversedShuffle(),
-    new K3ReversedShuffle(),
-    new K1ReversedShuffle(),
-    new ReversedShuffle(),
-    new FirstAndLastSwapped(),
-    new FirstTwoSwapped(),
-    new LastTwoSwapped()
-];
 
 
 /***/ }),
@@ -402,7 +376,7 @@ var Verbosity;
 })(Verbosity = exports.Verbosity || (exports.Verbosity = {}));
 var Board = (function () {
     function Board(size, shuffle, valueType, verbosity) {
-        if (shuffle === void 0) { shuffle = new Shuffles.RandomShuffle(); }
+        if (shuffle === void 0) { shuffle = Shuffles.RandomShuffle; }
         if (valueType === void 0) { valueType = new ValueTypes.Integer(); }
         if (verbosity === void 0) { verbosity = Verbosity.Debug; }
         this.shuffle = shuffle;
@@ -3104,7 +3078,7 @@ var Example;
     var boardList = [];
     var size = Sizes._25;
     var valueType = new ValueTypes.Integer();
-    var shuffle = new Shuffles.RandomShuffle();
+    var shuffle = Shuffles.RandomShuffle;
     var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
     var sort = new Sorts.OddEvenConcurrent(board);
     boardList.push({

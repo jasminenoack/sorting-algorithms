@@ -11,7 +11,7 @@ describe("Shuffle", function() {
 
     describe("ordered", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.OrderedShuffle()
+            shuffle = Shuffles.OrderedShuffle
         })
 
         it("returns ordered array", function () {
@@ -30,7 +30,7 @@ describe("Shuffle", function() {
 
     describe("k-1 sorted", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.K1Shuffle()
+            shuffle = Shuffles.K1Shuffle
         })
 
         it("returns shuffled array", function () {
@@ -50,7 +50,7 @@ describe("Shuffle", function() {
 
     describe("k-3 sorted", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.K3Shuffle()
+            shuffle = Shuffles.K3Shuffle
         })
 
         it("returns shuffled array", function () {
@@ -71,7 +71,7 @@ describe("Shuffle", function() {
 
     describe("k-5 sorted", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.K5Shuffle()
+            shuffle = Shuffles.K5Shuffle
         })
 
         it("returns shuffled array", function () {
@@ -91,7 +91,7 @@ describe("Shuffle", function() {
 
     describe("random", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.RandomShuffle()
+            shuffle = Shuffles.RandomShuffle
         })
 
         it("returns shuffled array", function () {
@@ -116,7 +116,7 @@ describe("Shuffle", function() {
 
     describe("k-5 reversed", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.K5ReversedShuffle()
+            shuffle = Shuffles.K5ReversedShuffle
         })
 
         it("returns shuffled array", function () {
@@ -136,7 +136,7 @@ describe("Shuffle", function() {
 
     describe("k-3 reversed", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.K3ReversedShuffle()
+            shuffle = Shuffles.K3ReversedShuffle
         })
 
         it("returns shuffled array", function () {
@@ -156,7 +156,7 @@ describe("Shuffle", function() {
 
     describe("k-1 reversed", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.K1ReversedShuffle()
+            shuffle = Shuffles.K1ReversedShuffle
         })
 
         it("returns shuffled array", function () {
@@ -176,7 +176,7 @@ describe("Shuffle", function() {
 
     describe("reversed", function () {
         beforeEach(function () {
-            shuffle = new Shuffles.ReversedShuffle()
+            shuffle = Shuffles.ReversedShuffle
         })
 
         it("returns reversed array", function () {
@@ -195,7 +195,7 @@ describe("Shuffle", function() {
 
     describe("swaps first and last", () => {
         beforeEach(function () {
-            shuffle = new Shuffles.FirstAndLastSwapped()
+            shuffle = Shuffles.FirstAndLastSwapped
         })
 
         it("returns array", function () {
@@ -207,7 +207,7 @@ describe("Shuffle", function() {
 
     describe("swaps first two", () => {
         beforeEach(function () {
-            shuffle = new Shuffles.FirstTwoSwapped()
+            shuffle = Shuffles.FirstTwoSwapped
         })
 
         it("returns array", function () {
@@ -219,7 +219,7 @@ describe("Shuffle", function() {
 
     describe("swaps last two", () => {
         beforeEach(function () {
-            shuffle = new Shuffles.LastTwoSwapped()
+            shuffle = Shuffles.LastTwoSwapped
         })
 
         it("returns array", function () {

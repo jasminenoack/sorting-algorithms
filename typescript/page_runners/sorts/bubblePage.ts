@@ -20,7 +20,7 @@ namespace SimpleBubbleElement {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Bubble(board)
     boardList.push({
@@ -39,7 +39,7 @@ namespace BubbleOptimizations {
     const OptimizationsElement = document.getElementById('bubble-optimizations');
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Bubble(board1)
     const board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
@@ -82,13 +82,13 @@ namespace BubbleShuffles {
     const ShufflesElement = document.getElementById('bubble-shuffles');
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info)
+    const board1 = new Boards.Board(size, Shuffles.OrderedShuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.BubbleSkipsSorted(board1)
-    const board2 = new Boards.Board(size, new Shuffles.K1Shuffle(), valueType, Boards.Verbosity.Info)
+    const board2 = new Boards.Board(size, Shuffles.K1Shuffle, valueType, Boards.Verbosity.Info)
     const sort2 = new Sorts.BubbleSkipsSorted(board2)
-    const board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info)
+    const board3 = new Boards.Board(size, Shuffles.RandomShuffle, valueType, Boards.Verbosity.Info)
     const sort3 = new Sorts.BubbleSkipsSorted(board3)
-    const board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info)
+    const board4 = new Boards.Board(size, Shuffles.ReversedShuffle, valueType, Boards.Verbosity.Info)
     const sort4 = new Sorts.BubbleSkipsSorted(board4)
     const boardList: any[] = [
         {
@@ -123,7 +123,7 @@ namespace BubbleShuffles {
 namespace BubbleConCur {
     const ConcurElement = document.getElementById('bubble-concur');
     const size = Sizes._25
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const valueType = new ValueTypes.Integer()
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.BubbleSortConcurrent(board1)
@@ -166,7 +166,7 @@ namespace BubbleConCur {
 namespace BubbleDontRestart {
     const RestartElement = document.getElementById('bubble-dont-restart');
     const size = Sizes._25
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const valueType = new ValueTypes.Integer()
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new BubbleFullyOptimized(board1)

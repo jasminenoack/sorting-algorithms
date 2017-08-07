@@ -15,7 +15,7 @@ namespace Example {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Cycle(board)
     boardList.push({
@@ -35,7 +35,7 @@ namespace Optimized {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort = new Sorts.Cycle(board)
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)

@@ -15,7 +15,7 @@ namespace Example {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Comb(board)
     boardList.push({
@@ -34,7 +34,7 @@ namespace Shrink {
     const element = document.getElementById('shrink');
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.CombSmallShrink(board1)
     const board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
@@ -77,13 +77,13 @@ namespace Shuffle {
     const element = document.getElementById('order');
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info)
+    const board1 = new Boards.Board(size, Shuffles.OrderedShuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.Comb(board1)
-    const board2 = new Boards.Board(size, new Shuffles.K1Shuffle(), valueType, Boards.Verbosity.Info)
+    const board2 = new Boards.Board(size, Shuffles.K1Shuffle, valueType, Boards.Verbosity.Info)
     const sort2 = new Sorts.Comb(board2)
-    const board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info)
+    const board3 = new Boards.Board(size, Shuffles.RandomShuffle, valueType, Boards.Verbosity.Info)
     const sort3 = new Sorts.Comb(board3)
-    const board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info)
+    const board4 = new Boards.Board(size, Shuffles.ReversedShuffle, valueType, Boards.Verbosity.Info)
     const sort4 = new Sorts.Comb(board4)
     const boardList: any[] = [
         {
@@ -119,7 +119,7 @@ namespace Gnome {
     const element = document.getElementById('gnome');
     const size = Sizes.medium
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.Comb(board1)
     const board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)

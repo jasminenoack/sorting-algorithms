@@ -15,7 +15,7 @@ namespace Example {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.Cocktail(board)
     boardList.push({
@@ -35,7 +35,7 @@ namespace Optimized {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.RandomShuffle()
+    const shuffle = Shuffles.RandomShuffle
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
     const sort = new Sorts.BubbleSkipNoShortCircuit(board)
     const board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info)
@@ -78,7 +78,7 @@ namespace FirstLast {
     const boardList: any[] = []
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const shuffle = new Shuffles.FirstAndLastSwapped()
+    const shuffle = Shuffles.FirstAndLastSwapped
     const board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None)
     const sort = new Sorts.CocktailShortCircuit(board)
     boardList.push({
@@ -97,13 +97,13 @@ namespace Shuffle {
     const element = document.getElementById('order');
     const size = Sizes._25
     const valueType = new ValueTypes.Integer()
-    const board1 = new Boards.Board(size, new Shuffles.OrderedShuffle(), valueType, Boards.Verbosity.Info)
+    const board1 = new Boards.Board(size, Shuffles.OrderedShuffle, valueType, Boards.Verbosity.Info)
     const sort1 = new Sorts.CocktailShortCircuit(board1)
-    const board2 = new Boards.Board(size, new Shuffles.FirstAndLastSwapped(), valueType, Boards.Verbosity.Info)
+    const board2 = new Boards.Board(size, Shuffles.FirstAndLastSwapped, valueType, Boards.Verbosity.Info)
     const sort2 = new Sorts.CocktailShortCircuit(board2)
-    const board3 = new Boards.Board(size, new Shuffles.RandomShuffle(), valueType, Boards.Verbosity.Info)
+    const board3 = new Boards.Board(size, Shuffles.RandomShuffle, valueType, Boards.Verbosity.Info)
     const sort3 = new Sorts.CocktailShortCircuit(board3)
-    const board4 = new Boards.Board(size, new Shuffles.ReversedShuffle(), valueType, Boards.Verbosity.Info)
+    const board4 = new Boards.Board(size, Shuffles.ReversedShuffle, valueType, Boards.Verbosity.Info)
     const sort4 = new Sorts.CocktailShortCircuit(board4)
     const boardList: any[] = [
         {

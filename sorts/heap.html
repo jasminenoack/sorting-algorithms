@@ -20,26 +20,27 @@
                 <article>
                     <h1>Summary</h1>
                     <div class="normal clear">
+                        <div class="left paddingRight10 one" id="example"></div>
                         <p>
-                            <div class="left paddingRight10 one" id="example"></div>
+                            <a href="https://en.wikipedia.org/wiki/Heapsort" target="_blank">Heap Sort</a> divides the array into 2 sections a heap section and a sorted section. The heap section uses a <a target="_blank" href="https://en.wikipedia.org/wiki/Heap_(data_structure)">Max Heap</a>. A Max heap is a data sructure in which each node has 2 children and is larger than both of it's children. This will build a tree structure. Heap Sort works by building a max heap in the array with the largest element in the 0 index. Once the heap is complete the element is removed and put into the "sorted" section by swapping it with the last unsorted element of the array. Then the element moved to the first position is processed to the correct location in the heap and the process starts over until all the elements have been moved to the sorted portion of the array.
                         </p>
-                        <p>Coming Soon</p>
+
+                        <p>
+                            Heap Sort works in 2 phases. In the first phase it builds the heap by starting at the nodes at the base of the tree and turning them into heaps. Then working it's way up to the first node and generating a single heap starting at the first node. The second phase repeatedly removes the first element, moves it to the sorted section, and then rebalances the heap.
+                        </p>
                     </div>
-                </article>
-
-                <article>
-                    <h1>Common Optimizations</h1>
-                    <p>Coming Soon</p>
-
-                    <p><a href="./debug/scatter.html">Compare Yourself</a></p>
-
-                    <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
                 </article>
 
                 <article>
                     <h1>Comparing Efficency Among Orderings</h1>
 
-                    <p>Coming Soon</p>
+                    <div id="order" class="four"></div>
+
+                    <p>
+                        Heap Sort runs at a speed of O(n log(n)). However, it is important to note that unlike other sorts Heap Sort is actually less effective on an ordered list. This is because it needs to move the largest elements to the beginning of the list to build the heap. But as you can see from the graph the difference of being able to skip much of the first phase only slightly improves the overall time the sort takes.
+                    </p>
+
+                    <div id="order-chart"></div>
 
                     <p><a href="./debug/scatter.html">Compare Yourself</a></p>
                     <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
@@ -52,17 +53,8 @@
                 </article>
 
                 <article>
-                    <h1>Further Optimization</h1>
-
-                    <p>Coming Soon</p>
-
-                    <p><a href="./debug/scatter.html">Compare Yourself</a></p>
-                    <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
-                </article>
-
-                <article>
                     <h1>More Links</h1>
-                    <!-- <p><a href="https://www.youtube.com/watch?v=HfdT_uOqbvA" target="_blank">Sound of Sorting</a></p> -->
+                    <p><a href="https://www.youtube.com/watch?v=_bkow6IykGM" target="_blank">Sound of Sorting</a></p>
                 </article>
 
                 <script src="../dist/utils.entry.js"></script>

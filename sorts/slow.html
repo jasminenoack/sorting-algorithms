@@ -64,6 +64,20 @@
                     <!-- <p><a href="https://www.youtube.com/watch?v=HfdT_uOqbvA" target="_blank">Sound of Sorting</a></p> -->
                 </article>
 
+                <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+                <script>
+                  // Initialize Firebase
+                  var config = {
+                    apiKey: "AIzaSyANHxUN0jdIHBf6VAgLXgdj_d5J5wvyVXQ",
+                    authDomain: "sorting-algorithms-d1bb2.firebaseapp.com",
+                    databaseURL: "https://sorting-algorithms-d1bb2.firebaseio.com",
+                    projectId: "sorting-algorithms-d1bb2",
+                    storageBucket: "",
+                    messagingSenderId: "709471617463"
+                  };
+                  firebase.initializeApp(config);
+                </script>
+
                 <script src="../dist/utils.entry.js"></script>
                 <script src="../dist/queens.entry.js"></script>
                 <!-- <script src="../dist/slow.entry.js"></script> -->

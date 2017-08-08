@@ -21,7 +21,7 @@ export class Comb extends BaseSort {
 
         if (this.comparisonNode >= this.length) {
             if (this.ordered === true && this.gap === 1) {
-                this.done = true
+                this.setDone()
             }
             this.gap = Math.max(Math.floor(this.gap / this.shrink), 1)
             this.baseNode = 0

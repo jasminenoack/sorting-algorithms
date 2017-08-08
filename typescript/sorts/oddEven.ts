@@ -46,7 +46,7 @@ export class OddEven extends BaseSort {
                 this.evenSorted = false
             }
             if (this.evenSorted && this.oddSorted) {
-                this.done = true
+                this.setDone()
                 return
             }
             this.oddPhase = !this.oddPhase

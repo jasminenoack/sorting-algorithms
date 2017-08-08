@@ -79,7 +79,7 @@ export class Cycle extends BaseSort {
             this.numberLess = 0
 
             if (this.baseNode >= this.length - 1) {
-                this.done = true
+                this.setDone()
             }
         }
     }

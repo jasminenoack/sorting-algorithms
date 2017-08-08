@@ -1,5 +1,19 @@
 import * as Boards from '../board'
 
+declare const firebase: any
+
+/**
+* database structure:
+*
+* sort_name:
+* order:
+* value_type:
+* point_count:
+* steps:
+* comparisons: []
+* swaps: []
+*/
+
 export abstract class BaseSort {
     steps: number
     static title: string = ''
@@ -21,9 +35,33 @@ export abstract class BaseSort {
     static links: any[]
     profile: { [key: string]: {[key: string]: number}[] }
     nextItemToAdd: number
+    database: any
 
     constructor(public board: Boards.Board, public trackAll: boolean = false) {
+        if (firebase) {
+            this.database = firebase.database()
+        }
         this.baseSetUp()
+    }
+
+    writeToDatabase() {
+        if (this.database) {
+            firebase.auth().signInAnonymously()
+            firebase.database().ref('sortstats/').push({
+                sort_name: this.constructor.title,
+                order: this.board.shuffle.title,
+                value_type: this.board.valueType.title,
+                point_count: this.length,
+                steps: this.steps,
+                comparisons: this.comparisons,
+                swaps: this.swaps
+              });
+        }
+    }
+
+    setDone() {
+        this.done = true;
+        this.writeToDatabase();
     }
 
     currentNodes() {

@@ -99,7 +99,7 @@ export class Smooth extends BaseSort {
             nodes = this.remove(this.roots.pop())
         }
         if (!this.roots.length && !(this.fromBottom && this.baseNode < this.length)) {
-            this.done = true
+            this.setDone()
         }
         this.trackProfile()
         return nodes

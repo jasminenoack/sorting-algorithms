@@ -17,7 +17,7 @@ export class Bogo extends BaseSort {
     checkSorted () {
         let values = this.board.values()
         if (values.sorted()) {
-            this.done = true
+            this.setDone()
             return true
         }
         this.comparisons += this.length - 1
@@ -56,7 +56,7 @@ export class BogoSingle extends BaseSort {
     checkSorted () {
         let values = this.board.values()
         if (values.sorted()) {
-            this.done = true
+            this.setDone()
             return true
         }
         return false
@@ -139,7 +139,7 @@ export class Bogobogo extends BaseSort {
         }
 
         if(this.currentTop === this.length - 1) {
-            this.done = true
+            this.setDone()
         }
 
         return currentNodes

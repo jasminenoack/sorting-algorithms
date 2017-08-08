@@ -56,7 +56,7 @@ export class Insertion extends BaseSort {
         }
 
         if (this.baseNode === this.length) {
-            this.done = true
+            this.setDone()
         }
         this.trackProfile()
         return nodes

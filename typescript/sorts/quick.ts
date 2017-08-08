@@ -70,7 +70,7 @@ export class QuickSort2 extends BaseSort {
                 let newPartition = partitions.shift()
                 this.setUpValues(newPartition)
             } else {
-                this.done = true
+                this.setDone()
                 return []
             }
         }

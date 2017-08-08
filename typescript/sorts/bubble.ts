@@ -16,10 +16,10 @@ export class Bubble extends BaseSort {
         if (this.comparisonNode == this.end) {
             this.maxRounds--
             if (this.maxRounds === 0) {
-                this.done = true
+                this.setDone()
             }
             if (this.ordered && this.shortCircuit) {
-                this.done = true
+                this.setDone()
             } else {
                 this.ordered = true
             }
@@ -29,7 +29,7 @@ export class Bubble extends BaseSort {
                 this.placed.push(this.end)
                 this.end--
                 if (this.end === 0) {
-                    this.done = true
+                    this.setDone()
                 }
             }
         } else {
@@ -116,14 +116,14 @@ export class BubbleSortConcurrent extends Bubble {
                     this.end--
                     this.maxRounds--
                     if (this.maxRounds === 0) {
-                        this.done = true
+                        this.setDone()
                     }
                 }
                 if (this.end === 0) {
-                    this.done = true
+                    this.setDone()
                 }
                 if (this.orderedSets[index]) {
-                    this.done = true
+                    this.setDone()
                 }
 
                 let nextIndex
@@ -220,7 +220,7 @@ export class BubbleSortDontRestart extends Bubble {
             this.baseNode++
             this.comparisonNode++
             if (this.comparisonNode === this.length) {
-                this.done = true
+                this.setDone()
             }
         }
         this.trackProfile()

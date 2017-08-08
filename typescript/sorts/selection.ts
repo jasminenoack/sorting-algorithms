@@ -20,7 +20,7 @@ export class SelectionSort extends BaseSort {
             this.comparisonNode = this.baseNode + 1
 
             if (this.baseNode === this.length - 1) {
-                this.done = true
+                this.setDone()
             }
         }
     }

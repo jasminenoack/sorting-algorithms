@@ -70,14 +70,46 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+* database structure:
+*
+* sort_name:
+* order:
+* value_type:
+* point_count:
+* steps:
+* comparisons: []
+* swaps: []
+*/
 var BaseSort = (function () {
     function BaseSort(board, trackAll) {
         if (trackAll === void 0) { trackAll = false; }
         this.board = board;
         this.trackAll = trackAll;
+        if (firebase) {
+            this.database = firebase.database();
+        }
         this.baseSetUp();
     }
     BaseSort.prototype.setUpNext = function () { };
+    BaseSort.prototype.writeToDatabase = function () {
+        if (this.database) {
+            firebase.auth().signInAnonymously();
+            firebase.database().ref('sortstats/').push({
+                sort_name: this.constructor.title,
+                order: this.board.shuffle.title,
+                value_type: this.board.valueType.title,
+                point_count: this.length,
+                steps: this.steps,
+                comparisons: this.comparisons,
+                swaps: this.swaps
+            });
+        }
+    };
+    BaseSort.prototype.setDone = function () {
+        this.done = true;
+        this.writeToDatabase();
+    };
     BaseSort.prototype.currentNodes = function () {
         if (this.done) {
             return [];
@@ -682,7 +714,7 @@ var Gnome = (function (_super) {
             this.comparisonNode--;
         }
         if (this.comparisonNode >= this.length) {
-            this.done = true;
+            this.setDone();
         }
     };
     Gnome.prototype.setUp = function () {
@@ -1352,7 +1384,7 @@ var Bogo = (function (_super) {
     Bogo.prototype.checkSorted = function () {
         var values = this.board.values();
         if (values.sorted()) {
-            this.done = true;
+            this.setDone();
             return true;
         }
         this.comparisons += this.length - 1;
@@ -1394,7 +1426,7 @@ var BogoSingle = (function (_super) {
     BogoSingle.prototype.checkSorted = function () {
         var values = this.board.values();
         if (values.sorted()) {
-            this.done = true;
+            this.setDone();
             return true;
         }
         return false;
@@ -1478,7 +1510,7 @@ var Bogobogo = (function (_super) {
             this.currentTop = 0;
         }
         if (this.currentTop === this.length - 1) {
-            this.done = true;
+            this.setDone();
         }
         return currentNodes;
     };
@@ -1589,10 +1621,10 @@ var Bubble = (function (_super) {
         if (this.comparisonNode == this.end) {
             this.maxRounds--;
             if (this.maxRounds === 0) {
-                this.done = true;
+                this.setDone();
             }
             if (this.ordered && this.shortCircuit) {
-                this.done = true;
+                this.setDone();
             }
             else {
                 this.ordered = true;
@@ -1603,7 +1635,7 @@ var Bubble = (function (_super) {
                 this.placed.push(this.end);
                 this.end--;
                 if (this.end === 0) {
-                    this.done = true;
+                    this.setDone();
                 }
             }
         }
@@ -1713,14 +1745,14 @@ var BubbleSortConcurrent = (function (_super) {
                     _this.end--;
                     _this.maxRounds--;
                     if (_this.maxRounds === 0) {
-                        _this.done = true;
+                        _this.setDone();
                     }
                 }
                 if (_this.end === 0) {
-                    _this.done = true;
+                    _this.setDone();
                 }
                 if (_this.orderedSets[index]) {
-                    _this.done = true;
+                    _this.setDone();
                 }
                 var nextIndex = void 0;
                 if (index < _this.baseNodes.length - 1) {
@@ -1830,7 +1862,7 @@ var BubbleSortDontRestart = (function (_super) {
             this.baseNode++;
             this.comparisonNode++;
             if (this.comparisonNode === this.length) {
-                this.done = true;
+                this.setDone();
             }
         }
         this.trackProfile();
@@ -1881,7 +1913,7 @@ var Cocktail = (function (_super) {
                 this.comparisonNode--;
                 this.direction = 0;
                 if (this.ordered && this.shortCircuit) {
-                    this.done = true;
+                    this.setDone();
                 }
                 else {
                     this.ordered = true;
@@ -1900,7 +1932,7 @@ var Cocktail = (function (_super) {
                 this.baseNode++;
                 this.comparisonNode++;
                 if (this.ordered && this.shortCircuit) {
-                    this.done = true;
+                    this.setDone();
                 }
                 else {
                     this.ordered = true;
@@ -1912,7 +1944,7 @@ var Cocktail = (function (_super) {
             }
         }
         if (!(this.start < this.end)) {
-            this.done = true;
+            this.setDone();
         }
     };
     Cocktail.title = "Cocktail Sort";
@@ -1966,7 +1998,7 @@ var Comb = (function (_super) {
         this.comparisonNode++;
         if (this.comparisonNode >= this.length) {
             if (this.ordered === true && this.gap === 1) {
-                this.done = true;
+                this.setDone();
             }
             this.gap = Math.max(Math.floor(this.gap / this.shrink), 1);
             this.baseNode = 0;
@@ -2235,7 +2267,7 @@ var Cycle = (function (_super) {
             this.comparisonNode = this.baseNode + 1;
             this.numberLess = 0;
             if (this.baseNode >= this.length - 1) {
-                this.done = true;
+                this.setDone();
             }
         }
     };
@@ -2349,7 +2381,7 @@ var Heap = (function (_super) {
             this.removeNode();
         }
         if (this.comparisonNode === 0) {
-            this.done = true;
+            this.setDone();
         }
         this.trackProfile();
         return currentNodes;
@@ -2426,7 +2458,7 @@ var Insertion = (function (_super) {
             this.insertValue = null;
         }
         if (this.baseNode === this.length) {
-            this.done = true;
+            this.setDone();
         }
         this.trackProfile();
         return nodes;
@@ -2499,7 +2531,7 @@ var OddEven = (function (_super) {
                 this.evenSorted = false;
             }
             if (this.evenSorted && this.oddSorted) {
-                this.done = true;
+                this.setDone();
                 return;
             }
             this.oddPhase = !this.oddPhase;
@@ -2629,7 +2661,7 @@ var QuickSort2 = (function (_super) {
                 this.setUpValues(newPartition);
             }
             else {
-                this.done = true;
+                this.setDone();
                 return [];
             }
         }
@@ -2788,7 +2820,7 @@ var SelectionSort = (function (_super) {
             this.baseNode = this.baseIndex;
             this.comparisonNode = this.baseNode + 1;
             if (this.baseNode === this.length - 1) {
-                this.done = true;
+                this.setDone();
             }
         }
     };
@@ -2916,7 +2948,7 @@ var Smooth = (function (_super) {
             nodes = this.remove(this.roots.pop());
         }
         if (!this.roots.length && !(this.fromBottom && this.baseNode < this.length)) {
-            this.done = true;
+            this.setDone();
         }
         this.trackProfile();
         return nodes;

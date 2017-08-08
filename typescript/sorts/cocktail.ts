@@ -23,7 +23,7 @@ export class Cocktail extends BaseSort {
                 this.comparisonNode--
                 this.direction = 0
                 if (this.ordered && this.shortCircuit) {
-                    this.done = true
+                    this.setDone()
                 } else {
                     this.ordered = true
                 }
@@ -39,7 +39,7 @@ export class Cocktail extends BaseSort {
                 this.baseNode++
                 this.comparisonNode++
                 if (this.ordered && this.shortCircuit) {
-                    this.done = true
+                    this.setDone()
                 } else {
                     this.ordered = true
                 }
@@ -49,7 +49,7 @@ export class Cocktail extends BaseSort {
             }
         }
         if (!(this.start < this.end)) {
-            this.done = true
+            this.setDone()
         }
     }
 }

@@ -14,7 +14,7 @@ export class Gnome extends BaseSort {
                 this.comparisonNode--
             }
             if (this.comparisonNode >= this.length) {
-                this.done = true
+                this.setDone()
             }
         }
 

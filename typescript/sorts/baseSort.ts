@@ -38,7 +38,7 @@ export abstract class BaseSort {
     database: any
 
     constructor(public board: Boards.Board, public trackAll: boolean = false) {
-        if (firebase) {
+        if (window.firebase) {
             this.database = firebase.database()
         }
         this.baseSetUp()

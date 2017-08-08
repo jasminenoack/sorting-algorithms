@@ -86,7 +86,7 @@ var BaseSort = (function () {
         if (trackAll === void 0) { trackAll = false; }
         this.board = board;
         this.trackAll = trackAll;
-        if (firebase) {
+        if (window.firebase) {
             this.database = firebase.database();
         }
         this.baseSetUp();

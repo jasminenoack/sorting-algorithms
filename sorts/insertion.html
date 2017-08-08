@@ -20,26 +20,37 @@
                 <article>
                     <h1>Summary</h1>
                     <div class="normal clear">
+                        <div class="left paddingRight10 one" id="example"></div>
                         <p>
-                            <div class="left paddingRight10 one" id="example"></div>
+                            <a href="https://en.wikipedia.org/wiki/Insertion_sort" target="_blank">Insertion Sort</a>
+                             is one of the most efficent O(n<sup>2</sup>) sorts.
+                            It's efficency can also be represented as O(n*k) where k is the max number of
+                            positions that an element is from it's correct position. Because of this it is extremely
+                            efficent for mostly ordered arrays.
                         </p>
-                        <p>Coming Soon</p>
+
+                        <p>
+                            Insertion sort works by separating the array into a sorted and unsorted portion.
+                            The sorted portion is at the beginning of the array. For each element in the array, the sort traverses backwards
+                            if the element before is larger than the element it copies that element into the current position and moves back again.
+                            If the previous element is smaller it places the element in the position. This means that traveling down elements are copied
+                            into the next location, but the element being inserted is only inserted one time. This is as opposed to <a href="./gnome.html">Gnome Sort</a>
+                            where each comparison leads to a swap if items are out of order.
+                        </p>
+
+                        <p>
+                            Insertion sort also can be online. Meaning that it can sort while it is recieving a list.
+                            This is because it only needs access the sorted portionof the array and the next element for each round.
+                        </p>
                     </div>
-                </article>
-
-                <article>
-                    <h1>Common Optimizations</h1>
-                    <p>Coming Soon</p>
-
-                    <p><a href="./debug/scatter.html">Compare Yourself</a></p>
-
-                    <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
                 </article>
 
                 <article>
                     <h1>Comparing Efficency Among Orderings</h1>
 
-                    <p>Coming Soon</p>
+                    <div id="order" class="four"></div>
+                    <p></p>
+                    <div id="order-chart"></div>
 
                     <p><a href="./debug/scatter.html">Compare Yourself</a></p>
                     <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
@@ -47,22 +58,12 @@
 
                 <article>
                     <h1>Code</h1>
-
-                     <p><a href="http://rosettacode.org/wiki/Sorting_algorithms/Insertion_sort">Code Examples</a></p>
-                </article>
-
-                <article>
-                    <h1>Further Optimization</h1>
-
-                    <p>Coming Soon</p>
-
-                    <p><a href="./debug/scatter.html">Compare Yourself</a></p>
-                    <p><a href="./debug/profile.html">See More Detailed Profile</a></p>
+                     <p><a target="_blank" href="http://rosettacode.org/wiki/Sorting_algorithms/Insertion_sort">Code Examples</a></p>
                 </article>
 
                 <article>
                     <h1>More Links</h1>
-                    <!-- <p><a href="https://www.youtube.com/watch?v=HfdT_uOqbvA" target="_blank">Sound of Sorting</a></p> -->
+                    <p><a href="https://www.youtube.com/watch?v=8oJS1BMKE64" target="_blank">Sound of Sorting</a></p>
                 </article>
 
                 <script src="../dist/utils.entry.js"></script>

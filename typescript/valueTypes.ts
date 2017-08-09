@@ -1,6 +1,6 @@
-abstract class ValueType {
-    static generate(n: number): any[] {return []}
-    static title: string
+export abstract class ValueType {
+    public static generate(n: number): any[] {return []}
+    public static title: string
 }
 
 export class Random implements ValueType {

@@ -19,6 +19,7 @@ module.exports = {
         quick: './typescript/page_runners/sorts/quickPage.ts',
         selection: './typescript/page_runners/sorts/selectionPage.ts',
         smooth: './typescript/page_runners/sorts/smoothPage.ts',
+        stooge: './typescript/page_runners/sorts/stoogePage.ts'
     },
     output: {
         path: __dirname + "/dist",

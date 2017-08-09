@@ -24,7 +24,7 @@ describe("Sorts", function() {
             })
         })
 
-        xit("has a reset function", () => {
+        it("has a reset function", () => {
             while(!sort.done) {
                 sort.next()
             }
@@ -37,6 +37,11 @@ describe("Sorts", function() {
             expect(values).not.toEqual(board.values())
             expect(sort.baseNode).toEqual(0)
             expect(sort.comparisonNode).toEqual(1)
+            expect(sort.partitions).toEqual([
+                [1, 2], [0, 1], // first 2 sets
+                [1, 3], [0, 2], // other 3 sets
+                [1, 4], [0, 3] // other 4 sets
+            ])
         })
 
         describe("utils", () => {

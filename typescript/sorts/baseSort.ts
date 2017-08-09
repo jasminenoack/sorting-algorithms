@@ -48,7 +48,7 @@ export abstract class BaseSort {
         if (this.database) {
             firebase.auth().signInAnonymously()
             firebase.database().ref('sortstats/').push({
-                sort_name: this.constructor.title,
+                sort_name: (this.constructor as any).title,
                 order: this.board.shuffle.title,
                 value_type: this.board.valueType.title,
                 point_count: this.length,

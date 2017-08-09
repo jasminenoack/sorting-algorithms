@@ -4,7 +4,7 @@ export class Shuffle {
     static reversed: boolean
     static title: string
 
-    static shuffle(array: number[]) {
+    public static shuffle(array: number[]) {
         array.sortNumbers()
         if (this.k === null) {
             array.shuffle()

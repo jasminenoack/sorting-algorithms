@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 30);
+/******/ 	return __webpack_require__(__webpack_require__.s = 31);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -496,6 +496,7 @@ var ValueType = (function () {
     ValueType.generate = function (n) { return []; };
     return ValueType;
 }());
+exports.ValueType = ValueType;
 var Random = (function () {
     function Random() {
     }
@@ -1143,7 +1144,7 @@ __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
 __export(__webpack_require__(19));
-__export(__webpack_require__(38));
+__export(__webpack_require__(20));
 
 
 /***/ }),
@@ -2865,83 +2866,7 @@ exports.SmoothSetUpBottom = SmoothSetUpBottom;
 
 
 /***/ }),
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Sizes = __webpack_require__(6);
-var Shuffles = __webpack_require__(1);
-var Index = __webpack_require__(7);
-var ValueTypes = __webpack_require__(3);
-var Sorts = __webpack_require__(8);
-var Boards = __webpack_require__(2);
-var boxHeight = 200;
-var boxWidth = 200;
-var delay = 100;
-var delayOnComplete = 2000;
-var Example;
-(function (Example) {
-    var exampleElement = document.getElementById('example');
-    var boardList = [];
-    var size = Sizes._25;
-    var valueType = ValueTypes.Integer;
-    var shuffle = Shuffles.RandomShuffle;
-    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
-    var sort = new Sorts.Cycle(board);
-    boardList.push({
-        board: board,
-        sort: sort
-    });
-    Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
-})(Example || (Example = {}));
-var Optimized;
-(function (Optimized) {
-    var element = document.getElementById('optimized');
-    var boardList = [];
-    var size = Sizes._25;
-    var valueType = ValueTypes.Integer;
-    var shuffle = Shuffles.RandomShuffle;
-    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort = new Sorts.Cycle(board);
-    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort1 = new Sorts.CycleOptimized(board1);
-    boardList.push({
-        board: board,
-        sort: sort
-    }, {
-        board: board1,
-        sort: sort1
-    });
-    boardList.forEach(function (board, index) {
-        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
-    });
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
-    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart');
-})(Optimized || (Optimized = {}));
-
-
-/***/ }),
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3007,6 +2932,75 @@ var Stooge = (function (_super) {
     return Stooge;
 }(baseSort_1.BaseSort));
 exports.Stooge = Stooge;
+
+
+/***/ }),
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Sizes = __webpack_require__(6);
+var Shuffles = __webpack_require__(1);
+var Index = __webpack_require__(7);
+var ValueTypes = __webpack_require__(3);
+var Sorts = __webpack_require__(8);
+var Boards = __webpack_require__(2);
+var boxHeight = 200;
+var boxWidth = 200;
+var delay = 100;
+var delayOnComplete = 2000;
+var Example;
+(function (Example) {
+    var exampleElement = document.getElementById('example');
+    var boardList = [];
+    var size = Sizes._25;
+    var valueType = ValueTypes.Integer;
+    var shuffle = Shuffles.RandomShuffle;
+    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
+    var sort = new Sorts.Cycle(board);
+    boardList.push({
+        board: board,
+        sort: sort
+    });
+    Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
+})(Example || (Example = {}));
+var Optimized;
+(function (Optimized) {
+    var element = document.getElementById('optimized');
+    var boardList = [];
+    var size = Sizes._25;
+    var valueType = ValueTypes.Integer;
+    var shuffle = Shuffles.RandomShuffle;
+    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort = new Sorts.Cycle(board);
+    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
+    var sort1 = new Sorts.CycleOptimized(board1);
+    boardList.push({
+        board: board,
+        sort: sort
+    }, {
+        board: board1,
+        sort: sort1
+    });
+    boardList.forEach(function (board, index) {
+        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
+    });
+    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
+    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart');
+})(Optimized || (Optimized = {}));
 
 
 /***/ })

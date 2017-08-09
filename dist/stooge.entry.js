@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 39);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2943,7 +2943,17 @@ exports.Stooge = Stooge;
 /* 26 */,
 /* 27 */,
 /* 28 */,
-/* 29 */
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2967,7 +2977,7 @@ var Example;
     var valueType = ValueTypes.Integer;
     var shuffle = Shuffles.RandomShuffle;
     var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
-    var sort = new Sorts.Cocktail(board);
+    var sort = new Sorts.Stooge(board);
     boardList.push({
         board: board,
         sort: sort
@@ -2975,69 +2985,19 @@ var Example;
     Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
     Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
 })(Example || (Example = {}));
-var Optimized;
-(function (Optimized) {
-    var element = document.getElementById('optimized');
-    var boardList = [];
-    var size = Sizes._25;
-    var valueType = ValueTypes.Integer;
-    var shuffle = Shuffles.RandomShuffle;
-    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort = new Sorts.BubbleSkipNoShortCircuit(board);
-    var board1 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort1 = new Sorts.BubbleSkipsSorted(board1);
-    var board2 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort2 = new Sorts.Cocktail(board2);
-    var board3 = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.Info);
-    var sort3 = new Sorts.CocktailShortCircuit(board3);
-    boardList.push({
-        board: board,
-        sort: sort
-    }, {
-        board: board1,
-        sort: sort1
-    }, {
-        board: board2,
-        sort: sort2
-    }, {
-        board: board3,
-        sort: sort3
-    });
-    boardList.forEach(function (board, index) {
-        Index.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, element);
-    });
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, element, delay, delayOnComplete);
-    Index.manageAutoRunCharts(boardList, 1000, 'optimize-chart');
-})(Optimized || (Optimized = {}));
-var FirstLast;
-(function (FirstLast) {
-    var exampleElement = document.getElementById('firstlast');
-    var boardList = [];
-    var size = Sizes._25;
-    var valueType = ValueTypes.Integer;
-    var shuffle = Shuffles.FirstAndLastSwapped;
-    var board = new Boards.Board(size, shuffle, valueType, Boards.Verbosity.None);
-    var sort = new Sorts.CocktailShortCircuit(board);
-    boardList.push({
-        board: board,
-        sort: sort
-    });
-    Index.createBoard(boardList.length - 1, sort.constructor, boardList, boxHeight, boxWidth, exampleElement);
-    Index.autoRunBoards(boardList, boxHeight, boxWidth, exampleElement, delay, delayOnComplete);
-})(FirstLast || (FirstLast = {}));
 var Shuffle;
 (function (Shuffle) {
     var element = document.getElementById('order');
     var size = Sizes._25;
     var valueType = ValueTypes.Integer;
     var board1 = new Boards.Board(size, Shuffles.OrderedShuffle, valueType, Boards.Verbosity.Info);
-    var sort1 = new Sorts.CocktailShortCircuit(board1);
+    var sort1 = new Sorts.Stooge(board1);
     var board2 = new Boards.Board(size, Shuffles.FirstAndLastSwapped, valueType, Boards.Verbosity.Info);
-    var sort2 = new Sorts.CocktailShortCircuit(board2);
+    var sort2 = new Sorts.Stooge(board2);
     var board3 = new Boards.Board(size, Shuffles.RandomShuffle, valueType, Boards.Verbosity.Info);
-    var sort3 = new Sorts.CocktailShortCircuit(board3);
+    var sort3 = new Sorts.Stooge(board3);
     var board4 = new Boards.Board(size, Shuffles.ReversedShuffle, valueType, Boards.Verbosity.Info);
-    var sort4 = new Sorts.CocktailShortCircuit(board4);
+    var sort4 = new Sorts.Stooge(board4);
     var boardList = [
         {
             board: board1,

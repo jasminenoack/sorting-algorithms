@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 25);
+/******/ 	return __webpack_require__(__webpack_require__.s = 26);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -496,6 +496,7 @@ var ValueType = (function () {
     ValueType.generate = function (n) { return []; };
     return ValueType;
 }());
+exports.ValueType = ValueType;
 var Random = (function () {
     function Random() {
     }
@@ -1143,7 +1144,7 @@ __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
 __export(__webpack_require__(19));
-__export(__webpack_require__(38));
+__export(__webpack_require__(20));
 
 
 /***/ }),
@@ -2865,12 +2866,81 @@ exports.SmoothSetUpBottom = SmoothSetUpBottom;
 
 
 /***/ }),
-/* 20 */,
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var Stooge = (function (_super) {
+    __extends(Stooge, _super);
+    function Stooge() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Stooge.prototype.subsets = function (indexes) {
+        var first = indexes[0], last = indexes[1];
+        // find the number of elements
+        var diff = last - first + 1;
+        // find the number to adjust by
+        var sectionSize = Math.ceil(diff * 2 / 3) - 1;
+        return [
+            [first, first + sectionSize],
+            [last - sectionSize, last],
+            [first, first + sectionSize]
+        ];
+    };
+    Stooge.prototype.breakDownSubset = function (indexes) {
+        var final = [indexes];
+        while (this.hasLargeEnoughDiff(final[0])) {
+            final = this.subsets(final.shift()).concat(final);
+        }
+        return final;
+    };
+    Stooge.prototype.hasLargeEnoughDiff = function (nums) {
+        return nums[1] - nums[0] >= 2;
+    };
+    Stooge.prototype.setUp = function () {
+        this.partitions = this.breakDownSubset([0, this.length - 1]);
+        var nextValuess = this.partitions.shift();
+        this.baseNode = nextValuess[0], this.comparisonNode = nextValuess[1];
+    };
+    Stooge.prototype.setUpNext = function () {
+        if (this.partitions.length) {
+            var nextValues = this.partitions.shift();
+            if (this.hasLargeEnoughDiff(nextValues)) {
+                this.partitions = this.breakDownSubset(nextValues).concat(this.partitions);
+                nextValues = this.partitions.shift();
+            }
+            this.baseNode = nextValues[0], this.comparisonNode = nextValues[1];
+        }
+        else {
+            this.setDone();
+        }
+    };
+    Stooge.title = "Stooge Sort";
+    return Stooge;
+}(baseSort_1.BaseSort));
+exports.Stooge = Stooge;
+
+
+/***/ }),
 /* 21 */,
 /* 22 */,
 /* 23 */,
 /* 24 */,
-/* 25 */
+/* 25 */,
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3009,87 +3079,6 @@ runElement.addEventListener('click', function (event) {
         });
     }
 });
-
-
-/***/ }),
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(0);
-var Stooge = (function (_super) {
-    __extends(Stooge, _super);
-    function Stooge() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Stooge.prototype.subsets = function (indexes) {
-        var first = indexes[0], last = indexes[1];
-        // find the number of elements
-        var diff = last - first + 1;
-        // find the number to adjust by
-        var sectionSize = Math.ceil(diff * 2 / 3) - 1;
-        return [
-            [first, first + sectionSize],
-            [last - sectionSize, last],
-            [first, first + sectionSize]
-        ];
-    };
-    Stooge.prototype.breakDownSubset = function (indexes) {
-        var final = [indexes];
-        while (this.hasLargeEnoughDiff(final[0])) {
-            final = this.subsets(final.shift()).concat(final);
-        }
-        return final;
-    };
-    Stooge.prototype.hasLargeEnoughDiff = function (nums) {
-        return nums[1] - nums[0] >= 2;
-    };
-    Stooge.prototype.setUp = function () {
-        this.partitions = this.breakDownSubset([0, this.length - 1]);
-        var nextValuess = this.partitions.shift();
-        this.baseNode = nextValuess[0], this.comparisonNode = nextValuess[1];
-    };
-    Stooge.prototype.setUpNext = function () {
-        if (this.partitions.length) {
-            var nextValues = this.partitions.shift();
-            if (this.hasLargeEnoughDiff(nextValues)) {
-                this.partitions = this.breakDownSubset(nextValues).concat(this.partitions);
-                nextValues = this.partitions.shift();
-            }
-            this.baseNode = nextValues[0], this.comparisonNode = nextValues[1];
-        }
-        else {
-            this.setDone();
-        }
-    };
-    Stooge.title = "Stooge Sort";
-    return Stooge;
-}(baseSort_1.BaseSort));
-exports.Stooge = Stooge;
 
 
 /***/ })

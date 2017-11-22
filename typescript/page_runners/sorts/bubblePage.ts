@@ -86,7 +86,7 @@ namespace BubbleShuffles {
     const sort1 = new Sorts.BubbleSkipsSorted(board1)
     const board2 = new Boards.Board(size, Shuffles.K1Shuffle, valueType, Boards.Verbosity.Info)
     const sort2 = new Sorts.BubbleSkipsSorted(board2)
-    const board3 = new Boards.Board(size, Shuffles.RandomShuffle, valueType, Boards.Verbosity.Info)
+    const board3 = new Boards.Board(size, Shuffles.RandomShuffle, valueType, Boards.Verbosity.Info);
     const sort3 = new Sorts.BubbleSkipsSorted(board3)
     const board4 = new Boards.Board(size, Shuffles.ReversedShuffle, valueType, Boards.Verbosity.Info)
     const sort4 = new Sorts.BubbleSkipsSorted(board4)
@@ -117,11 +117,11 @@ namespace BubbleShuffles {
     })
 
     Index.autoRunBoards(boardList, boxHeight, boxWidth, ShufflesElement, delay, delayOnComplete)
-    Index.manageAutoRunCharts(boardList, 1000, 'shuffle-chart')
+    Index.manageAutoRunCharts(boardList, 1000, "shuffle-chart")
 }
 
 namespace BubbleConCur {
-    const ConcurElement = document.getElementById('bubble-concur');
+    const ConcurElement = document.getElementById("bubble-concur");
     const size = Sizes._25
     const shuffle = Shuffles.RandomShuffle
     const valueType = ValueTypes.Integer
@@ -160,11 +160,11 @@ namespace BubbleConCur {
     })
 
     Index.autoRunBoards(boardList, boxHeight, boxWidth, ConcurElement, delay, delayOnComplete)
-    Index.manageAutoRunCharts(boardList, 1000, 'concur-chart')
+    Index.manageAutoRunCharts(boardList, 1000, "concur-chart")
 }
 
 namespace BubbleDontRestart {
-    const RestartElement = document.getElementById('bubble-dont-restart');
+    const RestartElement = document.getElementById("bubble-dont-restart");
     const size = Sizes._25
     const shuffle = Shuffles.RandomShuffle
     const valueType = ValueTypes.Integer
@@ -203,5 +203,5 @@ namespace BubbleDontRestart {
     })
 
     Index.autoRunBoards(boardList, boxHeight, boxWidth, RestartElement, delay, delayOnComplete)
-    Index.manageAutoRunCharts(boardList, 1000, 'restart-chart')
+    Index.manageAutoRunCharts(boardList, 1000, "restart-chart");
 }

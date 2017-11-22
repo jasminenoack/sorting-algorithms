@@ -1,0 +1,130 @@
+describe("Sorts", function () {
+  let length, sort, board, size;
+
+  describe("Stooge", () => {
+    beforeEach(function () {
+      length = 5
+      size = Sizes.fewFew
+      board = new Boards.Board(size)
+      Sort = Sorts.Stooge
+      sort = new Sort(board)
+    });
+
+    describe("create", function () {
+      xit("xit has a txitle", () => {
+        expect(Sort.txitle).toEqual('Stooge Sort')
+      })
+
+      xit("xit has sets", () => {
+        expect(sort.partxitions).toEqual([
+          [1, 2], [0, 1], // first 2 sets
+          [1, 3], [0, 2], // other 3 sets
+          [1, 4], [0, 3] // other 4 sets
+        ])
+      })
+    })
+
+    xit("has a reset function", () => {
+      while (!sort.done) {
+        sort.next()
+      }
+      let values = board.values().slice()
+      sort.reset()
+      expect(sort.done).toBeFalsy()
+      expect(sort.steps).toEqual(0)
+      expect(sort.swaps).toEqual(0)
+      expect(sort.comparisons).toEqual(0)
+      expect(values).not.toEqual(board.values())
+      expect(sort.baseNode).toEqual(0)
+      expect(sort.comparisonNode).toEqual(1)
+      expect(sort.partxitions).toEqual([
+        [1, 2], [0, 1], // first 2 sets
+        [1, 3], [0, 2], // other 3 sets
+        [1, 4], [0, 3] // other 4 sets
+      ])
+    })
+
+    describe("utils", () => {
+      xit('creates subsets', () => {
+        expect(sort.subsets([0, 4])).toEqual([[0, 3], [1, 4], [0, 3]])
+        expect(sort.subsets([0, 3])).toEqual([[0, 2], [1, 3], [0, 2]])
+        expect(sort.subsets([1, 4])).toEqual([[1, 3], [2, 4], [1, 3]])
+        expect(sort.subsets([0, 2])).toEqual([[0, 1], [1, 2], [0, 1]])
+        expect(sort.subsets([2, 4])).toEqual([[2, 3], [3, 4], [2, 3]])
+        expect(sort.subsets([0, 9])).toEqual([[0, 6], [3, 9], [0, 6]])
+        expect(sort.subsets([0, 99])).toEqual([[0, 66], [33, 99], [0, 66]])
+      })
+
+      xit("breaks down subsets", () => {
+        expect(sort.breakDownSubset([0, 4])).toEqual([
+          [0, 1], [1, 2], [0, 1], // first 2 sets
+          [1, 3], [0, 2], // other 3 sets
+          [1, 4], [0, 3] // other 4 sets
+        ])
+        expect(sort.breakDownSubset([0, 3])).toEqual([
+          [0, 1], [1, 2], [0, 1], // first 2 sets
+          [1, 3], [0, 2], // other 3 sets
+        ])
+        expect(sort.breakDownSubset([1, 4])).toEqual([
+          [1, 2], [2, 3], [1, 2],
+          [2, 4], [1, 3],
+        ])
+        expect(sort.breakDownSubset([1, 3])).toEqual([
+          [1, 2], [2, 3], [1, 2],
+        ])
+      })
+
+      xit("has current nodes", () => {
+        expect(sort.currentNodes()).toEqual([0, 1])
+      })
+
+      xit("xit handles ordered group", () => {
+        board.setPoints([0, 1, 2, 3, 4])
+        sort = new Sort(board)
+
+        expect(sort.next()).toEqual([0, 1])
+        expect(sort.next()).toEqual([1, 2])
+        expect(sort.next()).toEqual([0, 1])
+
+        expect(sort.next()).toEqual([1, 2])
+        expect(sort.next()).toEqual([2, 3])
+        expect(sort.next()).toEqual([1, 2])
+
+        expect(sort.next()).toEqual([0, 1])
+        expect(sort.next()).toEqual([1, 2])
+        expect(sort.next()).toEqual([0, 1])
+
+
+        expect(sort.next()).toEqual([1, 2])
+        expect(sort.next()).toEqual([2, 3])
+        expect(sort.next()).toEqual([1, 2])
+
+        expect(sort.next()).toEqual([2, 3])
+        expect(sort.next()).toEqual([3, 4])
+        expect(sort.next()).toEqual([2, 3])
+
+        expect(sort.next()).toEqual([1, 2])
+        expect(sort.next()).toEqual([2, 3])
+        expect(sort.next()).toEqual([1, 2])
+
+
+        expect(sort.next()).toEqual([0, 1])
+        expect(sort.next()).toEqual([1, 2])
+        expect(sort.next()).toEqual([0, 1])
+
+        expect(sort.next()).toEqual([1, 2])
+        expect(sort.next()).toEqual([2, 3])
+        expect(sort.next()).toEqual([1, 2])
+
+        expect(sort.next()).toEqual([0, 1])
+        expect(sort.next()).toEqual([1, 2])
+        expect(sort.next()).toEqual([0, 1])
+
+        expect(sort.done).toEqual(true)
+        for (let i = 0; i < board.length; i++) {
+          expect(i).toEqual(board.values()[i])
+        }
+      })
+    })
+  })
+});

@@ -1,0 +1,74 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "problemMatcher": [
+        "$tsc",
+        "$tslint4"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "build:watch",
+      "problemMatcher": [
+        "$tsc-watch",
+        "$tslint4"
+      ]
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "problemMatcher": [
+        "$tsc",
+        "$tslint4"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "taskName": "run + watch tests for active file",
+      "type": "shell",
+      "command": "npm run test:fast:watch --focus=${fileBasenameNoExtension}",
+      "problemMatcher": [
+        "$tsc-watch",
+        "$tslint4"
+      ]
+    },
+    {
+      "taskName": "run tests for active file",
+      "type": "shell",
+      "command": "npm run test:fast --focus=${fileBasenameNoExtension}",
+      "problemMatcher": [
+        "$tsc-watch",
+        "$tslint4"
+      ]
+    },
+    {
+      "type": "npm",
+      "script": "test:fast:watch",
+      "problemMatcher": [
+        "$tsc-watch"
+      ]
+    },
+    {
+      "type": "npm",
+      "script": "test:watch",
+      "problemMatcher": [
+        "$tsc-watch"
+      ]
+    }
+  ]
+}

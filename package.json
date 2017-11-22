@@ -4,18 +4,34 @@
   "description": "",
   "main": "build/index.js",
   "dependencies": {
+    "@types/lodash": "^4.14.85",
     "chart.js": "^2.6.0",
     "commonjs": "^0.0.1"
   },
   "devDependencies": {
-    "awesome-typescript-loader": "^3.2.2",
-    "commonjs": "0.0.1",
-    "source-map-loader": "^0.2.1",
-    "ts-loader": "^2.3.2",
-    "typescript": "^2.4.2"
+    "@types/jasmine": "^2.6.0",
+    "css-loader": "^0.28.7",
+    "es6-promise": "^4.1.1",
+    "jasmine": "^2.8.0",
+    "jquery": "^3.2.1",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-spec-reporter": "0.0.31",
+    "karma-typescript": "^3.0.6",
+    "karma-webpack": "^2.0.4",
+    "lodash": "^4.17.4",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
+    "ts-loader": "^2.3.7",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.2",
+    "webpack": "^3.6.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --watch",
+    "test": "karma start"
   },
   "repository": {
     "type": "git",

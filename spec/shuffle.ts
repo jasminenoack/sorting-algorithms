@@ -1,5 +1,5 @@
 import { range } from "lodash";
-import * as Shuffles from "../shuffles";
+import * as Shuffles from "../src/shuffles";
 
 const differenceFromOrdered = (array) => {
   const values = array;

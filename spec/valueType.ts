@@ -1,6 +1,5 @@
 import { countBy } from "lodash";
-import * as ValueTypes from "../valueTypes";
-import { Logarithmic } from "./../valueTypes";
+import * as ValueTypes from "../src/valueTypes";
 
 describe("Value Type", () => {
   describe("generates values", () => {

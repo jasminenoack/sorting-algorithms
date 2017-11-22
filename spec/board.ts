@@ -1,8 +1,8 @@
 import { range } from "lodash";
-import { Board } from "../board";
-import * as Shuffles from "../shuffles";
-import * as Sizes from "../sizes";
-import * as ValueTypes from "../ValueTypes";
+import { Board } from "../src/board";
+import * as Shuffles from "../src/shuffles";
+import * as Sizes from "../src/sizes";
+import * as ValueTypes from "../src/ValueTypes";
 
 describe("Board", () => {
   let board;

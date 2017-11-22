@@ -1,7 +1,7 @@
 import { range } from "lodash";
-import { Board } from "../../board";
-import { fewFew, xXLarge } from "./../../sizes";
-import { Bogo, BogoBogo, BogoSingle, BogoSingleCompare, Permutation } from "./../../sorts/bogo";
+import { Board } from "../../src/board";
+import { fewFew, xXLarge } from "./../../src/sizes";
+import { Bogo, BogoBogo, BogoSingle, BogoSingleCompare, Permutation } from "./../../src/sorts/bogo";
 
 describe("Bogo", () => {
   let length;

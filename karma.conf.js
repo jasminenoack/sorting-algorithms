@@ -10,14 +10,14 @@ module.exports = (config) => {
     frameworks: ["jasmine"],
 
     files: [
-      "typescript/*.ts",
-      "typescript/sorts/*.ts",
-      "typescript/shuffles/*.ts",
-      { pattern: `typescript/spec/**/${focusGlob}.ts`, watched: false },
+      "src/*.ts",
+      "src/sorts/*.ts",
+      "src/shuffles/*.ts",
+      { pattern: `spec/**/${focusGlob}.ts`, watched: false },
     ],
 
     preprocessors: {
-      "typescript/**/*.ts": ["webpack", "coverage"],
+      "src/**/*.ts": ["webpack", "coverage"],
     },
 
     webpack: webpackConfig,
@@ -31,6 +31,6 @@ module.exports = (config) => {
     },
   });
 
-  const testPath = `typescript/spec/**/${focusGlob}.ts`;
+  const testPath = `spec/**/${focusGlob}.ts`;
   config.preprocessors[testPath] = ["webpack"];
 };

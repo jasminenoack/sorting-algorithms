@@ -10,14 +10,19 @@ module.exports = (config) => {
     frameworks: ["jasmine"],
 
     files: [
+      "typescript/*.ts",
+      "typescript/sorts/*.ts",
+      "typescript/shuffles/*.ts",
       { pattern: `typescript/spec/**/${focusGlob}.ts`, watched: false },
     ],
 
-    preprocessors: {},
+    preprocessors: {
+      "typescript/**/*.ts": ["webpack", "coverage"],
+    },
 
     webpack: webpackConfig,
 
-    reporters: ["spec"],
+    reporters: ["spec", "coverage"],
 
     browsers: ["ChromeHeadless"],
 

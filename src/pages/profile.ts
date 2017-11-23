@@ -120,22 +120,3 @@ export const profileCallback = () => {
     });
   }
 };
-
-// import * as Sizes from '../sizes'
-// import * as Shuffles from '../shuffles'
-// import * as Index from '../index'
-// import * as ValueTypes from '../valueTypes';
-// import * as Sorts from '../sorts/sorts'
-// import * as Boards from '../board'
-// import { BaseSort } from '../sorts/baseSort';
-
-//
-//
-//
-// let boxHeight = 500
-// let boxWidth = 500
-//
-// let delay = 100
-//
-
-//

@@ -9,8 +9,8 @@ export class Board {
   public points: Points.Point[] = [];
   public size: Sizes.ISize;
   public length: number;
-  private _min: number;
-  private _max: number;
+  private secretMin: number;
+  private secretMax: number;
 
   constructor(
     size: Sizes.ISize, public shuffle: IShuffle = RandomShuffle,
@@ -24,8 +24,8 @@ export class Board {
   public createValues() {
     const values = this.valueType.generate(this.length);
     this.setPoints(values);
-    this._min = Math.min(...values);
-    this._max = Math.max(...values);
+    this.secretMin = Math.min(...values);
+    this.secretMax = Math.max(...values);
   }
   public shuffleBoard() {
     const values = this.values();
@@ -34,11 +34,11 @@ export class Board {
   }
   public setPoints(values: number[]) {
     const that = this;
-    values.forEach(function (value, index) {
+    values.forEach((value, index) => {
       that.set(index, value);
     });
-    this._min = Math.min(...values);
-    this._max = Math.max(...values);
+    this.secretMin = Math.min(...values);
+    this.secretMax = Math.max(...values);
   }
   public set(index: number, value: number) {
     this.points[index].value = value;
@@ -67,10 +67,10 @@ export class Board {
     return this.points[index];
   }
   public min() {
-    return this._min;
+    return this.secretMin;
   }
   public max() {
-    return this._max;
+    return this.secretMax;
   }
   public distribution() {
     const dist: { [value: number]: number } = {};

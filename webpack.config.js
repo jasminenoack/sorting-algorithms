@@ -1,9 +1,5 @@
 module.exports = {
   entry: {
-    // profileComp: "./src/page_runners/profileComp.ts",
-    queens: "./page_runners/queensBackground.ts",
-    // sortComp: "./src/page_runners/sortComp.ts",
-    // sortIndex: "./src/page_runners/sortIndex.ts",
     index: "./app/index.ts",
   },
   module: {

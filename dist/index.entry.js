@@ -60,211 +60,152 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 36);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = Function.prototype.apply;
-
-// DOM APIs, for completeness
-
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) {
-  if (timeout) {
-    timeout.close();
-  }
-};
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
-}
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(window, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// setimmediate attaches itself to the global object
-__webpack_require__(5);
-exports.setImmediate = setImmediate;
-exports.clearImmediate = clearImmediate;
-
-
-/***/ }),
-/* 1 */,
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var header_1 = __webpack_require__(10);
-var index_1 = __webpack_require__(13);
-var profile_1 = __webpack_require__(94);
-var scatter_1 = __webpack_require__(46);
-var router_1 = __webpack_require__(11);
-// const router = new Router();
-// tslint:disable-next-line:no-var-requires
-// const tpl = require("../templates/index.njk");
-// const html = tpl.render();
-// console.log(html)
-// window.onpopstate = function (event) {
-//   console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-// };
-header_1.setUpHeaders();
-var contentEl = document.getElementById("content");
-var router = new router_1.Router(contentEl);
-router.register("^$", index_1.setUpIndex, index_1.indexCallback);
-router.register("^scatter$", scatter_1.setUpScatter, scatter_1.scatterCallback);
-router.register("^profile$", profile_1.setUpProfile, profile_1.profileCallback);
-window.onpopstate();
+/**
+ * database structure:
+ *
+ * sort_name:
+ * order:
+ * value_type:
+ * point_count:
+ * steps:
+ * comparisons: []
+ * swaps: []
+ */
+var BaseSort = /** @class */ (function () {
+    function BaseSort(board, trackAll) {
+        if (trackAll === void 0) { trackAll = false; }
+        this.board = board;
+        this.trackAll = trackAll;
+        this.baseSetUp();
+    }
+    BaseSort.prototype.subsets = function (num) { return []; };
+    BaseSort.prototype.breakDownSubset = function (num) { return []; };
+    BaseSort.prototype.setUpNext = function () { return; };
+    BaseSort.prototype.checkSorted = function () {
+        var result = true;
+        var values = this.board.values();
+        for (var i = 0; i < values.length - 1; i++) {
+            this.comparisons++;
+            if (values[i] > values[i + 1]) {
+                result = false;
+                break;
+            }
+        }
+        this.done = result;
+        return this.done;
+    };
+    BaseSort.prototype.setDone = function () {
+        this.done = true;
+    };
+    BaseSort.prototype.currentNodes = function () {
+        if (this.done) {
+            return [];
+        }
+        return [this.baseNode, this.comparisonNode];
+    };
+    BaseSort.prototype.nodesInOrder = function (values) {
+        // used to compare nodes
+        var inOrder = values[this.baseNode] <= values[this.comparisonNode];
+        if (!inOrder) {
+            this.ordered = false;
+            this.lastSwapped = true;
+        }
+        else {
+            this.lastSwapped = false;
+        }
+        this.comparisons++;
+        return inOrder;
+    };
+    BaseSort.prototype.swap = function (currentNodes) {
+        this.swaps++;
+        this.board.swap.apply(this.board, currentNodes);
+    };
+    BaseSort.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        var values = this.board.values();
+        if (!this.nodesInOrder(values)) {
+            this.swap(currentNodes);
+        }
+        this.setUpNext();
+        this.trackProfile();
+        return currentNodes;
+    };
+    BaseSort.prototype.trackProfile = function () {
+        if (this.steps === this.nextItemToAdd || this.done) {
+            this.profile.swaps.push({
+                x: this.steps,
+                y: this.swaps,
+            });
+            this.profile.comparisons.push({
+                x: this.steps,
+                y: this.comparisons,
+            });
+            if (this.trackAll) {
+                this.nextItemToAdd++;
+            }
+            else {
+                this.nextItemToAdd = Math.ceil(Math.min(this.nextItemToAdd * 1.1, this.nextItemToAdd + 16));
+            }
+        }
+    };
+    BaseSort.prototype.reset = function () {
+        this.board.shuffleBoard();
+        this.baseSetUp();
+        return this;
+    };
+    BaseSort.prototype.baseSetUp = function () {
+        this.profile = {
+            comparisons: [],
+            swaps: [],
+        };
+        this.length = this.board.length;
+        this.baseNode = 0;
+        this.comparisonNode = 1;
+        this.end = this.length - 1;
+        this.done = false;
+        this.swaps = 0;
+        this.comparisons = 0;
+        this.steps = 0;
+        this.baseNode = 0;
+        this.comparisonNode = 1;
+        this.length = this.board.length;
+        this.end = this.length - 1;
+        this.lastSwapped = false;
+        this.ordered = true;
+        this.placed = [];
+        this.shadow = [];
+        this.nextItemToAdd = 1;
+        this.original = this.board.values().slice();
+        this.setUp();
+    };
+    BaseSort.prototype.setUp = function () {
+        // tslint:disable-next-line:no-console
+        console.log("not implemented");
+        // tslint:disable-next-line:no-console
+        console.log(this.constructor.title);
+    };
+    BaseSort.title = "";
+    return BaseSort;
+}());
+exports.BaseSort = BaseSort;
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var nunjucks = __webpack_require__(4);
-var env;
-if (!nunjucks.currentEnv){
-	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
-} else {
-	env = nunjucks.currentEnv;
-}
-var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
-dependencies["./links/tools.njk"] = __webpack_require__( 16 );
-dependencies["./links/blog.njk"] = __webpack_require__( 17 );
-dependencies["./links/learn.njk"] = __webpack_require__( 18 );
-
-
-
-
-var shim = __webpack_require__(8);
-
-
-(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/index.njk"] = (function() {
-function root(env, context, frame, runtime, cb) {
-var lineno = null;
-var colno = null;
-var output = "";
-try {
-var parentTemplate = null;
-output += "<article>\n  <h1>Why We Visualize Data</h1>\n  <p>\n    The best way to understand how things work is to disect them. To change them, to play with them, to implement them, and to break them. I love thinking about algorithms. How can we understand them better? How can we make them better? How can they make us better?\n    To do this I very much believe that one important step is to understand what data looks like. How it behaves. How algorithms move and manipulate patterns.\n    To do this I use <a href=\"https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0\" target='blank'>visualizations</a> This site is a collection of those visualizations.\n    They exist in many formats, orientations and settings because data dictates patterns. And different representations give rise to different patterns. The result of running a sort on reversed data is\n    very different then the result of running the same code on ordered data. In these patterns we can find beauty and insight, and if we are lucky we\n    can begin to understand the magic. But I make no promises.\n\n    <figure>\n      <div id=\"ordered-sorts\" class=\"four\"></div>\n      <figcaption>Steps 1-200 on ordered arrays.</figcaption>\n    </figure>\n\n    <figure>\n      <div id=\"reverse-sorts\" class=\"four\"></div>\n      <figcaption>Steps 1-200 on reversed arrays.</figcaption>\n    </figure>\n  </p>\n\n  <figure>\n    <img src=\"http://www.sandraandwoo.com/comics/2015-04-08-0673-worse-than-bogo-sort.png\">\n    <figcaption><a target=\"_blank\" href=\"http://www.sandraandwoo.com/2015/04/08/0673-worse-than-bogo-sort/\">Sandra and Woo</a></figcaption>\n  </figure>\n</article>\n\n<article>\n  ";
-var tasks = [];
-tasks.push(
-function(callback) {
-env.getTemplate("./links/tools.njk", false, "templates/index.njk", null, function(t_3,t_1) {
-if(t_3) { cb(t_3); return; }
-callback(null,t_1);});
-});
-tasks.push(
-function(template, callback){
-template.render(context.getVariables(), frame, function(t_4,t_2) {
-if(t_4) { cb(t_4); return; }
-callback(null,t_2);});
-});
-tasks.push(
-function(result, callback){
-output += result;
-callback(null);
-});
-env.waterfall(tasks, function(){
-output += "\n  ";
-var tasks = [];
-tasks.push(
-function(callback) {
-env.getTemplate("./links/blog.njk", false, "templates/index.njk", null, function(t_7,t_5) {
-if(t_7) { cb(t_7); return; }
-callback(null,t_5);});
-});
-tasks.push(
-function(template, callback){
-template.render(context.getVariables(), frame, function(t_8,t_6) {
-if(t_8) { cb(t_8); return; }
-callback(null,t_6);});
-});
-tasks.push(
-function(result, callback){
-output += result;
-callback(null);
-});
-env.waterfall(tasks, function(){
-output += "\n  ";
-var tasks = [];
-tasks.push(
-function(callback) {
-env.getTemplate("./links/learn.njk", false, "templates/index.njk", null, function(t_11,t_9) {
-if(t_11) { cb(t_11); return; }
-callback(null,t_9);});
-});
-tasks.push(
-function(template, callback){
-template.render(context.getVariables(), frame, function(t_12,t_10) {
-if(t_12) { cb(t_12); return; }
-callback(null,t_10);});
-});
-tasks.push(
-function(result, callback){
-output += result;
-callback(null);
-});
-env.waterfall(tasks, function(){
-output += "\n</article>\n";
-if(parentTemplate) {
-parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
-} else {
-cb(null, output);
-}
-})})});
-} catch (e) {
-  cb(runtime.handleError(e, lineno, colno));
-}
-}
-return {
-root: root
-};
-
-})();
-})();
-
-
-
-module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/index.njk"] , dependencies)
-
-/***/ }),
-/* 4 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {/*! Browser bundle of nunjucks 3.0.1 (slim, only works with precompiled templates) */
@@ -3473,420 +3414,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).setImmediate, __webpack_require__(0).clearImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25).setImmediate, __webpack_require__(25).clearImmediate))
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
-    "use strict";
-
-    if (global.setImmediate) {
-        return;
-    }
-
-    var nextHandle = 1; // Spec says greater than zero
-    var tasksByHandle = {};
-    var currentlyRunningATask = false;
-    var doc = global.document;
-    var registerImmediate;
-
-    function setImmediate(callback) {
-      // Callback can either be a function or a string
-      if (typeof callback !== "function") {
-        callback = new Function("" + callback);
-      }
-      // Copy function arguments
-      var args = new Array(arguments.length - 1);
-      for (var i = 0; i < args.length; i++) {
-          args[i] = arguments[i + 1];
-      }
-      // Store and register the task
-      var task = { callback: callback, args: args };
-      tasksByHandle[nextHandle] = task;
-      registerImmediate(nextHandle);
-      return nextHandle++;
-    }
-
-    function clearImmediate(handle) {
-        delete tasksByHandle[handle];
-    }
-
-    function run(task) {
-        var callback = task.callback;
-        var args = task.args;
-        switch (args.length) {
-        case 0:
-            callback();
-            break;
-        case 1:
-            callback(args[0]);
-            break;
-        case 2:
-            callback(args[0], args[1]);
-            break;
-        case 3:
-            callback(args[0], args[1], args[2]);
-            break;
-        default:
-            callback.apply(undefined, args);
-            break;
-        }
-    }
-
-    function runIfPresent(handle) {
-        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
-        // So if we're currently running a task, we'll need to delay this invocation.
-        if (currentlyRunningATask) {
-            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
-            // "too much recursion" error.
-            setTimeout(runIfPresent, 0, handle);
-        } else {
-            var task = tasksByHandle[handle];
-            if (task) {
-                currentlyRunningATask = true;
-                try {
-                    run(task);
-                } finally {
-                    clearImmediate(handle);
-                    currentlyRunningATask = false;
-                }
-            }
-        }
-    }
-
-    function installNextTickImplementation() {
-        registerImmediate = function(handle) {
-            process.nextTick(function () { runIfPresent(handle); });
-        };
-    }
-
-    function canUsePostMessage() {
-        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
-        // where `global.postMessage` means something completely different and can't be used for this purpose.
-        if (global.postMessage && !global.importScripts) {
-            var postMessageIsAsynchronous = true;
-            var oldOnMessage = global.onmessage;
-            global.onmessage = function() {
-                postMessageIsAsynchronous = false;
-            };
-            global.postMessage("", "*");
-            global.onmessage = oldOnMessage;
-            return postMessageIsAsynchronous;
-        }
-    }
-
-    function installPostMessageImplementation() {
-        // Installs an event handler on `global` for the `message` event: see
-        // * https://developer.mozilla.org/en/DOM/window.postMessage
-        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
-
-        var messagePrefix = "setImmediate$" + Math.random() + "$";
-        var onGlobalMessage = function(event) {
-            if (event.source === global &&
-                typeof event.data === "string" &&
-                event.data.indexOf(messagePrefix) === 0) {
-                runIfPresent(+event.data.slice(messagePrefix.length));
-            }
-        };
-
-        if (global.addEventListener) {
-            global.addEventListener("message", onGlobalMessage, false);
-        } else {
-            global.attachEvent("onmessage", onGlobalMessage);
-        }
-
-        registerImmediate = function(handle) {
-            global.postMessage(messagePrefix + handle, "*");
-        };
-    }
-
-    function installMessageChannelImplementation() {
-        var channel = new MessageChannel();
-        channel.port1.onmessage = function(event) {
-            var handle = event.data;
-            runIfPresent(handle);
-        };
-
-        registerImmediate = function(handle) {
-            channel.port2.postMessage(handle);
-        };
-    }
-
-    function installReadyStateChangeImplementation() {
-        var html = doc.documentElement;
-        registerImmediate = function(handle) {
-            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
-            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
-            var script = doc.createElement("script");
-            script.onreadystatechange = function () {
-                runIfPresent(handle);
-                script.onreadystatechange = null;
-                html.removeChild(script);
-                script = null;
-            };
-            html.appendChild(script);
-        };
-    }
-
-    function installSetTimeoutImplementation() {
-        registerImmediate = function(handle) {
-            setTimeout(runIfPresent, 0, handle);
-        };
-    }
-
-    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
-    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
-    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
-
-    // Don't get fooled by e.g. browserify environments.
-    if ({}.toString.call(global.process) === "[object process]") {
-        // For Node.js before 0.9
-        installNextTickImplementation();
-
-    } else if (canUsePostMessage()) {
-        // For non-IE10 modern browsers
-        installPostMessageImplementation();
-
-    } else if (global.MessageChannel) {
-        // For web workers, where supported
-        installMessageChannelImplementation();
-
-    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
-        // For IE 6–8
-        installReadyStateChangeImplementation();
-
-    } else {
-        // For older browsers
-        installSetTimeoutImplementation();
-    }
-
-    attachTo.setImmediate = setImmediate;
-    attachTo.clearImmediate = clearImmediate;
-}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(7)))
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 8 */
+/* 2 */
 /***/ (function(module, exports) {
 
 module.exports = function (nunjucks, env, obj, dependencies){
@@ -3937,605 +3468,13 @@ module.exports = function (nunjucks, env, obj, dependencies){
 };
 
 /***/ }),
-/* 9 */,
-/* 10 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var router_1 = __webpack_require__(11);
-var baseHeader = "Sorting Algorithms";
-var headerEl = document.getElementById("header");
-var router = new router_1.Router(headerEl);
-exports.setUpHeaders = function () {
-    // fallback for all endpoints not matched
-    router.register(".*", function () {
-        return "<div>" + baseHeader + "</div>";
-    });
-};
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var routerLocation_1 = __webpack_require__(12);
-/**
- * Router manages locations.
- *
- * Send a string that can be converted into a reg ex.
- *
- * examples:
- *
- * base: ""
- * hard url: "other"
- * url params: "a/(c|.*)/b" || "a/(c|\\d*)/b"
- * query string "?a=1"
- *
- * returns
- * location: "other"
- * url params: {c: "123"}
- * query string: {a: "1"}
- *
- * To construct the router send in the element the router should control.
- *
- * For registering each route pass the string and a function to register.
- * The function should return HTML the router will place the html in the page.
- */
-var Router = /** @class */ (function () {
-    function Router(element) {
-        this.element = element;
-        this.locations = [];
-        this.listenToChange = this.listenToChange.bind(this);
-        Router.routerListeners.push(this.listenToChange);
-    }
-    Router.prototype.listenToChange = function (event) {
-        var _this = this;
-        var location;
-        if (event) {
-            location = event.target.location;
-        }
-        else {
-            location = window.location;
-        }
-        // tslint:disable-next-line:prefer-const
-        var hash = this.cleanHash(location.hash);
-        var rendered = false;
-        this.locations.forEach(function (loc) {
-            var urlParams = loc.match(hash);
-            if (urlParams && !rendered) {
-                rendered = true;
-                var query = _this.processQuery(location.search);
-                var html = loc.fun(hash, urlParams, query);
-                _this.element.innerHTML = html;
-                // tslint:disable-next-line:no-unused-expression
-                loc.callback && loc.callback();
-            }
-        });
-    };
-    Router.prototype.register = function (location, fun, callback) {
-        this.locations.push(new routerLocation_1.RouterLocation(location, fun, callback));
-    };
-    Router.prototype.cleanHash = function (hash) {
-        return hash.replace(/^#?\/?/, "").replace(/\/$/, "");
-    };
-    Router.prototype.processQuery = function (search) {
-        search = search.replace(/^\?/, "");
-        if (!search) {
-            return {};
-        }
-        var params = search.split("&");
-        var query = {};
-        params.forEach(function (param) {
-            if (param) {
-                var _a = param.split("="), key = _a[0], value = _a[1];
-                query[key] = value || "";
-            }
-        });
-        return query;
-    };
-    Router.routerListeners = [];
-    return Router;
-}());
-exports.Router = Router;
-window.onpopstate = function (event) {
-    Router.routerListeners.forEach(function (fun) {
-        fun(event);
-    });
-};
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var RouterLocation = /** @class */ (function () {
-    function RouterLocation(location, fun, callback) {
-        this.fun = fun;
-        this.callback = callback;
-        var names = [];
-        // if location is a string
-        // check for match sections
-        if (location.indexOf("(") !== -1) {
-            var groups = location.match(/\([^)]*\)/g);
-            groups.forEach(function (group) {
-                var groupTrimmed = group.replace(/^\(/, "").replace(/\)$/, "");
-                if (groupTrimmed.indexOf("|") !== -1) {
-                    var _a = groupTrimmed.split("|"), name_1 = _a[0], regex = _a[1];
-                    names.push(name_1);
-                    location = location.replace(group, "(" + regex + ")");
-                }
-                else {
-                    names.push(groupTrimmed);
-                }
-            });
-        }
-        this.names = names;
-        this.location = new RegExp(location);
-    }
-    RouterLocation.prototype.match = function (hash) {
-        var match = hash.match(this.location);
-        if (!match) {
-            return;
-        }
-        var urlParams = {};
-        this.names.forEach(function (name, index) {
-            urlParams[name] = match[index + 1];
-        });
-        return urlParams;
-    };
-    return RouterLocation;
-}());
-exports.RouterLocation = RouterLocation;
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var board_1 = __webpack_require__(23);
-var index_1 = __webpack_require__(38);
-var shuffles_1 = __webpack_require__(21);
-var sizes_1 = __webpack_require__(25);
-var base_1 = __webpack_require__(42);
-var base_2 = __webpack_require__(43);
-var base_3 = __webpack_require__(44);
-var base_4 = __webpack_require__(45);
-var valueTypes_1 = __webpack_require__(24);
-exports.blog = {
-    "Bogobogo Sort": "http://jasminenoack.tumblr.com/tagged/bogobogo/chrono",
-    "Bogosort && Bozosort": "http://jasminenoack.tumblr.com/tagged/bogosort/chrono",
-    "Bubble Sort": "http://jasminenoack.tumblr.com/tagged/bubble%20sort/chrono",
-    "Cocktail Sort": "http://jasminenoack.tumblr.com/tagged/cocktail%20sort/chrono",
-    "Comb Sort": "http://jasminenoack.tumblr.com/tagged/comb%20sort/chrono",
-    "Cycle Sort": "http://jasminenoack.tumblr.com/tagged/cycle%20sort/chrono",
-    "Gnome Sort": "http://jasminenoack.tumblr.com/tagged/gnome%20sort/chrono",
-    "Heap Sort": "http://jasminenoack.tumblr.com/tagged/heap%20sort/chrono",
-    "Sorting": "http://jasminenoack.tumblr.com/tagged/sorting/chrono",
-};
-exports.tools = {
-    "Profile Graphs": "#profile",
-    "Scatter Animations": "#scatter",
-};
-exports.learn = {
-    "Rosetta Code": "https://rosettacode.org/wiki/Category:Sorting_Algorithms",
-    "Sound of Sorting": "http://panthema.net/2013/sound-of-sorting/",
-    "Wikipedia": "https://en.wikipedia.org/wiki/Sorting_algorithm",
-};
-exports.setUpIndex = function (location, data, query) {
-    // tslint:disable-next-line:no-var-requires
-    var tpl = __webpack_require__(3);
-    var html = tpl.render({
-        blog: exports.blog,
-        learn: exports.learn,
-        tools: exports.tools,
-    });
-    return html;
-};
-var createReversedSet = function () {
-    var ReverseElement = document.getElementById("reverse-sorts");
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 100;
-    var size = sizes_1._75;
-    var valueType = valueTypes_1.Integer;
-    var shuffle = shuffles_1.ReversedShuffle;
-    var board2 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
-    var sort2 = new base_1.Comb(board2);
-    var board4 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
-    var sort4 = new base_2.Heap(board4);
-    var board5 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
-    var sort5 = new base_3.OddEven(board5);
-    var board7 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
-    var sort7 = new base_4.Smooth(board7);
-    var boardList = [
-        {
-            board: board2,
-            sort: sort2,
-        },
-        {
-            board: board4,
-            sort: sort4,
-        },
-        {
-            board: board5,
-            sort: sort5,
-        },
-        {
-            board: board7,
-            sort: sort7,
-        },
-    ];
-    boardList.forEach(function (board, index) {
-        index_1.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ReverseElement);
-    });
-    index_1.autoRunBoards(boardList, boxHeight, boxWidth, ReverseElement, delay, delayOnComplete, function (board) {
-        return board.sort.steps < 200 && !board.sort.done;
-    });
-};
-var createOrderedSet = function () {
-    var OrderedElement = document.getElementById("ordered-sorts");
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 100;
-    var size = sizes_1._75;
-    var valueType = valueTypes_1.Integer;
-    var shuffle = shuffles_1.OrderedShuffle;
-    var board2 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
-    var sort2 = new base_1.Comb(board2);
-    var board4 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
-    var sort4 = new base_2.Heap(board4);
-    var board5 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
-    var sort5 = new base_3.OddEven(board5);
-    var board7 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
-    var sort7 = new base_4.Smooth(board7);
-    var boardList = [
-        {
-            board: board2,
-            sort: sort2,
-        },
-        {
-            board: board4,
-            sort: sort4,
-        },
-        {
-            board: board5,
-            sort: sort5,
-        },
-        {
-            board: board7,
-            sort: sort7,
-        },
-    ];
-    boardList.forEach(function (board, index) {
-        index_1.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, OrderedElement);
-    });
-    index_1.autoRunBoards(boardList, boxHeight, boxWidth, OrderedElement, delay, delayOnComplete, function (board) {
-        return board.sort.steps < 200 && !board.sort.done;
-    });
-};
-exports.indexCallback = function () {
-    createOrderedSet();
-    createReversedSet();
-};
-
-
-/***/ }),
-/* 14 */,
-/* 15 */,
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var nunjucks = __webpack_require__(4);
-var env;
-if (!nunjucks.currentEnv){
-	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
-} else {
-	env = nunjucks.currentEnv;
-}
-var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
-
-
-
-
-var shim = __webpack_require__(8);
-
-
-(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/links/tools.njk"] = (function() {
-function root(env, context, frame, runtime, cb) {
-var lineno = null;
-var colno = null;
-var output = "";
-try {
-var parentTemplate = null;
-output += "<h3>Tools</h3>\n\n<ul>\n";
-frame = frame.push();
-var t_3 = runtime.contextOrFrameLookup(context, frame, "tools");
-if(t_3) {var t_1;
-if(runtime.isArray(t_3)) {
-var t_2 = t_3.length;
-for(t_1=0; t_1 < t_3.length; t_1++) {
-var t_4 = t_3[t_1][0]
-frame.set("name", t_3[t_1][0]);
-var t_5 = t_3[t_1][1]
-frame.set("href", t_3[t_1][1]);
-frame.set("loop.index", t_1 + 1);
-frame.set("loop.index0", t_1);
-frame.set("loop.revindex", t_2 - t_1);
-frame.set("loop.revindex0", t_2 - t_1 - 1);
-frame.set("loop.first", t_1 === 0);
-frame.set("loop.last", t_1 === t_2 - 1);
-frame.set("loop.length", t_2);
-output += "\n  <a href=\"";
-output += runtime.suppressValue(t_5, env.opts.autoescape);
-output += "\" target=\"_top\"><li>";
-output += runtime.suppressValue(t_4, env.opts.autoescape);
-output += "</li></a>\n";
-;
-}
-} else {
-t_1 = -1;
-var t_2 = runtime.keys(t_3).length;
-for(var t_6 in t_3) {
-t_1++;
-var t_7 = t_3[t_6];
-frame.set("name", t_6);
-frame.set("href", t_7);
-frame.set("loop.index", t_1 + 1);
-frame.set("loop.index0", t_1);
-frame.set("loop.revindex", t_2 - t_1);
-frame.set("loop.revindex0", t_2 - t_1 - 1);
-frame.set("loop.first", t_1 === 0);
-frame.set("loop.last", t_1 === t_2 - 1);
-frame.set("loop.length", t_2);
-output += "\n  <a href=\"";
-output += runtime.suppressValue(t_7, env.opts.autoescape);
-output += "\" target=\"_top\"><li>";
-output += runtime.suppressValue(t_6, env.opts.autoescape);
-output += "</li></a>\n";
-;
-}
-}
-}
-frame = frame.pop();
-output += "\n</ul>\n";
-if(parentTemplate) {
-parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
-} else {
-cb(null, output);
-}
-;
-} catch (e) {
-  cb(runtime.handleError(e, lineno, colno));
-}
-}
-return {
-root: root
-};
-
-})();
-})();
-
-
-
-module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/links/tools.njk"] , dependencies)
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var nunjucks = __webpack_require__(4);
-var env;
-if (!nunjucks.currentEnv){
-	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
-} else {
-	env = nunjucks.currentEnv;
-}
-var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
-
-
-
-
-var shim = __webpack_require__(8);
-
-
-(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/links/blog.njk"] = (function() {
-function root(env, context, frame, runtime, cb) {
-var lineno = null;
-var colno = null;
-var output = "";
-try {
-var parentTemplate = null;
-output += "<h3>Blog Entries</h3>\n\n<ul>\n";
-frame = frame.push();
-var t_3 = runtime.contextOrFrameLookup(context, frame, "blog");
-if(t_3) {var t_1;
-if(runtime.isArray(t_3)) {
-var t_2 = t_3.length;
-for(t_1=0; t_1 < t_3.length; t_1++) {
-var t_4 = t_3[t_1][0]
-frame.set("name", t_3[t_1][0]);
-var t_5 = t_3[t_1][1]
-frame.set("href", t_3[t_1][1]);
-frame.set("loop.index", t_1 + 1);
-frame.set("loop.index0", t_1);
-frame.set("loop.revindex", t_2 - t_1);
-frame.set("loop.revindex0", t_2 - t_1 - 1);
-frame.set("loop.first", t_1 === 0);
-frame.set("loop.last", t_1 === t_2 - 1);
-frame.set("loop.length", t_2);
-output += "\n  <a href=\"";
-output += runtime.suppressValue(t_5, env.opts.autoescape);
-output += "\" target=\"_blank\"><li>";
-output += runtime.suppressValue(t_4, env.opts.autoescape);
-output += "</li></a>\n";
-;
-}
-} else {
-t_1 = -1;
-var t_2 = runtime.keys(t_3).length;
-for(var t_6 in t_3) {
-t_1++;
-var t_7 = t_3[t_6];
-frame.set("name", t_6);
-frame.set("href", t_7);
-frame.set("loop.index", t_1 + 1);
-frame.set("loop.index0", t_1);
-frame.set("loop.revindex", t_2 - t_1);
-frame.set("loop.revindex0", t_2 - t_1 - 1);
-frame.set("loop.first", t_1 === 0);
-frame.set("loop.last", t_1 === t_2 - 1);
-frame.set("loop.length", t_2);
-output += "\n  <a href=\"";
-output += runtime.suppressValue(t_7, env.opts.autoescape);
-output += "\" target=\"_blank\"><li>";
-output += runtime.suppressValue(t_6, env.opts.autoescape);
-output += "</li></a>\n";
-;
-}
-}
-}
-frame = frame.pop();
-output += "\n</ul>\n";
-if(parentTemplate) {
-parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
-} else {
-cb(null, output);
-}
-;
-} catch (e) {
-  cb(runtime.handleError(e, lineno, colno));
-}
-}
-return {
-root: root
-};
-
-})();
-})();
-
-
-
-module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/links/blog.njk"] , dependencies)
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var nunjucks = __webpack_require__(4);
-var env;
-if (!nunjucks.currentEnv){
-	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
-} else {
-	env = nunjucks.currentEnv;
-}
-var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
-
-
-
-
-var shim = __webpack_require__(8);
-
-
-(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/links/learn.njk"] = (function() {
-function root(env, context, frame, runtime, cb) {
-var lineno = null;
-var colno = null;
-var output = "";
-try {
-var parentTemplate = null;
-output += "<h3>Learn More</h3>\n\n<ul>\n";
-frame = frame.push();
-var t_3 = runtime.contextOrFrameLookup(context, frame, "learn");
-if(t_3) {var t_1;
-if(runtime.isArray(t_3)) {
-var t_2 = t_3.length;
-for(t_1=0; t_1 < t_3.length; t_1++) {
-var t_4 = t_3[t_1][0]
-frame.set("name", t_3[t_1][0]);
-var t_5 = t_3[t_1][1]
-frame.set("href", t_3[t_1][1]);
-frame.set("loop.index", t_1 + 1);
-frame.set("loop.index0", t_1);
-frame.set("loop.revindex", t_2 - t_1);
-frame.set("loop.revindex0", t_2 - t_1 - 1);
-frame.set("loop.first", t_1 === 0);
-frame.set("loop.last", t_1 === t_2 - 1);
-frame.set("loop.length", t_2);
-output += "\n  <a href=\"";
-output += runtime.suppressValue(t_5, env.opts.autoescape);
-output += "\" target=\"_blank\"><li>";
-output += runtime.suppressValue(t_4, env.opts.autoescape);
-output += "</li></a>\n";
-;
-}
-} else {
-t_1 = -1;
-var t_2 = runtime.keys(t_3).length;
-for(var t_6 in t_3) {
-t_1++;
-var t_7 = t_3[t_6];
-frame.set("name", t_6);
-frame.set("href", t_7);
-frame.set("loop.index", t_1 + 1);
-frame.set("loop.index0", t_1);
-frame.set("loop.revindex", t_2 - t_1);
-frame.set("loop.revindex0", t_2 - t_1 - 1);
-frame.set("loop.first", t_1 === 0);
-frame.set("loop.last", t_1 === t_2 - 1);
-frame.set("loop.length", t_2);
-output += "\n  <a href=\"";
-output += runtime.suppressValue(t_7, env.opts.autoescape);
-output += "\" target=\"_blank\"><li>";
-output += runtime.suppressValue(t_6, env.opts.autoescape);
-output += "</li></a>\n";
-;
-}
-}
-}
-frame = frame.pop();
-output += "\n</ul>\n";
-if(parentTemplate) {
-parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
-} else {
-cb(null, output);
-}
-;
-} catch (e) {
-  cb(runtime.handleError(e, lineno, colno));
-}
-}
-return {
-root: root
-};
-
-})();
-})();
-
-
-
-module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/links/learn.njk"] , dependencies)
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __webpack_require__(22);
+var lodash_1 = __webpack_require__(4);
 var Shuffle = /** @class */ (function () {
     function Shuffle() {
     }
@@ -4603,82 +3542,7 @@ exports.Shuffle = Shuffle;
 
 
 /***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var FirstAndLastSwapped = /** @class */ (function (_super) {
-    __extends(FirstAndLastSwapped, _super);
-    function FirstAndLastSwapped() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    FirstAndLastSwapped.swap = function (array) {
-        _a = [array[array.length - 1], array[0]], array[0] = _a[0], array[array.length - 1] = _a[1];
-        var _a;
-    };
-    FirstAndLastSwapped.shuffle = function (array) {
-        _super.shuffle.call(this, array);
-        this.swap(array);
-        return array;
-    };
-    FirstAndLastSwapped.k = 0;
-    FirstAndLastSwapped.reversed = false;
-    FirstAndLastSwapped.title = "First and Last Swapped";
-    return FirstAndLastSwapped;
-}(abstract_1.Shuffle));
-exports.FirstAndLastSwapped = FirstAndLastSwapped;
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-exports.Shuffle = abstract_1.Shuffle;
-var firstLast_1 = __webpack_require__(20);
-exports.FirstAndLastSwapped = firstLast_1.FirstAndLastSwapped;
-var firstTwo_1 = __webpack_require__(27);
-exports.FirstTwoSwapped = firstTwo_1.FirstTwoSwapped;
-var k1_1 = __webpack_require__(28);
-exports.K1Shuffle = k1_1.K1Shuffle;
-var k1Reversed_1 = __webpack_require__(29);
-exports.K1ReversedShuffle = k1Reversed_1.K1ReversedShuffle;
-var k3_1 = __webpack_require__(30);
-exports.K3Shuffle = k3_1.K3Shuffle;
-var k3Reversed_1 = __webpack_require__(31);
-exports.K3ReversedShuffle = k3Reversed_1.K3ReversedShuffle;
-var k5_1 = __webpack_require__(32);
-exports.K5Shuffle = k5_1.K5Shuffle;
-var k5Reversed_1 = __webpack_require__(33);
-exports.K5ReversedShuffle = k5Reversed_1.K5ReversedShuffle;
-var lastTwo_1 = __webpack_require__(34);
-exports.LastTwoSwapped = lastTwo_1.LastTwoSwapped;
-var ordered_1 = __webpack_require__(35);
-exports.OrderedShuffle = ordered_1.OrderedShuffle;
-var random_1 = __webpack_require__(36);
-exports.RandomShuffle = random_1.RandomShuffle;
-var reversed_1 = __webpack_require__(37);
-exports.ReversedShuffle = reversed_1.ReversedShuffle;
-
-
-/***/ }),
-/* 22 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -21767,18 +20631,282 @@ exports.ReversedShuffle = reversed_1.ReversedShuffle;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(26)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22), __webpack_require__(41)(module)))
 
 /***/ }),
-/* 23 */
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var Comb = /** @class */ (function (_super) {
+    __extends(Comb, _super);
+    function Comb() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Comb.prototype.setUp = function () {
+        this.shrink = this.constructor.shrink;
+        this.gap = Math.floor(this.length / this.shrink);
+        this.comparisonNode = 0 + this.gap;
+    };
+    Comb.prototype.setUpNext = function () {
+        this.baseNode++;
+        this.comparisonNode++;
+        if (this.comparisonNode >= this.length) {
+            if (this.ordered === true && this.gap === 1) {
+                this.setDone();
+            }
+            this.gap = Math.max(Math.floor(this.gap / this.shrink), 1);
+            this.baseNode = 0;
+            this.comparisonNode = this.gap;
+            this.ordered = true;
+        }
+    };
+    // test different shrinks
+    // test ceil over floor
+    Comb.title = "Comb Sort";
+    Comb.shrink = 1.3;
+    return Comb;
+}(baseSort_1.BaseSort));
+exports.Comb = Comb;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var Bubble = /** @class */ (function (_super) {
+    __extends(Bubble, _super);
+    function Bubble() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipSorted = false;
+        _this.shortCircuit = false;
+        return _this;
+    }
+    Bubble.prototype.setUpNext = function () {
+        if (this.comparisonNode === this.end) {
+            this.maxRounds--;
+            if (this.maxRounds === 0) {
+                this.setDone();
+            }
+            if (this.ordered && this.shortCircuit) {
+                this.setDone();
+            }
+            else {
+                this.ordered = true;
+            }
+            this.baseNode = 0;
+            this.comparisonNode = 1;
+            if (this.skipSorted) {
+                this.placed.push(this.end);
+                this.end--;
+                if (this.end === 0) {
+                    this.setDone();
+                }
+            }
+        }
+        else {
+            this.baseNode++;
+            this.comparisonNode++;
+        }
+    };
+    Bubble.prototype.setUp = function () {
+        this.maxRounds = this.length;
+        this.ordered = true;
+    };
+    Bubble.title = "Bubble Sort";
+    Bubble.links = [
+        {
+            name: "Bubble Sort: An Archaeological Algorithmic Analysis",
+            url: "https://users.cs.duke.edu/~ola/bubble/bubble.pdf",
+        },
+    ];
+    return Bubble;
+}(baseSort_1.BaseSort));
+exports.Bubble = Bubble;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var Gnome = /** @class */ (function (_super) {
+    __extends(Gnome, _super);
+    function Gnome() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Gnome.prototype.setUpNext = function () {
+        if (this.baseNode === 0 || !this.lastSwapped) {
+            this.currentGnome++;
+            this.comparisonNode = this.currentGnome;
+            this.baseNode = this.currentGnome - 1;
+        }
+        else if (this.lastSwapped) {
+            this.baseNode--;
+            this.comparisonNode--;
+        }
+        if (this.comparisonNode >= this.length) {
+            this.setDone();
+        }
+    };
+    Gnome.prototype.setUp = function () {
+        this.currentGnome = 1;
+    };
+    Gnome.title = "Gnome Sort";
+    return Gnome;
+}(baseSort_1.BaseSort));
+exports.Gnome = Gnome;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(5);
+var CombEvenLarger = /** @class */ (function (_super) {
+    __extends(CombEvenLarger, _super);
+    function CombEvenLarger() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CombEvenLarger.title = "Comb(Shrink: 2.0)";
+    CombEvenLarger.shrink = 2.0;
+    return CombEvenLarger;
+}(base_1.Comb));
+exports.CombEvenLarger = CombEvenLarger;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var base_1 = __webpack_require__(5);
+var base_2 = __webpack_require__(7);
+var CombGnome5 = /** @class */ (function (_super) {
+    __extends(CombGnome5, _super);
+    function CombGnome5() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 5;
+        return _this;
+    }
+    CombGnome5.prototype.setUp = function () {
+        this.comb = new base_1.Comb(this.board);
+        this.gnome = new base_2.Gnome(this.board);
+    };
+    CombGnome5.prototype.currentNodes = function () {
+        if (this.comb.gap >= this.gnomeSwitchValue) {
+            return this.comb.currentNodes();
+        }
+        else {
+            return this.gnome.currentNodes();
+        }
+    };
+    CombGnome5.prototype.reset = function () {
+        _super.prototype.reset.call(this);
+        this.gnome.done = false;
+        return this;
+    };
+    CombGnome5.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        var currentNodes;
+        if (this.comb.gap >= this.gnomeSwitchValue) {
+            currentNodes = this.comb.currentNodes();
+            this.comb.next();
+        }
+        else {
+            this.gnome.next();
+        }
+        this.steps = this.comb.steps + this.gnome.steps;
+        this.swaps = this.comb.swaps + this.gnome.swaps;
+        this.comparisons = this.comb.comparisons + this.gnome.comparisons;
+        this.done = this.gnome.done;
+        this.trackProfile();
+        return currentNodes;
+    };
+    CombGnome5.title = "Comb & Gnome(at gap 5)";
+    return CombGnome5;
+}(baseSort_1.BaseSort));
+exports.CombGnome5 = CombGnome5;
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Points = __webpack_require__(39);
-var shuffles_1 = __webpack_require__(21);
-var valueTypes_1 = __webpack_require__(24);
+var Points = __webpack_require__(40);
+var shuffles_1 = __webpack_require__(11);
+var valueTypes_1 = __webpack_require__(12);
 var Verbosity;
 (function (Verbosity) {
     Verbosity[Verbosity["None"] = 0] = "None";
@@ -21801,8 +20929,8 @@ var Board = /** @class */ (function () {
     Board.prototype.createValues = function () {
         var values = this.valueType.generate(this.length);
         this.setPoints(values);
-        this._min = Math.min.apply(Math, values);
-        this._max = Math.max.apply(Math, values);
+        this.secretMin = Math.min.apply(Math, values);
+        this.secretMax = Math.max.apply(Math, values);
     };
     Board.prototype.shuffleBoard = function () {
         var values = this.values();
@@ -21814,8 +20942,8 @@ var Board = /** @class */ (function () {
         values.forEach(function (value, index) {
             that.set(index, value);
         });
-        this._min = Math.min.apply(Math, values);
-        this._max = Math.max.apply(Math, values);
+        this.secretMin = Math.min.apply(Math, values);
+        this.secretMax = Math.max.apply(Math, values);
     };
     Board.prototype.set = function (index, value) {
         this.points[index].value = value;
@@ -21844,10 +20972,10 @@ var Board = /** @class */ (function () {
         return this.points[index];
     };
     Board.prototype.min = function () {
-        return this._min;
+        return this.secretMin;
     };
     Board.prototype.max = function () {
-        return this._max;
+        return this.secretMax;
     };
     Board.prototype.distribution = function () {
         var dist = {};
@@ -21863,13 +20991,48 @@ exports.Board = Board;
 
 
 /***/ }),
-/* 24 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __webpack_require__(22);
+var abstract_1 = __webpack_require__(3);
+exports.Shuffle = abstract_1.Shuffle;
+var firstLast_1 = __webpack_require__(15);
+exports.FirstAndLastSwapped = firstLast_1.FirstAndLastSwapped;
+var firstTwo_1 = __webpack_require__(42);
+exports.FirstTwoSwapped = firstTwo_1.FirstTwoSwapped;
+var k1_1 = __webpack_require__(43);
+exports.K1Shuffle = k1_1.K1Shuffle;
+var k1Reversed_1 = __webpack_require__(44);
+exports.K1ReversedShuffle = k1Reversed_1.K1ReversedShuffle;
+var k3_1 = __webpack_require__(45);
+exports.K3Shuffle = k3_1.K3Shuffle;
+var k3Reversed_1 = __webpack_require__(46);
+exports.K3ReversedShuffle = k3Reversed_1.K3ReversedShuffle;
+var k5_1 = __webpack_require__(47);
+exports.K5Shuffle = k5_1.K5Shuffle;
+var k5Reversed_1 = __webpack_require__(48);
+exports.K5ReversedShuffle = k5Reversed_1.K5ReversedShuffle;
+var lastTwo_1 = __webpack_require__(49);
+exports.LastTwoSwapped = lastTwo_1.LastTwoSwapped;
+var ordered_1 = __webpack_require__(50);
+exports.OrderedShuffle = ordered_1.OrderedShuffle;
+var random_1 = __webpack_require__(23);
+exports.RandomShuffle = random_1.RandomShuffle;
+var reversed_1 = __webpack_require__(51);
+exports.ReversedShuffle = reversed_1.ReversedShuffle;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(4);
 exports.Random = {
     title: "Random",
     generate: function (n) {
@@ -22007,108 +21170,7 @@ exports.Root = {
 
 
 /***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.stupidNumber = {
-    elemCount: 1000,
-    label: "1000",
-};
-exports._750 = {
-    elemCount: 750,
-    label: "750",
-};
-exports._500 = {
-    elemCount: 500,
-    label: "500",
-};
-exports.manyMany = {
-    elemCount: 300,
-    label: "300",
-};
-exports._250 = {
-    elemCount: 250,
-    label: "250",
-};
-exports._100 = {
-    elemCount: 100,
-    label: "100",
-};
-exports._75 = {
-    elemCount: 75,
-    label: "75",
-};
-exports.xXSmall = {
-    elemCount: 70,
-    label: "70",
-};
-exports.xSmall = {
-    elemCount: 60,
-    label: "60",
-};
-exports.small = {
-    elemCount: 50,
-    label: "50",
-};
-exports.medium = {
-    elemCount: 40,
-    label: "40",
-};
-exports.large = {
-    elemCount: 30,
-    label: "30",
-};
-exports._25 = {
-    elemCount: 25,
-    label: "25",
-};
-exports.xLarge = {
-    elemCount: 20,
-    label: "20",
-};
-exports.xXLarge = {
-    elemCount: 10,
-    label: "10",
-};
-exports.fewFew = {
-    elemCount: 5,
-    label: "5",
-};
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 27 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22124,347 +21186,210 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var firstLast_1 = __webpack_require__(20);
-var FirstTwoSwapped = /** @class */ (function (_super) {
-    __extends(FirstTwoSwapped, _super);
-    function FirstTwoSwapped() {
+var evenLarger_1 = __webpack_require__(8);
+var base_1 = __webpack_require__(7);
+var at5_1 = __webpack_require__(9);
+var CombGnomeLargeShrink5 = /** @class */ (function (_super) {
+    __extends(CombGnomeLargeShrink5, _super);
+    function CombGnomeLargeShrink5() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 5;
+        return _this;
+    }
+    CombGnomeLargeShrink5.prototype.setUp = function () {
+        this.comb = new evenLarger_1.CombEvenLarger(this.board);
+        this.gnome = new base_1.Gnome(this.board);
+    };
+    CombGnomeLargeShrink5.title = "Comb & Gnome(gap 5, shrink 2)";
+    return CombGnomeLargeShrink5;
+}(at5_1.CombGnome5));
+exports.CombGnomeLargeShrink5 = CombGnomeLargeShrink5;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var QuickSort2 = /** @class */ (function (_super) {
+    __extends(QuickSort2, _super);
+    function QuickSort2() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.threeWay = false;
+        return _this;
+    }
+    QuickSort2.prototype.setUp = function () {
+        this.addToUpdate = [];
+        this.partitions = [];
+        this.setUpValues([this.baseNode, this.length - 1]);
+    };
+    QuickSort2.prototype.setUpValues = function (values) {
+        this.lower = values[0];
+        this.higher = values[0];
+        this.partitionStart = values[0];
+        this.partitionEnd = values[1];
+        this.setPartition();
+        this.partitionTop = this.partition;
+    };
+    QuickSort2.prototype.currentNodes = function () {
+        var nodes = [];
+        if (this.partition !== this.lower) {
+            nodes.push(this.lower);
+        }
+        nodes.push(this.partition);
+        if (this.partition !== this.higher) {
+            nodes.push(this.higher);
+        }
+        return nodes;
+    };
+    QuickSort2.prototype.setUpNext = function () {
+        // if higher is at the end of the current partition
+        if (this.higher === this.partitionEnd) {
+            if (this.threeWay) {
+                for (var i = this.partition; i <= this.partitionTop; i++) {
+                    this.placed.push(i);
+                }
+            }
+            else {
+                this.placed.push(this.partition);
+            }
+            var partitions = this.partitions;
+            var topLow = void 0;
+            if (this.threeWay) {
+                topLow = this.partitionTop;
+            }
+            else {
+                topLow = this.partition;
+            }
+            if (this.higher > topLow + 1) {
+                partitions.unshift([topLow + 1, this.higher]);
+            }
+            if (this.lower < this.partition - 1) {
+                partitions.unshift([this.lower, this.partition - 1]);
+            }
+            if (partitions.length) {
+                var newPartition = partitions.shift();
+                this.setUpValues(newPartition);
+            }
+            else {
+                this.setDone();
+                return [];
+            }
+        }
+    };
+    QuickSort2.prototype.setPartition = function () {
+        this.partition = this.lower;
+    };
+    QuickSort2.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var valuesToUpdate = [];
+        // look at the next value
+        this.higher++;
+        var values = this.board.values();
+        this.comparisons++;
+        var threeWay = this.threeWay && values[this.higher] === values[this.partition];
+        if (values[this.higher] < values[this.partition] || threeWay) {
+            // if the value at higher is less than the partition
+            this.swaps++;
+            var temp = values.splice(this.higher, 1)[0];
+            values.splice(this.partition, 0, temp);
+            this.board.setPoints(values);
+            if (threeWay) {
+                this.partitionTop++;
+            }
+            else {
+                this.partition++;
+                this.partitionTop++;
+            }
+            for (var i = this.partition - 1; i <= this.higher; i++) {
+                if (i >= 0) {
+                    valuesToUpdate.push(i);
+                }
+            }
+        }
+        if (this.addToUpdate.length) {
+            this.addToUpdate.forEach(function (index) {
+                if (valuesToUpdate.indexOf(index) === -1) {
+                    valuesToUpdate.push(index);
+                }
+            });
+            this.addToUpdate = [];
+        }
+        this.setUpNext();
+        this.trackProfile();
+        return valuesToUpdate;
+    };
+    QuickSort2.title = "Quick Sort(Left Partition)";
+    return QuickSort2;
+}(baseSort_1.BaseSort));
+exports.QuickSort2 = QuickSort2;
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var FirstAndLastSwapped = /** @class */ (function (_super) {
+    __extends(FirstAndLastSwapped, _super);
+    function FirstAndLastSwapped() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    FirstTwoSwapped.swap = function (array) {
-        _a = [array[1], array[0]], array[0] = _a[0], array[1] = _a[1];
+    FirstAndLastSwapped.swap = function (array) {
+        _a = [array[array.length - 1], array[0]], array[0] = _a[0], array[array.length - 1] = _a[1];
         var _a;
     };
-    FirstTwoSwapped.k = 0;
-    FirstTwoSwapped.reversed = false;
-    FirstTwoSwapped.title = "First Two Swapped";
-    return FirstTwoSwapped;
-}(firstLast_1.FirstAndLastSwapped));
-exports.FirstTwoSwapped = FirstTwoSwapped;
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    FirstAndLastSwapped.shuffle = function (array) {
+        _super.shuffle.call(this, array);
+        this.swap(array);
+        return array;
     };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var K1Shuffle = /** @class */ (function (_super) {
-    __extends(K1Shuffle, _super);
-    function K1Shuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    K1Shuffle.k = 1;
-    K1Shuffle.reversed = false;
-    K1Shuffle.title = "K1";
-    return K1Shuffle;
+    FirstAndLastSwapped.k = 0;
+    FirstAndLastSwapped.reversed = false;
+    FirstAndLastSwapped.title = "First and Last Swapped";
+    return FirstAndLastSwapped;
 }(abstract_1.Shuffle));
-exports.K1Shuffle = K1Shuffle;
+exports.FirstAndLastSwapped = FirstAndLastSwapped;
 
 
 /***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var K1ReversedShuffle = /** @class */ (function (_super) {
-    __extends(K1ReversedShuffle, _super);
-    function K1ReversedShuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    K1ReversedShuffle.k = 1;
-    K1ReversedShuffle.reversed = true;
-    K1ReversedShuffle.title = "K1 Reversed";
-    return K1ReversedShuffle;
-}(abstract_1.Shuffle));
-exports.K1ReversedShuffle = K1ReversedShuffle;
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var K3Shuffle = /** @class */ (function (_super) {
-    __extends(K3Shuffle, _super);
-    function K3Shuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    K3Shuffle.k = 3;
-    K3Shuffle.reversed = false;
-    K3Shuffle.title = "K3";
-    return K3Shuffle;
-}(abstract_1.Shuffle));
-exports.K3Shuffle = K3Shuffle;
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var K3ReversedShuffle = /** @class */ (function (_super) {
-    __extends(K3ReversedShuffle, _super);
-    function K3ReversedShuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    K3ReversedShuffle.k = 3;
-    K3ReversedShuffle.reversed = true;
-    K3ReversedShuffle.title = "K3 Reversed";
-    return K3ReversedShuffle;
-}(abstract_1.Shuffle));
-exports.K3ReversedShuffle = K3ReversedShuffle;
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var K5Shuffle = /** @class */ (function (_super) {
-    __extends(K5Shuffle, _super);
-    function K5Shuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    K5Shuffle.k = 5;
-    K5Shuffle.reversed = false;
-    K5Shuffle.title = "K5";
-    return K5Shuffle;
-}(abstract_1.Shuffle));
-exports.K5Shuffle = K5Shuffle;
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var K5ReversedShuffle = /** @class */ (function (_super) {
-    __extends(K5ReversedShuffle, _super);
-    function K5ReversedShuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    K5ReversedShuffle.k = 5;
-    K5ReversedShuffle.reversed = true;
-    K5ReversedShuffle.title = "K5 Reversed";
-    return K5ReversedShuffle;
-}(abstract_1.Shuffle));
-exports.K5ReversedShuffle = K5ReversedShuffle;
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var firstLast_1 = __webpack_require__(20);
-var LastTwoSwapped = /** @class */ (function (_super) {
-    __extends(LastTwoSwapped, _super);
-    function LastTwoSwapped() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    LastTwoSwapped.swap = function (array) {
-        _a = [array[array.length - 1], array[array.length - 2]], array[array.length - 2] = _a[0], array[array.length - 1] = _a[1];
-        var _a;
-    };
-    LastTwoSwapped.k = 0;
-    LastTwoSwapped.reversed = false;
-    LastTwoSwapped.title = "Last Two Swapped";
-    return LastTwoSwapped;
-}(firstLast_1.FirstAndLastSwapped));
-exports.LastTwoSwapped = LastTwoSwapped;
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var OrderedShuffle = /** @class */ (function (_super) {
-    __extends(OrderedShuffle, _super);
-    function OrderedShuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    OrderedShuffle.k = 0;
-    OrderedShuffle.reversed = false;
-    OrderedShuffle.title = "Ordered";
-    return OrderedShuffle;
-}(abstract_1.Shuffle));
-exports.OrderedShuffle = OrderedShuffle;
-
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var RandomShuffle = /** @class */ (function (_super) {
-    __extends(RandomShuffle, _super);
-    function RandomShuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    RandomShuffle.k = null;
-    RandomShuffle.reversed = false;
-    RandomShuffle.title = "Random";
-    return RandomShuffle;
-}(abstract_1.Shuffle));
-exports.RandomShuffle = RandomShuffle;
-
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var abstract_1 = __webpack_require__(19);
-var ReversedShuffle = /** @class */ (function (_super) {
-    __extends(ReversedShuffle, _super);
-    function ReversedShuffle() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    ReversedShuffle.k = 0;
-    ReversedShuffle.reversed = true;
-    ReversedShuffle.title = "Reversed";
-    return ReversedShuffle;
-}(abstract_1.Shuffle));
-exports.ReversedShuffle = ReversedShuffle;
-
-
-/***/ }),
-/* 38 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __webpack_require__(22);
-var board_1 = __webpack_require__(23);
+var lodash_1 = __webpack_require__(4);
+var board_1 = __webpack_require__(10);
 function renderShadow(sort, board, boardElement, boxHeight, boxWidth) {
     var valueMin = board.min();
     var valueMax = board.max();
@@ -22761,280 +21686,80 @@ exports.manageAutoRunCharts = function (boardList, delay, id, names, callback) {
 
 
 /***/ }),
-/* 39 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Point = /** @class */ (function () {
-    function Point(index, value, color) {
-        if (value === void 0) { value = 0; }
-        if (color === void 0) { color = "aliceblue"; }
-        this.index = index;
-        this.value = value;
-        // TODO maybe color should be type and type should have color?
-        this.color = color;
-    }
-    return Point;
-}());
-exports.Point = Point;
+exports.stupidNumber = {
+    elemCount: 1000,
+    label: "1000",
+};
+exports._750 = {
+    elemCount: 750,
+    label: "750",
+};
+exports._500 = {
+    elemCount: 500,
+    label: "500",
+};
+exports.manyMany = {
+    elemCount: 300,
+    label: "300",
+};
+exports._250 = {
+    elemCount: 250,
+    label: "250",
+};
+exports._100 = {
+    elemCount: 100,
+    label: "100",
+};
+exports._75 = {
+    elemCount: 75,
+    label: "75",
+};
+exports.xXSmall = {
+    elemCount: 70,
+    label: "70",
+};
+exports.xSmall = {
+    elemCount: 60,
+    label: "60",
+};
+exports.small = {
+    elemCount: 50,
+    label: "50",
+};
+exports.medium = {
+    elemCount: 40,
+    label: "40",
+};
+exports.large = {
+    elemCount: 30,
+    label: "30",
+};
+exports._25 = {
+    elemCount: 25,
+    label: "25",
+};
+exports.xLarge = {
+    elemCount: 20,
+    label: "20",
+};
+exports.xXLarge = {
+    elemCount: 10,
+    label: "10",
+};
+exports.fewFew = {
+    elemCount: 5,
+    label: "5",
+};
 
 
 /***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// bogo
-var base_1 = __webpack_require__(61);
-exports.Bogo = base_1.Bogo;
-var bogoBogo_1 = __webpack_require__(62);
-exports.BogoBogo = bogoBogo_1.BogoBogo;
-var permutation_1 = __webpack_require__(63);
-exports.Permutation = permutation_1.Permutation;
-var single_1 = __webpack_require__(56);
-exports.BogoSingle = single_1.BogoSingle;
-var singleCompare_1 = __webpack_require__(64);
-exports.BogoSingleCompare = singleCompare_1.BogoSingleCompare;
-// bubble
-var base_2 = __webpack_require__(49);
-exports.Bubble = base_2.Bubble;
-var concurrent_1 = __webpack_require__(55);
-exports.BubbleSortConcurrent = concurrent_1.BubbleSortConcurrent;
-var concurrent10_1 = __webpack_require__(65);
-exports.BubbleSortConcurrent10 = concurrent10_1.BubbleSortConcurrent10;
-var concurrent5_1 = __webpack_require__(66);
-exports.BubbleSortConcurrent5 = concurrent5_1.BubbleSortConcurrent5;
-var doNotRestart_1 = __webpack_require__(67);
-exports.BubbleSortDontRestart = doNotRestart_1.BubbleSortDontRestart;
-var optimized_1 = __webpack_require__(68);
-exports.BubbleOptimized = optimized_1.BubbleOptimized;
-var shortCircuit_1 = __webpack_require__(69);
-exports.BubbleShortCircuit = shortCircuit_1.BubbleShortCircuit;
-var skipSorted_1 = __webpack_require__(70);
-exports.BubbleSkipSorted = skipSorted_1.BubbleSkipSorted;
-// cocktail
-var base_3 = __webpack_require__(57);
-exports.Cocktail = base_3.Cocktail;
-var shortCircuit_2 = __webpack_require__(71);
-exports.CocktailShortCircuit = shortCircuit_2.CocktailShortCircuit;
-// comb
-var base_4 = __webpack_require__(42);
-exports.Comb = base_4.Comb;
-var evenLarger_1 = __webpack_require__(51);
-exports.CombEvenLarger = evenLarger_1.CombEvenLarger;
-var largeShrink_1 = __webpack_require__(72);
-exports.CombLargeShrink = largeShrink_1.CombLargeShrink;
-var smallShrink_1 = __webpack_require__(73);
-exports.CombSmallShrink = smallShrink_1.CombSmallShrink;
-// comb and gnome
-var at10_1 = __webpack_require__(74);
-exports.CombGnome10 = at10_1.CombGnome10;
-var at2_1 = __webpack_require__(75);
-exports.CombGnome2 = at2_1.CombGnome2;
-var at3_1 = __webpack_require__(76);
-exports.CombGnome3 = at3_1.CombGnome3;
-var at5_1 = __webpack_require__(52);
-exports.CombGnome5 = at5_1.CombGnome5;
-var largeShrink10_1 = __webpack_require__(77);
-exports.CombGnomeLargeShrink10 = largeShrink10_1.CombGnomeLargeShrink10;
-var largeShrink2_1 = __webpack_require__(78);
-exports.CombGnomeLargeShrink2 = largeShrink2_1.CombGnomeLargeShrink2;
-var largeShrink3_1 = __webpack_require__(79);
-exports.CombGnomeLargeShrink3 = largeShrink3_1.CombGnomeLargeShrink3;
-var largeShrink5_1 = __webpack_require__(53);
-exports.CombGnomeLargeShrink5 = largeShrink5_1.CombGnomeLargeShrink5;
-// cycle
-var base_5 = __webpack_require__(58);
-exports.Cycle = base_5.Cycle;
-var optimized_2 = __webpack_require__(80);
-exports.CycleOptimized = optimized_2.CycleOptimized;
-// gnome
-var base_6 = __webpack_require__(50);
-exports.Gnome = base_6.Gnome;
-// heap
-var base_7 = __webpack_require__(43);
-exports.Heap = base_7.Heap;
-// insertion
-var base_8 = __webpack_require__(81);
-exports.Insertion = base_8.Insertion;
-// odd even
-var base_9 = __webpack_require__(44);
-exports.OddEven = base_9.OddEven;
-var concurrent_2 = __webpack_require__(82);
-exports.OddEvenConcurrent = concurrent_2.OddEvenConcurrent;
-// quick
-var base_10 = __webpack_require__(54);
-exports.QuickSort2 = base_10.QuickSort2;
-var partition3_1 = __webpack_require__(83);
-exports.QuickSort3 = partition3_1.QuickSort3;
-var partition3Random_1 = __webpack_require__(84);
-exports.QuickSort3Random = partition3Random_1.QuickSort3Random;
-var partition3Right_1 = __webpack_require__(89);
-exports.QuickSort3RightPartition = partition3Right_1.QuickSort3RightPartition;
-var randomPartition_1 = __webpack_require__(59);
-exports.QuickSort2Random = randomPartition_1.QuickSort2Random;
-var rightPartition_1 = __webpack_require__(60);
-exports.QuickSort2RightPartition = rightPartition_1.QuickSort2RightPartition;
-// selection
-var base_11 = __webpack_require__(86);
-exports.SelectionSort = base_11.SelectionSort;
-// smooth
-var base_12 = __webpack_require__(45);
-exports.Smooth = base_12.Smooth;
-var fromBottom_1 = __webpack_require__(87);
-exports.SmoothSetUpBottom = fromBottom_1.SmoothSetUpBottom;
-// stooge
-var base_13 = __webpack_require__(88);
-exports.Stooge = base_13.Stooge;
-
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * database structure:
- *
- * sort_name:
- * order:
- * value_type:
- * point_count:
- * steps:
- * comparisons: []
- * swaps: []
- */
-var BaseSort = /** @class */ (function () {
-    function BaseSort(board, trackAll) {
-        if (trackAll === void 0) { trackAll = false; }
-        this.board = board;
-        this.trackAll = trackAll;
-        this.baseSetUp();
-    }
-    BaseSort.prototype.subsets = function (num) { return []; };
-    BaseSort.prototype.breakDownSubset = function (num) { return []; };
-    BaseSort.prototype.setUpNext = function () { return; };
-    BaseSort.prototype.checkSorted = function () {
-        var result = true;
-        var values = this.board.values();
-        for (var i = 0; i < values.length - 1; i++) {
-            this.comparisons++;
-            if (values[i] > values[i + 1]) {
-                result = false;
-                break;
-            }
-        }
-        this.done = result;
-        return this.done;
-    };
-    BaseSort.prototype.setDone = function () {
-        this.done = true;
-    };
-    BaseSort.prototype.currentNodes = function () {
-        if (this.done) {
-            return [];
-        }
-        return [this.baseNode, this.comparisonNode];
-    };
-    BaseSort.prototype.nodesInOrder = function (values) {
-        // used to compare nodes
-        var inOrder = values[this.baseNode] <= values[this.comparisonNode];
-        if (!inOrder) {
-            this.ordered = false;
-            this.lastSwapped = true;
-        }
-        else {
-            this.lastSwapped = false;
-        }
-        this.comparisons++;
-        return inOrder;
-    };
-    BaseSort.prototype.swap = function (currentNodes) {
-        this.swaps++;
-        this.board.swap.apply(this.board, currentNodes);
-    };
-    BaseSort.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        this.steps++;
-        var currentNodes = this.currentNodes();
-        var values = this.board.values();
-        if (!this.nodesInOrder(values)) {
-            this.swap(currentNodes);
-        }
-        this.setUpNext();
-        this.trackProfile();
-        return currentNodes;
-    };
-    BaseSort.prototype.trackProfile = function () {
-        if (this.steps === this.nextItemToAdd || this.done) {
-            this.profile.swaps.push({
-                x: this.steps,
-                y: this.swaps,
-            });
-            this.profile.comparisons.push({
-                x: this.steps,
-                y: this.comparisons,
-            });
-            if (this.trackAll) {
-                this.nextItemToAdd++;
-            }
-            else {
-                this.nextItemToAdd = Math.ceil(Math.min(this.nextItemToAdd * 1.1, this.nextItemToAdd + 16));
-            }
-        }
-    };
-    BaseSort.prototype.reset = function () {
-        this.board.shuffleBoard();
-        this.baseSetUp();
-        return this;
-    };
-    BaseSort.prototype.baseSetUp = function () {
-        this.profile = {
-            comparisons: [],
-            swaps: [],
-        };
-        this.length = this.board.length;
-        this.baseNode = 0;
-        this.comparisonNode = 1;
-        this.end = this.length - 1;
-        this.done = false;
-        this.swaps = 0;
-        this.comparisons = 0;
-        this.steps = 0;
-        this.baseNode = 0;
-        this.comparisonNode = 1;
-        this.length = this.board.length;
-        this.end = this.length - 1;
-        this.lastSwapped = false;
-        this.ordered = true;
-        this.placed = [];
-        this.shadow = [];
-        this.nextItemToAdd = 1;
-        this.original = this.board.values().slice();
-        this.setUp();
-    };
-    BaseSort.prototype.setUp = function () {
-        // tslint:disable-next-line:no-console
-        console.log("not implemented");
-        // tslint:disable-next-line:no-console
-        console.log(this.constructor.title);
-    };
-    BaseSort.title = "";
-    return BaseSort;
-}());
-exports.BaseSort = BaseSort;
-
-
-/***/ }),
-/* 42 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23050,155 +21775,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var Comb = /** @class */ (function (_super) {
-    __extends(Comb, _super);
-    function Comb() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Comb.prototype.setUp = function () {
-        this.shrink = this.constructor.shrink;
-        this.gap = Math.floor(this.length / this.shrink);
-        this.comparisonNode = 0 + this.gap;
-    };
-    Comb.prototype.setUpNext = function () {
-        this.baseNode++;
-        this.comparisonNode++;
-        if (this.comparisonNode >= this.length) {
-            if (this.ordered === true && this.gap === 1) {
-                this.setDone();
-            }
-            this.gap = Math.max(Math.floor(this.gap / this.shrink), 1);
-            this.baseNode = 0;
-            this.comparisonNode = this.gap;
-            this.ordered = true;
-        }
-    };
-    // test different shrinks
-    // test ceil over floor
-    Comb.title = "Comb Sort";
-    Comb.shrink = 1.3;
-    return Comb;
-}(baseSort_1.BaseSort));
-exports.Comb = Comb;
-
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var Heap = /** @class */ (function (_super) {
-    __extends(Heap, _super);
-    function Heap() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Heap.prototype.setUp = function () {
-        this.nodesToHeap = [];
-        var heapIndex = Math.floor(this.length / 2) - 1;
-        for (var i = heapIndex; i >= 0; i--) {
-            this.nodesToHeap.push(i);
-        }
-        this.comparisonNode = this.length - 1;
-    };
-    Heap.prototype.currentNodes = function () {
-        if (this.done) {
-            return [];
-        }
-        if (this.nodesToHeap.length) {
-            return [this.nodesToHeap[0]];
-        }
-        else {
-            return [0];
-        }
-    };
-    Heap.prototype.heapify = function (node) {
-        var values = this.board.values();
-        var comparison = values[node];
-        var leftChild = (2 * node) + 1;
-        var rightChild = (2 * node) + 2;
-        var left = leftChild <= this.comparisonNode && values[leftChild];
-        var right = rightChild <= this.comparisonNode && values[rightChild];
-        var swapNode;
-        this.comparisons += 2;
-        if (((left || left === 0) && left > comparison) || ((right || right === 0) && right > comparison)) {
-            this.comparisons++;
-            if ((right || right === 0) && right > left) {
-                swapNode = rightChild;
-            }
-            else {
-                swapNode = leftChild;
-            }
-            this.swap([node, swapNode]);
-            var possibleChild = (2 * swapNode) + 1;
-            if (possibleChild <= this.comparisonNode) {
-                this.nodesToHeap.unshift(swapNode);
-            }
-        }
-    };
-    Heap.prototype.removeNode = function () {
-        this.swap([0, this.comparisonNode]);
-        this.placed.push(this.comparisonNode);
-        this.nodesToHeap.unshift(0);
-        this.comparisonNode--;
-    };
-    Heap.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        this.steps++;
-        var currentNodes = [];
-        if (this.nodesToHeap.length) {
-            var node = this.nodesToHeap.shift();
-            currentNodes.push(node);
-            this.heapify(node);
-        }
-        else {
-            this.removeNode();
-        }
-        if (this.comparisonNode === 0) {
-            this.setDone();
-        }
-        this.trackProfile();
-        return currentNodes;
-    };
-    Heap.title = "Heap Sort";
-    return Heap;
-}(baseSort_1.BaseSort));
-exports.Heap = Heap;
-
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
+var baseSort_1 = __webpack_require__(0);
 var OddEven = /** @class */ (function (_super) {
     __extends(OddEven, _super);
     function OddEven() {
@@ -23266,7 +21843,7 @@ exports.OddEven = OddEven;
 
 
 /***/ }),
-/* 45 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23282,7 +21859,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
+var baseSort_1 = __webpack_require__(0);
 var Smooth = /** @class */ (function (_super) {
     __extends(Smooth, _super);
     function Smooth() {
@@ -23471,353 +22048,7 @@ exports.Smooth = Smooth;
 
 
 /***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var board_1 = __webpack_require__(23);
-var index_1 = __webpack_require__(38);
-var shuffles = __webpack_require__(21);
-var sizes = __webpack_require__(25);
-var sorts = __webpack_require__(40);
-var valueTypes = __webpack_require__(24);
-exports.setUpScatter = function (location, data, query) {
-    // tslint:disable-next-line:no-var-requires
-    var tpl = __webpack_require__(47);
-    var html = tpl.render({
-        shuffles: shuffles,
-        sizes: sizes,
-        sorts: sorts,
-        valueTypes: valueTypes,
-    });
-    return html;
-};
-exports.scatterCallback = function () {
-    var boardsElement = document.getElementById("boards");
-    var createButton = document.getElementById("create");
-    var sizeElement = document.getElementById("size");
-    var orderSelect = document.getElementById("order");
-    var valueTypeSelect = document.getElementById("value-type");
-    var sortElement = document.getElementById("sort");
-    var boxHeight = 500;
-    var boxWidth = 500;
-    var boardList = [];
-    var autoInterval = null;
-    var delay = 100;
-    createButton.addEventListener("click", function () {
-        var size = sizes[sizeElement.value];
-        var value = valueTypes[valueTypeSelect.value];
-        var order = shuffles[orderSelect.value];
-        var Sort = sorts[sortElement.value];
-        // let board = new Boards.Board(size)
-        var board = new board_1.Board(size, order, value);
-        boardList.push({
-            board: board,
-            sort: new Sort(board),
-        });
-        index_1.createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement);
-    });
-    var stepElement = document.getElementById("step");
-    var boundStep = index_1.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
-    stepElement.addEventListener("click", boundStep);
-    index_1.createDelegatedEvent(boardsElement, "click", function (event, target) {
-        var wrapperElement = index_1.closestParent(target, ".wrapper");
-        var wrappers = document.getElementsByClassName("wrapper");
-        for (var i = 0; i < wrappers.length; i++) {
-            if (wrappers[i] === wrapperElement) {
-                boardList.splice(i, 1);
-                break;
-            }
-        }
-        wrapperElement.remove();
-    }, ".remove");
-    index_1.createDelegatedEvent(boardsElement, "click", function (event, target) {
-        var wrapperElement = index_1.closestParent(target, ".wrapper");
-        var wrappers = document.getElementsByClassName("wrapper");
-        var wrapperIndex;
-        for (var i = 0; i < wrappers.length; i++) {
-            if (wrappers[i] === wrapperElement) {
-                wrapperIndex = i;
-                break;
-            }
-        }
-        var item = boardList[wrapperIndex];
-        item.sort.reset();
-        index_1.reRenderBoard(wrapperIndex, item.sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
-    }, ".reset");
-    var autoElement = document.getElementById("auto");
-    autoElement.addEventListener("click", function (event) {
-        if (autoInterval) {
-            clearInterval(autoInterval);
-            autoInterval = null;
-            event.currentTarget.classList.remove("active");
-            boardsElement.classList.remove("auto");
-        }
-        else {
-            var currentBoundStep = index_1.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
-            autoInterval = setInterval(currentBoundStep, delay);
-            event.currentTarget.classList.add("active");
-            boardsElement.classList.add("auto");
-        }
-    });
-};
-
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var nunjucks = __webpack_require__(4);
-var env;
-if (!nunjucks.currentEnv){
-	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
-} else {
-	env = nunjucks.currentEnv;
-}
-var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
-dependencies["./controls/sort.njk"] = __webpack_require__( 48 );
-dependencies["./controls/count.njk"] = __webpack_require__( 90 );
-dependencies["./controls/order.njk"] = __webpack_require__( 91 );
-dependencies["./controls/values.njk"] = __webpack_require__( 92 );
-dependencies["./controls/runButtons.njk"] = __webpack_require__( 97 );
-
-
-
-
-var shim = __webpack_require__(8);
-
-
-(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/scatter.njk"] = (function() {
-function root(env, context, frame, runtime, cb) {
-var lineno = null;
-var colno = null;
-var output = "";
-try {
-var parentTemplate = null;
-output += "<div><a href=\"../../index.html\">Index</a></div>\n<div><a href=\"javascript:history.back()\"><< Back</a></div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
-var tasks = [];
-tasks.push(
-function(callback) {
-env.getTemplate("./controls/sort.njk", false, "templates/scatter.njk", null, function(t_3,t_1) {
-if(t_3) { cb(t_3); return; }
-callback(null,t_1);});
-});
-tasks.push(
-function(template, callback){
-template.render(context.getVariables(), frame, function(t_4,t_2) {
-if(t_4) { cb(t_4); return; }
-callback(null,t_2);});
-});
-tasks.push(
-function(result, callback){
-output += result;
-callback(null);
-});
-env.waterfall(tasks, function(){
-output += "\n      ";
-var tasks = [];
-tasks.push(
-function(callback) {
-env.getTemplate("./controls/count.njk", false, "templates/scatter.njk", null, function(t_7,t_5) {
-if(t_7) { cb(t_7); return; }
-callback(null,t_5);});
-});
-tasks.push(
-function(template, callback){
-template.render(context.getVariables(), frame, function(t_8,t_6) {
-if(t_8) { cb(t_8); return; }
-callback(null,t_6);});
-});
-tasks.push(
-function(result, callback){
-output += result;
-callback(null);
-});
-env.waterfall(tasks, function(){
-output += "\n      ";
-var tasks = [];
-tasks.push(
-function(callback) {
-env.getTemplate("./controls/order.njk", false, "templates/scatter.njk", null, function(t_11,t_9) {
-if(t_11) { cb(t_11); return; }
-callback(null,t_9);});
-});
-tasks.push(
-function(template, callback){
-template.render(context.getVariables(), frame, function(t_12,t_10) {
-if(t_12) { cb(t_12); return; }
-callback(null,t_10);});
-});
-tasks.push(
-function(result, callback){
-output += result;
-callback(null);
-});
-env.waterfall(tasks, function(){
-output += "\n      ";
-var tasks = [];
-tasks.push(
-function(callback) {
-env.getTemplate("./controls/values.njk", false, "templates/scatter.njk", null, function(t_15,t_13) {
-if(t_15) { cb(t_15); return; }
-callback(null,t_13);});
-});
-tasks.push(
-function(template, callback){
-template.render(context.getVariables(), frame, function(t_16,t_14) {
-if(t_16) { cb(t_16); return; }
-callback(null,t_14);});
-});
-tasks.push(
-function(result, callback){
-output += result;
-callback(null);
-});
-env.waterfall(tasks, function(){
-output += "\n    </div>\n    ";
-var tasks = [];
-tasks.push(
-function(callback) {
-env.getTemplate("./controls/runButtons.njk", false, "templates/scatter.njk", null, function(t_19,t_17) {
-if(t_19) { cb(t_19); return; }
-callback(null,t_17);});
-});
-tasks.push(
-function(template, callback){
-template.render(context.getVariables(), frame, function(t_20,t_18) {
-if(t_20) { cb(t_20); return; }
-callback(null,t_18);});
-});
-tasks.push(
-function(result, callback){
-output += result;
-callback(null);
-});
-env.waterfall(tasks, function(){
-output += "\n  </div>\n  <div id=\"boards\"></div>\n</article>\n\n";
-if(parentTemplate) {
-parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
-} else {
-cb(null, output);
-}
-})})})})});
-} catch (e) {
-  cb(runtime.handleError(e, lineno, colno));
-}
-}
-return {
-root: root
-};
-
-})();
-})();
-
-
-
-module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/scatter.njk"] , dependencies)
-
-/***/ }),
-/* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var nunjucks = __webpack_require__(4);
-var env;
-if (!nunjucks.currentEnv){
-	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
-} else {
-	env = nunjucks.currentEnv;
-}
-var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
-
-
-
-
-var shim = __webpack_require__(8);
-
-
-(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/sort.njk"] = (function() {
-function root(env, context, frame, runtime, cb) {
-var lineno = null;
-var colno = null;
-var output = "";
-try {
-var parentTemplate = null;
-output += "<label>\n  Sort:\n  <select id=\"sort\">\n    ";
-frame = frame.push();
-var t_3 = runtime.contextOrFrameLookup(context, frame, "sorts");
-if(t_3) {var t_1;
-if(runtime.isArray(t_3)) {
-var t_2 = t_3.length;
-for(t_1=0; t_1 < t_3.length; t_1++) {
-var t_4 = t_3[t_1][0]
-frame.set("name", t_3[t_1][0]);
-var t_5 = t_3[t_1][1]
-frame.set("sort", t_3[t_1][1]);
-frame.set("loop.index", t_1 + 1);
-frame.set("loop.index0", t_1);
-frame.set("loop.revindex", t_2 - t_1);
-frame.set("loop.revindex0", t_2 - t_1 - 1);
-frame.set("loop.first", t_1 === 0);
-frame.set("loop.last", t_1 === t_2 - 1);
-frame.set("loop.length", t_2);
-output += "\n      <option value=\"";
-output += runtime.suppressValue(t_4, env.opts.autoescape);
-output += "\">";
-output += runtime.suppressValue(runtime.memberLookup((t_5),"title"), env.opts.autoescape);
-output += "</option>\n    ";
-;
-}
-} else {
-t_1 = -1;
-var t_2 = runtime.keys(t_3).length;
-for(var t_6 in t_3) {
-t_1++;
-var t_7 = t_3[t_6];
-frame.set("name", t_6);
-frame.set("sort", t_7);
-frame.set("loop.index", t_1 + 1);
-frame.set("loop.index0", t_1);
-frame.set("loop.revindex", t_2 - t_1);
-frame.set("loop.revindex0", t_2 - t_1 - 1);
-frame.set("loop.first", t_1 === 0);
-frame.set("loop.last", t_1 === t_2 - 1);
-frame.set("loop.length", t_2);
-output += "\n      <option value=\"";
-output += runtime.suppressValue(t_6, env.opts.autoescape);
-output += "\">";
-output += runtime.suppressValue(runtime.memberLookup((t_7),"title"), env.opts.autoescape);
-output += "</option>\n    ";
-;
-}
-}
-}
-frame = frame.pop();
-output += "\n  </select>\n</label>\n";
-if(parentTemplate) {
-parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
-} else {
-cb(null, output);
-}
-;
-} catch (e) {
-  cb(runtime.handleError(e, lineno, colno));
-}
-}
-return {
-root: root
-};
-
-})();
-})();
-
-
-
-module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/sort.njk"] , dependencies)
-
-/***/ }),
-/* 49 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23833,393 +22064,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var Bubble = /** @class */ (function (_super) {
-    __extends(Bubble, _super);
-    function Bubble() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.skipSorted = false;
-        _this.shortCircuit = false;
-        return _this;
-    }
-    Bubble.prototype.setUpNext = function () {
-        if (this.comparisonNode === this.end) {
-            this.maxRounds--;
-            if (this.maxRounds === 0) {
-                this.setDone();
-            }
-            if (this.ordered && this.shortCircuit) {
-                this.setDone();
-            }
-            else {
-                this.ordered = true;
-            }
-            this.baseNode = 0;
-            this.comparisonNode = 1;
-            if (this.skipSorted) {
-                this.placed.push(this.end);
-                this.end--;
-                if (this.end === 0) {
-                    this.setDone();
-                }
-            }
-        }
-        else {
-            this.baseNode++;
-            this.comparisonNode++;
-        }
-    };
-    Bubble.prototype.setUp = function () {
-        this.maxRounds = this.length;
-        this.ordered = true;
-    };
-    Bubble.title = "Bubble Sort";
-    Bubble.links = [
-        {
-            name: "Bubble Sort: An Archaeological Algorithmic Analysis",
-            url: "https://users.cs.duke.edu/~ola/bubble/bubble.pdf",
-        },
-    ];
-    return Bubble;
-}(baseSort_1.BaseSort));
-exports.Bubble = Bubble;
-
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var Gnome = /** @class */ (function (_super) {
-    __extends(Gnome, _super);
-    function Gnome() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Gnome.prototype.setUpNext = function () {
-        if (this.baseNode === 0 || !this.lastSwapped) {
-            this.currentGnome++;
-            this.comparisonNode = this.currentGnome;
-            this.baseNode = this.currentGnome - 1;
-        }
-        else if (this.lastSwapped) {
-            this.baseNode--;
-            this.comparisonNode--;
-        }
-        if (this.comparisonNode >= this.length) {
-            this.setDone();
-        }
-    };
-    Gnome.prototype.setUp = function () {
-        this.currentGnome = 1;
-    };
-    Gnome.title = "Gnome Sort";
-    return Gnome;
-}(baseSort_1.BaseSort));
-exports.Gnome = Gnome;
-
-
-/***/ }),
-/* 51 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(42);
-var CombEvenLarger = /** @class */ (function (_super) {
-    __extends(CombEvenLarger, _super);
-    function CombEvenLarger() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    CombEvenLarger.title = "Comb(Shrink: 2.0)";
-    CombEvenLarger.shrink = 2.0;
-    return CombEvenLarger;
-}(base_1.Comb));
-exports.CombEvenLarger = CombEvenLarger;
-
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var base_1 = __webpack_require__(42);
-var base_2 = __webpack_require__(50);
-var CombGnome5 = /** @class */ (function (_super) {
-    __extends(CombGnome5, _super);
-    function CombGnome5() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.gnomeSwitchValue = 5;
-        return _this;
-    }
-    CombGnome5.prototype.setUp = function () {
-        this.comb = new base_1.Comb(this.board);
-        this.gnome = new base_2.Gnome(this.board);
-    };
-    CombGnome5.prototype.currentNodes = function () {
-        if (this.comb.gap >= this.gnomeSwitchValue) {
-            return this.comb.currentNodes();
-        }
-        else {
-            return this.gnome.currentNodes();
-        }
-    };
-    CombGnome5.prototype.reset = function () {
-        _super.prototype.reset.call(this);
-        this.gnome.done = false;
-        return this;
-    };
-    CombGnome5.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        var currentNodes;
-        if (this.comb.gap >= this.gnomeSwitchValue) {
-            currentNodes = this.comb.currentNodes();
-            this.comb.next();
-        }
-        else {
-            this.gnome.next();
-        }
-        this.steps = this.comb.steps + this.gnome.steps;
-        this.swaps = this.comb.swaps + this.gnome.swaps;
-        this.comparisons = this.comb.comparisons + this.gnome.comparisons;
-        this.done = this.gnome.done;
-        this.trackProfile();
-        return currentNodes;
-    };
-    CombGnome5.title = "Comb & Gnome(at gap 5)";
-    return CombGnome5;
-}(baseSort_1.BaseSort));
-exports.CombGnome5 = CombGnome5;
-
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var evenLarger_1 = __webpack_require__(51);
-var base_1 = __webpack_require__(50);
-var at5_1 = __webpack_require__(52);
-var CombGnomeLargeShrink5 = /** @class */ (function (_super) {
-    __extends(CombGnomeLargeShrink5, _super);
-    function CombGnomeLargeShrink5() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.gnomeSwitchValue = 5;
-        return _this;
-    }
-    CombGnomeLargeShrink5.prototype.setUp = function () {
-        this.comb = new evenLarger_1.CombEvenLarger(this.board);
-        this.gnome = new base_1.Gnome(this.board);
-    };
-    CombGnomeLargeShrink5.title = "Comb & Gnome(gap 5, shrink 2)";
-    return CombGnomeLargeShrink5;
-}(at5_1.CombGnome5));
-exports.CombGnomeLargeShrink5 = CombGnomeLargeShrink5;
-
-
-/***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var QuickSort2 = /** @class */ (function (_super) {
-    __extends(QuickSort2, _super);
-    function QuickSort2() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.threeWay = false;
-        return _this;
-    }
-    QuickSort2.prototype.setUp = function () {
-        this.addToUpdate = [];
-        this.partitions = [];
-        this.setUpValues([this.baseNode, this.length - 1]);
-    };
-    QuickSort2.prototype.setUpValues = function (values) {
-        this.lower = values[0];
-        this.higher = values[0];
-        this.partitionStart = values[0];
-        this.partitionEnd = values[1];
-        this.setPartition();
-        this.partitionTop = this.partition;
-    };
-    QuickSort2.prototype.currentNodes = function () {
-        var nodes = [];
-        if (this.partition !== this.lower) {
-            nodes.push(this.lower);
-        }
-        nodes.push(this.partition);
-        if (this.partition !== this.higher) {
-            nodes.push(this.higher);
-        }
-        return nodes;
-    };
-    QuickSort2.prototype.setUpNext = function () {
-        // if higher is at the end of the current partition
-        if (this.higher === this.partitionEnd) {
-            if (this.threeWay) {
-                for (var i = this.partition; i <= this.partitionTop; i++) {
-                    this.placed.push(i);
-                }
-            }
-            else {
-                this.placed.push(this.partition);
-            }
-            var partitions = this.partitions;
-            var topLow = void 0;
-            if (this.threeWay) {
-                topLow = this.partitionTop;
-            }
-            else {
-                topLow = this.partition;
-            }
-            if (this.higher > topLow + 1) {
-                partitions.unshift([topLow + 1, this.higher]);
-            }
-            if (this.lower < this.partition - 1) {
-                partitions.unshift([this.lower, this.partition - 1]);
-            }
-            if (partitions.length) {
-                var newPartition = partitions.shift();
-                this.setUpValues(newPartition);
-            }
-            else {
-                this.setDone();
-                return [];
-            }
-        }
-    };
-    QuickSort2.prototype.setPartition = function () {
-        this.partition = this.lower;
-    };
-    QuickSort2.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        this.steps++;
-        var valuesToUpdate = [];
-        // look at the next value
-        this.higher++;
-        var values = this.board.values();
-        this.comparisons++;
-        var threeWay = this.threeWay && values[this.higher] === values[this.partition];
-        if (values[this.higher] < values[this.partition] || threeWay) {
-            // if the value at higher is less than the partition
-            this.swaps++;
-            var temp = values.splice(this.higher, 1)[0];
-            values.splice(this.partition, 0, temp);
-            this.board.setPoints(values);
-            if (threeWay) {
-                this.partitionTop++;
-            }
-            else {
-                this.partition++;
-                this.partitionTop++;
-            }
-            for (var i = this.partition - 1; i <= this.higher; i++) {
-                if (i >= 0) {
-                    valuesToUpdate.push(i);
-                }
-            }
-        }
-        if (this.addToUpdate.length) {
-            this.addToUpdate.forEach(function (index) {
-                if (valuesToUpdate.indexOf(index) === -1) {
-                    valuesToUpdate.push(index);
-                }
-            });
-            this.addToUpdate = [];
-        }
-        this.setUpNext();
-        this.trackProfile();
-        return valuesToUpdate;
-    };
-    QuickSort2.title = "Quick Sort(Left Partition)";
-    return QuickSort2;
-}(baseSort_1.BaseSort));
-exports.QuickSort2 = QuickSort2;
-
-
-/***/ }),
-/* 55 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(49);
+var base_1 = __webpack_require__(6);
 var BubbleSortConcurrent = /** @class */ (function (_super) {
     __extends(BubbleSortConcurrent, _super);
     function BubbleSortConcurrent() {
@@ -24336,7 +22181,127 @@ exports.BubbleSortConcurrent = BubbleSortConcurrent;
 
 
 /***/ }),
-/* 56 */
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var routerLocation_1 = __webpack_require__(38);
+/**
+ * Router manages locations.
+ *
+ * Send a string that can be converted into a reg ex.
+ *
+ * examples:
+ *
+ * base: ""
+ * hard url: "other"
+ * url params: "a/(c|.*)/b" || "a/(c|\\d*)/b"
+ * query string "?a=1"
+ *
+ * returns
+ * location: "other"
+ * url params: {c: "123"}
+ * query string: {a: "1"}
+ *
+ * To construct the router send in the element the router should control.
+ *
+ * For registering each route pass the string and a function to register.
+ * The function should return HTML the router will place the html in the page.
+ */
+var Router = /** @class */ (function () {
+    function Router(element) {
+        this.element = element;
+        this.locations = [];
+        this.listenToChange = this.listenToChange.bind(this);
+        Router.routerListeners.push(this.listenToChange);
+    }
+    Router.prototype.listenToChange = function (event) {
+        var _this = this;
+        var location;
+        if (event) {
+            location = event.target.location;
+        }
+        else {
+            location = window.location;
+        }
+        // tslint:disable-next-line:prefer-const
+        var hash = this.cleanHash(location.hash);
+        var rendered = false;
+        this.locations.forEach(function (loc) {
+            var urlParams = loc.match(hash);
+            if (urlParams && !rendered) {
+                rendered = true;
+                var query = _this.processQuery(location.search);
+                var html = loc.fun(hash, urlParams, query);
+                _this.element.innerHTML = html;
+                // tslint:disable-next-line:no-unused-expression
+                loc.callback && loc.callback();
+            }
+        });
+    };
+    Router.prototype.register = function (location, fun, callback) {
+        this.locations.push(new routerLocation_1.RouterLocation(location, fun, callback));
+    };
+    Router.prototype.cleanHash = function (hash) {
+        return hash.replace(/^#?\/?/, "").replace(/\/$/, "");
+    };
+    Router.prototype.processQuery = function (search) {
+        search = search.replace(/^\?/, "");
+        if (!search) {
+            return {};
+        }
+        var params = search.split("&");
+        var query = {};
+        params.forEach(function (param) {
+            if (param) {
+                var _a = param.split("="), key = _a[0], value = _a[1];
+                query[key] = value || "";
+            }
+        });
+        return query;
+    };
+    Router.routerListeners = [];
+    return Router;
+}());
+exports.Router = Router;
+window.onpopstate = function (event) {
+    Router.routerListeners.forEach(function (fun) {
+        fun(event);
+    });
+};
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24352,7 +22317,306 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
+var abstract_1 = __webpack_require__(3);
+var RandomShuffle = /** @class */ (function (_super) {
+    __extends(RandomShuffle, _super);
+    function RandomShuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    RandomShuffle.k = null;
+    RandomShuffle.reversed = false;
+    RandomShuffle.title = "Random";
+    return RandomShuffle;
+}(abstract_1.Shuffle));
+exports.RandomShuffle = RandomShuffle;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var Heap = /** @class */ (function (_super) {
+    __extends(Heap, _super);
+    function Heap() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Heap.prototype.setUp = function () {
+        this.nodesToHeap = [];
+        var heapIndex = Math.floor(this.length / 2) - 1;
+        for (var i = heapIndex; i >= 0; i--) {
+            this.nodesToHeap.push(i);
+        }
+        this.comparisonNode = this.length - 1;
+    };
+    Heap.prototype.currentNodes = function () {
+        if (this.done) {
+            return [];
+        }
+        if (this.nodesToHeap.length) {
+            return [this.nodesToHeap[0]];
+        }
+        else {
+            return [0];
+        }
+    };
+    Heap.prototype.heapify = function (node) {
+        var values = this.board.values();
+        var comparison = values[node];
+        var leftChild = (2 * node) + 1;
+        var rightChild = (2 * node) + 2;
+        var left = leftChild <= this.comparisonNode && values[leftChild];
+        var right = rightChild <= this.comparisonNode && values[rightChild];
+        var swapNode;
+        this.comparisons += 2;
+        if (((left || left === 0) && left > comparison) || ((right || right === 0) && right > comparison)) {
+            this.comparisons++;
+            if ((right || right === 0) && right > left) {
+                swapNode = rightChild;
+            }
+            else {
+                swapNode = leftChild;
+            }
+            this.swap([node, swapNode]);
+            var possibleChild = (2 * swapNode) + 1;
+            if (possibleChild <= this.comparisonNode) {
+                this.nodesToHeap.unshift(swapNode);
+            }
+        }
+    };
+    Heap.prototype.removeNode = function () {
+        this.swap([0, this.comparisonNode]);
+        this.placed.push(this.comparisonNode);
+        this.nodesToHeap.unshift(0);
+        this.comparisonNode--;
+    };
+    Heap.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = [];
+        if (this.nodesToHeap.length) {
+            var node = this.nodesToHeap.shift();
+            currentNodes.push(node);
+            this.heapify(node);
+        }
+        else {
+            this.removeNode();
+        }
+        if (this.comparisonNode === 0) {
+            this.setDone();
+        }
+        this.trackProfile();
+        return currentNodes;
+    };
+    Heap.title = "Heap Sort";
+    return Heap;
+}(baseSort_1.BaseSort));
+exports.Heap = Heap;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var apply = Function.prototype.apply;
+
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) {
+  if (timeout) {
+    timeout.close();
+  }
+};
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// setimmediate attaches itself to the global object
+__webpack_require__(53);
+exports.setImmediate = setImmediate;
+exports.clearImmediate = clearImmediate;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// bogo
+var base_1 = __webpack_require__(59);
+exports.Bogo = base_1.Bogo;
+var bogoBogo_1 = __webpack_require__(60);
+exports.BogoBogo = bogoBogo_1.BogoBogo;
+var permutation_1 = __webpack_require__(61);
+exports.Permutation = permutation_1.Permutation;
+var single_1 = __webpack_require__(27);
+exports.BogoSingle = single_1.BogoSingle;
+var singleCompare_1 = __webpack_require__(62);
+exports.BogoSingleCompare = singleCompare_1.BogoSingleCompare;
+// bubble
+var base_2 = __webpack_require__(6);
+exports.Bubble = base_2.Bubble;
+var concurrent_1 = __webpack_require__(20);
+exports.BubbleSortConcurrent = concurrent_1.BubbleSortConcurrent;
+var concurrent10_1 = __webpack_require__(63);
+exports.BubbleSortConcurrent10 = concurrent10_1.BubbleSortConcurrent10;
+var concurrent5_1 = __webpack_require__(64);
+exports.BubbleSortConcurrent5 = concurrent5_1.BubbleSortConcurrent5;
+var doNotRestart_1 = __webpack_require__(65);
+exports.BubbleSortDontRestart = doNotRestart_1.BubbleSortDontRestart;
+var optimized_1 = __webpack_require__(66);
+exports.BubbleOptimized = optimized_1.BubbleOptimized;
+var shortCircuit_1 = __webpack_require__(67);
+exports.BubbleShortCircuit = shortCircuit_1.BubbleShortCircuit;
+var skipSorted_1 = __webpack_require__(68);
+exports.BubbleSkipSorted = skipSorted_1.BubbleSkipSorted;
+// cocktail
+var base_3 = __webpack_require__(28);
+exports.Cocktail = base_3.Cocktail;
+var shortCircuit_2 = __webpack_require__(69);
+exports.CocktailShortCircuit = shortCircuit_2.CocktailShortCircuit;
+// comb
+var base_4 = __webpack_require__(5);
+exports.Comb = base_4.Comb;
+var evenLarger_1 = __webpack_require__(8);
+exports.CombEvenLarger = evenLarger_1.CombEvenLarger;
+var largeShrink_1 = __webpack_require__(70);
+exports.CombLargeShrink = largeShrink_1.CombLargeShrink;
+var smallShrink_1 = __webpack_require__(71);
+exports.CombSmallShrink = smallShrink_1.CombSmallShrink;
+// comb and gnome
+var at10_1 = __webpack_require__(72);
+exports.CombGnome10 = at10_1.CombGnome10;
+var at2_1 = __webpack_require__(73);
+exports.CombGnome2 = at2_1.CombGnome2;
+var at3_1 = __webpack_require__(74);
+exports.CombGnome3 = at3_1.CombGnome3;
+var at5_1 = __webpack_require__(9);
+exports.CombGnome5 = at5_1.CombGnome5;
+var largeShrink10_1 = __webpack_require__(75);
+exports.CombGnomeLargeShrink10 = largeShrink10_1.CombGnomeLargeShrink10;
+var largeShrink2_1 = __webpack_require__(76);
+exports.CombGnomeLargeShrink2 = largeShrink2_1.CombGnomeLargeShrink2;
+var largeShrink3_1 = __webpack_require__(77);
+exports.CombGnomeLargeShrink3 = largeShrink3_1.CombGnomeLargeShrink3;
+var largeShrink5_1 = __webpack_require__(13);
+exports.CombGnomeLargeShrink5 = largeShrink5_1.CombGnomeLargeShrink5;
+// cycle
+var base_5 = __webpack_require__(29);
+exports.Cycle = base_5.Cycle;
+var optimized_2 = __webpack_require__(78);
+exports.CycleOptimized = optimized_2.CycleOptimized;
+// gnome
+var base_6 = __webpack_require__(7);
+exports.Gnome = base_6.Gnome;
+// heap
+var base_7 = __webpack_require__(24);
+exports.Heap = base_7.Heap;
+// insertion
+var base_8 = __webpack_require__(79);
+exports.Insertion = base_8.Insertion;
+// odd even
+var base_9 = __webpack_require__(18);
+exports.OddEven = base_9.OddEven;
+var concurrent_2 = __webpack_require__(80);
+exports.OddEvenConcurrent = concurrent_2.OddEvenConcurrent;
+// quick
+var base_10 = __webpack_require__(14);
+exports.QuickSort2 = base_10.QuickSort2;
+var partition3_1 = __webpack_require__(81);
+exports.QuickSort3 = partition3_1.QuickSort3;
+var partition3Random_1 = __webpack_require__(82);
+exports.QuickSort3Random = partition3Random_1.QuickSort3Random;
+var partition3Right_1 = __webpack_require__(83);
+exports.QuickSort3RightPartition = partition3Right_1.QuickSort3RightPartition;
+var randomPartition_1 = __webpack_require__(30);
+exports.QuickSort2Random = randomPartition_1.QuickSort2Random;
+var rightPartition_1 = __webpack_require__(31);
+exports.QuickSort2RightPartition = rightPartition_1.QuickSort2RightPartition;
+// selection
+var base_11 = __webpack_require__(84);
+exports.SelectionSort = base_11.SelectionSort;
+// smooth
+var base_12 = __webpack_require__(19);
+exports.Smooth = base_12.Smooth;
+var fromBottom_1 = __webpack_require__(85);
+exports.SmoothSetUpBottom = fromBottom_1.SmoothSetUpBottom;
+// stooge
+var base_13 = __webpack_require__(86);
+exports.Stooge = base_13.Stooge;
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
 var BogoSingle = /** @class */ (function (_super) {
     __extends(BogoSingle, _super);
     function BogoSingle() {
@@ -24389,7 +22653,7 @@ exports.BogoSingle = BogoSingle;
 
 
 /***/ }),
-/* 57 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24405,7 +22669,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
+var baseSort_1 = __webpack_require__(0);
 var Cocktail = /** @class */ (function (_super) {
     __extends(Cocktail, _super);
     function Cocktail() {
@@ -24469,7 +22733,7 @@ exports.Cocktail = Cocktail;
 
 
 /***/ }),
-/* 58 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24485,8 +22749,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __webpack_require__(22);
-var baseSort_1 = __webpack_require__(41);
+var lodash_1 = __webpack_require__(4);
+var baseSort_1 = __webpack_require__(0);
 var Cycle = /** @class */ (function (_super) {
     __extends(Cycle, _super);
     function Cycle() {
@@ -24569,7 +22833,7 @@ exports.Cycle = Cycle;
 
 
 /***/ }),
-/* 59 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24585,7 +22849,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(54);
+var base_1 = __webpack_require__(14);
 var QuickSort2Random = /** @class */ (function (_super) {
     __extends(QuickSort2Random, _super);
     function QuickSort2Random() {
@@ -24607,7 +22871,7 @@ exports.QuickSort2Random = QuickSort2Random;
 
 
 /***/ }),
-/* 60 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24623,7 +22887,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(54);
+var base_1 = __webpack_require__(14);
 var QuickSort2RightPartition = /** @class */ (function (_super) {
     __extends(QuickSort2RightPartition, _super);
     function QuickSort2RightPartition() {
@@ -24643,1197 +22907,10 @@ exports.QuickSort2RightPartition = QuickSort2RightPartition;
 
 
 /***/ }),
-/* 61 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __webpack_require__(22);
-var random_1 = __webpack_require__(36);
-var baseSort_1 = __webpack_require__(41);
-var Bogo = /** @class */ (function (_super) {
-    __extends(Bogo, _super);
-    function Bogo() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Bogo.prototype.setUp = function () {
-        this.checkSorted();
-    };
-    Bogo.prototype.currentNodes = function () {
-        if (!this.done) {
-            return lodash_1.range(0, this.board.length);
-        }
-        else {
-            return [];
-        }
-    };
-    Bogo.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        var currentNodes = this.currentNodes();
-        this.steps++;
-        var values = this.board.values();
-        var start = values.slice();
-        this.board.setPoints(random_1.RandomShuffle.shuffle(values));
-        var difference = 0;
-        for (var i = 0; i < values.length; i++) {
-            if (values[i] !== start[i]) {
-                difference++;
-            }
-        }
-        this.swaps += difference / 2;
-        this.checkSorted();
-        this.trackProfile();
-        return currentNodes;
-    };
-    Bogo.title = "Bogo";
-    return Bogo;
-}(baseSort_1.BaseSort));
-exports.Bogo = Bogo;
-
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __webpack_require__(22);
-var baseSort_1 = __webpack_require__(41);
-var BogoBogo = /** @class */ (function (_super) {
-    __extends(BogoBogo, _super);
-    function BogoBogo() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    BogoBogo.prototype.setUp = function () {
-        this.currentTop = 0;
-    };
-    BogoBogo.prototype.currentNodes = function () {
-        return [this.currentTop];
-    };
-    BogoBogo.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        var currentNodes = this.currentNodes();
-        this.steps++;
-        var values = this.board.values();
-        this.comparisons++;
-        if (values[this.currentTop] < values[this.currentTop + 1]) {
-            this.currentTop++;
-        }
-        else {
-            var start = values.slice();
-            var shuffledSubset = lodash_1.shuffle(values.slice(0, this.currentTop + 2));
-            values.splice.apply(values, [0, shuffledSubset.length].concat(shuffledSubset));
-            this.board.setPoints(values);
-            var difference = 0;
-            for (var i = 0; i < values.length; i++) {
-                if (values[i] !== start[i]) {
-                    difference++;
-                }
-            }
-            this.swaps += difference / 2;
-            this.currentTop = 0;
-        }
-        if (this.currentTop === this.length - 1) {
-            this.setDone();
-        }
-        return currentNodes;
-    };
-    BogoBogo.title = "Bogobogosort";
-    return BogoBogo;
-}(baseSort_1.BaseSort));
-exports.BogoBogo = BogoBogo;
-
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __webpack_require__(22);
-var baseSort_1 = __webpack_require__(41);
-var Permutation = /** @class */ (function (_super) {
-    __extends(Permutation, _super);
-    function Permutation() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Permutation.prototype.setUp = function () {
-        this.permutation = lodash_1.range(0, this.board.length);
-        this.checkSorted();
-        this.changed = [this.length - 1];
-    };
-    Permutation.prototype.currentNodes = function () {
-        return this.changed;
-    };
-    Permutation.prototype.getHighestPossible = function (array, highest) {
-        while (array.indexOf(highest) !== -1) {
-            highest--;
-        }
-        return highest;
-    };
-    Permutation.prototype.findNextPermutation = function () {
-        var nextPermutation = this.permutation;
-        var lastValue = nextPermutation.pop();
-        while (lastValue === this.getHighestPossible(nextPermutation, this.length - 1)) {
-            lastValue = nextPermutation.pop();
-        }
-        if (this.changed.indexOf(nextPermutation.length) === -1) {
-            this.changed.push(nextPermutation.length);
-        }
-        var nextNum = lastValue + 1;
-        while (nextPermutation.length < this.length) {
-            if (nextPermutation.indexOf(nextNum) === -1) {
-                nextPermutation.push(nextNum);
-                nextNum = 0;
-            }
-            else {
-                nextNum++;
-            }
-        }
-    };
-    Permutation.prototype.setValues = function () {
-        var _this = this;
-        var values = [];
-        var oldValues = this.original;
-        var currentBoard = this.board.values();
-        this.permutation.forEach(function (index, i) {
-            if (currentBoard[i] !== oldValues[index]) {
-                _this.swaps++;
-            }
-            values.push(oldValues[index]);
-        });
-        this.board.setPoints(values);
-    };
-    Permutation.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        this.steps++;
-        this.findNextPermutation();
-        this.setValues();
-        this.checkSorted();
-        this.trackProfile();
-        return this.currentNodes();
-    };
-    Permutation.title = "Permutation Sort";
-    return Permutation;
-}(baseSort_1.BaseSort));
-exports.Permutation = Permutation;
-
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var single_1 = __webpack_require__(56);
-var BogoSingleCompare = /** @class */ (function (_super) {
-    __extends(BogoSingleCompare, _super);
-    function BogoSingleCompare() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    BogoSingleCompare.prototype.nodesInOrder = function (values) {
-        // used to compare nodes
-        var inOrder = values[this.baseNode] <= values[this.comparisonNode];
-        if (!inOrder) {
-            this.ordered = false;
-        }
-        this.comparisons++;
-        return inOrder;
-    };
-    BogoSingleCompare.title = "Smart Bozo(Compare & Single Swap)";
-    return BogoSingleCompare;
-}(single_1.BogoSingle));
-exports.BogoSingleCompare = BogoSingleCompare;
-
-
-/***/ }),
-/* 65 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var concurrent_1 = __webpack_require__(55);
-var BubbleSortConcurrent10 = /** @class */ (function (_super) {
-    __extends(BubbleSortConcurrent10, _super);
-    function BubbleSortConcurrent10() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    BubbleSortConcurrent10.title = "Bubble Sort(Concurrent 10)";
-    BubbleSortConcurrent10.numberConcurrent = 10;
-    return BubbleSortConcurrent10;
-}(concurrent_1.BubbleSortConcurrent));
-exports.BubbleSortConcurrent10 = BubbleSortConcurrent10;
-
-
-/***/ }),
-/* 66 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var concurrent_1 = __webpack_require__(55);
-var BubbleSortConcurrent5 = /** @class */ (function (_super) {
-    __extends(BubbleSortConcurrent5, _super);
-    function BubbleSortConcurrent5() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    BubbleSortConcurrent5.title = "Bubble Sort(Concurrent 5)";
-    BubbleSortConcurrent5.numberConcurrent = 5;
-    return BubbleSortConcurrent5;
-}(concurrent_1.BubbleSortConcurrent));
-exports.BubbleSortConcurrent5 = BubbleSortConcurrent5;
-
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(49);
-var BubbleSortDontRestart = /** @class */ (function (_super) {
-    __extends(BubbleSortDontRestart, _super);
-    function BubbleSortDontRestart() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    BubbleSortDontRestart.prototype.swapValues = function (index1, index2) {
-        this.looking = false;
-        this.swaps++;
-        var baseValue = this.board.get(this.baseNode).value;
-        var newValues = this.board.values().slice();
-        newValues.splice(index1, 1);
-        newValues.splice(index2 - 1, 0, baseValue);
-        this.board.setPoints(newValues);
-        this.baseNode = Math.max(index1 - 1, 0);
-        this.comparisonNode = this.baseNode + 1;
-    };
-    BubbleSortDontRestart.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        this.steps++;
-        var currentNodes = this.currentNodes();
-        var values = this.board.values();
-        if (!this.nodesInOrder(values)) {
-            this.looking = true;
-            this.comparisonNode++;
-            if (this.comparisonNode === this.length) {
-                this.swapValues(this.baseNode, this.comparisonNode);
-            }
-        }
-        else if (this.looking) {
-            this.swapValues(this.baseNode, this.comparisonNode);
-        }
-        else {
-            this.baseNode++;
-            this.comparisonNode++;
-            if (this.comparisonNode === this.length) {
-                this.setDone();
-            }
-        }
-        this.trackProfile();
-        return currentNodes;
-    };
-    BubbleSortDontRestart.title = "Bubble(Don't restart)";
-    return BubbleSortDontRestart;
-}(base_1.Bubble));
-exports.BubbleSortDontRestart = BubbleSortDontRestart;
-
-
-/***/ }),
-/* 68 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(49);
-var BubbleOptimized = /** @class */ (function (_super) {
-    __extends(BubbleOptimized, _super);
-    function BubbleOptimized() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.skipSorted = true;
-        _this.shortCircuit = true;
-        return _this;
-    }
-    BubbleOptimized.title = "Bubble(Short Circuit & Skip Sorted)";
-    return BubbleOptimized;
-}(base_1.Bubble));
-exports.BubbleOptimized = BubbleOptimized;
-
-
-/***/ }),
-/* 69 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(49);
-var BubbleShortCircuit = /** @class */ (function (_super) {
-    __extends(BubbleShortCircuit, _super);
-    function BubbleShortCircuit() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.shortCircuit = true;
-        return _this;
-    }
-    BubbleShortCircuit.title = "Bubble(Short Circuit)";
-    return BubbleShortCircuit;
-}(base_1.Bubble));
-exports.BubbleShortCircuit = BubbleShortCircuit;
-
-
-/***/ }),
-/* 70 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(49);
-var BubbleSkipSorted = /** @class */ (function (_super) {
-    __extends(BubbleSkipSorted, _super);
-    function BubbleSkipSorted() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.skipSorted = true;
-        _this.shortCircuit = false;
-        return _this;
-    }
-    BubbleSkipSorted.title = "Bubble(Skip Sorted)";
-    return BubbleSkipSorted;
-}(base_1.Bubble));
-exports.BubbleSkipSorted = BubbleSkipSorted;
-
-
-/***/ }),
-/* 71 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(57);
-var CocktailShortCircuit = /** @class */ (function (_super) {
-    __extends(CocktailShortCircuit, _super);
-    function CocktailShortCircuit() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.shortCircuit = true;
-        return _this;
-    }
-    CocktailShortCircuit.title = "Cocktail(Short Circuit)";
-    return CocktailShortCircuit;
-}(base_1.Cocktail));
-exports.CocktailShortCircuit = CocktailShortCircuit;
-
-
-/***/ }),
-/* 72 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(42);
-var CombLargeShrink = /** @class */ (function (_super) {
-    __extends(CombLargeShrink, _super);
-    function CombLargeShrink() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    CombLargeShrink.shrink = 1.5;
-    CombLargeShrink.title = "Comb(Large Shrink: 1.5)";
-    return CombLargeShrink;
-}(base_1.Comb));
-exports.CombLargeShrink = CombLargeShrink;
-
-
-/***/ }),
-/* 73 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(42);
-var CombSmallShrink = /** @class */ (function (_super) {
-    __extends(CombSmallShrink, _super);
-    function CombSmallShrink() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    CombSmallShrink.shrink = 1.1;
-    CombSmallShrink.title = "Comb(Small Shrink: 1.1)";
-    return CombSmallShrink;
-}(base_1.Comb));
-exports.CombSmallShrink = CombSmallShrink;
-
-
-/***/ }),
-/* 74 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var at5_1 = __webpack_require__(52);
-var CombGnome10 = /** @class */ (function (_super) {
-    __extends(CombGnome10, _super);
-    function CombGnome10() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.gnomeSwitchValue = 10;
-        return _this;
-    }
-    CombGnome10.title = "Comb & Gnome(at gap 10)";
-    return CombGnome10;
-}(at5_1.CombGnome5));
-exports.CombGnome10 = CombGnome10;
-
-
-/***/ }),
-/* 75 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var at5_1 = __webpack_require__(52);
-var CombGnome2 = /** @class */ (function (_super) {
-    __extends(CombGnome2, _super);
-    function CombGnome2() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.gnomeSwitchValue = 2;
-        return _this;
-    }
-    CombGnome2.title = "Comb & Gnome(at gap 2)";
-    return CombGnome2;
-}(at5_1.CombGnome5));
-exports.CombGnome2 = CombGnome2;
-
-
-/***/ }),
-/* 76 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var at5_1 = __webpack_require__(52);
-var CombGnome3 = /** @class */ (function (_super) {
-    __extends(CombGnome3, _super);
-    function CombGnome3() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.gnomeSwitchValue = 3;
-        return _this;
-    }
-    CombGnome3.title = "Comb & Gnome(at gap 3)";
-    return CombGnome3;
-}(at5_1.CombGnome5));
-exports.CombGnome3 = CombGnome3;
-
-
-/***/ }),
-/* 77 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var evenLarger_1 = __webpack_require__(51);
-var base_1 = __webpack_require__(50);
-var largeShrink5_1 = __webpack_require__(53);
-var CombGnomeLargeShrink10 = /** @class */ (function (_super) {
-    __extends(CombGnomeLargeShrink10, _super);
-    function CombGnomeLargeShrink10() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.gnomeSwitchValue = 10;
-        return _this;
-    }
-    CombGnomeLargeShrink10.prototype.setUp = function () {
-        this.comb = new evenLarger_1.CombEvenLarger(this.board);
-        this.gnome = new base_1.Gnome(this.board);
-    };
-    CombGnomeLargeShrink10.title = "Comb & Gnome(gap 10, shrink 2)";
-    return CombGnomeLargeShrink10;
-}(largeShrink5_1.CombGnomeLargeShrink5));
-exports.CombGnomeLargeShrink10 = CombGnomeLargeShrink10;
-
-
-/***/ }),
-/* 78 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var evenLarger_1 = __webpack_require__(51);
-var base_1 = __webpack_require__(50);
-var largeShrink5_1 = __webpack_require__(53);
-var CombGnomeLargeShrink2 = /** @class */ (function (_super) {
-    __extends(CombGnomeLargeShrink2, _super);
-    function CombGnomeLargeShrink2() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.gnomeSwitchValue = 2;
-        return _this;
-    }
-    CombGnomeLargeShrink2.prototype.setUp = function () {
-        this.comb = new evenLarger_1.CombEvenLarger(this.board);
-        this.gnome = new base_1.Gnome(this.board);
-    };
-    CombGnomeLargeShrink2.title = "Comb & Gnome(gap 2, shrink 2)";
-    return CombGnomeLargeShrink2;
-}(largeShrink5_1.CombGnomeLargeShrink5));
-exports.CombGnomeLargeShrink2 = CombGnomeLargeShrink2;
-
-
-/***/ }),
-/* 79 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var evenLarger_1 = __webpack_require__(51);
-var base_1 = __webpack_require__(50);
-var largeShrink5_1 = __webpack_require__(53);
-var CombGnomeLargeShrink3 = /** @class */ (function (_super) {
-    __extends(CombGnomeLargeShrink3, _super);
-    function CombGnomeLargeShrink3() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.gnomeSwitchValue = 3;
-        return _this;
-    }
-    CombGnomeLargeShrink3.prototype.setUp = function () {
-        this.comb = new evenLarger_1.CombEvenLarger(this.board);
-        this.gnome = new base_1.Gnome(this.board);
-    };
-    CombGnomeLargeShrink3.title = "Comb & Gnome(gap 3, shrink 2)";
-    return CombGnomeLargeShrink3;
-}(largeShrink5_1.CombGnomeLargeShrink5));
-exports.CombGnomeLargeShrink3 = CombGnomeLargeShrink3;
-
-
-/***/ }),
-/* 80 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(58);
-var CycleOptimized = /** @class */ (function (_super) {
-    __extends(CycleOptimized, _super);
-    function CycleOptimized() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.skipPlaced = true;
-        return _this;
-    }
-    CycleOptimized.title = "Cycle Optimized";
-    return CycleOptimized;
-}(base_1.Cycle));
-exports.CycleOptimized = CycleOptimized;
-
-
-/***/ }),
-/* 81 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var Insertion = /** @class */ (function (_super) {
-    __extends(Insertion, _super);
-    function Insertion() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.insertValue = null;
-        return _this;
-    }
-    Insertion.prototype.setUp = function () {
-        this.baseNode = 1;
-    };
-    Insertion.prototype.currentNodes = function () {
-        if (this.done) {
-            return [];
-        }
-        var nodes = [this.baseNode];
-        if (this.comparisonNode >= 0) {
-            nodes.push(this.comparisonNode);
-        }
-        return nodes;
-    };
-    Insertion.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        this.steps++;
-        if (this.insertValue === null) {
-            this.insertValue = this.board.values()[this.baseNode];
-            this.shadow = [{ index: this.baseNode, value: this.insertValue }];
-            this.comparisonNode = this.baseNode - 1;
-        }
-        var nodes = [this.baseNode];
-        this.comparisons++;
-        if (this.insertValue < this.board.values()[this.comparisonNode]) {
-            nodes = [this.comparisonNode, this.baseNode];
-            this.swaps += 0.5;
-            this.board.set(this.comparisonNode + 1, this.board.values()[this.comparisonNode]);
-            this.comparisonNode--;
-        }
-        else {
-            if (this.comparisonNode + 1 !== this.baseNode) {
-                nodes = [this.comparisonNode + 1];
-                this.swaps += 0.5;
-                this.board.set(this.comparisonNode + 1, this.insertValue);
-            }
-            this.baseNode++;
-            this.insertValue = null;
-        }
-        if (this.baseNode === this.length) {
-            this.setDone();
-        }
-        this.trackProfile();
-        return nodes;
-    };
-    Insertion.title = "Insertion Sort";
-    return Insertion;
-}(baseSort_1.BaseSort));
-exports.Insertion = Insertion;
-
-
-/***/ }),
-/* 82 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(44);
-var OddEvenConcurrent = /** @class */ (function (_super) {
-    __extends(OddEvenConcurrent, _super);
-    function OddEvenConcurrent() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    OddEvenConcurrent.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        this.steps++;
-        var currentNodes = this.currentNodes();
-        var values = this.board.values();
-        while (this.baseNode !== undefined) {
-            if (!this.nodesInOrder(values)) {
-                this.swap();
-            }
-            this.baseNode = this.baseNodes.shift();
-            if (this.baseNode) {
-                this.comparisonNode = this.baseNode + 1;
-            }
-        }
-        this.setUpNext();
-        this.trackProfile();
-        return currentNodes;
-    };
-    OddEvenConcurrent.title = "Odd Even(Concurrent)";
-    return OddEvenConcurrent;
-}(base_1.OddEven));
-exports.OddEvenConcurrent = OddEvenConcurrent;
-
-
-/***/ }),
-/* 83 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(54);
-var QuickSort3 = /** @class */ (function (_super) {
-    __extends(QuickSort3, _super);
-    function QuickSort3() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.threeWay = true;
-        return _this;
-    }
-    QuickSort3.title = "Quick Sort 3(Left Partition)";
-    return QuickSort3;
-}(base_1.QuickSort2));
-exports.QuickSort3 = QuickSort3;
-
-
-/***/ }),
-/* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var randomPartition_1 = __webpack_require__(59);
-var QuickSort3Random = /** @class */ (function (_super) {
-    __extends(QuickSort3Random, _super);
-    function QuickSort3Random() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.threeWay = true;
-        return _this;
-    }
-    QuickSort3Random.title = "Quick Sort 3(Random Partition)";
-    return QuickSort3Random;
-}(randomPartition_1.QuickSort2Random));
-exports.QuickSort3Random = QuickSort3Random;
-
-
-/***/ }),
-/* 85 */,
-/* 86 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var SelectionSort = /** @class */ (function (_super) {
-    __extends(SelectionSort, _super);
-    function SelectionSort() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    SelectionSort.prototype.setUp = function () {
-        this.baseIndex = 0;
-    };
-    SelectionSort.prototype.setUpNext = function () {
-        this.comparisonNode++;
-        if (this.comparisonNode === this.length) {
-            if (this.baseNode !== this.baseIndex) {
-                this.swap([this.baseNode, this.baseIndex]);
-            }
-            this.baseIndex++;
-            this.baseNode = this.baseIndex;
-            this.comparisonNode = this.baseNode + 1;
-            if (this.baseNode === this.length - 1) {
-                this.setDone();
-            }
-        }
-    };
-    SelectionSort.prototype.next = function () {
-        if (this.done) {
-            return [];
-        }
-        this.steps++;
-        var currentNodes = this.currentNodes();
-        var values = this.board.values();
-        if (!this.nodesInOrder(values)) {
-            this.baseNode = this.comparisonNode;
-        }
-        this.setUpNext();
-        this.trackProfile();
-        return currentNodes;
-    };
-    SelectionSort.title = "Selection Sort";
-    return SelectionSort;
-}(baseSort_1.BaseSort));
-exports.SelectionSort = SelectionSort;
-
-
-/***/ }),
-/* 87 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __webpack_require__(45);
-var SmoothSetUpBottom = /** @class */ (function (_super) {
-    __extends(SmoothSetUpBottom, _super);
-    function SmoothSetUpBottom() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    SmoothSetUpBottom.prototype.setUp = function () {
-        _super.prototype.setUp.call(this);
-        this.baseNode = 1;
-        this.treeSizes = [1];
-        this.roots = [0];
-    };
-    SmoothSetUpBottom.title = "Smooth Sort(Set up from bottom)";
-    SmoothSetUpBottom.fromBottom = true;
-    return SmoothSetUpBottom;
-}(base_1.Smooth));
-exports.SmoothSetUpBottom = SmoothSetUpBottom;
-
-
-/***/ }),
-/* 88 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var baseSort_1 = __webpack_require__(41);
-var Stooge = /** @class */ (function (_super) {
-    __extends(Stooge, _super);
-    function Stooge() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Stooge.prototype.subsets = function (indexes) {
-        var first = indexes[0], last = indexes[1];
-        // find the number of elements
-        var diff = last - first + 1;
-        // find the number to adjust by
-        var sectionSize = Math.ceil(diff * 2 / 3) - 1;
-        return [
-            [first, first + sectionSize],
-            [last - sectionSize, last],
-            [first, first + sectionSize],
-        ];
-    };
-    Stooge.prototype.breakDownSubset = function (indexes) {
-        var final = [indexes];
-        while (this.hasLargeEnoughDiff(final[0])) {
-            final = this.subsets(final.shift()).concat(final);
-        }
-        return final;
-    };
-    Stooge.prototype.hasLargeEnoughDiff = function (nums) {
-        return nums[1] - nums[0] >= 2;
-    };
-    Stooge.prototype.setUp = function () {
-        this.partitions = this.breakDownSubset([0, this.length - 1]);
-        var nextValuess = this.partitions.shift();
-        this.baseNode = nextValuess[0], this.comparisonNode = nextValuess[1];
-    };
-    Stooge.prototype.setUpNext = function () {
-        if (this.partitions.length) {
-            var nextValues = this.partitions.shift();
-            if (this.hasLargeEnoughDiff(nextValues)) {
-                this.partitions = this.breakDownSubset(nextValues).concat(this.partitions);
-                nextValues = this.partitions.shift();
-            }
-            this.baseNode = nextValues[0], this.comparisonNode = nextValues[1];
-        }
-        else {
-            this.setDone();
-        }
-    };
-    Stooge.title = "Stooge Sort";
-    return Stooge;
-}(baseSort_1.BaseSort));
-exports.Stooge = Stooge;
-
-
-/***/ }),
-/* 89 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var rightPartition_1 = __webpack_require__(60);
-var QuickSort3RightPartition = /** @class */ (function (_super) {
-    __extends(QuickSort3RightPartition, _super);
-    function QuickSort3RightPartition() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.threeWay = true;
-        return _this;
-    }
-    QuickSort3RightPartition.title = "Quick Sort 3(Right Partition)";
-    return QuickSort3RightPartition;
-}(rightPartition_1.QuickSort2RightPartition));
-exports.QuickSort3RightPartition = QuickSort3RightPartition;
-
-
-/***/ }),
-/* 90 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var nunjucks = __webpack_require__(4);
+var nunjucks = __webpack_require__(1);
 var env;
 if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
@@ -25845,7 +22922,105 @@ var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies
 
 
 
-var shim = __webpack_require__(8);
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/sort.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<label>\n  Sort:\n  <select id=\"sort\">\n    ";
+frame = frame.push();
+var t_3 = runtime.contextOrFrameLookup(context, frame, "sorts");
+if(t_3) {var t_1;
+if(runtime.isArray(t_3)) {
+var t_2 = t_3.length;
+for(t_1=0; t_1 < t_3.length; t_1++) {
+var t_4 = t_3[t_1][0]
+frame.set("name", t_3[t_1][0]);
+var t_5 = t_3[t_1][1]
+frame.set("sort", t_3[t_1][1]);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      <option value=\"";
+output += runtime.suppressValue(t_4, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_5),"title"), env.opts.autoescape);
+output += "</option>\n    ";
+;
+}
+} else {
+t_1 = -1;
+var t_2 = runtime.keys(t_3).length;
+for(var t_6 in t_3) {
+t_1++;
+var t_7 = t_3[t_6];
+frame.set("name", t_6);
+frame.set("sort", t_7);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      <option value=\"";
+output += runtime.suppressValue(t_6, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_7),"title"), env.opts.autoescape);
+output += "</option>\n    ";
+;
+}
+}
+}
+frame = frame.pop();
+output += "\n  </select>\n</label>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/sort.njk"] , dependencies)
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(2);
 
 
 (function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/count.njk"] = (function() {
@@ -25928,10 +23103,10 @@ root: root
 module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/count.njk"] , dependencies)
 
 /***/ }),
-/* 91 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nunjucks = __webpack_require__(4);
+var nunjucks = __webpack_require__(1);
 var env;
 if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
@@ -25943,7 +23118,7 @@ var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies
 
 
 
-var shim = __webpack_require__(8);
+var shim = __webpack_require__(2);
 
 
 (function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/order.njk"] = (function() {
@@ -26036,10 +23211,10 @@ root: root
 module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/order.njk"] , dependencies)
 
 /***/ }),
-/* 92 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nunjucks = __webpack_require__(4);
+var nunjucks = __webpack_require__(1);
 var env;
 if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
@@ -26051,7 +23226,7 @@ var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies
 
 
 
-var shim = __webpack_require__(8);
+var shim = __webpack_require__(2);
 
 
 (function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/values.njk"] = (function() {
@@ -26134,22 +23309,1401 @@ root: root
 module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/values.njk"] , dependencies)
 
 /***/ }),
-/* 93 */,
-/* 94 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var board_1 = __webpack_require__(23);
-var index_1 = __webpack_require__(38);
-var shuffles = __webpack_require__(21);
-var sizes = __webpack_require__(25);
-var sorts = __webpack_require__(40);
-var valueTypes = __webpack_require__(24);
+var header_1 = __webpack_require__(37);
+var index_1 = __webpack_require__(39);
+var profile_1 = __webpack_require__(58);
+var scatter_1 = __webpack_require__(90);
+var router_1 = __webpack_require__(21);
+var queensBackground_1 = __webpack_require__(93);
+header_1.setUpHeaders();
+var contentEl = document.getElementById("content");
+var router = new router_1.Router(contentEl);
+router.register("^$", index_1.setUpIndex, index_1.indexCallback);
+router.register("^scatter$", scatter_1.setUpScatter, scatter_1.scatterCallback);
+router.register("^profile$", profile_1.setUpProfile, profile_1.profileCallback);
+window.onpopstate();
+queensBackground_1.setUpQueens();
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var router_1 = __webpack_require__(21);
+var baseHeader = "Sorting Algorithms";
+var headerEl = document.getElementById("header");
+var router = new router_1.Router(headerEl);
+exports.setUpHeaders = function () {
+    // fallback for all endpoints not matched
+    router.register(".*", function () {
+        return "<div>" + baseHeader + "</div>";
+    });
+};
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var RouterLocation = /** @class */ (function () {
+    function RouterLocation(location, fun, callback) {
+        this.fun = fun;
+        this.callback = callback;
+        var names = [];
+        // if location is a string
+        // check for match sections
+        if (location.indexOf("(") !== -1) {
+            var groups = location.match(/\([^)]*\)/g);
+            groups.forEach(function (group) {
+                var groupTrimmed = group.replace(/^\(/, "").replace(/\)$/, "");
+                if (groupTrimmed.indexOf("|") !== -1) {
+                    var _a = groupTrimmed.split("|"), name_1 = _a[0], regex = _a[1];
+                    names.push(name_1);
+                    location = location.replace(group, "(" + regex + ")");
+                }
+                else {
+                    names.push(groupTrimmed);
+                }
+            });
+        }
+        this.names = names;
+        this.location = new RegExp(location);
+    }
+    RouterLocation.prototype.match = function (hash) {
+        var match = hash.match(this.location);
+        if (!match) {
+            return;
+        }
+        var urlParams = {};
+        this.names.forEach(function (name, index) {
+            urlParams[name] = match[index + 1];
+        });
+        return urlParams;
+    };
+    return RouterLocation;
+}());
+exports.RouterLocation = RouterLocation;
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var board_1 = __webpack_require__(10);
+var index_1 = __webpack_require__(16);
+var shuffles_1 = __webpack_require__(11);
+var sizes_1 = __webpack_require__(17);
+var base_1 = __webpack_require__(5);
+var base_2 = __webpack_require__(24);
+var base_3 = __webpack_require__(18);
+var base_4 = __webpack_require__(19);
+var valueTypes_1 = __webpack_require__(12);
+exports.blog = {
+    "Bogobogo Sort": "http://jasminenoack.tumblr.com/tagged/bogobogo/chrono",
+    "Bogosort && Bozosort": "http://jasminenoack.tumblr.com/tagged/bogosort/chrono",
+    "Bubble Sort": "http://jasminenoack.tumblr.com/tagged/bubble%20sort/chrono",
+    "Cocktail Sort": "http://jasminenoack.tumblr.com/tagged/cocktail%20sort/chrono",
+    "Comb Sort": "http://jasminenoack.tumblr.com/tagged/comb%20sort/chrono",
+    "Cycle Sort": "http://jasminenoack.tumblr.com/tagged/cycle%20sort/chrono",
+    "Gnome Sort": "http://jasminenoack.tumblr.com/tagged/gnome%20sort/chrono",
+    "Heap Sort": "http://jasminenoack.tumblr.com/tagged/heap%20sort/chrono",
+    "Sorting": "http://jasminenoack.tumblr.com/tagged/sorting/chrono",
+};
+exports.tools = {
+    "Profile Graphs": "#profile",
+    "Scatter Animations": "#scatter",
+};
+exports.learn = {
+    "Rosetta Code": "https://rosettacode.org/wiki/Category:Sorting_Algorithms",
+    "Sound of Sorting": "http://panthema.net/2013/sound-of-sorting/",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Sorting_algorithm",
+};
+exports.setUpIndex = function (location, data, query) {
+    // tslint:disable-next-line:no-var-requires
+    var tpl = __webpack_require__(52);
+    var html = tpl.render({
+        blog: exports.blog,
+        learn: exports.learn,
+        tools: exports.tools,
+    });
+    return html;
+};
+var createReversedSet = function () {
+    var ReverseElement = document.getElementById("reverse-sorts");
+    var boxHeight = 200;
+    var boxWidth = 200;
+    var delay = 100;
+    var delayOnComplete = 100;
+    var size = sizes_1._75;
+    var valueType = valueTypes_1.Integer;
+    var shuffle = shuffles_1.ReversedShuffle;
+    var board2 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var sort2 = new base_1.Comb(board2);
+    var board4 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var sort4 = new base_2.Heap(board4);
+    var board5 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var sort5 = new base_3.OddEven(board5);
+    var board7 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var sort7 = new base_4.Smooth(board7);
+    var boardList = [
+        {
+            board: board2,
+            sort: sort2,
+        },
+        {
+            board: board4,
+            sort: sort4,
+        },
+        {
+            board: board5,
+            sort: sort5,
+        },
+        {
+            board: board7,
+            sort: sort7,
+        },
+    ];
+    boardList.forEach(function (board, index) {
+        index_1.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ReverseElement);
+    });
+    index_1.autoRunBoards(boardList, boxHeight, boxWidth, ReverseElement, delay, delayOnComplete, function (board) {
+        return board.sort.steps < 200 && !board.sort.done;
+    });
+};
+var createOrderedSet = function () {
+    var OrderedElement = document.getElementById("ordered-sorts");
+    var boxHeight = 200;
+    var boxWidth = 200;
+    var delay = 100;
+    var delayOnComplete = 100;
+    var size = sizes_1._75;
+    var valueType = valueTypes_1.Integer;
+    var shuffle = shuffles_1.OrderedShuffle;
+    var board2 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var sort2 = new base_1.Comb(board2);
+    var board4 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var sort4 = new base_2.Heap(board4);
+    var board5 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var sort5 = new base_3.OddEven(board5);
+    var board7 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var sort7 = new base_4.Smooth(board7);
+    var boardList = [
+        {
+            board: board2,
+            sort: sort2,
+        },
+        {
+            board: board4,
+            sort: sort4,
+        },
+        {
+            board: board5,
+            sort: sort5,
+        },
+        {
+            board: board7,
+            sort: sort7,
+        },
+    ];
+    boardList.forEach(function (board, index) {
+        index_1.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, OrderedElement);
+    });
+    index_1.autoRunBoards(boardList, boxHeight, boxWidth, OrderedElement, delay, delayOnComplete, function (board) {
+        return board.sort.steps < 200 && !board.sort.done;
+    });
+};
+exports.indexCallback = function () {
+    createOrderedSet();
+    createReversedSet();
+};
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Point = /** @class */ (function () {
+    function Point(index, value, color) {
+        if (value === void 0) { value = 0; }
+        if (color === void 0) { color = "aliceblue"; }
+        this.index = index;
+        this.value = value;
+        // TODO maybe color should be type and type should have color?
+        this.color = color;
+    }
+    return Point;
+}());
+exports.Point = Point;
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var firstLast_1 = __webpack_require__(15);
+var FirstTwoSwapped = /** @class */ (function (_super) {
+    __extends(FirstTwoSwapped, _super);
+    function FirstTwoSwapped() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    FirstTwoSwapped.swap = function (array) {
+        _a = [array[1], array[0]], array[0] = _a[0], array[1] = _a[1];
+        var _a;
+    };
+    FirstTwoSwapped.k = 0;
+    FirstTwoSwapped.reversed = false;
+    FirstTwoSwapped.title = "First Two Swapped";
+    return FirstTwoSwapped;
+}(firstLast_1.FirstAndLastSwapped));
+exports.FirstTwoSwapped = FirstTwoSwapped;
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var K1Shuffle = /** @class */ (function (_super) {
+    __extends(K1Shuffle, _super);
+    function K1Shuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    K1Shuffle.k = 1;
+    K1Shuffle.reversed = false;
+    K1Shuffle.title = "K1";
+    return K1Shuffle;
+}(abstract_1.Shuffle));
+exports.K1Shuffle = K1Shuffle;
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var K1ReversedShuffle = /** @class */ (function (_super) {
+    __extends(K1ReversedShuffle, _super);
+    function K1ReversedShuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    K1ReversedShuffle.k = 1;
+    K1ReversedShuffle.reversed = true;
+    K1ReversedShuffle.title = "K1 Reversed";
+    return K1ReversedShuffle;
+}(abstract_1.Shuffle));
+exports.K1ReversedShuffle = K1ReversedShuffle;
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var K3Shuffle = /** @class */ (function (_super) {
+    __extends(K3Shuffle, _super);
+    function K3Shuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    K3Shuffle.k = 3;
+    K3Shuffle.reversed = false;
+    K3Shuffle.title = "K3";
+    return K3Shuffle;
+}(abstract_1.Shuffle));
+exports.K3Shuffle = K3Shuffle;
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var K3ReversedShuffle = /** @class */ (function (_super) {
+    __extends(K3ReversedShuffle, _super);
+    function K3ReversedShuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    K3ReversedShuffle.k = 3;
+    K3ReversedShuffle.reversed = true;
+    K3ReversedShuffle.title = "K3 Reversed";
+    return K3ReversedShuffle;
+}(abstract_1.Shuffle));
+exports.K3ReversedShuffle = K3ReversedShuffle;
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var K5Shuffle = /** @class */ (function (_super) {
+    __extends(K5Shuffle, _super);
+    function K5Shuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    K5Shuffle.k = 5;
+    K5Shuffle.reversed = false;
+    K5Shuffle.title = "K5";
+    return K5Shuffle;
+}(abstract_1.Shuffle));
+exports.K5Shuffle = K5Shuffle;
+
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var K5ReversedShuffle = /** @class */ (function (_super) {
+    __extends(K5ReversedShuffle, _super);
+    function K5ReversedShuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    K5ReversedShuffle.k = 5;
+    K5ReversedShuffle.reversed = true;
+    K5ReversedShuffle.title = "K5 Reversed";
+    return K5ReversedShuffle;
+}(abstract_1.Shuffle));
+exports.K5ReversedShuffle = K5ReversedShuffle;
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var firstLast_1 = __webpack_require__(15);
+var LastTwoSwapped = /** @class */ (function (_super) {
+    __extends(LastTwoSwapped, _super);
+    function LastTwoSwapped() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    LastTwoSwapped.swap = function (array) {
+        _a = [array[array.length - 1], array[array.length - 2]], array[array.length - 2] = _a[0], array[array.length - 1] = _a[1];
+        var _a;
+    };
+    LastTwoSwapped.k = 0;
+    LastTwoSwapped.reversed = false;
+    LastTwoSwapped.title = "Last Two Swapped";
+    return LastTwoSwapped;
+}(firstLast_1.FirstAndLastSwapped));
+exports.LastTwoSwapped = LastTwoSwapped;
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var OrderedShuffle = /** @class */ (function (_super) {
+    __extends(OrderedShuffle, _super);
+    function OrderedShuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OrderedShuffle.k = 0;
+    OrderedShuffle.reversed = false;
+    OrderedShuffle.title = "Ordered";
+    return OrderedShuffle;
+}(abstract_1.Shuffle));
+exports.OrderedShuffle = OrderedShuffle;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(3);
+var ReversedShuffle = /** @class */ (function (_super) {
+    __extends(ReversedShuffle, _super);
+    function ReversedShuffle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ReversedShuffle.k = 0;
+    ReversedShuffle.reversed = true;
+    ReversedShuffle.title = "Reversed";
+    return ReversedShuffle;
+}(abstract_1.Shuffle));
+exports.ReversedShuffle = ReversedShuffle;
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./links/tools.njk"] = __webpack_require__( 55 );
+dependencies["./links/blog.njk"] = __webpack_require__( 56 );
+dependencies["./links/learn.njk"] = __webpack_require__( 57 );
+
+
+
+
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/index.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<article>\n  <h1>Why We Visualize Data</h1>\n  <p>\n    The best way to understand how things work is to disect them. To change them, to play with them, to implement them, and to break them. I love thinking about algorithms. How can we understand them better? How can we make them better? How can they make us better?\n    To do this I very much believe that one important step is to understand what data looks like. How it behaves. How algorithms move and manipulate patterns.\n    To do this I use <a href=\"https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0\" target='blank'>visualizations</a> This site is a collection of those visualizations.\n    They exist in many formats, orientations and settings because data dictates patterns. And different representations give rise to different patterns. The result of running a sort on reversed data is\n    very different then the result of running the same code on ordered data. In these patterns we can find beauty and insight, and if we are lucky we\n    can begin to understand the magic. But I make no promises.\n\n    <figure>\n      <div id=\"ordered-sorts\" class=\"four\"></div>\n      <figcaption>Steps 1-200 on ordered arrays.</figcaption>\n    </figure>\n\n    <figure>\n      <div id=\"reverse-sorts\" class=\"four\"></div>\n      <figcaption>Steps 1-200 on reversed arrays.</figcaption>\n    </figure>\n  </p>\n\n  <figure>\n    <img src=\"http://www.sandraandwoo.com/comics/2015-04-08-0673-worse-than-bogo-sort.png\">\n    <figcaption><a target=\"_blank\" href=\"http://www.sandraandwoo.com/2015/04/08/0673-worse-than-bogo-sort/\">Sandra and Woo</a></figcaption>\n  </figure>\n</article>\n\n<article>\n  ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./links/tools.njk", false, "templates/index.njk", null, function(t_3,t_1) {
+if(t_3) { cb(t_3); return; }
+callback(null,t_1);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_4,t_2) {
+if(t_4) { cb(t_4); return; }
+callback(null,t_2);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n  ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./links/blog.njk", false, "templates/index.njk", null, function(t_7,t_5) {
+if(t_7) { cb(t_7); return; }
+callback(null,t_5);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_8,t_6) {
+if(t_8) { cb(t_8); return; }
+callback(null,t_6);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n  ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./links/learn.njk", false, "templates/index.njk", null, function(t_11,t_9) {
+if(t_11) { cb(t_11); return; }
+callback(null,t_9);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_12,t_10) {
+if(t_12) { cb(t_12); return; }
+callback(null,t_10);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n</article>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+})})});
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/index.njk"] , dependencies)
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+    "use strict";
+
+    if (global.setImmediate) {
+        return;
+    }
+
+    var nextHandle = 1; // Spec says greater than zero
+    var tasksByHandle = {};
+    var currentlyRunningATask = false;
+    var doc = global.document;
+    var registerImmediate;
+
+    function setImmediate(callback) {
+      // Callback can either be a function or a string
+      if (typeof callback !== "function") {
+        callback = new Function("" + callback);
+      }
+      // Copy function arguments
+      var args = new Array(arguments.length - 1);
+      for (var i = 0; i < args.length; i++) {
+          args[i] = arguments[i + 1];
+      }
+      // Store and register the task
+      var task = { callback: callback, args: args };
+      tasksByHandle[nextHandle] = task;
+      registerImmediate(nextHandle);
+      return nextHandle++;
+    }
+
+    function clearImmediate(handle) {
+        delete tasksByHandle[handle];
+    }
+
+    function run(task) {
+        var callback = task.callback;
+        var args = task.args;
+        switch (args.length) {
+        case 0:
+            callback();
+            break;
+        case 1:
+            callback(args[0]);
+            break;
+        case 2:
+            callback(args[0], args[1]);
+            break;
+        case 3:
+            callback(args[0], args[1], args[2]);
+            break;
+        default:
+            callback.apply(undefined, args);
+            break;
+        }
+    }
+
+    function runIfPresent(handle) {
+        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
+        // So if we're currently running a task, we'll need to delay this invocation.
+        if (currentlyRunningATask) {
+            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+            // "too much recursion" error.
+            setTimeout(runIfPresent, 0, handle);
+        } else {
+            var task = tasksByHandle[handle];
+            if (task) {
+                currentlyRunningATask = true;
+                try {
+                    run(task);
+                } finally {
+                    clearImmediate(handle);
+                    currentlyRunningATask = false;
+                }
+            }
+        }
+    }
+
+    function installNextTickImplementation() {
+        registerImmediate = function(handle) {
+            process.nextTick(function () { runIfPresent(handle); });
+        };
+    }
+
+    function canUsePostMessage() {
+        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+        // where `global.postMessage` means something completely different and can't be used for this purpose.
+        if (global.postMessage && !global.importScripts) {
+            var postMessageIsAsynchronous = true;
+            var oldOnMessage = global.onmessage;
+            global.onmessage = function() {
+                postMessageIsAsynchronous = false;
+            };
+            global.postMessage("", "*");
+            global.onmessage = oldOnMessage;
+            return postMessageIsAsynchronous;
+        }
+    }
+
+    function installPostMessageImplementation() {
+        // Installs an event handler on `global` for the `message` event: see
+        // * https://developer.mozilla.org/en/DOM/window.postMessage
+        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
+
+        var messagePrefix = "setImmediate$" + Math.random() + "$";
+        var onGlobalMessage = function(event) {
+            if (event.source === global &&
+                typeof event.data === "string" &&
+                event.data.indexOf(messagePrefix) === 0) {
+                runIfPresent(+event.data.slice(messagePrefix.length));
+            }
+        };
+
+        if (global.addEventListener) {
+            global.addEventListener("message", onGlobalMessage, false);
+        } else {
+            global.attachEvent("onmessage", onGlobalMessage);
+        }
+
+        registerImmediate = function(handle) {
+            global.postMessage(messagePrefix + handle, "*");
+        };
+    }
+
+    function installMessageChannelImplementation() {
+        var channel = new MessageChannel();
+        channel.port1.onmessage = function(event) {
+            var handle = event.data;
+            runIfPresent(handle);
+        };
+
+        registerImmediate = function(handle) {
+            channel.port2.postMessage(handle);
+        };
+    }
+
+    function installReadyStateChangeImplementation() {
+        var html = doc.documentElement;
+        registerImmediate = function(handle) {
+            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+            var script = doc.createElement("script");
+            script.onreadystatechange = function () {
+                runIfPresent(handle);
+                script.onreadystatechange = null;
+                html.removeChild(script);
+                script = null;
+            };
+            html.appendChild(script);
+        };
+    }
+
+    function installSetTimeoutImplementation() {
+        registerImmediate = function(handle) {
+            setTimeout(runIfPresent, 0, handle);
+        };
+    }
+
+    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
+    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
+    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
+
+    // Don't get fooled by e.g. browserify environments.
+    if ({}.toString.call(global.process) === "[object process]") {
+        // For Node.js before 0.9
+        installNextTickImplementation();
+
+    } else if (canUsePostMessage()) {
+        // For non-IE10 modern browsers
+        installPostMessageImplementation();
+
+    } else if (global.MessageChannel) {
+        // For web workers, where supported
+        installMessageChannelImplementation();
+
+    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+        // For IE 6–8
+        installReadyStateChangeImplementation();
+
+    } else {
+        // For older browsers
+        installSetTimeoutImplementation();
+    }
+
+    attachTo.setImmediate = setImmediate;
+    attachTo.clearImmediate = clearImmediate;
+}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22), __webpack_require__(54)))
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/links/tools.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<h3>Tools</h3>\n\n<ul>\n";
+frame = frame.push();
+var t_3 = runtime.contextOrFrameLookup(context, frame, "tools");
+if(t_3) {var t_1;
+if(runtime.isArray(t_3)) {
+var t_2 = t_3.length;
+for(t_1=0; t_1 < t_3.length; t_1++) {
+var t_4 = t_3[t_1][0]
+frame.set("name", t_3[t_1][0]);
+var t_5 = t_3[t_1][1]
+frame.set("href", t_3[t_1][1]);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n  <a href=\"";
+output += runtime.suppressValue(t_5, env.opts.autoescape);
+output += "\" target=\"_top\"><li>";
+output += runtime.suppressValue(t_4, env.opts.autoescape);
+output += "</li></a>\n";
+;
+}
+} else {
+t_1 = -1;
+var t_2 = runtime.keys(t_3).length;
+for(var t_6 in t_3) {
+t_1++;
+var t_7 = t_3[t_6];
+frame.set("name", t_6);
+frame.set("href", t_7);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n  <a href=\"";
+output += runtime.suppressValue(t_7, env.opts.autoescape);
+output += "\" target=\"_top\"><li>";
+output += runtime.suppressValue(t_6, env.opts.autoescape);
+output += "</li></a>\n";
+;
+}
+}
+}
+frame = frame.pop();
+output += "\n</ul>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/links/tools.njk"] , dependencies)
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/links/blog.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<h3>Blog Entries</h3>\n\n<ul>\n";
+frame = frame.push();
+var t_3 = runtime.contextOrFrameLookup(context, frame, "blog");
+if(t_3) {var t_1;
+if(runtime.isArray(t_3)) {
+var t_2 = t_3.length;
+for(t_1=0; t_1 < t_3.length; t_1++) {
+var t_4 = t_3[t_1][0]
+frame.set("name", t_3[t_1][0]);
+var t_5 = t_3[t_1][1]
+frame.set("href", t_3[t_1][1]);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n  <a href=\"";
+output += runtime.suppressValue(t_5, env.opts.autoescape);
+output += "\" target=\"_blank\"><li>";
+output += runtime.suppressValue(t_4, env.opts.autoescape);
+output += "</li></a>\n";
+;
+}
+} else {
+t_1 = -1;
+var t_2 = runtime.keys(t_3).length;
+for(var t_6 in t_3) {
+t_1++;
+var t_7 = t_3[t_6];
+frame.set("name", t_6);
+frame.set("href", t_7);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n  <a href=\"";
+output += runtime.suppressValue(t_7, env.opts.autoescape);
+output += "\" target=\"_blank\"><li>";
+output += runtime.suppressValue(t_6, env.opts.autoescape);
+output += "</li></a>\n";
+;
+}
+}
+}
+frame = frame.pop();
+output += "\n</ul>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/links/blog.njk"] , dependencies)
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/links/learn.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<h3>Learn More</h3>\n\n<ul>\n";
+frame = frame.push();
+var t_3 = runtime.contextOrFrameLookup(context, frame, "learn");
+if(t_3) {var t_1;
+if(runtime.isArray(t_3)) {
+var t_2 = t_3.length;
+for(t_1=0; t_1 < t_3.length; t_1++) {
+var t_4 = t_3[t_1][0]
+frame.set("name", t_3[t_1][0]);
+var t_5 = t_3[t_1][1]
+frame.set("href", t_3[t_1][1]);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n  <a href=\"";
+output += runtime.suppressValue(t_5, env.opts.autoescape);
+output += "\" target=\"_blank\"><li>";
+output += runtime.suppressValue(t_4, env.opts.autoescape);
+output += "</li></a>\n";
+;
+}
+} else {
+t_1 = -1;
+var t_2 = runtime.keys(t_3).length;
+for(var t_6 in t_3) {
+t_1++;
+var t_7 = t_3[t_6];
+frame.set("name", t_6);
+frame.set("href", t_7);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n  <a href=\"";
+output += runtime.suppressValue(t_7, env.opts.autoescape);
+output += "\" target=\"_blank\"><li>";
+output += runtime.suppressValue(t_6, env.opts.autoescape);
+output += "</li></a>\n";
+;
+}
+}
+}
+frame = frame.pop();
+output += "\n</ul>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/links/learn.njk"] , dependencies)
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var board_1 = __webpack_require__(10);
+var index_1 = __webpack_require__(16);
+var shuffles = __webpack_require__(11);
+var sizes = __webpack_require__(17);
+var sorts = __webpack_require__(26);
+var valueTypes = __webpack_require__(12);
 exports.setUpProfile = function (location, data, query) {
     // tslint:disable-next-line:no-var-requires
-    var tpl = __webpack_require__(95);
+    var tpl = __webpack_require__(87);
     var html = tpl.render({
         shuffles: shuffles,
         sizes: sizes,
@@ -26241,29 +24795,1199 @@ exports.profileCallback = function () {
         });
     }
 };
-// import * as Sizes from '../sizes'
-// import * as Shuffles from '../shuffles'
-// import * as Index from '../index'
-// import * as ValueTypes from '../valueTypes';
-// import * as Sorts from '../sorts/sorts'
-// import * as Boards from '../board'
-// import { BaseSort } from '../sorts/baseSort';
-//
-//
-//
-// let boxHeight = 500
-// let boxWidth = 500
-//
-// let delay = 100
-//
-//
 
 
 /***/ }),
-/* 95 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nunjucks = __webpack_require__(4);
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(4);
+var random_1 = __webpack_require__(23);
+var baseSort_1 = __webpack_require__(0);
+var Bogo = /** @class */ (function (_super) {
+    __extends(Bogo, _super);
+    function Bogo() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Bogo.prototype.setUp = function () {
+        this.checkSorted();
+    };
+    Bogo.prototype.currentNodes = function () {
+        if (!this.done) {
+            return lodash_1.range(0, this.board.length);
+        }
+        else {
+            return [];
+        }
+    };
+    Bogo.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        var currentNodes = this.currentNodes();
+        this.steps++;
+        var values = this.board.values();
+        var start = values.slice();
+        this.board.setPoints(random_1.RandomShuffle.shuffle(values));
+        var difference = 0;
+        for (var i = 0; i < values.length; i++) {
+            if (values[i] !== start[i]) {
+                difference++;
+            }
+        }
+        this.swaps += difference / 2;
+        this.checkSorted();
+        this.trackProfile();
+        return currentNodes;
+    };
+    Bogo.title = "Bogo";
+    return Bogo;
+}(baseSort_1.BaseSort));
+exports.Bogo = Bogo;
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(4);
+var baseSort_1 = __webpack_require__(0);
+var BogoBogo = /** @class */ (function (_super) {
+    __extends(BogoBogo, _super);
+    function BogoBogo() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BogoBogo.prototype.setUp = function () {
+        this.currentTop = 0;
+    };
+    BogoBogo.prototype.currentNodes = function () {
+        return [this.currentTop];
+    };
+    BogoBogo.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        var currentNodes = this.currentNodes();
+        this.steps++;
+        var values = this.board.values();
+        this.comparisons++;
+        if (values[this.currentTop] < values[this.currentTop + 1]) {
+            this.currentTop++;
+        }
+        else {
+            var start = values.slice();
+            var shuffledSubset = lodash_1.shuffle(values.slice(0, this.currentTop + 2));
+            values.splice.apply(values, [0, shuffledSubset.length].concat(shuffledSubset));
+            this.board.setPoints(values);
+            var difference = 0;
+            for (var i = 0; i < values.length; i++) {
+                if (values[i] !== start[i]) {
+                    difference++;
+                }
+            }
+            this.swaps += difference / 2;
+            this.currentTop = 0;
+        }
+        if (this.currentTop === this.length - 1) {
+            this.setDone();
+        }
+        return currentNodes;
+    };
+    BogoBogo.title = "Bogobogosort";
+    return BogoBogo;
+}(baseSort_1.BaseSort));
+exports.BogoBogo = BogoBogo;
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(4);
+var baseSort_1 = __webpack_require__(0);
+var Permutation = /** @class */ (function (_super) {
+    __extends(Permutation, _super);
+    function Permutation() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Permutation.prototype.setUp = function () {
+        this.permutation = lodash_1.range(0, this.board.length);
+        this.checkSorted();
+        this.changed = [this.length - 1];
+    };
+    Permutation.prototype.currentNodes = function () {
+        return this.changed;
+    };
+    Permutation.prototype.getHighestPossible = function (array, highest) {
+        while (array.indexOf(highest) !== -1) {
+            highest--;
+        }
+        return highest;
+    };
+    Permutation.prototype.findNextPermutation = function () {
+        var nextPermutation = this.permutation;
+        var lastValue = nextPermutation.pop();
+        while (lastValue === this.getHighestPossible(nextPermutation, this.length - 1)) {
+            lastValue = nextPermutation.pop();
+        }
+        if (this.changed.indexOf(nextPermutation.length) === -1) {
+            this.changed.push(nextPermutation.length);
+        }
+        var nextNum = lastValue + 1;
+        while (nextPermutation.length < this.length) {
+            if (nextPermutation.indexOf(nextNum) === -1) {
+                nextPermutation.push(nextNum);
+                nextNum = 0;
+            }
+            else {
+                nextNum++;
+            }
+        }
+    };
+    Permutation.prototype.setValues = function () {
+        var _this = this;
+        var values = [];
+        var oldValues = this.original;
+        var currentBoard = this.board.values();
+        this.permutation.forEach(function (index, i) {
+            if (currentBoard[i] !== oldValues[index]) {
+                _this.swaps++;
+            }
+            values.push(oldValues[index]);
+        });
+        this.board.setPoints(values);
+    };
+    Permutation.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        this.findNextPermutation();
+        this.setValues();
+        this.checkSorted();
+        this.trackProfile();
+        return this.currentNodes();
+    };
+    Permutation.title = "Permutation Sort";
+    return Permutation;
+}(baseSort_1.BaseSort));
+exports.Permutation = Permutation;
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var single_1 = __webpack_require__(27);
+var BogoSingleCompare = /** @class */ (function (_super) {
+    __extends(BogoSingleCompare, _super);
+    function BogoSingleCompare() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BogoSingleCompare.prototype.nodesInOrder = function (values) {
+        // used to compare nodes
+        var inOrder = values[this.baseNode] <= values[this.comparisonNode];
+        if (!inOrder) {
+            this.ordered = false;
+        }
+        this.comparisons++;
+        return inOrder;
+    };
+    BogoSingleCompare.title = "Smart Bozo(Compare & Single Swap)";
+    return BogoSingleCompare;
+}(single_1.BogoSingle));
+exports.BogoSingleCompare = BogoSingleCompare;
+
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var concurrent_1 = __webpack_require__(20);
+var BubbleSortConcurrent10 = /** @class */ (function (_super) {
+    __extends(BubbleSortConcurrent10, _super);
+    function BubbleSortConcurrent10() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BubbleSortConcurrent10.title = "Bubble Sort(Concurrent 10)";
+    BubbleSortConcurrent10.numberConcurrent = 10;
+    return BubbleSortConcurrent10;
+}(concurrent_1.BubbleSortConcurrent));
+exports.BubbleSortConcurrent10 = BubbleSortConcurrent10;
+
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var concurrent_1 = __webpack_require__(20);
+var BubbleSortConcurrent5 = /** @class */ (function (_super) {
+    __extends(BubbleSortConcurrent5, _super);
+    function BubbleSortConcurrent5() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BubbleSortConcurrent5.title = "Bubble Sort(Concurrent 5)";
+    BubbleSortConcurrent5.numberConcurrent = 5;
+    return BubbleSortConcurrent5;
+}(concurrent_1.BubbleSortConcurrent));
+exports.BubbleSortConcurrent5 = BubbleSortConcurrent5;
+
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(6);
+var BubbleSortDontRestart = /** @class */ (function (_super) {
+    __extends(BubbleSortDontRestart, _super);
+    function BubbleSortDontRestart() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BubbleSortDontRestart.prototype.swapValues = function (index1, index2) {
+        this.looking = false;
+        this.swaps++;
+        var baseValue = this.board.get(this.baseNode).value;
+        var newValues = this.board.values().slice();
+        newValues.splice(index1, 1);
+        newValues.splice(index2 - 1, 0, baseValue);
+        this.board.setPoints(newValues);
+        this.baseNode = Math.max(index1 - 1, 0);
+        this.comparisonNode = this.baseNode + 1;
+    };
+    BubbleSortDontRestart.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        var values = this.board.values();
+        if (!this.nodesInOrder(values)) {
+            this.looking = true;
+            this.comparisonNode++;
+            if (this.comparisonNode === this.length) {
+                this.swapValues(this.baseNode, this.comparisonNode);
+            }
+        }
+        else if (this.looking) {
+            this.swapValues(this.baseNode, this.comparisonNode);
+        }
+        else {
+            this.baseNode++;
+            this.comparisonNode++;
+            if (this.comparisonNode === this.length) {
+                this.setDone();
+            }
+        }
+        this.trackProfile();
+        return currentNodes;
+    };
+    BubbleSortDontRestart.title = "Bubble(Don't restart)";
+    return BubbleSortDontRestart;
+}(base_1.Bubble));
+exports.BubbleSortDontRestart = BubbleSortDontRestart;
+
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(6);
+var BubbleOptimized = /** @class */ (function (_super) {
+    __extends(BubbleOptimized, _super);
+    function BubbleOptimized() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipSorted = true;
+        _this.shortCircuit = true;
+        return _this;
+    }
+    BubbleOptimized.title = "Bubble(Short Circuit & Skip Sorted)";
+    return BubbleOptimized;
+}(base_1.Bubble));
+exports.BubbleOptimized = BubbleOptimized;
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(6);
+var BubbleShortCircuit = /** @class */ (function (_super) {
+    __extends(BubbleShortCircuit, _super);
+    function BubbleShortCircuit() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shortCircuit = true;
+        return _this;
+    }
+    BubbleShortCircuit.title = "Bubble(Short Circuit)";
+    return BubbleShortCircuit;
+}(base_1.Bubble));
+exports.BubbleShortCircuit = BubbleShortCircuit;
+
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(6);
+var BubbleSkipSorted = /** @class */ (function (_super) {
+    __extends(BubbleSkipSorted, _super);
+    function BubbleSkipSorted() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipSorted = true;
+        _this.shortCircuit = false;
+        return _this;
+    }
+    BubbleSkipSorted.title = "Bubble(Skip Sorted)";
+    return BubbleSkipSorted;
+}(base_1.Bubble));
+exports.BubbleSkipSorted = BubbleSkipSorted;
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(28);
+var CocktailShortCircuit = /** @class */ (function (_super) {
+    __extends(CocktailShortCircuit, _super);
+    function CocktailShortCircuit() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shortCircuit = true;
+        return _this;
+    }
+    CocktailShortCircuit.title = "Cocktail(Short Circuit)";
+    return CocktailShortCircuit;
+}(base_1.Cocktail));
+exports.CocktailShortCircuit = CocktailShortCircuit;
+
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(5);
+var CombLargeShrink = /** @class */ (function (_super) {
+    __extends(CombLargeShrink, _super);
+    function CombLargeShrink() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CombLargeShrink.shrink = 1.5;
+    CombLargeShrink.title = "Comb(Large Shrink: 1.5)";
+    return CombLargeShrink;
+}(base_1.Comb));
+exports.CombLargeShrink = CombLargeShrink;
+
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(5);
+var CombSmallShrink = /** @class */ (function (_super) {
+    __extends(CombSmallShrink, _super);
+    function CombSmallShrink() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CombSmallShrink.shrink = 1.1;
+    CombSmallShrink.title = "Comb(Small Shrink: 1.1)";
+    return CombSmallShrink;
+}(base_1.Comb));
+exports.CombSmallShrink = CombSmallShrink;
+
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var at5_1 = __webpack_require__(9);
+var CombGnome10 = /** @class */ (function (_super) {
+    __extends(CombGnome10, _super);
+    function CombGnome10() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 10;
+        return _this;
+    }
+    CombGnome10.title = "Comb & Gnome(at gap 10)";
+    return CombGnome10;
+}(at5_1.CombGnome5));
+exports.CombGnome10 = CombGnome10;
+
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var at5_1 = __webpack_require__(9);
+var CombGnome2 = /** @class */ (function (_super) {
+    __extends(CombGnome2, _super);
+    function CombGnome2() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 2;
+        return _this;
+    }
+    CombGnome2.title = "Comb & Gnome(at gap 2)";
+    return CombGnome2;
+}(at5_1.CombGnome5));
+exports.CombGnome2 = CombGnome2;
+
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var at5_1 = __webpack_require__(9);
+var CombGnome3 = /** @class */ (function (_super) {
+    __extends(CombGnome3, _super);
+    function CombGnome3() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 3;
+        return _this;
+    }
+    CombGnome3.title = "Comb & Gnome(at gap 3)";
+    return CombGnome3;
+}(at5_1.CombGnome5));
+exports.CombGnome3 = CombGnome3;
+
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var evenLarger_1 = __webpack_require__(8);
+var base_1 = __webpack_require__(7);
+var largeShrink5_1 = __webpack_require__(13);
+var CombGnomeLargeShrink10 = /** @class */ (function (_super) {
+    __extends(CombGnomeLargeShrink10, _super);
+    function CombGnomeLargeShrink10() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 10;
+        return _this;
+    }
+    CombGnomeLargeShrink10.prototype.setUp = function () {
+        this.comb = new evenLarger_1.CombEvenLarger(this.board);
+        this.gnome = new base_1.Gnome(this.board);
+    };
+    CombGnomeLargeShrink10.title = "Comb & Gnome(gap 10, shrink 2)";
+    return CombGnomeLargeShrink10;
+}(largeShrink5_1.CombGnomeLargeShrink5));
+exports.CombGnomeLargeShrink10 = CombGnomeLargeShrink10;
+
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var evenLarger_1 = __webpack_require__(8);
+var base_1 = __webpack_require__(7);
+var largeShrink5_1 = __webpack_require__(13);
+var CombGnomeLargeShrink2 = /** @class */ (function (_super) {
+    __extends(CombGnomeLargeShrink2, _super);
+    function CombGnomeLargeShrink2() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 2;
+        return _this;
+    }
+    CombGnomeLargeShrink2.prototype.setUp = function () {
+        this.comb = new evenLarger_1.CombEvenLarger(this.board);
+        this.gnome = new base_1.Gnome(this.board);
+    };
+    CombGnomeLargeShrink2.title = "Comb & Gnome(gap 2, shrink 2)";
+    return CombGnomeLargeShrink2;
+}(largeShrink5_1.CombGnomeLargeShrink5));
+exports.CombGnomeLargeShrink2 = CombGnomeLargeShrink2;
+
+
+/***/ }),
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var evenLarger_1 = __webpack_require__(8);
+var base_1 = __webpack_require__(7);
+var largeShrink5_1 = __webpack_require__(13);
+var CombGnomeLargeShrink3 = /** @class */ (function (_super) {
+    __extends(CombGnomeLargeShrink3, _super);
+    function CombGnomeLargeShrink3() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 3;
+        return _this;
+    }
+    CombGnomeLargeShrink3.prototype.setUp = function () {
+        this.comb = new evenLarger_1.CombEvenLarger(this.board);
+        this.gnome = new base_1.Gnome(this.board);
+    };
+    CombGnomeLargeShrink3.title = "Comb & Gnome(gap 3, shrink 2)";
+    return CombGnomeLargeShrink3;
+}(largeShrink5_1.CombGnomeLargeShrink5));
+exports.CombGnomeLargeShrink3 = CombGnomeLargeShrink3;
+
+
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(29);
+var CycleOptimized = /** @class */ (function (_super) {
+    __extends(CycleOptimized, _super);
+    function CycleOptimized() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipPlaced = true;
+        return _this;
+    }
+    CycleOptimized.title = "Cycle Optimized";
+    return CycleOptimized;
+}(base_1.Cycle));
+exports.CycleOptimized = CycleOptimized;
+
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var Insertion = /** @class */ (function (_super) {
+    __extends(Insertion, _super);
+    function Insertion() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.insertValue = null;
+        return _this;
+    }
+    Insertion.prototype.setUp = function () {
+        this.baseNode = 1;
+    };
+    Insertion.prototype.currentNodes = function () {
+        if (this.done) {
+            return [];
+        }
+        var nodes = [this.baseNode];
+        if (this.comparisonNode >= 0) {
+            nodes.push(this.comparisonNode);
+        }
+        return nodes;
+    };
+    Insertion.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        if (this.insertValue === null) {
+            this.insertValue = this.board.values()[this.baseNode];
+            this.shadow = [{ index: this.baseNode, value: this.insertValue }];
+            this.comparisonNode = this.baseNode - 1;
+        }
+        var nodes = [this.baseNode];
+        this.comparisons++;
+        if (this.insertValue < this.board.values()[this.comparisonNode]) {
+            nodes = [this.comparisonNode, this.baseNode];
+            this.swaps += 0.5;
+            this.board.set(this.comparisonNode + 1, this.board.values()[this.comparisonNode]);
+            this.comparisonNode--;
+        }
+        else {
+            if (this.comparisonNode + 1 !== this.baseNode) {
+                nodes = [this.comparisonNode + 1];
+                this.swaps += 0.5;
+                this.board.set(this.comparisonNode + 1, this.insertValue);
+            }
+            this.baseNode++;
+            this.insertValue = null;
+        }
+        if (this.baseNode === this.length) {
+            this.setDone();
+        }
+        this.trackProfile();
+        return nodes;
+    };
+    Insertion.title = "Insertion Sort";
+    return Insertion;
+}(baseSort_1.BaseSort));
+exports.Insertion = Insertion;
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(18);
+var OddEvenConcurrent = /** @class */ (function (_super) {
+    __extends(OddEvenConcurrent, _super);
+    function OddEvenConcurrent() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OddEvenConcurrent.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        var values = this.board.values();
+        while (this.baseNode !== undefined) {
+            if (!this.nodesInOrder(values)) {
+                this.swap();
+            }
+            this.baseNode = this.baseNodes.shift();
+            if (this.baseNode) {
+                this.comparisonNode = this.baseNode + 1;
+            }
+        }
+        this.setUpNext();
+        this.trackProfile();
+        return currentNodes;
+    };
+    OddEvenConcurrent.title = "Odd Even(Concurrent)";
+    return OddEvenConcurrent;
+}(base_1.OddEven));
+exports.OddEvenConcurrent = OddEvenConcurrent;
+
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(14);
+var QuickSort3 = /** @class */ (function (_super) {
+    __extends(QuickSort3, _super);
+    function QuickSort3() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.threeWay = true;
+        return _this;
+    }
+    QuickSort3.title = "Quick Sort 3(Left Partition)";
+    return QuickSort3;
+}(base_1.QuickSort2));
+exports.QuickSort3 = QuickSort3;
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var randomPartition_1 = __webpack_require__(30);
+var QuickSort3Random = /** @class */ (function (_super) {
+    __extends(QuickSort3Random, _super);
+    function QuickSort3Random() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.threeWay = true;
+        return _this;
+    }
+    QuickSort3Random.title = "Quick Sort 3(Random Partition)";
+    return QuickSort3Random;
+}(randomPartition_1.QuickSort2Random));
+exports.QuickSort3Random = QuickSort3Random;
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rightPartition_1 = __webpack_require__(31);
+var QuickSort3RightPartition = /** @class */ (function (_super) {
+    __extends(QuickSort3RightPartition, _super);
+    function QuickSort3RightPartition() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.threeWay = true;
+        return _this;
+    }
+    QuickSort3RightPartition.title = "Quick Sort 3(Right Partition)";
+    return QuickSort3RightPartition;
+}(rightPartition_1.QuickSort2RightPartition));
+exports.QuickSort3RightPartition = QuickSort3RightPartition;
+
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var SelectionSort = /** @class */ (function (_super) {
+    __extends(SelectionSort, _super);
+    function SelectionSort() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    SelectionSort.prototype.setUp = function () {
+        this.baseIndex = 0;
+    };
+    SelectionSort.prototype.setUpNext = function () {
+        this.comparisonNode++;
+        if (this.comparisonNode === this.length) {
+            if (this.baseNode !== this.baseIndex) {
+                this.swap([this.baseNode, this.baseIndex]);
+            }
+            this.baseIndex++;
+            this.baseNode = this.baseIndex;
+            this.comparisonNode = this.baseNode + 1;
+            if (this.baseNode === this.length - 1) {
+                this.setDone();
+            }
+        }
+    };
+    SelectionSort.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        var values = this.board.values();
+        if (!this.nodesInOrder(values)) {
+            this.baseNode = this.comparisonNode;
+        }
+        this.setUpNext();
+        this.trackProfile();
+        return currentNodes;
+    };
+    SelectionSort.title = "Selection Sort";
+    return SelectionSort;
+}(baseSort_1.BaseSort));
+exports.SelectionSort = SelectionSort;
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(19);
+var SmoothSetUpBottom = /** @class */ (function (_super) {
+    __extends(SmoothSetUpBottom, _super);
+    function SmoothSetUpBottom() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    SmoothSetUpBottom.prototype.setUp = function () {
+        _super.prototype.setUp.call(this);
+        this.baseNode = 1;
+        this.treeSizes = [1];
+        this.roots = [0];
+    };
+    SmoothSetUpBottom.title = "Smooth Sort(Set up from bottom)";
+    SmoothSetUpBottom.fromBottom = true;
+    return SmoothSetUpBottom;
+}(base_1.Smooth));
+exports.SmoothSetUpBottom = SmoothSetUpBottom;
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(0);
+var Stooge = /** @class */ (function (_super) {
+    __extends(Stooge, _super);
+    function Stooge() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Stooge.prototype.subsets = function (indexes) {
+        var first = indexes[0], last = indexes[1];
+        // find the number of elements
+        var diff = last - first + 1;
+        // find the number to adjust by
+        var sectionSize = Math.ceil(diff * 2 / 3) - 1;
+        return [
+            [first, first + sectionSize],
+            [last - sectionSize, last],
+            [first, first + sectionSize],
+        ];
+    };
+    Stooge.prototype.breakDownSubset = function (indexes) {
+        var final = [indexes];
+        while (this.hasLargeEnoughDiff(final[0])) {
+            final = this.subsets(final.shift()).concat(final);
+        }
+        return final;
+    };
+    Stooge.prototype.hasLargeEnoughDiff = function (nums) {
+        return nums[1] - nums[0] >= 2;
+    };
+    Stooge.prototype.setUp = function () {
+        this.partitions = this.breakDownSubset([0, this.length - 1]);
+        var nextValuess = this.partitions.shift();
+        this.baseNode = nextValuess[0], this.comparisonNode = nextValuess[1];
+    };
+    Stooge.prototype.setUpNext = function () {
+        if (this.partitions.length) {
+            var nextValues = this.partitions.shift();
+            if (this.hasLargeEnoughDiff(nextValues)) {
+                this.partitions = this.breakDownSubset(nextValues).concat(this.partitions);
+                nextValues = this.partitions.shift();
+            }
+            this.baseNode = nextValues[0], this.comparisonNode = nextValues[1];
+        }
+        else {
+            this.setDone();
+        }
+    };
+    Stooge.title = "Stooge Sort";
+    return Stooge;
+}(baseSort_1.BaseSort));
+exports.Stooge = Stooge;
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
 var env;
 if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
@@ -26271,17 +25995,17 @@ if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv;
 }
 var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
-dependencies["./controls/sort.njk"] = __webpack_require__( 48 );
-dependencies["./controls/count.njk"] = __webpack_require__( 90 );
-dependencies["./controls/order.njk"] = __webpack_require__( 91 );
-dependencies["./controls/values.njk"] = __webpack_require__( 92 );
-dependencies["./controls/checkboxes.njk"] = __webpack_require__( 98 );
-dependencies["./controls/profileButtons.njk"] = __webpack_require__( 96 );
+dependencies["./controls/sort.njk"] = __webpack_require__( 32 );
+dependencies["./controls/count.njk"] = __webpack_require__( 33 );
+dependencies["./controls/order.njk"] = __webpack_require__( 34 );
+dependencies["./controls/values.njk"] = __webpack_require__( 35 );
+dependencies["./controls/checkboxes.njk"] = __webpack_require__( 88 );
+dependencies["./controls/profileButtons.njk"] = __webpack_require__( 89 );
 
 
 
 
-var shim = __webpack_require__(8);
+var shim = __webpack_require__(2);
 
 
 (function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/profile.njk"] = (function() {
@@ -26434,10 +26158,10 @@ root: root
 module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/profile.njk"] , dependencies)
 
 /***/ }),
-/* 96 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nunjucks = __webpack_require__(4);
+var nunjucks = __webpack_require__(1);
 var env;
 if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
@@ -26449,7 +26173,55 @@ var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies
 
 
 
-var shim = __webpack_require__(8);
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/checkboxes.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<label>Swaps<input type=\"checkbox\" id=\"swaps\" checked></label>\n<label>Comparisons<input type=\"checkbox\" id=\"comps\"></label>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/checkboxes.njk"] , dependencies)
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(2);
 
 
 (function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/profileButtons.njk"] = (function() {
@@ -26482,10 +26254,258 @@ root: root
 module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/profileButtons.njk"] , dependencies)
 
 /***/ }),
-/* 97 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nunjucks = __webpack_require__(4);
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var board_1 = __webpack_require__(10);
+var index_1 = __webpack_require__(16);
+var shuffles = __webpack_require__(11);
+var sizes = __webpack_require__(17);
+var sorts = __webpack_require__(26);
+var valueTypes = __webpack_require__(12);
+exports.setUpScatter = function (location, data, query) {
+    // tslint:disable-next-line:no-var-requires
+    var tpl = __webpack_require__(91);
+    var html = tpl.render({
+        shuffles: shuffles,
+        sizes: sizes,
+        sorts: sorts,
+        valueTypes: valueTypes,
+    });
+    return html;
+};
+exports.scatterCallback = function () {
+    var boardsElement = document.getElementById("boards");
+    var createButton = document.getElementById("create");
+    var sizeElement = document.getElementById("size");
+    var orderSelect = document.getElementById("order");
+    var valueTypeSelect = document.getElementById("value-type");
+    var sortElement = document.getElementById("sort");
+    var boxHeight = 500;
+    var boxWidth = 500;
+    var boardList = [];
+    var autoInterval = null;
+    var delay = 100;
+    createButton.addEventListener("click", function () {
+        var size = sizes[sizeElement.value];
+        var value = valueTypes[valueTypeSelect.value];
+        var order = shuffles[orderSelect.value];
+        var Sort = sorts[sortElement.value];
+        // let board = new Boards.Board(size)
+        var board = new board_1.Board(size, order, value);
+        boardList.push({
+            board: board,
+            sort: new Sort(board),
+        });
+        index_1.createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement);
+    });
+    var stepElement = document.getElementById("step");
+    var boundStep = index_1.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
+    stepElement.addEventListener("click", boundStep);
+    index_1.createDelegatedEvent(boardsElement, "click", function (event, target) {
+        var wrapperElement = index_1.closestParent(target, ".wrapper");
+        var wrappers = document.getElementsByClassName("wrapper");
+        for (var i = 0; i < wrappers.length; i++) {
+            if (wrappers[i] === wrapperElement) {
+                boardList.splice(i, 1);
+                break;
+            }
+        }
+        wrapperElement.remove();
+    }, ".remove");
+    index_1.createDelegatedEvent(boardsElement, "click", function (event, target) {
+        var wrapperElement = index_1.closestParent(target, ".wrapper");
+        var wrappers = document.getElementsByClassName("wrapper");
+        var wrapperIndex;
+        for (var i = 0; i < wrappers.length; i++) {
+            if (wrappers[i] === wrapperElement) {
+                wrapperIndex = i;
+                break;
+            }
+        }
+        var item = boardList[wrapperIndex];
+        item.sort.reset();
+        index_1.reRenderBoard(wrapperIndex, item.sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
+    }, ".reset");
+    var autoElement = document.getElementById("auto");
+    autoElement.addEventListener("click", function (event) {
+        if (autoInterval) {
+            clearInterval(autoInterval);
+            autoInterval = null;
+            event.currentTarget.classList.remove("active");
+            boardsElement.classList.remove("auto");
+        }
+        else {
+            var currentBoundStep = index_1.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
+            autoInterval = setInterval(currentBoundStep, delay);
+            event.currentTarget.classList.add("active");
+            boardsElement.classList.add("auto");
+        }
+    });
+};
+
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./controls/sort.njk"] = __webpack_require__( 32 );
+dependencies["./controls/count.njk"] = __webpack_require__( 33 );
+dependencies["./controls/order.njk"] = __webpack_require__( 34 );
+dependencies["./controls/values.njk"] = __webpack_require__( 35 );
+dependencies["./controls/runButtons.njk"] = __webpack_require__( 92 );
+
+
+
+
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/scatter.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<div><a href=\"../../index.html\">Index</a></div>\n<div><a href=\"javascript:history.back()\"><< Back</a></div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/sort.njk", false, "templates/scatter.njk", null, function(t_3,t_1) {
+if(t_3) { cb(t_3); return; }
+callback(null,t_1);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_4,t_2) {
+if(t_4) { cb(t_4); return; }
+callback(null,t_2);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/count.njk", false, "templates/scatter.njk", null, function(t_7,t_5) {
+if(t_7) { cb(t_7); return; }
+callback(null,t_5);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_8,t_6) {
+if(t_8) { cb(t_8); return; }
+callback(null,t_6);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/order.njk", false, "templates/scatter.njk", null, function(t_11,t_9) {
+if(t_11) { cb(t_11); return; }
+callback(null,t_9);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_12,t_10) {
+if(t_12) { cb(t_12); return; }
+callback(null,t_10);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/values.njk", false, "templates/scatter.njk", null, function(t_15,t_13) {
+if(t_15) { cb(t_15); return; }
+callback(null,t_13);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_16,t_14) {
+if(t_16) { cb(t_16); return; }
+callback(null,t_14);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n    </div>\n    ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/runButtons.njk", false, "templates/scatter.njk", null, function(t_19,t_17) {
+if(t_19) { cb(t_19); return; }
+callback(null,t_17);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_20,t_18) {
+if(t_20) { cb(t_20); return; }
+callback(null,t_18);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n  </div>\n  <div id=\"boards\"></div>\n</article>\n\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+})})})})});
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/scatter.njk"] , dependencies)
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
 var env;
 if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
@@ -26497,7 +26517,7 @@ var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies
 
 
 
-var shim = __webpack_require__(8);
+var shim = __webpack_require__(2);
 
 
 (function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/runButtons.njk"] = (function() {
@@ -26530,52 +26550,141 @@ root: root
 module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/runButtons.njk"] , dependencies)
 
 /***/ }),
-/* 98 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nunjucks = __webpack_require__(4);
-var env;
-if (!nunjucks.currentEnv){
-	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
-} else {
-	env = nunjucks.currentEnv;
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var queens = [
+    // tslint:disable:max-line-length
+    ["Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null],
+    ["Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    ["Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null],
+    ["Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null],
+    [null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null],
+    [null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null],
+    [null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null],
+    [null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null],
+    [null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null],
+    [null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null],
+    [null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null],
+    [null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null],
+    [null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen"],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null],
+    [null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null],
+    [null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen"],
+    [null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null],
+    [null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null],
+    [null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null],
+    [null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen"],
+    [null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null],
+    [null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen"],
+    [null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null],
+    [null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null],
+    [null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null],
+    [null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, null, null, null, null, "Queen", null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null],
+    [null, null, null, null, null, null, null, "Queen", null, null, "Queen", null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null],
+    [null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, "Queen", null, null, null, null, null, null, null, null, null, null, null, null, "Queen", null, null, null, null, null, "Queen", null, null, null],
+];
+var queensIndex;
+var body = document.getElementsByTagName("body")[0];
+var ul = document.createElement("ul");
+ul.className = "background";
+// tslint:disable-next-line:prefer-for-of
+for (var i = 0; i < queens[0].length; i++) {
+    var li = document.createElement("li");
+    ul.appendChild(li);
+    li.className = "square";
 }
-var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
-
-
-
-
-var shim = __webpack_require__(8);
-
-
-(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/checkboxes.njk"] = (function() {
-function root(env, context, frame, runtime, cb) {
-var lineno = null;
-var colno = null;
-var output = "";
-try {
-var parentTemplate = null;
-output += "<label>Swaps<input type=\"checkbox\" id=\"swaps\" checked></label>\n<label>Comparisons<input type=\"checkbox\" id=\"comps\"></label>\n";
-if(parentTemplate) {
-parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
-} else {
-cb(null, output);
+body.appendChild(ul);
+function setIndex() {
+    queensIndex = Math.floor(Math.random() * queens.length);
 }
-;
-} catch (e) {
-  cb(runtime.handleError(e, lineno, colno));
+function renderQueens() {
+    setIndex();
+    var squares = document.getElementsByClassName("square");
+    var board = queens[queensIndex];
+    for (var i = 0; i < board.length; i++) {
+        if (board[i]) {
+            squares[i].classList.add("queen");
+        }
+        else {
+            squares[i].classList.remove("queen");
+        }
+    }
 }
-}
-return {
-root: root
+exports.setUpQueens = function () {
+    renderQueens();
+    setInterval(function () {
+        renderQueens();
+    }, 5000);
 };
 
-})();
-})();
-
-
-
-module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/checkboxes.njk"] , dependencies)
 
 /***/ })
 /******/ ]);

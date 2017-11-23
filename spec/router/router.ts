@@ -289,5 +289,13 @@ describe("router", () => {
       changeLocationFun(event);
       expect(document.body.innerHTML).toEqual(originalHtml);
     });
+
+    it("should allow for a callback", () => {
+      const callback = jasmine.createSpy();
+      router.register("^test$", baseRouteFun, callback);
+      location.hash = "#test";
+      changeLocationFun(event);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
   });
 });

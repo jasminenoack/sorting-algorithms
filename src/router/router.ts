@@ -51,6 +51,8 @@ export class Router {
         const query = this.processQuery(location.search);
         const html = loc.fun(hash, urlParams, query);
         this.element.innerHTML = html;
+        // tslint:disable-next-line:no-unused-expression
+        loc.callback && loc.callback();
       }
     });
   }
@@ -62,8 +64,9 @@ export class Router {
       data: { [key: string]: string },
       query: { [key: string]: string },
     ) => string,
+    callback?: any,
   ) {
-    this.locations.push(new RouterLocation(location, fun));
+    this.locations.push(new RouterLocation(location, fun, callback));
   }
 
   private cleanHash(hash: string) {

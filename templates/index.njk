@@ -1,3 +1,32 @@
-{% include "./links/tools.njk" %}
-{% include "./links/blog.njk" %}
-{% include "./links/learn.njk" %}
+<article>
+  <h1>Why We Visualize Data</h1>
+  <p>
+    The best way to understand how things work is to disect them. To change them, to play with them, to implement them, and to break them. I love thinking about algorithms. How can we understand them better? How can we make them better? How can they make us better?
+    To do this I very much believe that one important step is to understand what data looks like. How it behaves. How algorithms move and manipulate patterns.
+    To do this I use <a href="https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0" target='blank'>visualizations</a> This site is a collection of those visualizations.
+    They exist in many formats, orientations and settings because data dictates patterns. And different representations give rise to different patterns. The result of running a sort on reversed data is
+    very different then the result of running the same code on ordered data. In these patterns we can find beauty and insight, and if we are lucky we
+    can begin to understand the magic. But I make no promises.
+
+    <figure>
+      <div id="ordered-sorts" class="four"></div>
+      <figcaption>Steps 1-200 on ordered arrays.</figcaption>
+    </figure>
+
+    <figure>
+      <div id="reverse-sorts" class="four"></div>
+      <figcaption>Steps 1-200 on reversed arrays.</figcaption>
+    </figure>
+  </p>
+
+  <figure>
+    <img src="http://www.sandraandwoo.com/comics/2015-04-08-0673-worse-than-bogo-sort.png">
+    <figcaption><a target="_blank" href="http://www.sandraandwoo.com/2015/04/08/0673-worse-than-bogo-sort/">Sandra and Woo</a></figcaption>
+  </figure>
+</article>
+
+<article>
+  {% include "./links/tools.njk" %}
+  {% include "./links/blog.njk" %}
+  {% include "./links/learn.njk" %}
+</article>

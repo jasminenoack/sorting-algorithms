@@ -1,5 +1,5 @@
 import { setUpHeaders } from "./../src/pages/header";
-import { setUpIndex } from "./../src/pages/index";
+import { indexCallback, setUpIndex } from "./../src/pages/index";
 import { Router } from "./../src/router/router";
 
 // const router = new Router();
@@ -17,6 +17,6 @@ setUpHeaders();
 
 const contentEl = document.getElementById("content");
 const router = new Router(contentEl);
-router.register("^$", setUpIndex);
+router.register("^$", setUpIndex, indexCallback);
 
 (window as any).onpopstate();

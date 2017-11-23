@@ -9,6 +9,7 @@ export class RouterLocation {
       data: { [key: string]: string },
       query: { [key: string]: string },
     ) => string,
+    public callback: any,
   ) {
     const names: string[] = [];
     // if location is a string

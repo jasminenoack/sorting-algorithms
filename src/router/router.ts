@@ -23,13 +23,12 @@ import { RouterLocation } from "./routerLocation";
  * The function should return HTML the router will place the html in the page.
  */
 export class Router {
+  public static routerListeners: Array<(event?: PopStateEvent) => void> = [];
   private locations: RouterLocation[] = [];
 
   constructor(public element: HTMLElement) {
     this.listenToChange = this.listenToChange.bind(this);
-
-    this.listenToChange();
-    window.onpopstate = this.listenToChange;
+    Router.routerListeners.push(this.listenToChange);
   }
 
   public listenToChange(event?: PopStateEvent) {
@@ -87,3 +86,9 @@ export class Router {
     return query;
   }
 }
+
+window.onpopstate = (event?: PopStateEvent) => {
+  Router.routerListeners.forEach((fun: (event?: PopStateEvent) => void) => {
+    fun(event);
+  });
+};

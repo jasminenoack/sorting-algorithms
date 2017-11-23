@@ -5,11 +5,15 @@
   "main": "build/index.js",
   "dependencies": {
     "@types/lodash": "^4.14.85",
+    "@types/navigo": "^4.0.1",
     "chart.js": "^2.6.0",
-    "commonjs": "^0.0.1"
+    "commonjs": "^0.0.1",
+    "nunjucks": "^3.0.1",
+    "nunjucks-loader": "^2.4.8"
   },
   "devDependencies": {
     "@types/jasmine": "^2.6.0",
+    "@types/node": "^8.0.53",
     "css-loader": "^0.28.7",
     "es6-promise": "^4.1.1",
     "istanbul-instrumenter-loader": "^3.0.0",

@@ -1,6 +1,6 @@
 import { range } from "lodash";
 import { BaseSort } from "../baseSort";
-import { Bogo } from "./../bogo";
+import { Bogo } from "./base";
 
 export class Permutation extends BaseSort {
   public static title: string = "Permutation Sort";

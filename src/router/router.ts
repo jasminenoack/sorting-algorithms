@@ -1,0 +1,89 @@
+import { RouterLocation } from "./routerLocation";
+
+/**
+ * Router manages locations.
+ *
+ * Send a string that can be converted into a reg ex.
+ *
+ * examples:
+ *
+ * base: ""
+ * hard url: "other"
+ * url params: "a/(c|.*)/b" || "a/(c|\\d*)/b"
+ * query string "?a=1"
+ *
+ * returns
+ * location: "other"
+ * url params: {c: "123"}
+ * query string: {a: "1"}
+ *
+ * To construct the router send in the element the router should control.
+ *
+ * For registering each route pass the string and a function to register.
+ * The function should return HTML the router will place the html in the page.
+ */
+export class Router {
+  private locations: RouterLocation[] = [];
+
+  constructor(public element: HTMLElement) {
+    this.listenToChange = this.listenToChange.bind(this);
+
+    this.listenToChange();
+    window.onpopstate = this.listenToChange;
+  }
+
+  public listenToChange(event?: PopStateEvent) {
+    let location: Location;
+    if (event) {
+      location = (event.target as Window).location;
+    } else {
+      location = window.location;
+    }
+
+    // tslint:disable-next-line:prefer-const
+    const hash = this.cleanHash(location.hash);
+
+    let rendered = false;
+
+    this.locations.forEach((loc: RouterLocation) => {
+      const urlParams = loc.match(hash);
+      if (urlParams && !rendered) {
+        rendered = true;
+        const query = this.processQuery(location.search);
+        const html = loc.fun(hash, urlParams, query);
+        this.element.innerHTML = html;
+      }
+    });
+  }
+
+  public register(
+    location: string,
+    fun: (
+      location: string,
+      data: { [key: string]: string },
+      query: { [key: string]: string },
+    ) => string,
+  ) {
+    this.locations.push(new RouterLocation(location, fun));
+  }
+
+  private cleanHash(hash: string) {
+    return hash.replace(/^#?\/?/, "").replace(/\/$/, "");
+  }
+
+  private processQuery(search: string) {
+    search = search.replace(/^\?/, "");
+    if (!search) {
+      return {};
+    }
+    const params = search.split("&");
+    const query: { [key: string]: string } = {};
+    params.forEach((param) => {
+      if (param) {
+        const [key, value] = param.split("=");
+        query[key] = value || "";
+      }
+    });
+    return query;
+  }
+}

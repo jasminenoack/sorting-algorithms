@@ -1,7 +1,5 @@
 import * as Boards from "../board";
 
-declare const firebase: any;
-
 /**
  * database structure:
  *
@@ -37,28 +35,10 @@ export abstract class BaseSort {
   public database: any;
 
   constructor(public board: Boards.Board, public trackAll: boolean = false) {
-    if (window.firebase) {
-      this.database = firebase.database();
-    }
     this.baseSetUp();
   }
 
   public setUpNext(): void { return; }
-
-  public writeToDatabase() {
-    if (this.database) {
-      firebase.auth().signInAnonymously();
-      firebase.database().ref("sortstats/").push({
-        sort_name: (this.constructor as any).title,
-        order: this.board.shuffle.title,
-        value_type: this.board.valueType.title,
-        point_count: this.length,
-        steps: this.steps,
-        comparisons: this.comparisons,
-        swaps: this.swaps,
-      });
-    }
-  }
 
   public checkSorted() {
     let result = true;
@@ -76,7 +56,6 @@ export abstract class BaseSort {
 
   public setDone() {
     this.done = true;
-    this.writeToDatabase();
   }
 
   public currentNodes() {

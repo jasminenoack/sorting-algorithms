@@ -1,4 +1,4 @@
-var webpackConfig = require("./webpack.config.js");
+var webpackConfig = require("./webpack.test.js");
 
 module.exports = (config) => {
   let focusGlob = "*";
@@ -10,21 +10,25 @@ module.exports = (config) => {
     frameworks: ["jasmine"],
 
     files: [
-      "src/*.ts",
-      "src/sorts/*.ts",
-      "src/shuffles/*.ts",
+      { pattern: `src/**/${focusGlob}.ts`, watched: false },
       { pattern: `spec/**/${focusGlob}.ts`, watched: false },
     ],
 
     preprocessors: {
-      "src/**/*.ts": ["webpack", "coverage"],
+      "src/**/*.ts": ["webpack"],
     },
 
     webpack: webpackConfig,
 
-    reporters: ["spec", "coverage"],
+    reporters: ["spec", "coverage-istanbul"],
 
     browsers: ["ChromeHeadless"],
+
+    coverageIstanbulReporter: {
+      fixWebpackSourcePaths: true,
+      skipFilesWithNoCoverage: false,
+      reports: ["html"],
+    },
 
     mime: {
       "text/x-typescript": ["ts"],

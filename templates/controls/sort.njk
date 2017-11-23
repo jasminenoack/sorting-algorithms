@@ -1,0 +1,8 @@
+<label>
+  Sort:
+  <select id="sort">
+    {% for name, sort in sorts %}
+      <option value="{{name}}">{{sort.title}}</option>
+    {% endfor %}
+  </select>
+</label>

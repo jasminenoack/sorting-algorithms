@@ -132,6 +132,8 @@ exports.clearImmediate = clearImmediate;
 Object.defineProperty(exports, "__esModule", { value: true });
 var header_1 = __webpack_require__(10);
 var index_1 = __webpack_require__(13);
+var profile_1 = __webpack_require__(94);
+var scatter_1 = __webpack_require__(46);
 var router_1 = __webpack_require__(11);
 // const router = new Router();
 // tslint:disable-next-line:no-var-requires
@@ -145,6 +147,8 @@ header_1.setUpHeaders();
 var contentEl = document.getElementById("content");
 var router = new router_1.Router(contentEl);
 router.register("^$", index_1.setUpIndex, index_1.indexCallback);
+router.register("^scatter$", scatter_1.setUpScatter, scatter_1.scatterCallback);
+router.register("^profile$", profile_1.setUpProfile, profile_1.profileCallback);
 window.onpopstate();
 
 
@@ -22778,7 +22782,117 @@ exports.Point = Point;
 
 
 /***/ }),
-/* 40 */,
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// bogo
+var base_1 = __webpack_require__(61);
+exports.Bogo = base_1.Bogo;
+var bogoBogo_1 = __webpack_require__(62);
+exports.BogoBogo = bogoBogo_1.BogoBogo;
+var permutation_1 = __webpack_require__(63);
+exports.Permutation = permutation_1.Permutation;
+var single_1 = __webpack_require__(56);
+exports.BogoSingle = single_1.BogoSingle;
+var singleCompare_1 = __webpack_require__(64);
+exports.BogoSingleCompare = singleCompare_1.BogoSingleCompare;
+// bubble
+var base_2 = __webpack_require__(49);
+exports.Bubble = base_2.Bubble;
+var concurrent_1 = __webpack_require__(55);
+exports.BubbleSortConcurrent = concurrent_1.BubbleSortConcurrent;
+var concurrent10_1 = __webpack_require__(65);
+exports.BubbleSortConcurrent10 = concurrent10_1.BubbleSortConcurrent10;
+var concurrent5_1 = __webpack_require__(66);
+exports.BubbleSortConcurrent5 = concurrent5_1.BubbleSortConcurrent5;
+var doNotRestart_1 = __webpack_require__(67);
+exports.BubbleSortDontRestart = doNotRestart_1.BubbleSortDontRestart;
+var optimized_1 = __webpack_require__(68);
+exports.BubbleOptimized = optimized_1.BubbleOptimized;
+var shortCircuit_1 = __webpack_require__(69);
+exports.BubbleShortCircuit = shortCircuit_1.BubbleShortCircuit;
+var skipSorted_1 = __webpack_require__(70);
+exports.BubbleSkipSorted = skipSorted_1.BubbleSkipSorted;
+// cocktail
+var base_3 = __webpack_require__(57);
+exports.Cocktail = base_3.Cocktail;
+var shortCircuit_2 = __webpack_require__(71);
+exports.CocktailShortCircuit = shortCircuit_2.CocktailShortCircuit;
+// comb
+var base_4 = __webpack_require__(42);
+exports.Comb = base_4.Comb;
+var evenLarger_1 = __webpack_require__(51);
+exports.CombEvenLarger = evenLarger_1.CombEvenLarger;
+var largeShrink_1 = __webpack_require__(72);
+exports.CombLargeShrink = largeShrink_1.CombLargeShrink;
+var smallShrink_1 = __webpack_require__(73);
+exports.CombSmallShrink = smallShrink_1.CombSmallShrink;
+// comb and gnome
+var at10_1 = __webpack_require__(74);
+exports.CombGnome10 = at10_1.CombGnome10;
+var at2_1 = __webpack_require__(75);
+exports.CombGnome2 = at2_1.CombGnome2;
+var at3_1 = __webpack_require__(76);
+exports.CombGnome3 = at3_1.CombGnome3;
+var at5_1 = __webpack_require__(52);
+exports.CombGnome5 = at5_1.CombGnome5;
+var largeShrink10_1 = __webpack_require__(77);
+exports.CombGnomeLargeShrink10 = largeShrink10_1.CombGnomeLargeShrink10;
+var largeShrink2_1 = __webpack_require__(78);
+exports.CombGnomeLargeShrink2 = largeShrink2_1.CombGnomeLargeShrink2;
+var largeShrink3_1 = __webpack_require__(79);
+exports.CombGnomeLargeShrink3 = largeShrink3_1.CombGnomeLargeShrink3;
+var largeShrink5_1 = __webpack_require__(53);
+exports.CombGnomeLargeShrink5 = largeShrink5_1.CombGnomeLargeShrink5;
+// cycle
+var base_5 = __webpack_require__(58);
+exports.Cycle = base_5.Cycle;
+var optimized_2 = __webpack_require__(80);
+exports.CycleOptimized = optimized_2.CycleOptimized;
+// gnome
+var base_6 = __webpack_require__(50);
+exports.Gnome = base_6.Gnome;
+// heap
+var base_7 = __webpack_require__(43);
+exports.Heap = base_7.Heap;
+// insertion
+var base_8 = __webpack_require__(81);
+exports.Insertion = base_8.Insertion;
+// odd even
+var base_9 = __webpack_require__(44);
+exports.OddEven = base_9.OddEven;
+var concurrent_2 = __webpack_require__(82);
+exports.OddEvenConcurrent = concurrent_2.OddEvenConcurrent;
+// quick
+var base_10 = __webpack_require__(54);
+exports.QuickSort2 = base_10.QuickSort2;
+var partition3_1 = __webpack_require__(83);
+exports.QuickSort3 = partition3_1.QuickSort3;
+var partition3Random_1 = __webpack_require__(84);
+exports.QuickSort3Random = partition3Random_1.QuickSort3Random;
+var partition3Right_1 = __webpack_require__(89);
+exports.QuickSort3RightPartition = partition3Right_1.QuickSort3RightPartition;
+var randomPartition_1 = __webpack_require__(59);
+exports.QuickSort2Random = randomPartition_1.QuickSort2Random;
+var rightPartition_1 = __webpack_require__(60);
+exports.QuickSort2RightPartition = rightPartition_1.QuickSort2RightPartition;
+// selection
+var base_11 = __webpack_require__(86);
+exports.SelectionSort = base_11.SelectionSort;
+// smooth
+var base_12 = __webpack_require__(45);
+exports.Smooth = base_12.Smooth;
+var fromBottom_1 = __webpack_require__(87);
+exports.SmoothSetUpBottom = fromBottom_1.SmoothSetUpBottom;
+// stooge
+var base_13 = __webpack_require__(88);
+exports.Stooge = base_13.Stooge;
+
+
+/***/ }),
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23355,6 +23469,3113 @@ var Smooth = /** @class */ (function (_super) {
 }(baseSort_1.BaseSort));
 exports.Smooth = Smooth;
 
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var board_1 = __webpack_require__(23);
+var index_1 = __webpack_require__(38);
+var shuffles = __webpack_require__(21);
+var sizes = __webpack_require__(25);
+var sorts = __webpack_require__(40);
+var valueTypes = __webpack_require__(24);
+exports.setUpScatter = function (location, data, query) {
+    // tslint:disable-next-line:no-var-requires
+    var tpl = __webpack_require__(47);
+    var html = tpl.render({
+        shuffles: shuffles,
+        sizes: sizes,
+        sorts: sorts,
+        valueTypes: valueTypes,
+    });
+    return html;
+};
+exports.scatterCallback = function () {
+    var boardsElement = document.getElementById("boards");
+    var createButton = document.getElementById("create");
+    var sizeElement = document.getElementById("size");
+    var orderSelect = document.getElementById("order");
+    var valueTypeSelect = document.getElementById("value-type");
+    var sortElement = document.getElementById("sort");
+    var boxHeight = 500;
+    var boxWidth = 500;
+    var boardList = [];
+    var autoInterval = null;
+    var delay = 100;
+    createButton.addEventListener("click", function () {
+        var size = sizes[sizeElement.value];
+        var value = valueTypes[valueTypeSelect.value];
+        var order = shuffles[orderSelect.value];
+        var Sort = sorts[sortElement.value];
+        // let board = new Boards.Board(size)
+        var board = new board_1.Board(size, order, value);
+        boardList.push({
+            board: board,
+            sort: new Sort(board),
+        });
+        index_1.createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement);
+    });
+    var stepElement = document.getElementById("step");
+    var boundStep = index_1.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
+    stepElement.addEventListener("click", boundStep);
+    index_1.createDelegatedEvent(boardsElement, "click", function (event, target) {
+        var wrapperElement = index_1.closestParent(target, ".wrapper");
+        var wrappers = document.getElementsByClassName("wrapper");
+        for (var i = 0; i < wrappers.length; i++) {
+            if (wrappers[i] === wrapperElement) {
+                boardList.splice(i, 1);
+                break;
+            }
+        }
+        wrapperElement.remove();
+    }, ".remove");
+    index_1.createDelegatedEvent(boardsElement, "click", function (event, target) {
+        var wrapperElement = index_1.closestParent(target, ".wrapper");
+        var wrappers = document.getElementsByClassName("wrapper");
+        var wrapperIndex;
+        for (var i = 0; i < wrappers.length; i++) {
+            if (wrappers[i] === wrapperElement) {
+                wrapperIndex = i;
+                break;
+            }
+        }
+        var item = boardList[wrapperIndex];
+        item.sort.reset();
+        index_1.reRenderBoard(wrapperIndex, item.sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
+    }, ".reset");
+    var autoElement = document.getElementById("auto");
+    autoElement.addEventListener("click", function (event) {
+        if (autoInterval) {
+            clearInterval(autoInterval);
+            autoInterval = null;
+            event.currentTarget.classList.remove("active");
+            boardsElement.classList.remove("auto");
+        }
+        else {
+            var currentBoundStep = index_1.step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
+            autoInterval = setInterval(currentBoundStep, delay);
+            event.currentTarget.classList.add("active");
+            boardsElement.classList.add("auto");
+        }
+    });
+};
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./controls/sort.njk"] = __webpack_require__( 48 );
+dependencies["./controls/count.njk"] = __webpack_require__( 90 );
+dependencies["./controls/order.njk"] = __webpack_require__( 91 );
+dependencies["./controls/values.njk"] = __webpack_require__( 92 );
+dependencies["./controls/runButtons.njk"] = __webpack_require__( 97 );
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/scatter.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<div><a href=\"../../index.html\">Index</a></div>\n<div><a href=\"javascript:history.back()\"><< Back</a></div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/sort.njk", false, "templates/scatter.njk", null, function(t_3,t_1) {
+if(t_3) { cb(t_3); return; }
+callback(null,t_1);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_4,t_2) {
+if(t_4) { cb(t_4); return; }
+callback(null,t_2);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/count.njk", false, "templates/scatter.njk", null, function(t_7,t_5) {
+if(t_7) { cb(t_7); return; }
+callback(null,t_5);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_8,t_6) {
+if(t_8) { cb(t_8); return; }
+callback(null,t_6);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/order.njk", false, "templates/scatter.njk", null, function(t_11,t_9) {
+if(t_11) { cb(t_11); return; }
+callback(null,t_9);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_12,t_10) {
+if(t_12) { cb(t_12); return; }
+callback(null,t_10);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/values.njk", false, "templates/scatter.njk", null, function(t_15,t_13) {
+if(t_15) { cb(t_15); return; }
+callback(null,t_13);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_16,t_14) {
+if(t_16) { cb(t_16); return; }
+callback(null,t_14);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n    </div>\n    ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/runButtons.njk", false, "templates/scatter.njk", null, function(t_19,t_17) {
+if(t_19) { cb(t_19); return; }
+callback(null,t_17);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_20,t_18) {
+if(t_20) { cb(t_20); return; }
+callback(null,t_18);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n  </div>\n  <div id=\"boards\"></div>\n</article>\n\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+})})})})});
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/scatter.njk"] , dependencies)
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/sort.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<label>\n  Sort:\n  <select id=\"sort\">\n    ";
+frame = frame.push();
+var t_3 = runtime.contextOrFrameLookup(context, frame, "sorts");
+if(t_3) {var t_1;
+if(runtime.isArray(t_3)) {
+var t_2 = t_3.length;
+for(t_1=0; t_1 < t_3.length; t_1++) {
+var t_4 = t_3[t_1][0]
+frame.set("name", t_3[t_1][0]);
+var t_5 = t_3[t_1][1]
+frame.set("sort", t_3[t_1][1]);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      <option value=\"";
+output += runtime.suppressValue(t_4, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_5),"title"), env.opts.autoescape);
+output += "</option>\n    ";
+;
+}
+} else {
+t_1 = -1;
+var t_2 = runtime.keys(t_3).length;
+for(var t_6 in t_3) {
+t_1++;
+var t_7 = t_3[t_6];
+frame.set("name", t_6);
+frame.set("sort", t_7);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      <option value=\"";
+output += runtime.suppressValue(t_6, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_7),"title"), env.opts.autoescape);
+output += "</option>\n    ";
+;
+}
+}
+}
+frame = frame.pop();
+output += "\n  </select>\n</label>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/sort.njk"] , dependencies)
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var Bubble = /** @class */ (function (_super) {
+    __extends(Bubble, _super);
+    function Bubble() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipSorted = false;
+        _this.shortCircuit = false;
+        return _this;
+    }
+    Bubble.prototype.setUpNext = function () {
+        if (this.comparisonNode === this.end) {
+            this.maxRounds--;
+            if (this.maxRounds === 0) {
+                this.setDone();
+            }
+            if (this.ordered && this.shortCircuit) {
+                this.setDone();
+            }
+            else {
+                this.ordered = true;
+            }
+            this.baseNode = 0;
+            this.comparisonNode = 1;
+            if (this.skipSorted) {
+                this.placed.push(this.end);
+                this.end--;
+                if (this.end === 0) {
+                    this.setDone();
+                }
+            }
+        }
+        else {
+            this.baseNode++;
+            this.comparisonNode++;
+        }
+    };
+    Bubble.prototype.setUp = function () {
+        this.maxRounds = this.length;
+        this.ordered = true;
+    };
+    Bubble.title = "Bubble Sort";
+    Bubble.links = [
+        {
+            name: "Bubble Sort: An Archaeological Algorithmic Analysis",
+            url: "https://users.cs.duke.edu/~ola/bubble/bubble.pdf",
+        },
+    ];
+    return Bubble;
+}(baseSort_1.BaseSort));
+exports.Bubble = Bubble;
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var Gnome = /** @class */ (function (_super) {
+    __extends(Gnome, _super);
+    function Gnome() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Gnome.prototype.setUpNext = function () {
+        if (this.baseNode === 0 || !this.lastSwapped) {
+            this.currentGnome++;
+            this.comparisonNode = this.currentGnome;
+            this.baseNode = this.currentGnome - 1;
+        }
+        else if (this.lastSwapped) {
+            this.baseNode--;
+            this.comparisonNode--;
+        }
+        if (this.comparisonNode >= this.length) {
+            this.setDone();
+        }
+    };
+    Gnome.prototype.setUp = function () {
+        this.currentGnome = 1;
+    };
+    Gnome.title = "Gnome Sort";
+    return Gnome;
+}(baseSort_1.BaseSort));
+exports.Gnome = Gnome;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(42);
+var CombEvenLarger = /** @class */ (function (_super) {
+    __extends(CombEvenLarger, _super);
+    function CombEvenLarger() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CombEvenLarger.title = "Comb(Shrink: 2.0)";
+    CombEvenLarger.shrink = 2.0;
+    return CombEvenLarger;
+}(base_1.Comb));
+exports.CombEvenLarger = CombEvenLarger;
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var base_1 = __webpack_require__(42);
+var base_2 = __webpack_require__(50);
+var CombGnome5 = /** @class */ (function (_super) {
+    __extends(CombGnome5, _super);
+    function CombGnome5() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 5;
+        return _this;
+    }
+    CombGnome5.prototype.setUp = function () {
+        this.comb = new base_1.Comb(this.board);
+        this.gnome = new base_2.Gnome(this.board);
+    };
+    CombGnome5.prototype.currentNodes = function () {
+        if (this.comb.gap >= this.gnomeSwitchValue) {
+            return this.comb.currentNodes();
+        }
+        else {
+            return this.gnome.currentNodes();
+        }
+    };
+    CombGnome5.prototype.reset = function () {
+        _super.prototype.reset.call(this);
+        this.gnome.done = false;
+        return this;
+    };
+    CombGnome5.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        var currentNodes;
+        if (this.comb.gap >= this.gnomeSwitchValue) {
+            currentNodes = this.comb.currentNodes();
+            this.comb.next();
+        }
+        else {
+            this.gnome.next();
+        }
+        this.steps = this.comb.steps + this.gnome.steps;
+        this.swaps = this.comb.swaps + this.gnome.swaps;
+        this.comparisons = this.comb.comparisons + this.gnome.comparisons;
+        this.done = this.gnome.done;
+        this.trackProfile();
+        return currentNodes;
+    };
+    CombGnome5.title = "Comb & Gnome(at gap 5)";
+    return CombGnome5;
+}(baseSort_1.BaseSort));
+exports.CombGnome5 = CombGnome5;
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var evenLarger_1 = __webpack_require__(51);
+var base_1 = __webpack_require__(50);
+var at5_1 = __webpack_require__(52);
+var CombGnomeLargeShrink5 = /** @class */ (function (_super) {
+    __extends(CombGnomeLargeShrink5, _super);
+    function CombGnomeLargeShrink5() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 5;
+        return _this;
+    }
+    CombGnomeLargeShrink5.prototype.setUp = function () {
+        this.comb = new evenLarger_1.CombEvenLarger(this.board);
+        this.gnome = new base_1.Gnome(this.board);
+    };
+    CombGnomeLargeShrink5.title = "Comb & Gnome(gap 5, shrink 2)";
+    return CombGnomeLargeShrink5;
+}(at5_1.CombGnome5));
+exports.CombGnomeLargeShrink5 = CombGnomeLargeShrink5;
+
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var QuickSort2 = /** @class */ (function (_super) {
+    __extends(QuickSort2, _super);
+    function QuickSort2() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.threeWay = false;
+        return _this;
+    }
+    QuickSort2.prototype.setUp = function () {
+        this.addToUpdate = [];
+        this.partitions = [];
+        this.setUpValues([this.baseNode, this.length - 1]);
+    };
+    QuickSort2.prototype.setUpValues = function (values) {
+        this.lower = values[0];
+        this.higher = values[0];
+        this.partitionStart = values[0];
+        this.partitionEnd = values[1];
+        this.setPartition();
+        this.partitionTop = this.partition;
+    };
+    QuickSort2.prototype.currentNodes = function () {
+        var nodes = [];
+        if (this.partition !== this.lower) {
+            nodes.push(this.lower);
+        }
+        nodes.push(this.partition);
+        if (this.partition !== this.higher) {
+            nodes.push(this.higher);
+        }
+        return nodes;
+    };
+    QuickSort2.prototype.setUpNext = function () {
+        // if higher is at the end of the current partition
+        if (this.higher === this.partitionEnd) {
+            if (this.threeWay) {
+                for (var i = this.partition; i <= this.partitionTop; i++) {
+                    this.placed.push(i);
+                }
+            }
+            else {
+                this.placed.push(this.partition);
+            }
+            var partitions = this.partitions;
+            var topLow = void 0;
+            if (this.threeWay) {
+                topLow = this.partitionTop;
+            }
+            else {
+                topLow = this.partition;
+            }
+            if (this.higher > topLow + 1) {
+                partitions.unshift([topLow + 1, this.higher]);
+            }
+            if (this.lower < this.partition - 1) {
+                partitions.unshift([this.lower, this.partition - 1]);
+            }
+            if (partitions.length) {
+                var newPartition = partitions.shift();
+                this.setUpValues(newPartition);
+            }
+            else {
+                this.setDone();
+                return [];
+            }
+        }
+    };
+    QuickSort2.prototype.setPartition = function () {
+        this.partition = this.lower;
+    };
+    QuickSort2.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var valuesToUpdate = [];
+        // look at the next value
+        this.higher++;
+        var values = this.board.values();
+        this.comparisons++;
+        var threeWay = this.threeWay && values[this.higher] === values[this.partition];
+        if (values[this.higher] < values[this.partition] || threeWay) {
+            // if the value at higher is less than the partition
+            this.swaps++;
+            var temp = values.splice(this.higher, 1)[0];
+            values.splice(this.partition, 0, temp);
+            this.board.setPoints(values);
+            if (threeWay) {
+                this.partitionTop++;
+            }
+            else {
+                this.partition++;
+                this.partitionTop++;
+            }
+            for (var i = this.partition - 1; i <= this.higher; i++) {
+                if (i >= 0) {
+                    valuesToUpdate.push(i);
+                }
+            }
+        }
+        if (this.addToUpdate.length) {
+            this.addToUpdate.forEach(function (index) {
+                if (valuesToUpdate.indexOf(index) === -1) {
+                    valuesToUpdate.push(index);
+                }
+            });
+            this.addToUpdate = [];
+        }
+        this.setUpNext();
+        this.trackProfile();
+        return valuesToUpdate;
+    };
+    QuickSort2.title = "Quick Sort(Left Partition)";
+    return QuickSort2;
+}(baseSort_1.BaseSort));
+exports.QuickSort2 = QuickSort2;
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(49);
+var BubbleSortConcurrent = /** @class */ (function (_super) {
+    __extends(BubbleSortConcurrent, _super);
+    function BubbleSortConcurrent() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BubbleSortConcurrent.prototype.setUp = function () {
+        _super.prototype.setUp.call(this);
+        this.numberConcurrent = this.constructor.numberConcurrent;
+        this.setUpBaseNodes();
+    };
+    BubbleSortConcurrent.prototype.setUpBaseNodes = function (base) {
+        if (base === void 0) { base = 0; }
+        // sets up base nodes with a minimum diff of 2
+        var numberConcurrent = this.numberConcurrent;
+        var nodeDiffs = Math.floor(this.length / numberConcurrent);
+        if (nodeDiffs < 2) {
+            nodeDiffs = 2;
+            numberConcurrent = Math.floor(this.length / 2);
+        }
+        this.baseNodes = [];
+        this.orderedSets = [];
+        this.fullRound = [];
+        for (var i = 0; i < numberConcurrent; i++) {
+            this.baseNodes.push(0 + i * nodeDiffs);
+            if (i === 0) {
+                this.orderedSets.push(true);
+                this.fullRound.push(true);
+            }
+            else {
+                this.orderedSets.push(false);
+                this.fullRound.push(false);
+            }
+        }
+    };
+    BubbleSortConcurrent.prototype.currentNodes = function () {
+        if (this.done) {
+            return [];
+        }
+        return this.baseNodes;
+    };
+    BubbleSortConcurrent.prototype.setUpNext = function () {
+        var _this = this;
+        var indexToRemove;
+        this.baseNodes.forEach(function (node, index) {
+            _this.baseNodes[index] += 1;
+        });
+        this.baseNodes.forEach(function (node, index) {
+            if (node === _this.end) {
+                if (_this.fullRound[index]) {
+                    _this.placed.push(_this.end);
+                    _this.end--;
+                    _this.maxRounds--;
+                    if (_this.maxRounds === 0) {
+                        _this.setDone();
+                    }
+                }
+                if (_this.end === 0) {
+                    _this.setDone();
+                }
+                if (_this.orderedSets[index]) {
+                    _this.setDone();
+                }
+                var nextIndex = void 0;
+                if (index < _this.baseNodes.length - 1) {
+                    nextIndex = index + 1;
+                }
+                else {
+                    nextIndex = 0;
+                }
+                if (_this.baseNodes[nextIndex] <= 1 && _this.fullRound[index]) {
+                    indexToRemove = index;
+                }
+                else {
+                    _this.baseNodes[index] = 0;
+                }
+                _this.orderedSets[index] = true;
+                _this.fullRound[index] = true;
+            }
+        });
+        if (indexToRemove !== undefined) {
+            this.baseNodes.splice(indexToRemove, 1);
+            this.orderedSets.splice(indexToRemove, 1);
+            this.fullRound.splice(indexToRemove, 1);
+        }
+    };
+    BubbleSortConcurrent.prototype.specificNodesInOrder = function (values, firstIndex, secondIndex) {
+        this.comparisons++;
+        return values[firstIndex] < values[secondIndex];
+    };
+    BubbleSortConcurrent.prototype.next = function () {
+        var _this = this;
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes().slice();
+        var values = this.board.values();
+        var nodes = currentNodes;
+        currentNodes.forEach(function (node, index) {
+            if (!_this.specificNodesInOrder(values, node, node + 1)) {
+                _this.orderedSets[index] = false;
+                _this.swap([node, node + 1]);
+            }
+        });
+        this.setUpNext();
+        this.trackProfile();
+        return currentNodes;
+    };
+    BubbleSortConcurrent.title = "Bubble Sort(Concurrent 2)";
+    BubbleSortConcurrent.numberConcurrent = 2;
+    return BubbleSortConcurrent;
+}(base_1.Bubble));
+exports.BubbleSortConcurrent = BubbleSortConcurrent;
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var BogoSingle = /** @class */ (function (_super) {
+    __extends(BogoSingle, _super);
+    function BogoSingle() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BogoSingle.prototype.setUp = function () {
+        this.checkSorted();
+        this.setUpNext();
+    };
+    BogoSingle.prototype.nodesInOrder = function (values) {
+        // always swap
+        return false;
+    };
+    BogoSingle.prototype.setUpNext = function () {
+        var first = Math.floor(Math.random() * this.length);
+        var second = Math.floor(Math.random() * this.length);
+        while (first === second) {
+            second = Math.floor(Math.random() * this.length);
+        }
+        this.baseNode = Math.min(first, second);
+        this.comparisonNode = Math.max(first, second);
+    };
+    BogoSingle.prototype.next = function () {
+        var currentNodes = this.currentNodes();
+        _super.prototype.next.call(this);
+        this.checkSorted();
+        this.trackProfile();
+        return currentNodes;
+    };
+    BogoSingle.title = "Bozo(Single Swap)";
+    return BogoSingle;
+}(baseSort_1.BaseSort));
+exports.BogoSingle = BogoSingle;
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var Cocktail = /** @class */ (function (_super) {
+    __extends(Cocktail, _super);
+    function Cocktail() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shortCircuit = false;
+        return _this;
+    }
+    Cocktail.prototype.setUp = function () {
+        this.start = 0;
+        this.end = this.length - 1;
+        this.direction = 1;
+    };
+    Cocktail.prototype.setUpNext = function () {
+        if (this.direction) {
+            if (this.comparisonNode === this.end) {
+                this.placed.push(this.end);
+                this.end--;
+                this.baseNode--;
+                this.comparisonNode--;
+                this.direction = 0;
+                if (this.ordered && this.shortCircuit) {
+                    this.setDone();
+                }
+                else {
+                    this.ordered = true;
+                }
+            }
+            else {
+                this.baseNode++;
+                this.comparisonNode++;
+            }
+        }
+        else {
+            if (this.baseNode === this.start) {
+                this.placed.push(this.start);
+                this.direction = 1;
+                this.start++;
+                this.baseNode++;
+                this.comparisonNode++;
+                if (this.ordered && this.shortCircuit) {
+                    this.setDone();
+                }
+                else {
+                    this.ordered = true;
+                }
+            }
+            else {
+                this.baseNode--;
+                this.comparisonNode--;
+            }
+        }
+        if (!(this.start < this.end)) {
+            this.setDone();
+        }
+    };
+    // is there a way to respect sorted sections?
+    Cocktail.title = "Cocktail Sort";
+    return Cocktail;
+}(baseSort_1.BaseSort));
+exports.Cocktail = Cocktail;
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(22);
+var baseSort_1 = __webpack_require__(41);
+var Cycle = /** @class */ (function (_super) {
+    __extends(Cycle, _super);
+    function Cycle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipPlaced = false;
+        return _this;
+    }
+    Cycle.prototype.setUp = function () {
+        this.setCurrentValue(this.baseNode);
+        this.numberLess = 0;
+    };
+    Cycle.prototype.currentNodes = function () {
+        return [this.comparisonNode];
+    };
+    Cycle.prototype.setCurrentValue = function (index) {
+        this.currentValue = this.board.values()[index];
+        this.shadow = [{ index: this.baseNode, value: this.currentValue }];
+    };
+    Cycle.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = lodash_1.range(0, this.length);
+        var values = this.board.values();
+        this.lesserThanComparison(values);
+        this.setUpNext();
+        this.trackProfile();
+        return currentNodes;
+    };
+    Cycle.prototype.lesserThanComparison = function (values) {
+        this.comparisons++;
+        if (this.currentValue > values[this.comparisonNode]) {
+            this.numberLess++;
+        }
+    };
+    Cycle.prototype.setUpNext = function () {
+        var index = this.numberLess + this.baseNode;
+        this.comparisonNode++;
+        if (this.comparisonNode === this.baseNode) {
+            this.comparisonNode++;
+        }
+        if (this.comparisonNode === this.length) {
+            this.placed.push(index);
+            if (index !== this.baseNode ||
+                this.currentValue !== this.board.values()[this.baseNode]) {
+                var values = this.board.values();
+                while (values[index] === this.currentValue) {
+                    index++;
+                }
+                var oldValue = this.currentValue;
+                this.setCurrentValue(index);
+                this.board.set(index, oldValue);
+                this.swaps++;
+            }
+            if (this.baseNode === index) {
+                this.baseNode++;
+                while (this.skipPlaced && this.placed.indexOf(this.baseNode) !== -1) {
+                    this.baseNode++;
+                }
+                this.setCurrentValue(this.baseNode);
+            }
+            this.comparisonNode = this.baseNode + 1;
+            this.numberLess = 0;
+            if (this.baseNode >= this.length - 1) {
+                this.setDone();
+            }
+        }
+    };
+    Cycle.title = "Cycle Sort";
+    Cycle.links = [
+        {
+            name: "Cyclesort - a curious little sorting algorithm",
+            url: "https://corte.si/posts/code/cyclesort/index.html",
+        },
+    ];
+    return Cycle;
+}(baseSort_1.BaseSort));
+exports.Cycle = Cycle;
+
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(54);
+var QuickSort2Random = /** @class */ (function (_super) {
+    __extends(QuickSort2Random, _super);
+    function QuickSort2Random() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    QuickSort2Random.prototype.setPartition = function () {
+        var diff = this.partitionEnd - this.partitionStart + 1;
+        var index = this.partitionStart + Math.floor(Math.random() * diff);
+        this.partition = this.lower;
+        var temp = this.board.get(index).value;
+        this.board.set(index, this.board.get(this.partition).value);
+        this.board.set(this.partition, temp);
+        this.addToUpdate = [this.lower, index];
+    };
+    QuickSort2Random.title = "Quick Sort(Random Partition)";
+    return QuickSort2Random;
+}(base_1.QuickSort2));
+exports.QuickSort2Random = QuickSort2Random;
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(54);
+var QuickSort2RightPartition = /** @class */ (function (_super) {
+    __extends(QuickSort2RightPartition, _super);
+    function QuickSort2RightPartition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    QuickSort2RightPartition.prototype.setPartition = function () {
+        this.partition = this.lower;
+        var temp = this.board.get(this.partitionEnd).value;
+        this.board.set(this.partitionEnd, this.board.get(this.partition).value);
+        this.board.set(this.partition, temp);
+        this.addToUpdate = [this.lower, this.partitionEnd];
+    };
+    QuickSort2RightPartition.title = "Quick Sort(Right Partition)";
+    return QuickSort2RightPartition;
+}(base_1.QuickSort2));
+exports.QuickSort2RightPartition = QuickSort2RightPartition;
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(22);
+var random_1 = __webpack_require__(36);
+var baseSort_1 = __webpack_require__(41);
+var Bogo = /** @class */ (function (_super) {
+    __extends(Bogo, _super);
+    function Bogo() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Bogo.prototype.setUp = function () {
+        this.checkSorted();
+    };
+    Bogo.prototype.currentNodes = function () {
+        if (!this.done) {
+            return lodash_1.range(0, this.board.length);
+        }
+        else {
+            return [];
+        }
+    };
+    Bogo.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        var currentNodes = this.currentNodes();
+        this.steps++;
+        var values = this.board.values();
+        var start = values.slice();
+        this.board.setPoints(random_1.RandomShuffle.shuffle(values));
+        var difference = 0;
+        for (var i = 0; i < values.length; i++) {
+            if (values[i] !== start[i]) {
+                difference++;
+            }
+        }
+        this.swaps += difference / 2;
+        this.checkSorted();
+        this.trackProfile();
+        return currentNodes;
+    };
+    Bogo.title = "Bogo";
+    return Bogo;
+}(baseSort_1.BaseSort));
+exports.Bogo = Bogo;
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(22);
+var baseSort_1 = __webpack_require__(41);
+var BogoBogo = /** @class */ (function (_super) {
+    __extends(BogoBogo, _super);
+    function BogoBogo() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BogoBogo.prototype.setUp = function () {
+        this.currentTop = 0;
+    };
+    BogoBogo.prototype.currentNodes = function () {
+        return [this.currentTop];
+    };
+    BogoBogo.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        var currentNodes = this.currentNodes();
+        this.steps++;
+        var values = this.board.values();
+        this.comparisons++;
+        if (values[this.currentTop] < values[this.currentTop + 1]) {
+            this.currentTop++;
+        }
+        else {
+            var start = values.slice();
+            var shuffledSubset = lodash_1.shuffle(values.slice(0, this.currentTop + 2));
+            values.splice.apply(values, [0, shuffledSubset.length].concat(shuffledSubset));
+            this.board.setPoints(values);
+            var difference = 0;
+            for (var i = 0; i < values.length; i++) {
+                if (values[i] !== start[i]) {
+                    difference++;
+                }
+            }
+            this.swaps += difference / 2;
+            this.currentTop = 0;
+        }
+        if (this.currentTop === this.length - 1) {
+            this.setDone();
+        }
+        return currentNodes;
+    };
+    BogoBogo.title = "Bogobogosort";
+    return BogoBogo;
+}(baseSort_1.BaseSort));
+exports.BogoBogo = BogoBogo;
+
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(22);
+var baseSort_1 = __webpack_require__(41);
+var Permutation = /** @class */ (function (_super) {
+    __extends(Permutation, _super);
+    function Permutation() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Permutation.prototype.setUp = function () {
+        this.permutation = lodash_1.range(0, this.board.length);
+        this.checkSorted();
+        this.changed = [this.length - 1];
+    };
+    Permutation.prototype.currentNodes = function () {
+        return this.changed;
+    };
+    Permutation.prototype.getHighestPossible = function (array, highest) {
+        while (array.indexOf(highest) !== -1) {
+            highest--;
+        }
+        return highest;
+    };
+    Permutation.prototype.findNextPermutation = function () {
+        var nextPermutation = this.permutation;
+        var lastValue = nextPermutation.pop();
+        while (lastValue === this.getHighestPossible(nextPermutation, this.length - 1)) {
+            lastValue = nextPermutation.pop();
+        }
+        if (this.changed.indexOf(nextPermutation.length) === -1) {
+            this.changed.push(nextPermutation.length);
+        }
+        var nextNum = lastValue + 1;
+        while (nextPermutation.length < this.length) {
+            if (nextPermutation.indexOf(nextNum) === -1) {
+                nextPermutation.push(nextNum);
+                nextNum = 0;
+            }
+            else {
+                nextNum++;
+            }
+        }
+    };
+    Permutation.prototype.setValues = function () {
+        var _this = this;
+        var values = [];
+        var oldValues = this.original;
+        var currentBoard = this.board.values();
+        this.permutation.forEach(function (index, i) {
+            if (currentBoard[i] !== oldValues[index]) {
+                _this.swaps++;
+            }
+            values.push(oldValues[index]);
+        });
+        this.board.setPoints(values);
+    };
+    Permutation.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        this.findNextPermutation();
+        this.setValues();
+        this.checkSorted();
+        this.trackProfile();
+        return this.currentNodes();
+    };
+    Permutation.title = "Permutation Sort";
+    return Permutation;
+}(baseSort_1.BaseSort));
+exports.Permutation = Permutation;
+
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var single_1 = __webpack_require__(56);
+var BogoSingleCompare = /** @class */ (function (_super) {
+    __extends(BogoSingleCompare, _super);
+    function BogoSingleCompare() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BogoSingleCompare.prototype.nodesInOrder = function (values) {
+        // used to compare nodes
+        var inOrder = values[this.baseNode] <= values[this.comparisonNode];
+        if (!inOrder) {
+            this.ordered = false;
+        }
+        this.comparisons++;
+        return inOrder;
+    };
+    BogoSingleCompare.title = "Smart Bozo(Compare & Single Swap)";
+    return BogoSingleCompare;
+}(single_1.BogoSingle));
+exports.BogoSingleCompare = BogoSingleCompare;
+
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var concurrent_1 = __webpack_require__(55);
+var BubbleSortConcurrent10 = /** @class */ (function (_super) {
+    __extends(BubbleSortConcurrent10, _super);
+    function BubbleSortConcurrent10() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BubbleSortConcurrent10.title = "Bubble Sort(Concurrent 10)";
+    BubbleSortConcurrent10.numberConcurrent = 10;
+    return BubbleSortConcurrent10;
+}(concurrent_1.BubbleSortConcurrent));
+exports.BubbleSortConcurrent10 = BubbleSortConcurrent10;
+
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var concurrent_1 = __webpack_require__(55);
+var BubbleSortConcurrent5 = /** @class */ (function (_super) {
+    __extends(BubbleSortConcurrent5, _super);
+    function BubbleSortConcurrent5() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BubbleSortConcurrent5.title = "Bubble Sort(Concurrent 5)";
+    BubbleSortConcurrent5.numberConcurrent = 5;
+    return BubbleSortConcurrent5;
+}(concurrent_1.BubbleSortConcurrent));
+exports.BubbleSortConcurrent5 = BubbleSortConcurrent5;
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(49);
+var BubbleSortDontRestart = /** @class */ (function (_super) {
+    __extends(BubbleSortDontRestart, _super);
+    function BubbleSortDontRestart() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BubbleSortDontRestart.prototype.swapValues = function (index1, index2) {
+        this.looking = false;
+        this.swaps++;
+        var baseValue = this.board.get(this.baseNode).value;
+        var newValues = this.board.values().slice();
+        newValues.splice(index1, 1);
+        newValues.splice(index2 - 1, 0, baseValue);
+        this.board.setPoints(newValues);
+        this.baseNode = Math.max(index1 - 1, 0);
+        this.comparisonNode = this.baseNode + 1;
+    };
+    BubbleSortDontRestart.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        var values = this.board.values();
+        if (!this.nodesInOrder(values)) {
+            this.looking = true;
+            this.comparisonNode++;
+            if (this.comparisonNode === this.length) {
+                this.swapValues(this.baseNode, this.comparisonNode);
+            }
+        }
+        else if (this.looking) {
+            this.swapValues(this.baseNode, this.comparisonNode);
+        }
+        else {
+            this.baseNode++;
+            this.comparisonNode++;
+            if (this.comparisonNode === this.length) {
+                this.setDone();
+            }
+        }
+        this.trackProfile();
+        return currentNodes;
+    };
+    BubbleSortDontRestart.title = "Bubble(Don't restart)";
+    return BubbleSortDontRestart;
+}(base_1.Bubble));
+exports.BubbleSortDontRestart = BubbleSortDontRestart;
+
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(49);
+var BubbleOptimized = /** @class */ (function (_super) {
+    __extends(BubbleOptimized, _super);
+    function BubbleOptimized() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipSorted = true;
+        _this.shortCircuit = true;
+        return _this;
+    }
+    BubbleOptimized.title = "Bubble(Short Circuit & Skip Sorted)";
+    return BubbleOptimized;
+}(base_1.Bubble));
+exports.BubbleOptimized = BubbleOptimized;
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(49);
+var BubbleShortCircuit = /** @class */ (function (_super) {
+    __extends(BubbleShortCircuit, _super);
+    function BubbleShortCircuit() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shortCircuit = true;
+        return _this;
+    }
+    BubbleShortCircuit.title = "Bubble(Short Circuit)";
+    return BubbleShortCircuit;
+}(base_1.Bubble));
+exports.BubbleShortCircuit = BubbleShortCircuit;
+
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(49);
+var BubbleSkipSorted = /** @class */ (function (_super) {
+    __extends(BubbleSkipSorted, _super);
+    function BubbleSkipSorted() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipSorted = true;
+        _this.shortCircuit = false;
+        return _this;
+    }
+    BubbleSkipSorted.title = "Bubble(Skip Sorted)";
+    return BubbleSkipSorted;
+}(base_1.Bubble));
+exports.BubbleSkipSorted = BubbleSkipSorted;
+
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(57);
+var CocktailShortCircuit = /** @class */ (function (_super) {
+    __extends(CocktailShortCircuit, _super);
+    function CocktailShortCircuit() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shortCircuit = true;
+        return _this;
+    }
+    CocktailShortCircuit.title = "Cocktail(Short Circuit)";
+    return CocktailShortCircuit;
+}(base_1.Cocktail));
+exports.CocktailShortCircuit = CocktailShortCircuit;
+
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(42);
+var CombLargeShrink = /** @class */ (function (_super) {
+    __extends(CombLargeShrink, _super);
+    function CombLargeShrink() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CombLargeShrink.shrink = 1.5;
+    CombLargeShrink.title = "Comb(Large Shrink: 1.5)";
+    return CombLargeShrink;
+}(base_1.Comb));
+exports.CombLargeShrink = CombLargeShrink;
+
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(42);
+var CombSmallShrink = /** @class */ (function (_super) {
+    __extends(CombSmallShrink, _super);
+    function CombSmallShrink() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CombSmallShrink.shrink = 1.1;
+    CombSmallShrink.title = "Comb(Small Shrink: 1.1)";
+    return CombSmallShrink;
+}(base_1.Comb));
+exports.CombSmallShrink = CombSmallShrink;
+
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var at5_1 = __webpack_require__(52);
+var CombGnome10 = /** @class */ (function (_super) {
+    __extends(CombGnome10, _super);
+    function CombGnome10() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 10;
+        return _this;
+    }
+    CombGnome10.title = "Comb & Gnome(at gap 10)";
+    return CombGnome10;
+}(at5_1.CombGnome5));
+exports.CombGnome10 = CombGnome10;
+
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var at5_1 = __webpack_require__(52);
+var CombGnome2 = /** @class */ (function (_super) {
+    __extends(CombGnome2, _super);
+    function CombGnome2() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 2;
+        return _this;
+    }
+    CombGnome2.title = "Comb & Gnome(at gap 2)";
+    return CombGnome2;
+}(at5_1.CombGnome5));
+exports.CombGnome2 = CombGnome2;
+
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var at5_1 = __webpack_require__(52);
+var CombGnome3 = /** @class */ (function (_super) {
+    __extends(CombGnome3, _super);
+    function CombGnome3() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 3;
+        return _this;
+    }
+    CombGnome3.title = "Comb & Gnome(at gap 3)";
+    return CombGnome3;
+}(at5_1.CombGnome5));
+exports.CombGnome3 = CombGnome3;
+
+
+/***/ }),
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var evenLarger_1 = __webpack_require__(51);
+var base_1 = __webpack_require__(50);
+var largeShrink5_1 = __webpack_require__(53);
+var CombGnomeLargeShrink10 = /** @class */ (function (_super) {
+    __extends(CombGnomeLargeShrink10, _super);
+    function CombGnomeLargeShrink10() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 10;
+        return _this;
+    }
+    CombGnomeLargeShrink10.prototype.setUp = function () {
+        this.comb = new evenLarger_1.CombEvenLarger(this.board);
+        this.gnome = new base_1.Gnome(this.board);
+    };
+    CombGnomeLargeShrink10.title = "Comb & Gnome(gap 10, shrink 2)";
+    return CombGnomeLargeShrink10;
+}(largeShrink5_1.CombGnomeLargeShrink5));
+exports.CombGnomeLargeShrink10 = CombGnomeLargeShrink10;
+
+
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var evenLarger_1 = __webpack_require__(51);
+var base_1 = __webpack_require__(50);
+var largeShrink5_1 = __webpack_require__(53);
+var CombGnomeLargeShrink2 = /** @class */ (function (_super) {
+    __extends(CombGnomeLargeShrink2, _super);
+    function CombGnomeLargeShrink2() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 2;
+        return _this;
+    }
+    CombGnomeLargeShrink2.prototype.setUp = function () {
+        this.comb = new evenLarger_1.CombEvenLarger(this.board);
+        this.gnome = new base_1.Gnome(this.board);
+    };
+    CombGnomeLargeShrink2.title = "Comb & Gnome(gap 2, shrink 2)";
+    return CombGnomeLargeShrink2;
+}(largeShrink5_1.CombGnomeLargeShrink5));
+exports.CombGnomeLargeShrink2 = CombGnomeLargeShrink2;
+
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var evenLarger_1 = __webpack_require__(51);
+var base_1 = __webpack_require__(50);
+var largeShrink5_1 = __webpack_require__(53);
+var CombGnomeLargeShrink3 = /** @class */ (function (_super) {
+    __extends(CombGnomeLargeShrink3, _super);
+    function CombGnomeLargeShrink3() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gnomeSwitchValue = 3;
+        return _this;
+    }
+    CombGnomeLargeShrink3.prototype.setUp = function () {
+        this.comb = new evenLarger_1.CombEvenLarger(this.board);
+        this.gnome = new base_1.Gnome(this.board);
+    };
+    CombGnomeLargeShrink3.title = "Comb & Gnome(gap 3, shrink 2)";
+    return CombGnomeLargeShrink3;
+}(largeShrink5_1.CombGnomeLargeShrink5));
+exports.CombGnomeLargeShrink3 = CombGnomeLargeShrink3;
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(58);
+var CycleOptimized = /** @class */ (function (_super) {
+    __extends(CycleOptimized, _super);
+    function CycleOptimized() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.skipPlaced = true;
+        return _this;
+    }
+    CycleOptimized.title = "Cycle Optimized";
+    return CycleOptimized;
+}(base_1.Cycle));
+exports.CycleOptimized = CycleOptimized;
+
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var Insertion = /** @class */ (function (_super) {
+    __extends(Insertion, _super);
+    function Insertion() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.insertValue = null;
+        return _this;
+    }
+    Insertion.prototype.setUp = function () {
+        this.baseNode = 1;
+    };
+    Insertion.prototype.currentNodes = function () {
+        if (this.done) {
+            return [];
+        }
+        var nodes = [this.baseNode];
+        if (this.comparisonNode >= 0) {
+            nodes.push(this.comparisonNode);
+        }
+        return nodes;
+    };
+    Insertion.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        if (this.insertValue === null) {
+            this.insertValue = this.board.values()[this.baseNode];
+            this.shadow = [{ index: this.baseNode, value: this.insertValue }];
+            this.comparisonNode = this.baseNode - 1;
+        }
+        var nodes = [this.baseNode];
+        this.comparisons++;
+        if (this.insertValue < this.board.values()[this.comparisonNode]) {
+            nodes = [this.comparisonNode, this.baseNode];
+            this.swaps += 0.5;
+            this.board.set(this.comparisonNode + 1, this.board.values()[this.comparisonNode]);
+            this.comparisonNode--;
+        }
+        else {
+            if (this.comparisonNode + 1 !== this.baseNode) {
+                nodes = [this.comparisonNode + 1];
+                this.swaps += 0.5;
+                this.board.set(this.comparisonNode + 1, this.insertValue);
+            }
+            this.baseNode++;
+            this.insertValue = null;
+        }
+        if (this.baseNode === this.length) {
+            this.setDone();
+        }
+        this.trackProfile();
+        return nodes;
+    };
+    Insertion.title = "Insertion Sort";
+    return Insertion;
+}(baseSort_1.BaseSort));
+exports.Insertion = Insertion;
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(44);
+var OddEvenConcurrent = /** @class */ (function (_super) {
+    __extends(OddEvenConcurrent, _super);
+    function OddEvenConcurrent() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OddEvenConcurrent.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        var values = this.board.values();
+        while (this.baseNode !== undefined) {
+            if (!this.nodesInOrder(values)) {
+                this.swap();
+            }
+            this.baseNode = this.baseNodes.shift();
+            if (this.baseNode) {
+                this.comparisonNode = this.baseNode + 1;
+            }
+        }
+        this.setUpNext();
+        this.trackProfile();
+        return currentNodes;
+    };
+    OddEvenConcurrent.title = "Odd Even(Concurrent)";
+    return OddEvenConcurrent;
+}(base_1.OddEven));
+exports.OddEvenConcurrent = OddEvenConcurrent;
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(54);
+var QuickSort3 = /** @class */ (function (_super) {
+    __extends(QuickSort3, _super);
+    function QuickSort3() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.threeWay = true;
+        return _this;
+    }
+    QuickSort3.title = "Quick Sort 3(Left Partition)";
+    return QuickSort3;
+}(base_1.QuickSort2));
+exports.QuickSort3 = QuickSort3;
+
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var randomPartition_1 = __webpack_require__(59);
+var QuickSort3Random = /** @class */ (function (_super) {
+    __extends(QuickSort3Random, _super);
+    function QuickSort3Random() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.threeWay = true;
+        return _this;
+    }
+    QuickSort3Random.title = "Quick Sort 3(Random Partition)";
+    return QuickSort3Random;
+}(randomPartition_1.QuickSort2Random));
+exports.QuickSort3Random = QuickSort3Random;
+
+
+/***/ }),
+/* 85 */,
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var SelectionSort = /** @class */ (function (_super) {
+    __extends(SelectionSort, _super);
+    function SelectionSort() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    SelectionSort.prototype.setUp = function () {
+        this.baseIndex = 0;
+    };
+    SelectionSort.prototype.setUpNext = function () {
+        this.comparisonNode++;
+        if (this.comparisonNode === this.length) {
+            if (this.baseNode !== this.baseIndex) {
+                this.swap([this.baseNode, this.baseIndex]);
+            }
+            this.baseIndex++;
+            this.baseNode = this.baseIndex;
+            this.comparisonNode = this.baseNode + 1;
+            if (this.baseNode === this.length - 1) {
+                this.setDone();
+            }
+        }
+    };
+    SelectionSort.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        var values = this.board.values();
+        if (!this.nodesInOrder(values)) {
+            this.baseNode = this.comparisonNode;
+        }
+        this.setUpNext();
+        this.trackProfile();
+        return currentNodes;
+    };
+    SelectionSort.title = "Selection Sort";
+    return SelectionSort;
+}(baseSort_1.BaseSort));
+exports.SelectionSort = SelectionSort;
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_1 = __webpack_require__(45);
+var SmoothSetUpBottom = /** @class */ (function (_super) {
+    __extends(SmoothSetUpBottom, _super);
+    function SmoothSetUpBottom() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    SmoothSetUpBottom.prototype.setUp = function () {
+        _super.prototype.setUp.call(this);
+        this.baseNode = 1;
+        this.treeSizes = [1];
+        this.roots = [0];
+    };
+    SmoothSetUpBottom.title = "Smooth Sort(Set up from bottom)";
+    SmoothSetUpBottom.fromBottom = true;
+    return SmoothSetUpBottom;
+}(base_1.Smooth));
+exports.SmoothSetUpBottom = SmoothSetUpBottom;
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseSort_1 = __webpack_require__(41);
+var Stooge = /** @class */ (function (_super) {
+    __extends(Stooge, _super);
+    function Stooge() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Stooge.prototype.subsets = function (indexes) {
+        var first = indexes[0], last = indexes[1];
+        // find the number of elements
+        var diff = last - first + 1;
+        // find the number to adjust by
+        var sectionSize = Math.ceil(diff * 2 / 3) - 1;
+        return [
+            [first, first + sectionSize],
+            [last - sectionSize, last],
+            [first, first + sectionSize],
+        ];
+    };
+    Stooge.prototype.breakDownSubset = function (indexes) {
+        var final = [indexes];
+        while (this.hasLargeEnoughDiff(final[0])) {
+            final = this.subsets(final.shift()).concat(final);
+        }
+        return final;
+    };
+    Stooge.prototype.hasLargeEnoughDiff = function (nums) {
+        return nums[1] - nums[0] >= 2;
+    };
+    Stooge.prototype.setUp = function () {
+        this.partitions = this.breakDownSubset([0, this.length - 1]);
+        var nextValuess = this.partitions.shift();
+        this.baseNode = nextValuess[0], this.comparisonNode = nextValuess[1];
+    };
+    Stooge.prototype.setUpNext = function () {
+        if (this.partitions.length) {
+            var nextValues = this.partitions.shift();
+            if (this.hasLargeEnoughDiff(nextValues)) {
+                this.partitions = this.breakDownSubset(nextValues).concat(this.partitions);
+                nextValues = this.partitions.shift();
+            }
+            this.baseNode = nextValues[0], this.comparisonNode = nextValues[1];
+        }
+        else {
+            this.setDone();
+        }
+    };
+    Stooge.title = "Stooge Sort";
+    return Stooge;
+}(baseSort_1.BaseSort));
+exports.Stooge = Stooge;
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rightPartition_1 = __webpack_require__(60);
+var QuickSort3RightPartition = /** @class */ (function (_super) {
+    __extends(QuickSort3RightPartition, _super);
+    function QuickSort3RightPartition() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.threeWay = true;
+        return _this;
+    }
+    QuickSort3RightPartition.title = "Quick Sort 3(Right Partition)";
+    return QuickSort3RightPartition;
+}(rightPartition_1.QuickSort2RightPartition));
+exports.QuickSort3RightPartition = QuickSort3RightPartition;
+
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/count.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<label>\n  Point count:\n  <select id=\"size\">\n    ";
+frame = frame.push();
+var t_3 = runtime.contextOrFrameLookup(context, frame, "sizes");
+if(t_3) {var t_1;
+if(runtime.isArray(t_3)) {
+var t_2 = t_3.length;
+for(t_1=0; t_1 < t_3.length; t_1++) {
+var t_4 = t_3[t_1][0]
+frame.set("name", t_3[t_1][0]);
+var t_5 = t_3[t_1][1]
+frame.set("size", t_3[t_1][1]);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      <option value=\"";
+output += runtime.suppressValue(t_4, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_5),"label"), env.opts.autoescape);
+output += "</option>\n    ";
+;
+}
+} else {
+t_1 = -1;
+var t_2 = runtime.keys(t_3).length;
+for(var t_6 in t_3) {
+t_1++;
+var t_7 = t_3[t_6];
+frame.set("name", t_6);
+frame.set("size", t_7);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      <option value=\"";
+output += runtime.suppressValue(t_6, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_7),"label"), env.opts.autoescape);
+output += "</option>\n    ";
+;
+}
+}
+}
+frame = frame.pop();
+output += "\n  </select>\n<label>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/count.njk"] , dependencies)
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/order.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<label>\n  Order:\n  <select id=\"order\">\n    ";
+frame = frame.push();
+var t_3 = runtime.contextOrFrameLookup(context, frame, "shuffles");
+if(t_3) {var t_1;
+if(runtime.isArray(t_3)) {
+var t_2 = t_3.length;
+for(t_1=0; t_1 < t_3.length; t_1++) {
+var t_4 = t_3[t_1][0]
+frame.set("name", t_3[t_1][0]);
+var t_5 = t_3[t_1][1]
+frame.set("order", t_3[t_1][1]);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      ";
+if(runtime.memberLookup((t_5),"title")) {
+output += "\n        <option value=\"";
+output += runtime.suppressValue(t_4, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_5),"title"), env.opts.autoescape);
+output += "</option>\n      ";
+;
+}
+output += "\n    ";
+;
+}
+} else {
+t_1 = -1;
+var t_2 = runtime.keys(t_3).length;
+for(var t_6 in t_3) {
+t_1++;
+var t_7 = t_3[t_6];
+frame.set("name", t_6);
+frame.set("order", t_7);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      ";
+if(runtime.memberLookup((t_7),"title")) {
+output += "\n        <option value=\"";
+output += runtime.suppressValue(t_6, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_7),"title"), env.opts.autoescape);
+output += "</option>\n      ";
+;
+}
+output += "\n    ";
+;
+}
+}
+}
+frame = frame.pop();
+output += "\n  </select>\n<label>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/order.njk"] , dependencies)
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/values.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<label>\n  Values:\n  <select id=\"value-type\">\n    ";
+frame = frame.push();
+var t_3 = runtime.contextOrFrameLookup(context, frame, "valueTypes");
+if(t_3) {var t_1;
+if(runtime.isArray(t_3)) {
+var t_2 = t_3.length;
+for(t_1=0; t_1 < t_3.length; t_1++) {
+var t_4 = t_3[t_1][0]
+frame.set("name", t_3[t_1][0]);
+var t_5 = t_3[t_1][1]
+frame.set("valueType", t_3[t_1][1]);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      <option value=\"";
+output += runtime.suppressValue(t_4, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_5),"title"), env.opts.autoescape);
+output += "</option>\n    ";
+;
+}
+} else {
+t_1 = -1;
+var t_2 = runtime.keys(t_3).length;
+for(var t_6 in t_3) {
+t_1++;
+var t_7 = t_3[t_6];
+frame.set("name", t_6);
+frame.set("valueType", t_7);
+frame.set("loop.index", t_1 + 1);
+frame.set("loop.index0", t_1);
+frame.set("loop.revindex", t_2 - t_1);
+frame.set("loop.revindex0", t_2 - t_1 - 1);
+frame.set("loop.first", t_1 === 0);
+frame.set("loop.last", t_1 === t_2 - 1);
+frame.set("loop.length", t_2);
+output += "\n      <option value=\"";
+output += runtime.suppressValue(t_6, env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((t_7),"title"), env.opts.autoescape);
+output += "</option>\n    ";
+;
+}
+}
+}
+frame = frame.pop();
+output += "\n  </select>\n<label>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/values.njk"] , dependencies)
+
+/***/ }),
+/* 93 */,
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var board_1 = __webpack_require__(23);
+var index_1 = __webpack_require__(38);
+var shuffles = __webpack_require__(21);
+var sizes = __webpack_require__(25);
+var sorts = __webpack_require__(40);
+var valueTypes = __webpack_require__(24);
+exports.setUpProfile = function (location, data, query) {
+    // tslint:disable-next-line:no-var-requires
+    var tpl = __webpack_require__(95);
+    var html = tpl.render({
+        shuffles: shuffles,
+        sizes: sizes,
+        sorts: sorts,
+        valueTypes: valueTypes,
+    });
+    return html;
+};
+exports.profileCallback = function () {
+    var createButton = document.getElementById("create");
+    var sizeElement = document.getElementById("size");
+    var orderSelect = document.getElementById("order");
+    var valueTypeSelect = document.getElementById("value-type");
+    var sortElement = document.getElementById("sort");
+    var listDisplayElement = document.getElementById("sorts");
+    var boardList = [];
+    if (createButton) {
+        createButton.addEventListener("click", function () {
+            var size = sizes[sizeElement.value];
+            var value = valueTypes[valueTypeSelect.value];
+            var order = shuffles[orderSelect.value];
+            var Sort = sorts[sortElement.value];
+            // let board = new Boards.Board(size)
+            var board = new board_1.Board(size, order, value);
+            boardList.push({
+                board: board,
+                sort: new Sort(board, true),
+            });
+            index_1.createBoardList(boardList, listDisplayElement);
+        });
+    }
+    if (listDisplayElement) {
+        index_1.createDelegatedEvent(listDisplayElement, "click", function (event, target) {
+            var wrapperElement = index_1.closestParent(target, ".list-wrapper");
+            var wrappers = document.getElementsByClassName("list-wrapper");
+            for (var i = 0; i < wrappers.length; i++) {
+                if (wrappers[i] === wrapperElement) {
+                    boardList.splice(i, 1);
+                    break;
+                }
+            }
+            index_1.createBoardList(boardList, listDisplayElement);
+        }, ".remove");
+    }
+    var running = null;
+    var runElement = document.getElementById("run");
+    var graphElement = document.getElementById("graph");
+    var oldGraphs = document.getElementById("previous");
+    if (runElement) {
+        runElement.addEventListener("click", function (event) {
+            if (!running) {
+                running = true;
+                var dataTypes = [];
+                if (document.getElementById("swaps").checked) {
+                    dataTypes.push("swaps");
+                }
+                if (document.getElementById("comps").checked) {
+                    dataTypes.push("comps");
+                }
+                if (!(boardList.length && dataTypes.length)) {
+                    running = false;
+                    return;
+                }
+                index_1.createBoardList(boardList, listDisplayElement, false);
+                runElement.disabled = true;
+                createButton.disabled = true;
+                index_1.functionRunBoardsWithoutRender(boardList, 100);
+                index_1.manageAutoRunCharts(boardList, 500, "graph", dataTypes, function () {
+                    boardList.forEach(function (board) {
+                        board.sort.reset();
+                    });
+                    var svg = graphElement.getElementsByTagName("svg")[0];
+                    var first = oldGraphs.firstChild;
+                    var newsortList = listDisplayElement.cloneNode(true);
+                    if (first) {
+                        oldGraphs.insertBefore(svg, first);
+                    }
+                    else {
+                        oldGraphs.appendChild(svg);
+                    }
+                    oldGraphs.insertBefore(newsortList, svg);
+                    graphElement.innerHTML = "";
+                    runElement.disabled = false;
+                    createButton.disabled = false;
+                    running = false;
+                    index_1.createBoardList(boardList, listDisplayElement);
+                });
+            }
+        });
+    }
+};
+// import * as Sizes from '../sizes'
+// import * as Shuffles from '../shuffles'
+// import * as Index from '../index'
+// import * as ValueTypes from '../valueTypes';
+// import * as Sorts from '../sorts/sorts'
+// import * as Boards from '../board'
+// import { BaseSort } from '../sorts/baseSort';
+//
+//
+//
+// let boxHeight = 500
+// let boxWidth = 500
+//
+// let delay = 100
+//
+//
+
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./controls/sort.njk"] = __webpack_require__( 48 );
+dependencies["./controls/count.njk"] = __webpack_require__( 90 );
+dependencies["./controls/order.njk"] = __webpack_require__( 91 );
+dependencies["./controls/values.njk"] = __webpack_require__( 92 );
+dependencies["./controls/checkboxes.njk"] = __webpack_require__( 98 );
+dependencies["./controls/profileButtons.njk"] = __webpack_require__( 96 );
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/profile.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<div><a href=\"../../index.html\">Index</a></div>\n<div><a href=\"javascript:history.back()\"><< Back</a></div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/sort.njk", false, "templates/profile.njk", null, function(t_3,t_1) {
+if(t_3) { cb(t_3); return; }
+callback(null,t_1);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_4,t_2) {
+if(t_4) { cb(t_4); return; }
+callback(null,t_2);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/count.njk", false, "templates/profile.njk", null, function(t_7,t_5) {
+if(t_7) { cb(t_7); return; }
+callback(null,t_5);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_8,t_6) {
+if(t_8) { cb(t_8); return; }
+callback(null,t_6);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/order.njk", false, "templates/profile.njk", null, function(t_11,t_9) {
+if(t_11) { cb(t_11); return; }
+callback(null,t_9);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_12,t_10) {
+if(t_12) { cb(t_12); return; }
+callback(null,t_10);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/values.njk", false, "templates/profile.njk", null, function(t_15,t_13) {
+if(t_15) { cb(t_15); return; }
+callback(null,t_13);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_16,t_14) {
+if(t_16) { cb(t_16); return; }
+callback(null,t_14);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/checkboxes.njk", false, "templates/profile.njk", null, function(t_19,t_17) {
+if(t_19) { cb(t_19); return; }
+callback(null,t_17);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_20,t_18) {
+if(t_20) { cb(t_20); return; }
+callback(null,t_18);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n    </div>\n    ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/profileButtons.njk", false, "templates/profile.njk", null, function(t_23,t_21) {
+if(t_23) { cb(t_23); return; }
+callback(null,t_21);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_24,t_22) {
+if(t_24) { cb(t_24); return; }
+callback(null,t_22);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n    <div>\n      Sorts: <span id=\"sorts\"></sorts>\n    </div>\n  </div>\n  <div id=\"graph\">\n  </div>\n\n  <div id=\"previous\">\n  </div>\n</article>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+})})})})})});
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/profile.njk"] , dependencies)
+
+/***/ }),
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/profileButtons.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<button id=\"create\">Create</button>\n<button id=\"run\">Run</button>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/profileButtons.njk"] , dependencies)
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/runButtons.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<div>\n  <button id=\"create\">Create</button>\n  <button id=\"step\">Step</button>\n  <button id=\"auto\">Auto</button>\n</div>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/runButtons.njk"] , dependencies)
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(4);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(8);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/checkboxes.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<label>Swaps<input type=\"checkbox\" id=\"swaps\" checked></label>\n<label>Comparisons<input type=\"checkbox\" id=\"comps\"></label>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/checkboxes.njk"] , dependencies)
 
 /***/ })
 /******/ ]);

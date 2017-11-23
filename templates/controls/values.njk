@@ -1,0 +1,8 @@
+<label>
+  Values:
+  <select id="value-type">
+    {% for name, valueType in valueTypes %}
+      <option value="{{name}}">{{valueType.title}}</option>
+    {% endfor %}
+  </select>
+<label>

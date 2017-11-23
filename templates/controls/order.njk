@@ -1,0 +1,10 @@
+<label>
+  Order:
+  <select id="order">
+    {% for name, order in shuffles %}
+      {% if order.title %}
+        <option value="{{name}}">{{order.title}}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+<label>

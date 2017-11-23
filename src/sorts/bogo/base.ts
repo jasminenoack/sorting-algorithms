@@ -4,6 +4,7 @@ import { BaseSort } from "./../baseSort";
 
 export class Bogo extends BaseSort {
   public static title: string = "Bogo";
+
   public setUp() {
     this.checkSorted();
   }

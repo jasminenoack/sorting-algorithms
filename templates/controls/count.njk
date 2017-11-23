@@ -1,0 +1,8 @@
+<label>
+  Point count:
+  <select id="size">
+    {% for name, size in sizes %}
+      <option value="{{name}}">{{size.label}}</option>
+    {% endfor %}
+  </select>
+<label>

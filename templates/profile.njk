@@ -1,0 +1,22 @@
+<div><a href="../../index.html">Index</a></div>
+<div><a href="javascript:history.back()"><< Back</a></div>
+<article class="sorting">
+  <div class="controls">
+    <div>
+      {% include "./controls/sort.njk" %}
+      {% include "./controls/count.njk" %}
+      {% include "./controls/order.njk" %}
+      {% include "./controls/values.njk" %}
+      {% include "./controls/checkboxes.njk" %}
+    </div>
+    {% include "./controls/profileButtons.njk" %}
+    <div>
+      Sorts: <span id="sorts"></sorts>
+    </div>
+  </div>
+  <div id="graph">
+  </div>
+
+  <div id="previous">
+  </div>
+</article>

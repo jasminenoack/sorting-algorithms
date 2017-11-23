@@ -10,8 +10,5 @@ engines:
       - javascript:
 exclude_paths:
 - "dist/**"
-- "jasmine/**"
 - "js/**"
-- "images/**"
 - "lib/**"
-- "videos/**"

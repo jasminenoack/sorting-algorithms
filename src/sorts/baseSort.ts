@@ -1,22 +1,23 @@
-import * as Boards from '../board'
+import * as Boards from "../board";
 
-declare const firebase: any
+declare const firebase: any;
 
 /**
-* database structure:
-*
-* sort_name:
-* order:
-* value_type:
-* point_count:
-* steps:
-* comparisons: []
-* swaps: []
-*/
+ * database structure:
+ *
+ * sort_name:
+ * order:
+ * value_type:
+ * point_count:
+ * steps:
+ * comparisons: []
+ * swaps: []
+ */
 
 export abstract class BaseSort {
-  steps: number;
-  static title: string = ''
+  public static title: string = "";
+  public static links: any[];
+  public steps: number;
   public baseNode: number;
   public comparisonNode: number;
   // used for sorts that short circuit
@@ -28,11 +29,9 @@ export abstract class BaseSort {
   public length: number;
   public end: number;
   public maxRounds: number;
-  public setUpNext(): void { }
   public placed: number[];
   public shadow: any[];
   public lastSwapped: boolean;
-  public static links: any[];
   public profile: { [key: string]: Array<{ [key: string]: number }> };
   public nextItemToAdd: number;
   public database: any;
@@ -43,6 +42,8 @@ export abstract class BaseSort {
     }
     this.baseSetUp();
   }
+
+  public setUpNext(): void { return; }
 
   public writeToDatabase() {
     if (this.database) {

@@ -32,11 +32,41 @@ export abstract class BaseSort {
   public lastSwapped: boolean;
   public profile: { [key: string]: Array<{ [key: string]: number }> };
   public nextItemToAdd: number;
-  public database: any;
+  public direction?: number;
+  public start?: number;
+  public baseNodes?: number[];
+  public orderedSets?: boolean[];
+  public gap?: number;
+  public shrink?: number;
+  public currentValue?: number;
+  public numberLess?: number;
+  public partition?: number;
+  public lower?: number;
+  public higher?: number;
+  public partitionStart?: number;
+  public partitionEnd?: number;
+  public partitionTop?: number;
+  public partitions?: number[][];
+  public original: number[];
+  public permutation?: number[];
+  public evenSorted?: boolean;
+  public oddSorted?: boolean;
+  public oddPhase?: boolean;
+  public leonardoNumbers?: number[];
+  public treeSizes?: number[];
+  public nodesToHeap?: number[];
+  public roots?: number[];
+  public rootsToCompare?: number[];
+  public currentTop?: number;
+  public currentGnome?: number;
 
   constructor(public board: Boards.Board, public trackAll: boolean = false) {
     this.baseSetUp();
   }
+
+  public subsets(num: number[]): number[][] { return []; }
+
+  public breakDownSubset(num: number[]): number[][] { return []; }
 
   public setUpNext(): void { return; }
 
@@ -124,8 +154,8 @@ export abstract class BaseSort {
 
   public baseSetUp() {
     this.profile = {
-      swaps: [],
       comparisons: [],
+      swaps: [],
     };
     this.length = this.board.length;
     this.baseNode = 0;
@@ -144,11 +174,14 @@ export abstract class BaseSort {
     this.placed = [];
     this.shadow = [];
     this.nextItemToAdd = 1;
+    this.original = this.board.values().slice();
     this.setUp();
   }
 
   public setUp() {
+    // tslint:disable-next-line:no-console
     console.log("not implemented");
+    // tslint:disable-next-line:no-console
     console.log((this.constructor as any).title);
   }
 }

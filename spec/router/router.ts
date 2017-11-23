@@ -141,8 +141,8 @@ describe("router", () => {
   });
 
   describe("url params", () => {
-    let matchListener;
-    let nonMatchListener;
+    let matchListener: any;
+    let nonMatchListener: any;
     beforeEach(() => {
       matchListener = jasmine.createSpy("match");
       nonMatchListener = jasmine.createSpy("non-match");

@@ -1,13 +1,14 @@
 import { Board } from "../../src/board";
-import { fewFew, xXLarge } from "./../../src/sizes";
+import { BaseSort } from "../../src/sorts/baseSort";
+import { fewFew, ISize, xXLarge } from "./../../src/sizes";
 import { Cocktail } from "./../../src/sorts/cocktail/base";
 import { CocktailShortCircuit } from "./../../src/sorts/cocktail/shortCircuit";
 
 describe("Sorts", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
 
   describe("cocktail", () => {
     beforeEach(() => {
@@ -186,49 +187,49 @@ describe("Sorts", () => {
 
       it("performs full step and returns list of nodes to render", () => {
         board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([0, 1]);
+        expect(sort.next()).toEqual([0, 1]);
         expect(sort.ordered).toBeFalsy();
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
-        expect(sort.next(board)).toEqual([8, 9]);
-        expect(sort.next(board)).toEqual([7, 8]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([0, 1]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
+        expect(sort.next()).toEqual([8, 9]);
+        expect(sort.next()).toEqual([7, 8]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([0, 1]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
       });
     });
   });
 
   describe("cocktail short circuit", () => {
-    let Sort;
+    let Sort: any;
 
     beforeEach(() => {
       length = 5;

@@ -1,14 +1,16 @@
 import { Board } from "../../src/board";
 import { fewFew } from "../../src/sizes";
+import { BaseSort } from "../../src/sorts/baseSort";
+import { ISize } from "./../../src/sizes";
 import { OddEven } from "./../../src/sorts/oddEven/base";
 import { OddEvenConcurrent } from "./../../src/sorts/oddEven/concurrent";
 
 describe("Odd Even", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
-  let Sort;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
+  let Sort: any;
   describe("odd even single processor", () => {
     beforeEach(() => {
       length = 5;

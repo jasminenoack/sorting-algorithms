@@ -1,13 +1,14 @@
+import { BaseSort } from "../../src/sorts/baseSort";
 import { Board } from "./../../src/board";
-import { fewFew } from "./../../src/sizes";
+import { fewFew, ISize } from "./../../src/sizes";
 import { Gnome } from "./../../src/sorts/gnome/base";
 
 describe("gnome", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
-  let Sort;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
+  let Sort: any;
 
   beforeEach(() => {
     length = 10;

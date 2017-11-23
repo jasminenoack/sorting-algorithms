@@ -1,6 +1,6 @@
-import { Router } from "./../src/router/router";
+// import { Router } from "./../src/router/router";
 
-const router = new Router();
+// const router = new Router();
 
 // tslint:disable-next-line:no-var-requires
 // const tpl = require("../templates/index.njk");

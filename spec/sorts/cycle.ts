@@ -1,13 +1,14 @@
 import { Board } from "../../src/board";
-import { fewFew } from "./../../src/sizes";
+import { BaseSort } from "../../src/sorts/baseSort";
+import { fewFew, ISize } from "./../../src/sizes";
 import { Cycle } from "./../../src/sorts/cycle/base";
 import { CycleOptimized } from "./../../src/sorts/cycle/optimized";
 
 describe("Sorts", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
 
   describe("cycle", () => {
     beforeEach(() => {
@@ -414,7 +415,7 @@ describe("Sorts", () => {
   });
 
   describe("cycle optimized", () => {
-    let Sort;
+    let Sort: any;
 
     beforeEach(() => {
       length = 5;

@@ -1,15 +1,16 @@
 import { Board } from "../../src/board";
-import { fewFew } from "./../../src/sizes";
+import { BaseSort } from "../../src/sorts/baseSort";
+import { fewFew, ISize } from "./../../src/sizes";
 import { QuickSort2 } from "./../../src/sorts/quick/base";
 import { QuickSort3 } from "./../../src/sorts/quick/partition3";
 import { QuickSort2RightPartition } from "./../../src/sorts/quick/rightPartition";
 
 describe("Quick Sort", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
-  let Sort;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
+  let Sort: any;
 
   describe("quick 2 left partition", () => {
     beforeEach(() => {

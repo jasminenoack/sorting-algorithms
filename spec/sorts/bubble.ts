@@ -1,5 +1,6 @@
 import { Board } from "../../src/board";
-import { fewFew, xXLarge } from "./../../src/sizes";
+import { BaseSort } from "../../src/sorts/baseSort";
+import { fewFew, ISize, xXLarge } from "./../../src/sizes";
 import { Bubble } from "./../../src/sorts/bubble/base";
 import { BubbleSortConcurrent } from "./../../src/sorts/bubble/concurrent";
 import { BubbleSortDontRestart } from "./../../src/sorts/bubble/doNotRestart";
@@ -8,10 +9,10 @@ import { BubbleShortCircuit } from "./../../src/sorts/bubble/shortCircuit";
 import { BubbleSkipSorted } from "./../../src/sorts/bubble/skipSorted";
 
 describe("Bubble Sorts", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
 
   describe("short Circuit", () => {
     beforeEach(() => {
@@ -102,12 +103,12 @@ describe("Bubble Sorts", () => {
 
       it("tracks profile", () => {
         board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9]);
-        sort.next(board);
+        sort.next();
         expect(sort.profile).toEqual({
           comparisons: [{ x: 1, y: 1 }],
           swaps: [{ x: 1, y: 1 }],
         });
-        sort.next(board);
+        sort.next();
         expect(sort.profile).toEqual({
           comparisons: [{ x: 1, y: 1 }, { x: 2, y: 2 }],
           swaps: [{ x: 1, y: 1 }, { x: 2, y: 1 }],
@@ -190,30 +191,30 @@ describe("Bubble Sorts", () => {
 
       it("performs full step and returns list of nodes to render", () => {
         board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([0, 1]);
+        expect(sort.next()).toEqual([0, 1]);
         expect(sort.ordered).toBeFalsy();
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
         expect(sort.ordered).toEqual(false);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([8, 9]);
+        expect(sort.next()).toEqual([8, 9]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([0, 1]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
-        expect(sort.next(board)).toEqual([8, 9]);
+        expect(sort.next()).toEqual([0, 1]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
+        expect(sort.next()).toEqual([8, 9]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(true);
         expect(sort.comparisons).toEqual(18);
@@ -317,29 +318,29 @@ describe("Bubble Sorts", () => {
     describe("utils", () => {
       it("skips sorted nodes", () => {
         board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([0, 1]);
+        expect(sort.next()).toEqual([0, 1]);
         expect(sort.ordered).toBeFalsy();
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
         expect(sort.ordered).toEqual(false);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([8, 9]);
+        expect(sort.next()).toEqual([8, 9]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([0, 1]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
+        expect(sort.next()).toEqual([0, 1]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(true);
         expect(sort.comparisons).toEqual(17);
@@ -348,17 +349,17 @@ describe("Bubble Sorts", () => {
 
       it("short circuits", () => {
         board.setPoints([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([0, 1]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
+        expect(sort.next()).toEqual([0, 1]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([8, 9]);
+        expect(sort.next()).toEqual([8, 9]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(true);
       });
@@ -403,27 +404,27 @@ describe("Bubble Sorts", () => {
     describe("utils", () => {
       it("skips sorted nodes", () => {
         board.setPoints([1, 0, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([0, 1]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
+        expect(sort.next()).toEqual([0, 1]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
         expect(sort.ordered).toEqual(false);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([8, 9]);
+        expect(sort.next()).toEqual([8, 9]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([0, 1]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
+        expect(sort.next()).toEqual([0, 1]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(false);
         expect(sort.comparisons).toEqual(17);
@@ -432,27 +433,27 @@ describe("Bubble Sorts", () => {
 
       it("skips short circuits", () => {
         board.setPoints([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next(board)).toEqual([0, 1]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
+        expect(sort.next()).toEqual([0, 1]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([8, 9]);
+        expect(sort.next()).toEqual([8, 9]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(false);
-        expect(sort.next(board)).toEqual([0, 1]);
-        expect(sort.next(board)).toEqual([1, 2]);
-        expect(sort.next(board)).toEqual([2, 3]);
-        expect(sort.next(board)).toEqual([3, 4]);
-        expect(sort.next(board)).toEqual([4, 5]);
-        expect(sort.next(board)).toEqual([5, 6]);
-        expect(sort.next(board)).toEqual([6, 7]);
-        expect(sort.next(board)).toEqual([7, 8]);
+        expect(sort.next()).toEqual([0, 1]);
+        expect(sort.next()).toEqual([1, 2]);
+        expect(sort.next()).toEqual([2, 3]);
+        expect(sort.next()).toEqual([3, 4]);
+        expect(sort.next()).toEqual([4, 5]);
+        expect(sort.next()).toEqual([5, 6]);
+        expect(sort.next()).toEqual([6, 7]);
+        expect(sort.next()).toEqual([7, 8]);
         expect(sort.ordered).toEqual(true);
         expect(sort.done).toEqual(false);
         expect(sort.comparisons).toEqual(17);
@@ -462,7 +463,7 @@ describe("Bubble Sorts", () => {
   });
 
   describe("concurrent bubble sort", () => {
-    let Sort;
+    let Sort: any;
     beforeEach(() => {
       length = 5;
       size = fewFew;
@@ -583,7 +584,7 @@ describe("Bubble Sorts", () => {
   });
 
   describe("Bubble don't restart", () => {
-    let Sort;
+    let Sort: any;
     beforeEach(() => {
       length = 5;
       size = fewFew;

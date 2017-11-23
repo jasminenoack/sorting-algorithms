@@ -1,12 +1,13 @@
 import { Board } from "../../src/board";
-import { xXLarge } from "./../../src/sizes";
+import { BaseSort } from "../../src/sorts/baseSort";
+import { ISize, xXLarge } from "./../../src/sizes";
 import { Comb } from "./../../src/sorts/comb/base";
 
 describe("comb", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
 
   beforeEach(() => {
     length = 10;
@@ -172,163 +173,163 @@ describe("comb", () => {
       sort.setUpNext();
       expect(sort.currentNodes()).toEqual([7, 8]);
       sort.setUpNext();
-      expect(sort.next(board)).toEqual([8, 9]);
-      expect(sort.next(board)).toEqual([]);
+      expect(sort.next()).toEqual([8, 9]);
+      expect(sort.next()).toEqual([]);
       expect(sort.done).toEqual(true);
     });
 
     it("it changes doesn't mark done if sort is needed", () => {
       const values = [0, 1, 2, 4, 3, 5, 6, 7, 8, 9];
       board.setPoints(values);
-      expect(sort.next(board)).toEqual([0, 7]);
-      expect(sort.next(board)).toEqual([1, 8]);
-      expect(sort.next(board)).toEqual([2, 9]);
+      expect(sort.next()).toEqual([0, 7]);
+      expect(sort.next()).toEqual([1, 8]);
+      expect(sort.next()).toEqual([2, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 5]);
-      expect(sort.next(board)).toEqual([1, 6]);
-      expect(sort.next(board)).toEqual([2, 7]);
-      expect(sort.next(board)).toEqual([3, 8]);
-      expect(sort.next(board)).toEqual([4, 9]);
+      expect(sort.next()).toEqual([0, 5]);
+      expect(sort.next()).toEqual([1, 6]);
+      expect(sort.next()).toEqual([2, 7]);
+      expect(sort.next()).toEqual([3, 8]);
+      expect(sort.next()).toEqual([4, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 3]);
-      expect(sort.next(board)).toEqual([1, 4]);
-      expect(sort.next(board)).toEqual([2, 5]);
-      expect(sort.next(board)).toEqual([3, 6]);
-      expect(sort.next(board)).toEqual([4, 7]);
-      expect(sort.next(board)).toEqual([5, 8]);
-      expect(sort.next(board)).toEqual([6, 9]);
+      expect(sort.next()).toEqual([0, 3]);
+      expect(sort.next()).toEqual([1, 4]);
+      expect(sort.next()).toEqual([2, 5]);
+      expect(sort.next()).toEqual([3, 6]);
+      expect(sort.next()).toEqual([4, 7]);
+      expect(sort.next()).toEqual([5, 8]);
+      expect(sort.next()).toEqual([6, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 2]);
-      expect(sort.next(board)).toEqual([1, 3]);
-      expect(sort.next(board)).toEqual([2, 4]);
-      expect(sort.next(board)).toEqual([3, 5]);
-      expect(sort.next(board)).toEqual([4, 6]);
-      expect(sort.next(board)).toEqual([5, 7]);
-      expect(sort.next(board)).toEqual([6, 8]);
-      expect(sort.next(board)).toEqual([7, 9]);
+      expect(sort.next()).toEqual([0, 2]);
+      expect(sort.next()).toEqual([1, 3]);
+      expect(sort.next()).toEqual([2, 4]);
+      expect(sort.next()).toEqual([3, 5]);
+      expect(sort.next()).toEqual([4, 6]);
+      expect(sort.next()).toEqual([5, 7]);
+      expect(sort.next()).toEqual([6, 8]);
+      expect(sort.next()).toEqual([7, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 1]);
-      expect(sort.next(board)).toEqual([1, 2]);
-      expect(sort.next(board)).toEqual([2, 3]);
-      expect(sort.next(board)).toEqual([3, 4]);
-      expect(sort.next(board)).toEqual([4, 5]);
-      expect(sort.next(board)).toEqual([5, 6]);
-      expect(sort.next(board)).toEqual([6, 7]);
-      expect(sort.next(board)).toEqual([7, 8]);
-      expect(sort.next(board)).toEqual([8, 9]);
+      expect(sort.next()).toEqual([0, 1]);
+      expect(sort.next()).toEqual([1, 2]);
+      expect(sort.next()).toEqual([2, 3]);
+      expect(sort.next()).toEqual([3, 4]);
+      expect(sort.next()).toEqual([4, 5]);
+      expect(sort.next()).toEqual([5, 6]);
+      expect(sort.next()).toEqual([6, 7]);
+      expect(sort.next()).toEqual([7, 8]);
+      expect(sort.next()).toEqual([8, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 1]);
+      expect(sort.next()).toEqual([0, 1]);
     });
 
     it("it sets done after sorted", () => {
       const values = [0, 1, 2, 4, 3, 5, 6, 7, 8, 9];
       board.setPoints(values);
-      expect(sort.next(board)).toEqual([0, 7]);
-      expect(sort.next(board)).toEqual([1, 8]);
-      expect(sort.next(board)).toEqual([2, 9]);
+      expect(sort.next()).toEqual([0, 7]);
+      expect(sort.next()).toEqual([1, 8]);
+      expect(sort.next()).toEqual([2, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 5]);
-      expect(sort.next(board)).toEqual([1, 6]);
-      expect(sort.next(board)).toEqual([2, 7]);
-      expect(sort.next(board)).toEqual([3, 8]);
-      expect(sort.next(board)).toEqual([4, 9]);
+      expect(sort.next()).toEqual([0, 5]);
+      expect(sort.next()).toEqual([1, 6]);
+      expect(sort.next()).toEqual([2, 7]);
+      expect(sort.next()).toEqual([3, 8]);
+      expect(sort.next()).toEqual([4, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 3]);
-      expect(sort.next(board)).toEqual([1, 4]);
-      expect(sort.next(board)).toEqual([2, 5]);
-      expect(sort.next(board)).toEqual([3, 6]);
-      expect(sort.next(board)).toEqual([4, 7]);
-      expect(sort.next(board)).toEqual([5, 8]);
-      expect(sort.next(board)).toEqual([6, 9]);
+      expect(sort.next()).toEqual([0, 3]);
+      expect(sort.next()).toEqual([1, 4]);
+      expect(sort.next()).toEqual([2, 5]);
+      expect(sort.next()).toEqual([3, 6]);
+      expect(sort.next()).toEqual([4, 7]);
+      expect(sort.next()).toEqual([5, 8]);
+      expect(sort.next()).toEqual([6, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 2]);
-      expect(sort.next(board)).toEqual([1, 3]);
-      expect(sort.next(board)).toEqual([2, 4]);
-      expect(sort.next(board)).toEqual([3, 5]);
-      expect(sort.next(board)).toEqual([4, 6]);
-      expect(sort.next(board)).toEqual([5, 7]);
-      expect(sort.next(board)).toEqual([6, 8]);
-      expect(sort.next(board)).toEqual([7, 9]);
+      expect(sort.next()).toEqual([0, 2]);
+      expect(sort.next()).toEqual([1, 3]);
+      expect(sort.next()).toEqual([2, 4]);
+      expect(sort.next()).toEqual([3, 5]);
+      expect(sort.next()).toEqual([4, 6]);
+      expect(sort.next()).toEqual([5, 7]);
+      expect(sort.next()).toEqual([6, 8]);
+      expect(sort.next()).toEqual([7, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 1]);
-      expect(sort.next(board)).toEqual([1, 2]);
-      expect(sort.next(board)).toEqual([2, 3]);
-      expect(sort.next(board)).toEqual([3, 4]);
-      expect(sort.next(board)).toEqual([4, 5]);
-      expect(sort.next(board)).toEqual([5, 6]);
-      expect(sort.next(board)).toEqual([6, 7]);
-      expect(sort.next(board)).toEqual([7, 8]);
-      expect(sort.next(board)).toEqual([8, 9]);
+      expect(sort.next()).toEqual([0, 1]);
+      expect(sort.next()).toEqual([1, 2]);
+      expect(sort.next()).toEqual([2, 3]);
+      expect(sort.next()).toEqual([3, 4]);
+      expect(sort.next()).toEqual([4, 5]);
+      expect(sort.next()).toEqual([5, 6]);
+      expect(sort.next()).toEqual([6, 7]);
+      expect(sort.next()).toEqual([7, 8]);
+      expect(sort.next()).toEqual([8, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 1]);
-      expect(sort.next(board)).toEqual([1, 2]);
-      expect(sort.next(board)).toEqual([2, 3]);
-      expect(sort.next(board)).toEqual([3, 4]);
-      expect(sort.next(board)).toEqual([4, 5]);
-      expect(sort.next(board)).toEqual([5, 6]);
-      expect(sort.next(board)).toEqual([6, 7]);
-      expect(sort.next(board)).toEqual([7, 8]);
-      expect(sort.next(board)).toEqual([8, 9]);
+      expect(sort.next()).toEqual([0, 1]);
+      expect(sort.next()).toEqual([1, 2]);
+      expect(sort.next()).toEqual([2, 3]);
+      expect(sort.next()).toEqual([3, 4]);
+      expect(sort.next()).toEqual([4, 5]);
+      expect(sort.next()).toEqual([5, 6]);
+      expect(sort.next()).toEqual([6, 7]);
+      expect(sort.next()).toEqual([7, 8]);
+      expect(sort.next()).toEqual([8, 9]);
       expect(sort.done).toEqual(true);
 
-      expect(sort.next(board)).toEqual([]);
+      expect(sort.next()).toEqual([]);
     });
 
     it("it sets done earlier fix", () => {
       const values = [0, 1, 4, 3, 2, 5, 6, 7, 8, 9];
       board.setPoints(values);
-      expect(sort.next(board)).toEqual([0, 7]);
-      expect(sort.next(board)).toEqual([1, 8]);
-      expect(sort.next(board)).toEqual([2, 9]);
+      expect(sort.next()).toEqual([0, 7]);
+      expect(sort.next()).toEqual([1, 8]);
+      expect(sort.next()).toEqual([2, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 5]);
-      expect(sort.next(board)).toEqual([1, 6]);
-      expect(sort.next(board)).toEqual([2, 7]);
-      expect(sort.next(board)).toEqual([3, 8]);
-      expect(sort.next(board)).toEqual([4, 9]);
+      expect(sort.next()).toEqual([0, 5]);
+      expect(sort.next()).toEqual([1, 6]);
+      expect(sort.next()).toEqual([2, 7]);
+      expect(sort.next()).toEqual([3, 8]);
+      expect(sort.next()).toEqual([4, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 3]);
-      expect(sort.next(board)).toEqual([1, 4]);
-      expect(sort.next(board)).toEqual([2, 5]);
-      expect(sort.next(board)).toEqual([3, 6]);
-      expect(sort.next(board)).toEqual([4, 7]);
-      expect(sort.next(board)).toEqual([5, 8]);
-      expect(sort.next(board)).toEqual([6, 9]);
+      expect(sort.next()).toEqual([0, 3]);
+      expect(sort.next()).toEqual([1, 4]);
+      expect(sort.next()).toEqual([2, 5]);
+      expect(sort.next()).toEqual([3, 6]);
+      expect(sort.next()).toEqual([4, 7]);
+      expect(sort.next()).toEqual([5, 8]);
+      expect(sort.next()).toEqual([6, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 2]);
-      expect(sort.next(board)).toEqual([1, 3]);
-      expect(sort.next(board)).toEqual([2, 4]);
-      expect(sort.next(board)).toEqual([3, 5]);
-      expect(sort.next(board)).toEqual([4, 6]);
-      expect(sort.next(board)).toEqual([5, 7]);
-      expect(sort.next(board)).toEqual([6, 8]);
-      expect(sort.next(board)).toEqual([7, 9]);
+      expect(sort.next()).toEqual([0, 2]);
+      expect(sort.next()).toEqual([1, 3]);
+      expect(sort.next()).toEqual([2, 4]);
+      expect(sort.next()).toEqual([3, 5]);
+      expect(sort.next()).toEqual([4, 6]);
+      expect(sort.next()).toEqual([5, 7]);
+      expect(sort.next()).toEqual([6, 8]);
+      expect(sort.next()).toEqual([7, 9]);
       expect(sort.done).toEqual(false);
 
-      expect(sort.next(board)).toEqual([0, 1]);
-      expect(sort.next(board)).toEqual([1, 2]);
-      expect(sort.next(board)).toEqual([2, 3]);
-      expect(sort.next(board)).toEqual([3, 4]);
-      expect(sort.next(board)).toEqual([4, 5]);
-      expect(sort.next(board)).toEqual([5, 6]);
-      expect(sort.next(board)).toEqual([6, 7]);
-      expect(sort.next(board)).toEqual([7, 8]);
-      expect(sort.next(board)).toEqual([8, 9]);
+      expect(sort.next()).toEqual([0, 1]);
+      expect(sort.next()).toEqual([1, 2]);
+      expect(sort.next()).toEqual([2, 3]);
+      expect(sort.next()).toEqual([3, 4]);
+      expect(sort.next()).toEqual([4, 5]);
+      expect(sort.next()).toEqual([5, 6]);
+      expect(sort.next()).toEqual([6, 7]);
+      expect(sort.next()).toEqual([7, 8]);
+      expect(sort.next()).toEqual([8, 9]);
       expect(sort.done).toEqual(true);
-      expect(sort.next(board)).toEqual([]);
+      expect(sort.next()).toEqual([]);
     });
 
     it("it tracks comparisons", () => {

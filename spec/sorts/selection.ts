@@ -1,13 +1,14 @@
 import { Board } from "../../src/board";
-import { fewFew } from "./../../src/sizes";
+import { BaseSort } from "../../src/sorts/baseSort";
+import { fewFew, ISize } from "./../../src/sizes";
 import { SelectionSort } from "./../../src/sorts/selection/base";
 
 describe("selection sort", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
-  let Sort;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
+  let Sort: any;
 
   beforeEach(() => {
     length = 5;

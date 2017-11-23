@@ -60,153 +60,16 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
-/******/ ({
+/******/ ([
+/* 0 */,
+/* 1 */
+/***/ (function(module, exports) {
 
-/***/ 10:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var routerLocation_1 = __webpack_require__(11);
-/**
- * Router manages locations.
- *
- * Send a string that can be converted into a reg ex.
- *
- * examples:
- *
- * base: ""
- * hard url: "other"
- * url params: "a/(c|.*)/b" || "a/(c|\\d*)/b"
- * query string "?a=1"
- *
- * returns
- * location: "other"
- * url params: {c: "123"}
- * query string: {a: "1"}
- *
- * To construct the router send in the element the router should control.
- *
- * For registering each route pass the string and a function to register.
- * The function should return HTML the router will place the html in the page.
- */
-var Router = /** @class */ (function () {
-    function Router(element) {
-        this.element = element;
-        this.locations = [];
-        this.listenToChange = this.listenToChange.bind(this);
-        this.listenToChange();
-        window.onpopstate = this.listenToChange;
-    }
-    Router.prototype.listenToChange = function (event) {
-        var _this = this;
-        var location;
-        if (event) {
-            location = event.target.location;
-        }
-        else {
-            location = window.location;
-        }
-        // tslint:disable-next-line:prefer-const
-        var hash = this.cleanHash(location.hash);
-        var rendered = false;
-        this.locations.forEach(function (loc) {
-            var urlParams = loc.match(hash);
-            if (urlParams && !rendered) {
-                rendered = true;
-                var query = _this.processQuery(location.search);
-                var html = loc.fun(hash, urlParams, query);
-                _this.element.innerHTML = html;
-            }
-        });
-    };
-    Router.prototype.register = function (location, fun) {
-        this.locations.push(new routerLocation_1.RouterLocation(location, fun));
-    };
-    Router.prototype.cleanHash = function (hash) {
-        return hash.replace(/^#?\/?/, "").replace(/\/$/, "");
-    };
-    Router.prototype.processQuery = function (search) {
-        search = search.replace(/^\?/, "");
-        if (!search) {
-            return {};
-        }
-        var params = search.split("&");
-        var query = {};
-        params.forEach(function (param) {
-            if (param) {
-                var _a = param.split("="), key = _a[0], value = _a[1];
-                query[key] = value || "";
-            }
-        });
-        return query;
-    };
-    return Router;
-}());
-exports.Router = Router;
-
-
-/***/ }),
-
-/***/ 11:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var RouterLocation = /** @class */ (function () {
-    function RouterLocation(location, fun) {
-        this.fun = fun;
-        var names = [];
-        // if location is a string
-        // check for match sections
-        if (location.indexOf("(") !== -1) {
-            var groups = location.match(/\([^)]*\)/g);
-            groups.forEach(function (group) {
-                var groupTrimmed = group.replace(/^\(/, "").replace(/\)$/, "");
-                if (groupTrimmed.indexOf("|") !== -1) {
-                    var _a = groupTrimmed.split("|"), name_1 = _a[0], regex = _a[1];
-                    names.push(name_1);
-                    location = location.replace(group, "(" + regex + ")");
-                }
-                else {
-                    names.push(groupTrimmed);
-                }
-            });
-        }
-        this.names = names;
-        this.location = new RegExp(location);
-    }
-    RouterLocation.prototype.match = function (hash) {
-        var match = hash.match(this.location);
-        if (!match) {
-            return;
-        }
-        var urlParams = {};
-        this.names.forEach(function (name, index) {
-            urlParams[name] = match[index + 1];
-        });
-        return urlParams;
-    };
-    return RouterLocation;
-}());
-exports.RouterLocation = RouterLocation;
-
-
-/***/ }),
-
-/***/ 2:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var router_1 = __webpack_require__(10);
-var router = new router_1.Router();
+// import { Router } from "./../src/router/router";
+// const router = new Router();
 // tslint:disable-next-line:no-var-requires
 // const tpl = require("../templates/index.njk");
 // const html = tpl.render();
@@ -216,5 +79,4 @@ var router = new router_1.Router();
 
 
 /***/ })
-
-/******/ });
+/******/ ]);

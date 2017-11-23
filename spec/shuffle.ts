@@ -1,7 +1,8 @@
 import { range } from "lodash";
 import * as Shuffles from "../src/shuffles";
+import { IShuffle } from "./../src/shuffles/abstract";
 
-const differenceFromOrdered = (array) => {
+const differenceFromOrdered = (array: number[]) => {
   const values = array;
   const ordered = range(0, values.length);
   let difference = 0;
@@ -12,13 +13,13 @@ const differenceFromOrdered = (array) => {
 };
 
 describe("Shuffle", () => {
-  let shuffle;
-  let orderedArray;
-  let testOrdered;
-  let testNonOrdered;
-  let testReversedArray;
-  let nonOrderedArray;
-  let reversedArray;
+  let shuffle: IShuffle;
+  let orderedArray: number[];
+  let testOrdered: number[];
+  let testNonOrdered: number[];
+  let testReversedArray: number[];
+  let nonOrderedArray: number[];
+  let reversedArray: number[];
 
   beforeEach(() => {
     orderedArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];

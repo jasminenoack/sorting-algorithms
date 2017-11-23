@@ -1,13 +1,14 @@
 import { Board } from "../../src/board";
-import { fewFew, xXLarge } from "./../../src/sizes";
+import { BaseSort } from "../../src/sorts/baseSort";
+import { fewFew, ISize, xXLarge } from "./../../src/sizes";
 import { Heap } from "./../../src/sorts/heap/base";
 
 describe("heap sort", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
-  let Sort;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
+  let Sort: any;
 
   beforeEach(() => {
     length = 5;

@@ -1,16 +1,17 @@
 import { Board } from "../../src/board";
+import { BaseSort } from "../../src/sorts/baseSort";
 import { Smooth } from "../../src/sorts/smooth/base";
-import { xXLarge } from "./../../src/sizes";
+import { ISize, xXLarge } from "./../../src/sizes";
 import { SmoothSetUpBottom } from "./../../src/sorts/smooth/fromBottom";
 
 describe("Sorts", () => {
-  let length;
-  let sort;
-  let board;
-  let size;
+  let length: number;
+  let sort: BaseSort;
+  let board: Board;
+  let size: ISize;
 
   describe("smooth first attempt", () => {
-    let Sort;
+    let Sort: any;
 
     beforeEach(() => {
       length = 10;
@@ -92,45 +93,45 @@ describe("Sorts", () => {
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         // compare nodes
-        expect(sort.next([4, 7]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         // remove
-        expect(sort.next([7]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         // compare nodes
-        expect(sort.next([4, 5]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next([5, 6]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         // remove
-        expect(sort.next([6]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next([5]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next([4]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         // compare nodes
-        expect(sort.next([2, 3]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         // remove
-        expect(sort.next([3]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next([2]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         // compare nodes
-        expect(sort.next([0, 1]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         // remove
-        expect(sort.next([1]));
+        expect(sort.next());
         expect(board.values()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        expect(sort.next([0]));
+        expect(sort.next());
 
         expect(sort.done).toEqual(true);
         for (let i = 0; i < board.length; i++) {
@@ -240,7 +241,7 @@ describe("Sorts", () => {
       it("test random large set", () => {
         size = {
           elemCount: 30,
-          label: 30,
+          label: "30",
         };
         board.setSize(size);
         board.setPoints([
@@ -1059,7 +1060,7 @@ describe("Sorts", () => {
   });
 
   describe("smooth setup up one at a time", () => {
-    let Sort;
+    let Sort: any;
     beforeEach(() => {
       length = 10;
       size = xXLarge;

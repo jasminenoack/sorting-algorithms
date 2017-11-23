@@ -9,7 +9,6 @@ export class Permutation extends BaseSort {
   public changed: number[];
 
   public setUp() {
-    this.original = this.board.values().slice();
     this.permutation = range(0, this.board.length);
     this.checkSorted();
     this.changed = [this.length - 1];

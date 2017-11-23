@@ -2,11 +2,12 @@ import { range } from "lodash";
 import { Board } from "../src/board";
 import * as Shuffles from "../src/shuffles";
 import * as Sizes from "../src/sizes";
-import * as ValueTypes from "../src/ValueTypes";
+import * as ValueTypes from "../src/valueTypes";
+import { ISize } from "./../src/sizes";
 
 describe("Board", () => {
-  let board;
-  let size;
+  let board: Board;
+  let size: ISize;
 
   describe("creates a board", () => {
     beforeEach(() => {

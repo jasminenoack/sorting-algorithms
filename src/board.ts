@@ -3,7 +3,13 @@ import { IShuffle, RandomShuffle } from "./shuffles";
 import * as Sizes from "./sizes";
 import { Integer, IValueType } from "./valueTypes";
 
-export enum Verbosity { None = 0, Info = 1, Debug = 5 }
+export enum Verbosity {
+  None = 0,
+  Mini = 1,
+  Simple = 2,
+  Info = 3,
+  Debug = 4,
+}
 
 export class Board {
   public points: Points.Point[] = [];

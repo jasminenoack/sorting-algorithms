@@ -3,7 +3,11 @@
   <select id="order">
     {% for name, order in shuffles %}
       {% if order.title %}
-        <option value="{{name}}">{{order.title}}</option>
+        <option value="{{name}}"
+          {% if defaults.shuffle === name %}
+            selected
+          {% endif %}
+        >{{order.title}}</option>
       {% endif %}
     {% endfor %}
   </select>

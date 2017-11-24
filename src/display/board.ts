@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import * as jquery from "jquery";
 import { filter } from "lodash";
 import { buildBoard } from "../index";
 import { BaseSort } from "../sorts/baseSort";
@@ -14,13 +15,15 @@ interface ITestGroup {
 export class BoardDisplay {
   public groups: ITestGroup[] = [];
   public delay: number = 100;
-  public delayOnComplete: number = 100;
+  public interval: any;
 
   constructor(
     public displayEl: HTMLElement,
     public boardHeight: number,
     public boardWidth: number,
-  ) { }
+  ) {
+    this.setupReset();
+  }
 
   public add(group: ITestGroup) {
     const element = this.createBoardElement(group);
@@ -50,6 +53,7 @@ export class BoardDisplay {
       shuffleTitle: board.shuffle.title,
       sort,
       title: (group.sort.constructor as any).title,
+      verbosity: board.verbosity,
       width: this.boardWidth,
     });
     const div = document.createElement("div");
@@ -104,11 +108,17 @@ export class BoardDisplay {
     const placed = sort.placed;
     const currentNodes = sort.currentNodes();
 
-    const boardEl = d3.select(
+    const g = d3.select(
       `#${group.name}`,
-    ).select("g").selectAll("circle").data(
+    ).select("g");
+
+    g.selectAll("circle").data(
       points,
-    ).enter().append("circle").attr(
+    ).enter().append("circle");
+
+    g.selectAll("circle").data(
+      points,
+    ).attr(
       "cx", (point, index) => this.xCenter(index, widthSpread, this.boardWidth),
     ).attr(
       "cy", (point) => this.yCenter(heightSpread, this.boardHeight, point.value, valueMin),
@@ -119,5 +129,74 @@ export class BoardDisplay {
         `point ${currentNodes.indexOf(index) !== -1 ? "active" : ""} ${placed.indexOf(index) !== -1 ? "placed" : ""}`
       ),
     );
+  }
+
+  public resetAll() {
+    clearInterval(this.interval);
+    this.interval = null;
+    this.groups.forEach((group) => {
+      this.resetGroup(group);
+    });
+  }
+
+  public setupAuto() {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+      jquery(".reset").prop("disabled", false);
+    } else {
+      this.interval = setInterval(() => {
+        let done = true;
+        this.groups.forEach((group) => {
+          const sort = group.sort;
+          if (!sort.done) {
+            group.sort.next();
+            this.drawSpots(group);
+            done = false;
+          }
+        });
+        if (done) {
+          setTimeout(() => {
+            this.resetAll();
+            this.setupAuto();
+          }, this.delay * 5);
+        }
+      }, this.delay);
+      jquery(".reset").prop("disabled", true);
+    }
+  }
+
+  public setupReset() {
+    this.createDelegatedEvent(
+      this.displayEl, "click",
+      this.reset.bind(this),
+      ".reset",
+    );
+  }
+
+  public resetGroup(group: ITestGroup) {
+    group.sort.reset();
+    this.drawSpots(group);
+  }
+
+  public reset(event: Event, target: HTMLElement) {
+    const wrapper = jquery(target).closest(".wrapper")[0];
+    const currentGroup = filter(this.groups, (group) => group.name === wrapper.id)[0];
+
+    this.resetGroup(currentGroup);
+  }
+
+  public createDelegatedEvent(
+    eventNode: HTMLElement, eventType: string,
+    fun: (event: Event, target: HTMLElement) => void, selector: string,
+  ) {
+    const listener = eventNode.addEventListener(eventType, (event) => {
+      const currentTarget = event.target;
+      const foundClosestParent: HTMLElement = jquery(currentTarget).closest(selector)[0];
+      if (foundClosestParent) {
+        fun(event, foundClosestParent);
+      }
+    });
+    return listener;
   }
 }

@@ -2,7 +2,11 @@
   Sort:
   <select id="sort">
     {% for name, sort in sorts %}
-      <option value="{{name}}">{{sort.title}}</option>
+      <option value="{{name}}"
+      {% if defaults.sort === name %}
+        selected
+      {% endif %}
+      >{{sort.title}}</option>
     {% endfor %}
   </select>
 </label>

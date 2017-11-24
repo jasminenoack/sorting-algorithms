@@ -10,6 +10,7 @@ module.exports = (config) => {
     frameworks: ["jasmine"],
 
     files: [
+      { pattern: `src/${focusGlob}.ts`, watched: false },
       { pattern: `src/**/${focusGlob}.ts`, watched: false },
       { pattern: `spec/**/${focusGlob}.ts`, watched: false },
     ],
@@ -26,8 +27,8 @@ module.exports = (config) => {
 
     coverageIstanbulReporter: {
       fixWebpackSourcePaths: true,
-      skipFilesWithNoCoverage: false,
       reports: ["html"],
+      skipFilesWithNoCoverage: false,
     },
 
     mime: {

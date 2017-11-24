@@ -166,9 +166,8 @@ function createBoardElements(boxWidth: number, boxHeight: number) {
   return [boardElement, gElement];
 }
 
-function buildBoard(
+export function buildBoard(
   index: number, Sort: BaseSort, boardList: any[], boxHeight: number, boxWidth: number,
-  boardsElement: HTMLElement,
 ) {
   const board = boardList[index].board;
   const sort = boardList[index].sort;
@@ -202,7 +201,7 @@ export function createBoard(
   index: number, Sort: BaseSort, boardList: any[], boxHeight: number,
   boxWidth: number, boardsElement: HTMLElement,
 ) {
-  const wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+  const wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth);
   boardsElement.appendChild(wrapperElement);
 }
 
@@ -210,7 +209,7 @@ export function reRenderBoard(
   index: number, Sort: BaseSort, boardList: any[], boxHeight: number,
   boxWidth: number, boardsElement: HTMLElement,
 ) {
-  const wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth, boardsElement);
+  const wrapperElement = buildBoard(index, Sort, boardList, boxHeight, boxWidth);
   boardsElement.replaceChild(wrapperElement, boardsElement.getElementsByClassName("wrapper")[index]);
 }
 

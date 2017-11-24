@@ -1,0 +1,29 @@
+<div class="wrapper" id="{{name}}" style="width:{{width}}px;">
+  <h1>{{title}}</h1>
+  <span class="data">
+    <div>
+      <span class="nowrap">Order Type: {{shuffleTitle}}.</span>
+      <span class="nowrap">Value Type: {{board.valueType.title}}.</span>
+      <span class="nowrap">Point Count: {{board.size.label}}.</span>
+      <span class="nowrap">Steps: {{sort.steps}}</span>
+      <span class="nowrap">Comparisons: {{sort.comparisons}}</span>
+      <span class="nowrap">Moves: {{sort.moves}}</span>
+    </div>
+    <button class="remove">X</button>
+    <button class="reset">Reset</button>
+    <svg viewBox="0 0 {{width + 40}} {{height + 40}}" style="width:{{width}}px;height:{{height}}px">
+      <g transform="translate(20, 20)" class="board">
+        {# <circle cx="0" cy="0" r="20.833333333333332" class="point active"></circle>
+        <circle cx="55.55555555555555" cy="416.6666666666667" r="20.833333333333332" class="point active"></circle>
+        <circle cx="111.1111111111111" cy="416.6666666666667" r="20.833333333333332" class="point active"></circle>
+        <circle cx="166.66666666666666" cy="291.6666666666667" r="20.833333333333332" class="point active"></circle>
+        <circle cx="222.2222222222222" cy="208.33333333333334" r="20.833333333333332" class="point active"></circle>
+        <circle cx="277.77777777777777" cy="208.33333333333334" r="20.833333333333332" class="point active"></circle>
+        <circle cx="333.3333333333333" cy="83.33333333333333" r="20.833333333333332" class="point active"></circle>
+        <circle cx="388.8888888888889" cy="41.666666666666664" r="20.833333333333332" class="point active"></circle>
+        <circle cx="444.4444444444444" cy="0" r="20.833333333333332" class="point active"></circle>
+        <circle cx="500" cy="500" r="20.833333333333332" class="point active"></circle> #}
+      </g>
+    </svg>
+  </span>
+</div>

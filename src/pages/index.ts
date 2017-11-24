@@ -23,6 +23,7 @@ export const blog = {
 export const tools = {
   "Profile Graphs": "#profile",
   "Scatter Animations": "#scatter",
+  "Single Sort": "#single",
 };
 
 export const learn = {

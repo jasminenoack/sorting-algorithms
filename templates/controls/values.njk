@@ -2,7 +2,11 @@
   Values:
   <select id="value-type">
     {% for name, valueType in valueTypes %}
-      <option value="{{name}}">{{valueType.title}}</option>
+      <option value="{{name}}"
+        {% if defaults.valueType === name %}
+          selected
+        {% endif %}
+      >{{valueType.title}}</option>
     {% endfor %}
   </select>
 <label>

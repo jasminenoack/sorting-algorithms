@@ -2,7 +2,11 @@
   Point count:
   <select id="size">
     {% for name, size in sizes %}
-      <option value="{{name}}">{{size.label}}</option>
+      <option value="{{name}}"
+        {% if defaults.count === name %}
+          selected
+        {% endif %}
+      >{{size.label}}</option>
     {% endfor %}
   </select>
 <label>

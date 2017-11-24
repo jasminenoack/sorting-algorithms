@@ -31,7 +31,24 @@ export class Router {
     Router.routerListeners.push(this.listenToChange);
   }
 
+  public clearIntervals() {
+    const intNum = setInterval(() => { return; }, 9000);
+    for (let i = 0; i < (intNum as any); i++) {
+      clearInterval(i);
+    }
+  }
+
+  public clearTimeouts() {
+    const timeNum = setTimeout(() => { return; }, 9000);
+    for (let i = 0; i < (timeNum as any); i++) {
+      clearTimeout(i);
+    }
+  }
+
   public listenToChange(event?: PopStateEvent) {
+    this.clearIntervals();
+    this.clearTimeouts();
+
     let location: Location;
     if (event) {
       location = (event.target as Window).location;

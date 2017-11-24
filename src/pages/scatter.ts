@@ -1,13 +1,11 @@
+import * as jquery from "jquery";
 import { Board } from "../board";
-import {
-  closestParent, createBoard, createBoardList,
-  createDelegatedEvent, functionRunBoardsWithoutRender, manageAutoRunCharts, reRenderBoard, step,
-} from "../index";
 import * as shuffles from "../shuffles";
 import * as sizes from "../sizes";
 import { BaseSort } from "../sorts/baseSort";
 import * as sorts from "../sorts/sorts";
 import * as valueTypes from "../valueTypes";
+import { BoardDisplay } from "./../display/board";
 import { IShuffle } from "./../shuffles/abstract";
 import { ISize } from "./../sizes";
 import { IValueType } from "./../valueTypes";
@@ -20,6 +18,12 @@ export const setUpScatter = (
   // tslint:disable-next-line:no-var-requires
   const tpl = require("../../templates/scatter.njk");
   const html = tpl.render({
+    defaults: {
+      count: "xLarge",
+      shuffle: "RandomShuffle",
+      sort: "Comb",
+      valueType: "Integer",
+    },
     shuffles,
     sizes,
     sorts,
@@ -28,76 +32,50 @@ export const setUpScatter = (
   return html;
 };
 
-export const scatterCallback = () => {
-  const boardsElement = document.getElementById("boards");
-  const createButton = document.getElementById("create");
+let index = 1;
+
+const createBoard = (display: BoardDisplay) => {
+  // the figure out the size
   const sizeElement = document.getElementById("size");
+  const size: ISize = (sizes as { [key: string]: ISize })[(sizeElement as any).value];
+
+  // figure out the order
   const orderSelect = document.getElementById("order");
+  const order: IShuffle = (shuffles as { [key: string]: IShuffle })[(orderSelect as any).value];
+
+  // figure out the value type
   const valueTypeSelect = document.getElementById("value-type");
+  const value: IValueType = (valueTypes as { [key: string]: IValueType })[(valueTypeSelect as any).value];
+
+  // figure out the sort
   const sortElement = document.getElementById("sort");
-  const boxHeight = 500;
-  const boxWidth = 500;
-  const boardList: any[] = [];
-  let autoInterval: any = null;
-  const delay = 100;
-  createButton.addEventListener("click", () => {
-    const size: ISize = (sizes as { [key: string]: ISize })[(sizeElement as any).value];
-    const value: IValueType = (valueTypes as { [key: string]: IValueType })[(valueTypeSelect as any).value];
-    const order: IShuffle = (shuffles as { [key: string]: IShuffle })[(orderSelect as any).value];
-    const Sort: BaseSort = (sorts as any)[(sortElement as any).value];
+  const Sort: BaseSort = (sorts as any)[(sortElement as any).value];
 
-    // let board = new Boards.Board(size)
-    const board = new Board(size, order, value);
-    boardList.push({
-      board,
-      sort: new (Sort as any)(board),
-    });
-    createBoard(boardList.length - 1, Sort, boardList, boxHeight, boxWidth, boardsElement);
+  const board = new Board(size, order, value);
+  const sort = new (Sort as any)(board);
+
+  display.add({
+    board,
+    name: `board-${index}`,
+    sort,
   });
+  index++;
+};
 
-  const stepElement = document.getElementById("step");
-  const boundStep = step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
-  stepElement.addEventListener("click", boundStep);
+export const scatterCallback = () => {
+  // the wrapper for the boards
+  const boardsElement = document.getElementById("boards");
+  const display = new BoardDisplay(boardsElement, 500, 500);
 
-  createDelegatedEvent(boardsElement, "click", (event, target) => {
-    const wrapperElement = closestParent(target, ".wrapper");
-    const wrappers = document.getElementsByClassName("wrapper");
-    for (let i = 0; i < wrappers.length; i++) {
-      if (wrappers[i] === wrapperElement) {
-        boardList.splice(i, 1);
-        break;
-      }
-    }
-    wrapperElement.remove();
-  }, ".remove");
+  // controls
+  const createButton = document.getElementById("create");
 
-  createDelegatedEvent(boardsElement, "click", (event, target) => {
-    const wrapperElement = closestParent(target, ".wrapper");
-    const wrappers = document.getElementsByClassName("wrapper");
-    let wrapperIndex;
-    for (let i = 0; i < wrappers.length; i++) {
-      if (wrappers[i] === wrapperElement) {
-        wrapperIndex = i;
-        break;
-      }
-    }
-    const item = boardList[wrapperIndex];
-    item.sort.reset();
-    reRenderBoard(wrapperIndex, item.sort.constructor, boardList, boxHeight, boxWidth, boardsElement);
-  }, ".reset");
+  // on create
+  jquery(createButton).click(createBoard.bind(this, display));
 
   const autoElement = document.getElementById("auto");
-  autoElement.addEventListener("click", (event) => {
-    if (autoInterval) {
-      clearInterval(autoInterval);
-      autoInterval = null;
-      (event.currentTarget as HTMLElement).classList.remove("active");
-      boardsElement.classList.remove("auto");
-    } else {
-      const currentBoundStep = step.bind(null, boardList, boxHeight, boxWidth, boardsElement);
-      autoInterval = setInterval(currentBoundStep, delay);
-      (event.currentTarget as HTMLElement).classList.add("active");
-      boardsElement.classList.add("auto");
-    }
-  });
+  jquery(autoElement).click(display.setupAuto.bind(display));
+
+  const stepElement = document.getElementById("step");
+  jquery(stepElement).click(display.step.bind(display));
 };

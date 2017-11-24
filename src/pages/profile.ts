@@ -20,6 +20,12 @@ export const setUpProfile = (
   // tslint:disable-next-line:no-var-requires
   const tpl = require("../../templates/profile.njk");
   const html = tpl.render({
+    defaults: {
+      count: "xLarge",
+      shuffle: "RandomShuffle",
+      sort: "Comb",
+      value: "Integer",
+    },
     shuffles,
     sizes,
     sorts,

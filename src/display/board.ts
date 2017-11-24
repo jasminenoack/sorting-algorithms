@@ -23,6 +23,7 @@ export class BoardDisplay {
     public boardWidth: number,
   ) {
     this.setupReset();
+    this.setupRemove();
   }
 
   public add(group: ITestGroup) {
@@ -132,11 +133,22 @@ export class BoardDisplay {
   }
 
   public resetAll() {
-    clearInterval(this.interval);
-    this.interval = null;
     this.groups.forEach((group) => {
       this.resetGroup(group);
     });
+  }
+
+  public step() {
+    let done = true;
+    this.groups.forEach((group) => {
+      const sort = group.sort;
+      if (!sort.done) {
+        group.sort.next();
+        this.drawSpots(group);
+        done = false;
+      }
+    });
+    return done;
   }
 
   public setupAuto() {
@@ -144,34 +156,40 @@ export class BoardDisplay {
       clearInterval(this.interval);
       this.interval = null;
       jquery(".reset").prop("disabled", false);
+      jquery(".remove").prop("disabled", false);
     } else {
       this.interval = setInterval(() => {
-        let done = true;
-        this.groups.forEach((group) => {
-          const sort = group.sort;
-          if (!sort.done) {
-            group.sort.next();
-            this.drawSpots(group);
-            done = false;
-          }
-        });
+        const done = this.step();
         if (done) {
+          clearInterval(this.interval);
+          this.interval = null;
           setTimeout(() => {
             this.resetAll();
             this.setupAuto();
-          }, this.delay * 5);
+          }, this.delay * 10);
         }
       }, this.delay);
       jquery(".reset").prop("disabled", true);
+      jquery(".remove").prop("disabled", false);
     }
   }
 
   public setupReset() {
-    this.createDelegatedEvent(
-      this.displayEl, "click",
-      this.reset.bind(this),
-      ".reset",
-    );
+    jquery(this.displayEl).on("click", ".reset", this.reset.bind(this));
+  }
+
+  public setupRemove() {
+    jquery(this.displayEl).on("click", ".remove", this.handleRemove.bind(this));
+  }
+
+  public handleRemove(event: Event) {
+    const currentGroup = this.findGroupFromEvent(event);
+    this.remove(currentGroup.name);
+  }
+
+  public findGroupFromEvent(event: Event) {
+    const wrapper = jquery(event.currentTarget).closest(".wrapper")[0];
+    return filter(this.groups, (group) => group.name === wrapper.id)[0];
   }
 
   public resetGroup(group: ITestGroup) {
@@ -179,10 +197,8 @@ export class BoardDisplay {
     this.drawSpots(group);
   }
 
-  public reset(event: Event, target: HTMLElement) {
-    const wrapper = jquery(target).closest(".wrapper")[0];
-    const currentGroup = filter(this.groups, (group) => group.name === wrapper.id)[0];
-
+  public reset(event: Event) {
+    const currentGroup = this.findGroupFromEvent(event);
     this.resetGroup(currentGroup);
   }
 

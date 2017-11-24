@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import * as jquery from "jquery";
 import { filter } from "lodash";
-import { buildBoard } from "../index";
 import { BaseSort } from "../sorts/baseSort";
 import { Board } from "./../board";
 
@@ -31,7 +30,7 @@ export class BoardDisplay {
     const element = this.createBoardElement(group);
     group.domElement = element;
     this.displayEl.appendChild(element);
-    this.drawSpots(group);
+    this.drawSpots(group, false);
     this.groups.push(group);
   }
 
@@ -69,20 +68,6 @@ export class BoardDisplay {
     ), 2);
   }
 
-  public centers(
-    heightSpread: number, widthSpread: number, boxHeight: number, boxWidth: number, value: number,
-    index: number, valueMin: number,
-  ) {
-    let yCenter;
-    if (heightSpread) {
-      yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
-    } else {
-      yCenter = boxHeight / 2;
-    }
-    const xCenter = (index) / widthSpread * boxWidth;
-    return [xCenter, yCenter];
-  }
-
   public xCenter(index: number, widthSpread: number, width: number) {
     return (index) / widthSpread * width;
   }
@@ -95,10 +80,18 @@ export class BoardDisplay {
     }
   }
 
-  public drawSpots(group: ITestGroup) {
+  public drawSpots(group: ITestGroup, shadow: boolean) {
     const board = group.board;
     const sort = group.sort;
-    const points = board.points;
+    let points;
+    if (!shadow) {
+      points = board.points;
+    } else {
+      points = sort.shadow;
+    }
+    if (!points || !points.length) {
+      return;
+    }
 
     const valueMin = board.min();
     const valueMax = board.max();
@@ -110,13 +103,19 @@ export class BoardDisplay {
     const placed = sort.placed;
     const currentNodes = sort.currentNodes();
 
-    const g = d3.select(
-      `#${group.name}`,
-    ).select("g");
+    let g;
+    if (shadow) {
+      g = d3.select(
+        `#${group.name}`,
+      ).select("g.shadow");
+    } else {
+      g = d3.select(
+        `#${group.name}`,
+      ).select(".board");
+    }
 
-    g.selectAll("circle").data(
-      points,
-    ).enter().append("circle");
+    g.selectAll(`circle`).data(points).enter().append("circle");
+    g.selectAll(`circle`).data(points).exit().remove();
 
     g.selectAll("circle").data(
       points,
@@ -128,7 +127,9 @@ export class BoardDisplay {
       "r", radius,
     ).attr(
       "class", (point, index) => (
-        `point ${currentNodes.indexOf(index) !== -1 ? "active" : ""} ${placed.indexOf(index) !== -1 ? "placed" : ""}`
+        `point ${currentNodes.indexOf(index) !== -1 && !shadow ? "active" : ""} `
+        + `${placed.indexOf(index) !== -1 && !shadow ? "placed" : ""} `
+        + `${shadow ? "shadow" : ""}`
       ),
     );
   }
@@ -145,7 +146,8 @@ export class BoardDisplay {
       const sort = group.sort;
       if (!sort.done) {
         group.sort.next();
-        this.drawSpots(group);
+        this.drawSpots(group, false);
+        this.drawSpots(group, true);
         done = false;
       }
     });
@@ -201,19 +203,5 @@ export class BoardDisplay {
   public reset(event: Event) {
     const currentGroup = this.findGroupFromEvent(event);
     this.resetGroup(currentGroup);
-  }
-
-  public createDelegatedEvent(
-    eventNode: HTMLElement, eventType: string,
-    fun: (event: Event, target: HTMLElement) => void, selector: string,
-  ) {
-    const listener = eventNode.addEventListener(eventType, (event) => {
-      const currentTarget = event.target;
-      const foundClosestParent: HTMLElement = jquery(currentTarget).closest(selector)[0];
-      if (foundClosestParent) {
-        fun(event, foundClosestParent);
-      }
-    });
-    return listener;
   }
 }

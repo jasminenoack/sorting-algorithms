@@ -46254,7 +46254,7 @@ var BoardDisplay = /** @class */ (function () {
         var element = this.createBoardElement(group);
         group.domElement = element;
         this.displayEl.appendChild(element);
-        this.drawSpots(group);
+        this.drawSpots(group, false);
         this.groups.push(group);
     };
     BoardDisplay.prototype.remove = function (name) {
@@ -46286,17 +46286,6 @@ var BoardDisplay = /** @class */ (function () {
     BoardDisplay.prototype.getRadius = function (boxHeight, heightSpread, boxWidth, widthSpread) {
         return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
     };
-    BoardDisplay.prototype.centers = function (heightSpread, widthSpread, boxHeight, boxWidth, value, index, valueMin) {
-        var yCenter;
-        if (heightSpread) {
-            yCenter = (heightSpread - (value - valueMin)) / heightSpread * boxHeight;
-        }
-        else {
-            yCenter = boxHeight / 2;
-        }
-        var xCenter = (index) / widthSpread * boxWidth;
-        return [xCenter, yCenter];
-    };
     BoardDisplay.prototype.xCenter = function (index, widthSpread, width) {
         return (index) / widthSpread * width;
     };
@@ -46308,11 +46297,20 @@ var BoardDisplay = /** @class */ (function () {
             return height / 2;
         }
     };
-    BoardDisplay.prototype.drawSpots = function (group) {
+    BoardDisplay.prototype.drawSpots = function (group, shadow) {
         var _this = this;
         var board = group.board;
         var sort = group.sort;
-        var points = board.points;
+        var points;
+        if (!shadow) {
+            points = board.points;
+        }
+        else {
+            points = sort.shadow;
+        }
+        if (!points || !points.length) {
+            return;
+        }
         var valueMin = board.min();
         var valueMax = board.max();
         var heightSpread = valueMax - valueMin;
@@ -46320,9 +46318,18 @@ var BoardDisplay = /** @class */ (function () {
         var radius = this.getRadius(this.boardHeight, heightSpread, this.boardWidth, widthSpread);
         var placed = sort.placed;
         var currentNodes = sort.currentNodes();
-        var g = d3.select("#" + group.name).select("g");
+        var g;
+        if (shadow) {
+            g = d3.select("#" + group.name).select("g.shadow");
+        }
+        else {
+            g = d3.select("#" + group.name).select(".board");
+        }
         g.selectAll("circle").data(points).enter().append("circle");
-        g.selectAll("circle").data(points).attr("cx", function (point, index) { return _this.xCenter(index, widthSpread, _this.boardWidth); }).attr("cy", function (point) { return _this.yCenter(heightSpread, _this.boardHeight, point.value, valueMin); }).attr("r", radius).attr("class", function (point, index) { return ("point " + (currentNodes.indexOf(index) !== -1 ? "active" : "") + " " + (placed.indexOf(index) !== -1 ? "placed" : "")); });
+        g.selectAll("circle").data(points).exit().remove();
+        g.selectAll("circle").data(points).attr("cx", function (point, index) { return _this.xCenter(index, widthSpread, _this.boardWidth); }).attr("cy", function (point) { return _this.yCenter(heightSpread, _this.boardHeight, point.value, valueMin); }).attr("r", radius).attr("class", function (point, index) { return ("point " + (currentNodes.indexOf(index) !== -1 && !shadow ? "active" : "") + " "
+            + ((placed.indexOf(index) !== -1 && !shadow ? "placed" : "") + " ")
+            + ("" + (shadow ? "shadow" : ""))); });
     };
     BoardDisplay.prototype.resetAll = function () {
         var _this = this;
@@ -46337,7 +46344,8 @@ var BoardDisplay = /** @class */ (function () {
             var sort = group.sort;
             if (!sort.done) {
                 group.sort.next();
-                _this.drawSpots(group);
+                _this.drawSpots(group, false);
+                _this.drawSpots(group, true);
                 done = false;
             }
         });
@@ -46388,16 +46396,6 @@ var BoardDisplay = /** @class */ (function () {
     BoardDisplay.prototype.reset = function (event) {
         var currentGroup = this.findGroupFromEvent(event);
         this.resetGroup(currentGroup);
-    };
-    BoardDisplay.prototype.createDelegatedEvent = function (eventNode, eventType, fun, selector) {
-        var listener = eventNode.addEventListener(eventType, function (event) {
-            var currentTarget = event.target;
-            var foundClosestParent = jquery(currentTarget).closest(selector)[0];
-            if (foundClosestParent) {
-                fun(event, foundClosestParent);
-            }
-        });
-        return listener;
     };
     return BoardDisplay;
 }());
@@ -60017,7 +60015,7 @@ output += "\n    <svg viewBox=\"0 0 ";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "width") + 40, env.opts.autoescape);
 output += " ";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "height") + 40, env.opts.autoescape);
-output += "\">\n      <g transform=\"translate(20, 20)\" class=\"board\">\n      </g>\n    </svg>\n  </span>\n</div>\n";
+output += "\">\n      <g transform=\"translate(20, 20)\" class=\"board\">\n      </g>\n      <g transform=\"translate(20, 20)\" class=\"shadow\">\n      </g>\n    </svg>\n  </span>\n</div>\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {

@@ -1,5 +1,5 @@
 import { Board, Verbosity } from "../board";
-import { autoRunBoards, createBoard } from "../index";
+import { BoardDisplay } from "../display/board";
 import { OrderedShuffle, ReversedShuffle } from "../shuffles";
 import { _75 } from "../sizes";
 import { Comb } from "../sorts/comb/base";
@@ -48,104 +48,85 @@ export const setUpIndex = (
 };
 
 const createReversedSet = () => {
-  const ReverseElement = document.getElementById("reverse-sorts");
-  const boxHeight = 200;
-  const boxWidth = 200;
-  const delay = 100;
-  const delayOnComplete = 100;
+  const reverseElement = document.getElementById("reverse-sorts");
+  const display = new BoardDisplay(reverseElement, 200, 200);
+
   const size = _75;
   const valueType = Integer;
   const shuffle = ReversedShuffle;
-  const board2 = new Board(size, shuffle, valueType, Verbosity.Info);
+
+  const board2 = new Board(size, shuffle, valueType, Verbosity.None);
   const sort2 = new Comb(board2);
-  const board4 = new Board(size, shuffle, valueType, Verbosity.Info);
+  const board4 = new Board(size, shuffle, valueType, Verbosity.None);
   const sort4 = new Heap(board4);
-  const board5 = new Board(size, shuffle, valueType, Verbosity.Info);
+  const board5 = new Board(size, shuffle, valueType, Verbosity.None);
   const sort5 = new OddEven(board5);
-  const board7 = new Board(size, shuffle, valueType, Verbosity.Info);
+  const board7 = new Board(size, shuffle, valueType, Verbosity.None);
   const sort7 = new Smooth(board7);
-  const boardList: any[] = [
-    {
-      board: board2,
-      sort: sort2,
-    },
-    {
-      board: board4,
-      sort: sort4,
-    },
-    {
-      board: board5,
-      sort: sort5,
-    },
-    {
-      board: board7,
-      sort: sort7,
-    },
-  ];
-  boardList.forEach((board, index) => {
-    createBoard(
-      index, (board.sort.constructor as any), boardList,
-      boxHeight, boxWidth, ReverseElement,
-    );
+
+  display.add({
+    board: board2,
+    name: "rev-comb",
+    sort: sort2,
+  });
+  display.add({
+    board: board4,
+    name: "rev-heap",
+    sort: sort4,
+  });
+  display.add({
+    board: board5,
+    name: "rev-odd-even",
+    sort: sort5,
+  });
+  display.add({
+    board: board7,
+    name: "rev-smooth",
+    sort: sort7,
   });
 
-  autoRunBoards(
-    boardList, boxHeight, boxWidth, ReverseElement, delay, delayOnComplete,
-    (board) => {
-      return (board.sort as any).steps < 200 && !(board.sort as any).done;
-    },
-  );
+  display.setupAuto();
 };
 
 const createOrderedSet = () => {
   const OrderedElement = document.getElementById("ordered-sorts");
-  const boxHeight = 200;
-  const boxWidth = 200;
-  const delay = 100;
-  const delayOnComplete = 100;
+  const display = new BoardDisplay(OrderedElement, 200, 200);
+
   const size = _75;
   const valueType = Integer;
   const shuffle = OrderedShuffle;
-  const board2 = new Board(size, shuffle, valueType, Verbosity.Info);
-  const sort2 = new Comb(board2);
-  const board4 = new Board(size, shuffle, valueType, Verbosity.Info);
-  const sort4 = new Heap(board4);
-  const board5 = new Board(size, shuffle, valueType, Verbosity.Info);
-  const sort5 = new OddEven(board5);
-  const board7 = new Board(size, shuffle, valueType, Verbosity.Info);
-  const sort7 = new Smooth(board7);
-  const boardList: any[] = [
-    {
-      board: board2,
-      sort: sort2,
-    },
-    {
-      board: board4,
-      sort: sort4,
-    },
-    {
-      board: board5,
-      sort: sort5,
-    },
-    {
-      board: board7,
-      sort: sort7,
-    },
-  ];
 
-  boardList.forEach((board, index) => {
-    createBoard(
-      index, (board.sort.constructor as any), boardList,
-      boxHeight, boxWidth, OrderedElement,
-    );
+  const board2 = new Board(size, shuffle, valueType, Verbosity.None);
+  const sort2 = new Comb(board2);
+  const board4 = new Board(size, shuffle, valueType, Verbosity.None);
+  const sort4 = new Heap(board4);
+  const board5 = new Board(size, shuffle, valueType, Verbosity.None);
+  const sort5 = new OddEven(board5);
+  const board7 = new Board(size, shuffle, valueType, Verbosity.None);
+  const sort7 = new Smooth(board7);
+
+  display.add({
+    board: board2,
+    name: "ord-comb",
+    sort: sort2,
+  });
+  display.add({
+    board: board4,
+    name: "ord-heap",
+    sort: sort4,
+  });
+  display.add({
+    board: board5,
+    name: "ord-odd-even",
+    sort: sort5,
+  });
+  display.add({
+    board: board7,
+    name: "ord-smooth",
+    sort: sort7,
   });
 
-  autoRunBoards(
-    boardList, boxHeight, boxWidth, OrderedElement, delay, delayOnComplete,
-    (board) => {
-      return (board.sort as any).steps < 200 && !(board.sort as any).done;
-    },
-  );
+  display.setupAuto();
 };
 
 export const indexCallback = () => {

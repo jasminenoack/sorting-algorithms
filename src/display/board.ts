@@ -13,7 +13,7 @@ interface ITestGroup {
 }
 
 export class BoardDisplay {
-  public groups: ITestGroup[] = [];
+  public groups: ITestGroup[];
   public delay: number = 100;
   public interval: any;
 
@@ -22,6 +22,7 @@ export class BoardDisplay {
     public boardHeight: number,
     public boardWidth: number,
   ) {
+    this.groups = [];
     this.setupReset();
     this.setupRemove();
   }

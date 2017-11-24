@@ -42872,7 +42872,7 @@ exports.RouterLocation = RouterLocation;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var board_1 = __webpack_require__(29);
-var index_1 = __webpack_require__(66);
+var board_2 = __webpack_require__(265);
 var shuffles_1 = __webpack_require__(30);
 var sizes_1 = __webpack_require__(46);
 var base_1 = __webpack_require__(22);
@@ -42912,88 +42912,76 @@ exports.setUpIndex = function (location, data, query) {
     return html;
 };
 var createReversedSet = function () {
-    var ReverseElement = document.getElementById("reverse-sorts");
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 100;
+    var reverseElement = document.getElementById("reverse-sorts");
+    var display = new board_2.BoardDisplay(reverseElement, 200, 200);
     var size = sizes_1._75;
     var valueType = valueTypes_1.Integer;
     var shuffle = shuffles_1.ReversedShuffle;
-    var board2 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var board2 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.None);
     var sort2 = new base_1.Comb(board2);
-    var board4 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var board4 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.None);
     var sort4 = new base_2.Heap(board4);
-    var board5 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var board5 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.None);
     var sort5 = new base_3.OddEven(board5);
-    var board7 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var board7 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.None);
     var sort7 = new base_4.Smooth(board7);
-    var boardList = [
-        {
-            board: board2,
-            sort: sort2,
-        },
-        {
-            board: board4,
-            sort: sort4,
-        },
-        {
-            board: board5,
-            sort: sort5,
-        },
-        {
-            board: board7,
-            sort: sort7,
-        },
-    ];
-    boardList.forEach(function (board, index) {
-        index_1.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, ReverseElement);
+    display.add({
+        board: board2,
+        name: "rev-comb",
+        sort: sort2,
     });
-    index_1.autoRunBoards(boardList, boxHeight, boxWidth, ReverseElement, delay, delayOnComplete, function (board) {
-        return board.sort.steps < 200 && !board.sort.done;
+    display.add({
+        board: board4,
+        name: "rev-heap",
+        sort: sort4,
     });
+    display.add({
+        board: board5,
+        name: "rev-odd-even",
+        sort: sort5,
+    });
+    display.add({
+        board: board7,
+        name: "rev-smooth",
+        sort: sort7,
+    });
+    display.setupAuto();
 };
 var createOrderedSet = function () {
     var OrderedElement = document.getElementById("ordered-sorts");
-    var boxHeight = 200;
-    var boxWidth = 200;
-    var delay = 100;
-    var delayOnComplete = 100;
+    var display = new board_2.BoardDisplay(OrderedElement, 200, 200);
     var size = sizes_1._75;
     var valueType = valueTypes_1.Integer;
     var shuffle = shuffles_1.OrderedShuffle;
-    var board2 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var board2 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.None);
     var sort2 = new base_1.Comb(board2);
-    var board4 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var board4 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.None);
     var sort4 = new base_2.Heap(board4);
-    var board5 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var board5 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.None);
     var sort5 = new base_3.OddEven(board5);
-    var board7 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.Info);
+    var board7 = new board_1.Board(size, shuffle, valueType, board_1.Verbosity.None);
     var sort7 = new base_4.Smooth(board7);
-    var boardList = [
-        {
-            board: board2,
-            sort: sort2,
-        },
-        {
-            board: board4,
-            sort: sort4,
-        },
-        {
-            board: board5,
-            sort: sort5,
-        },
-        {
-            board: board7,
-            sort: sort7,
-        },
-    ];
-    boardList.forEach(function (board, index) {
-        index_1.createBoard(index, board.sort.constructor, boardList, boxHeight, boxWidth, OrderedElement);
+    display.add({
+        board: board2,
+        name: "ord-comb",
+        sort: sort2,
     });
-    index_1.autoRunBoards(boardList, boxHeight, boxWidth, OrderedElement, delay, delayOnComplete, function (board) {
-        return board.sort.steps < 200 && !board.sort.done;
+    display.add({
+        board: board4,
+        name: "ord-heap",
+        sort: sort4,
     });
+    display.add({
+        board: board5,
+        name: "ord-odd-even",
+        sort: sort5,
+    });
+    display.add({
+        board: board7,
+        name: "ord-smooth",
+        sort: sort7,
+    });
+    display.setupAuto();
 };
 exports.indexCallback = function () {
     createOrderedSet();
@@ -46257,8 +46245,8 @@ var BoardDisplay = /** @class */ (function () {
         this.displayEl = displayEl;
         this.boardHeight = boardHeight;
         this.boardWidth = boardWidth;
-        this.groups = [];
         this.delay = 100;
+        this.groups = [];
         this.setupReset();
         this.setupRemove();
     }

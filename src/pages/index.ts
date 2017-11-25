@@ -21,9 +21,12 @@ export const blog = {
 };
 
 export const tools = {
-  "Profile Graphs": "#profile",
+  "Single Scatter Sort Animation": "#single",
+
   "Scatter Animations": "#scatter",
-  "Single Sort": "#single",
+
+  "Profiling": "#profile",
+
   "Stick Animation": "#stick",
 };
 

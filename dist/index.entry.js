@@ -43590,9 +43590,9 @@ exports.blog = {
     "Sorting": "http://jasminenoack.tumblr.com/tagged/sorting/chrono",
 };
 exports.tools = {
-    "Profile Graphs": "#profile",
+    "Single Scatter Sort Animation": "#single",
     "Scatter Animations": "#scatter",
-    "Single Sort": "#single",
+    "Profiling": "#profile",
     "Stick Animation": "#stick",
 };
 exports.learn = {
@@ -59629,6 +59629,7 @@ if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv;
 }
 var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./controls/home.njk"] = __webpack_require__( 567 );
 dependencies["./controls/sort.njk"] = __webpack_require__( 67 );
 dependencies["./controls/count.njk"] = __webpack_require__( 117 );
 dependencies["./controls/order.njk"] = __webpack_require__( 68 );
@@ -59649,11 +59650,10 @@ var colno = null;
 var output = "";
 try {
 var parentTemplate = null;
-output += "<div><a href=\"../../index.html\">Index</a></div>\n<div><a href=\"javascript:history.back()\"><< Back</a></div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/sort.njk", false, "templates/profile.njk", null, function(t_3,t_1) {
+env.getTemplate("./controls/home.njk", false, "templates/profile.njk", null, function(t_3,t_1) {
 if(t_3) { cb(t_3); return; }
 callback(null,t_1);});
 });
@@ -59669,11 +59669,11 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n      ";
+output += "\n<h2>Profiles</h2>\n<div>\n  This visualization shows the profile for a given sort.\n</div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/count.njk", false, "templates/profile.njk", null, function(t_7,t_5) {
+env.getTemplate("./controls/sort.njk", false, "templates/profile.njk", null, function(t_7,t_5) {
 if(t_7) { cb(t_7); return; }
 callback(null,t_5);});
 });
@@ -59693,7 +59693,7 @@ output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/order.njk", false, "templates/profile.njk", null, function(t_11,t_9) {
+env.getTemplate("./controls/count.njk", false, "templates/profile.njk", null, function(t_11,t_9) {
 if(t_11) { cb(t_11); return; }
 callback(null,t_9);});
 });
@@ -59713,7 +59713,7 @@ output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/values.njk", false, "templates/profile.njk", null, function(t_15,t_13) {
+env.getTemplate("./controls/order.njk", false, "templates/profile.njk", null, function(t_15,t_13) {
 if(t_15) { cb(t_15); return; }
 callback(null,t_13);});
 });
@@ -59733,7 +59733,7 @@ output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/checkboxes.njk", false, "templates/profile.njk", null, function(t_19,t_17) {
+env.getTemplate("./controls/values.njk", false, "templates/profile.njk", null, function(t_19,t_17) {
 if(t_19) { cb(t_19); return; }
 callback(null,t_17);});
 });
@@ -59749,11 +59749,11 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n    </div>\n    ";
+output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/profileButtons.njk", false, "templates/profile.njk", null, function(t_23,t_21) {
+env.getTemplate("./controls/checkboxes.njk", false, "templates/profile.njk", null, function(t_23,t_21) {
 if(t_23) { cb(t_23); return; }
 callback(null,t_21);});
 });
@@ -59769,13 +59769,33 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
+output += "\n    </div>\n    ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/profileButtons.njk", false, "templates/profile.njk", null, function(t_27,t_25) {
+if(t_27) { cb(t_27); return; }
+callback(null,t_25);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_28,t_26) {
+if(t_28) { cb(t_28); return; }
+callback(null,t_26);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
 output += "\n    <div>\n      Sorts: <span id=\"sorts\"></sorts>\n    </div>\n  </div>\n  <div id=\"graph\">\n  </div>\n\n  <div id=\"previous\">\n  </div>\n\n  <style>\n    path {\n      stroke: black;\n      fill: none;\n    }\n\n    .swaps-0 {\n      stroke: #1f77b4;\n      fill: #1f77b4;\n    }\n    .comps-0 {\n      stroke: #aec7e8;\n      fill: #aec7e8;\n    }\n    .item:nth-child(1) .swaps {\n      color: #1f77b4;\n    }\n    .item:nth-child(1) .comps {\n      color: #aec7e8;\n    }\n\n    .swaps-1 {\n      stroke: #ff7f0e;\n      fill: #ff7f0e;\n    }\n    .comps-1 {\n      stroke: #ffbb78;\n      fill: #ffbb78;\n    }\n    .item:nth-child(2) .swaps {\n      color: #ff7f0e;\n    }\n    .item:nth-child(2) .comps {\n      color: #ffbb78;\n    }\n\n    .swaps-2 {\n      stroke: #2ca02c;\n      fill: #2ca02c;\n    }\n    .comps-2 {\n      stroke: #98df8a;\n      fill: #98df8a;\n    }\n    .item:nth-child(3) .swaps {\n      color: #2ca02c;\n    }\n    .item:nth-child(3) .comps {\n      color: #98df8a;\n    }\n\n    .swaps-3 {\n      stroke: #d62728;\n      fill: #d62728;\n    }\n    .comps-3 {\n      stroke: #ff9896;\n      fill: #ff9896;\n    }\n    .item:nth-child(4) .swaps {\n      color: #d62728;\n    }\n    .item:nth-child(4) .comps {\n      color: #ff9896;\n    }\n\n    .swaps-4 {\n      stroke: #9467bd;\n      fill: #9467bd;\n    }\n    .comps-4 {\n      stroke: #c5b0d5;\n      fill: #c5b0d5;\n    }\n    .item:nth-child(5) .swaps {\n      color: #9467bd;\n    }\n    .item:nth-child(5) .comps {\n      color: #c5b0d5;\n    }\n\n    .swaps-5 {\n      stroke: #8c564b;\n      fill: #8c564b;\n    }\n    .comps-5 {\n      stroke: #c49c94;\n      fill: #c49c94;\n    }\n    .item:nth-child(6) .swaps {\n      color: #8c564b;\n    }\n    .item:nth-child(6) .comps {\n      color: #c49c94;\n    }\n\n    .swaps-6 {\n      stroke: #e377c2;\n      fill: #e377c2;\n    }\n    .comps-6 {\n      stroke: #f7b6d2;\n      fill: #f7b6d2;\n    }\n    .item:nth-child(7) .swaps {\n      color: #e377c2;\n    }\n    .item:nth-child(7) .comps {\n      color: #f7b6d2;\n    }\n\n    .swaps-7 {\n      stroke: #7f7f7f;\n      fill: #7f7f7f;\n    }\n    .comps-7 {\n      stroke: #c7c7c7;\n      fill: #c7c7c7;\n    }\n    .item:nth-child(8) .swaps {\n      color: #7f7f7f;\n    }\n    .item:nth-child(8) .comps {\n      color: #c7c7c7;\n    }\n\n    .swaps-8 {\n      stroke: #bcbd22;\n      fill: #bcbd22;\n    }\n    .comps-8 {\n      stroke: #dbdb8d;\n      fill: #dbdb8d;\n    }\n    .item:nth-child(9) .swaps {\n      color: #bcbd22;\n    }\n    .item:nth-child(9) .comps {\n      color: #dbdb8d;\n    }\n\n    .swaps-9 {\n      stroke: #17becf;\n      fill: #17becf;\n    }\n    .comps-9 {\n      stroke: #9edae5;\n      fill: #9edae5;\n    }\n    .item:nth-child(10) .swaps {\n      color: #17becf;\n    }\n    .item:nth-child(10) .comps {\n      color: #9edae5;\n    }\n\n    .line {\n      fill: none;\n    }\n  </style>\n</article>\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
 cb(null, output);
 }
-})})})})})});
+})})})})})})});
 } catch (e) {
   cb(runtime.handleError(e, lineno, colno));
 }
@@ -59977,6 +59997,7 @@ if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv;
 }
 var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./controls/home.njk"] = __webpack_require__( 567 );
 dependencies["./controls/sort.njk"] = __webpack_require__( 67 );
 dependencies["./controls/count.njk"] = __webpack_require__( 117 );
 dependencies["./controls/order.njk"] = __webpack_require__( 68 );
@@ -59996,11 +60017,10 @@ var colno = null;
 var output = "";
 try {
 var parentTemplate = null;
-output += "<div><a href=\"../../index.html\">Index</a></div>\n<div><a href=\"javascript:history.back()\"><< Back</a></div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/sort.njk", false, "templates/scatter.njk", null, function(t_3,t_1) {
+env.getTemplate("./controls/home.njk", false, "templates/scatter.njk", null, function(t_3,t_1) {
 if(t_3) { cb(t_3); return; }
 callback(null,t_1);});
 });
@@ -60016,11 +60036,11 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n      ";
+output += "\n<h2>Scatter Plots</h2>\n<div>\n  This visualization uses scatter plots to show the sort.\n</div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/count.njk", false, "templates/scatter.njk", null, function(t_7,t_5) {
+env.getTemplate("./controls/sort.njk", false, "templates/scatter.njk", null, function(t_7,t_5) {
 if(t_7) { cb(t_7); return; }
 callback(null,t_5);});
 });
@@ -60040,7 +60060,7 @@ output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/order.njk", false, "templates/scatter.njk", null, function(t_11,t_9) {
+env.getTemplate("./controls/count.njk", false, "templates/scatter.njk", null, function(t_11,t_9) {
 if(t_11) { cb(t_11); return; }
 callback(null,t_9);});
 });
@@ -60060,7 +60080,7 @@ output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/values.njk", false, "templates/scatter.njk", null, function(t_15,t_13) {
+env.getTemplate("./controls/order.njk", false, "templates/scatter.njk", null, function(t_15,t_13) {
 if(t_15) { cb(t_15); return; }
 callback(null,t_13);});
 });
@@ -60076,11 +60096,11 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n    </div>\n    ";
+output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/runButtons.njk", false, "templates/scatter.njk", null, function(t_19,t_17) {
+env.getTemplate("./controls/values.njk", false, "templates/scatter.njk", null, function(t_19,t_17) {
 if(t_19) { cb(t_19); return; }
 callback(null,t_17);});
 });
@@ -60096,13 +60116,33 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
+output += "\n    </div>\n    ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/runButtons.njk", false, "templates/scatter.njk", null, function(t_23,t_21) {
+if(t_23) { cb(t_23); return; }
+callback(null,t_21);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_24,t_22) {
+if(t_24) { cb(t_24); return; }
+callback(null,t_22);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
 output += "\n  </div>\n  <div id=\"boards\"></div>\n</article>\n\n<style>\n  #content {\n    width: 90%;\n    max-width: none;\n  }\n</style>\n\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
 cb(null, output);
 }
-})})})})});
+})})})})})});
 } catch (e) {
   cb(runtime.handleError(e, lineno, colno));
 }
@@ -60206,6 +60246,7 @@ if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv;
 }
 var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./controls/home.njk"] = __webpack_require__( 567 );
 dependencies["./controls/sort.njk"] = __webpack_require__( 67 );
 dependencies["./controls/order.njk"] = __webpack_require__( 68 );
 
@@ -60222,11 +60263,10 @@ var colno = null;
 var output = "";
 try {
 var parentTemplate = null;
-output += "<div class=\"controls\">\n  <div>\n    ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/sort.njk", false, "templates/single.njk", null, function(t_3,t_1) {
+env.getTemplate("./controls/home.njk", false, "templates/single.njk", null, function(t_3,t_1) {
 if(t_3) { cb(t_3); return; }
 callback(null,t_1);});
 });
@@ -60242,12 +60282,11 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n    ";
-output += "\n    ";
+output += "\n<div class=\"controls\">\n  <div>\n    ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/order.njk", false, "templates/single.njk", null, function(t_7,t_5) {
+env.getTemplate("./controls/sort.njk", false, "templates/single.njk", null, function(t_7,t_5) {
 if(t_7) { cb(t_7); return; }
 callback(null,t_5);});
 });
@@ -60264,14 +60303,32 @@ callback(null);
 });
 env.waterfall(tasks, function(){
 output += "\n    ";
-output += "\n    ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/order.njk", false, "templates/single.njk", null, function(t_11,t_9) {
+if(t_11) { cb(t_11); return; }
+callback(null,t_9);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_12,t_10) {
+if(t_12) { cb(t_12); return; }
+callback(null,t_10);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
 output += "\n  </div>\n\n<div id=\"single\"></div>\n\n<style>\n  .wrapper {\n    display: block;\n    margin: auto;\n    width: 500px;\n  }\n</style>\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
 cb(null, output);
 }
-})});
+})})});
 } catch (e) {
   cb(runtime.handleError(e, lineno, colno));
 }
@@ -60691,6 +60748,7 @@ if (!nunjucks.currentEnv){
 	env = nunjucks.currentEnv;
 }
 var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./controls/home.njk"] = __webpack_require__( 567 );
 dependencies["./controls/sort.njk"] = __webpack_require__( 67 );
 dependencies["./controls/count.njk"] = __webpack_require__( 117 );
 dependencies["./controls/order.njk"] = __webpack_require__( 68 );
@@ -60710,11 +60768,10 @@ var colno = null;
 var output = "";
 try {
 var parentTemplate = null;
-output += "<div><a href=\"../../index.html\">Index</a></div>\n<div><a href=\"javascript:history.back()\"><< Back</a></div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/sort.njk", false, "templates/stick.njk", null, function(t_3,t_1) {
+env.getTemplate("./controls/home.njk", false, "templates/stick.njk", null, function(t_3,t_1) {
 if(t_3) { cb(t_3); return; }
 callback(null,t_1);});
 });
@@ -60730,11 +60787,11 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n      ";
+output += "\n<h2>Stick Visualization</h2>\n<div>\n  This visualization uses lines at various angles to show the sort.\n</div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/count.njk", false, "templates/stick.njk", null, function(t_7,t_5) {
+env.getTemplate("./controls/sort.njk", false, "templates/stick.njk", null, function(t_7,t_5) {
 if(t_7) { cb(t_7); return; }
 callback(null,t_5);});
 });
@@ -60754,7 +60811,7 @@ output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/order.njk", false, "templates/stick.njk", null, function(t_11,t_9) {
+env.getTemplate("./controls/count.njk", false, "templates/stick.njk", null, function(t_11,t_9) {
 if(t_11) { cb(t_11); return; }
 callback(null,t_9);});
 });
@@ -60774,7 +60831,7 @@ output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/values.njk", false, "templates/stick.njk", null, function(t_15,t_13) {
+env.getTemplate("./controls/order.njk", false, "templates/stick.njk", null, function(t_15,t_13) {
 if(t_15) { cb(t_15); return; }
 callback(null,t_13);});
 });
@@ -60790,11 +60847,11 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n    </div>\n    ";
+output += "\n      ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/runButtons.njk", false, "templates/stick.njk", null, function(t_19,t_17) {
+env.getTemplate("./controls/values.njk", false, "templates/stick.njk", null, function(t_19,t_17) {
 if(t_19) { cb(t_19); return; }
 callback(null,t_17);});
 });
@@ -60810,13 +60867,33 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
+output += "\n    </div>\n    ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/runButtons.njk", false, "templates/stick.njk", null, function(t_23,t_21) {
+if(t_23) { cb(t_23); return; }
+callback(null,t_21);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_24,t_22) {
+if(t_24) { cb(t_24); return; }
+callback(null,t_22);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
 output += "\n  </div>\n</article>\n\n<div id=\"sticks\">\n</div>\n\n<style>\n  #content {\n    width: 90%;\n    max-width: none;\n  }\n  svg {\n    margin: 20px auto;\n  }\n  line {\n    stroke: black;\n    stroke-width: 3px;\n  }\n  line.active {\n    stroke: blue;\n  }\n  line.placed {\n    stroke: purple;\n  }\n  line.shadow {\n    stroke: gray;\n  }\n  .reset {\n    position: absolute;\n    right: 0;\n    z-index: 100;\n  }\n</style>\n\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
 cb(null, output);
 }
-})})})})});
+})})})})})});
 } catch (e) {
   cb(runtime.handleError(e, lineno, colno));
 }
@@ -60968,6 +61045,54 @@ exports.setUpQueens = function () {
     }, 5000);
 };
 
+
+/***/ }),
+/* 567 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+
+
+
+
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/controls/home.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<div><a href=\"../../index.html\">Index</a></div>\n<div><a href=\"javascript:history.back()\"><< Back</a></div>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/home.njk"] , dependencies)
 
 /***/ })
 /******/ ]);

@@ -34672,10 +34672,21 @@ var BoardDisplay = /** @class */ (function () {
         var sort = group.sort;
         var points;
         if (!shadow) {
-            points = board.points;
+            points = board.points.slice();
+            board.points.forEach(function (point, index) {
+                point.index = index;
+            });
+            points = board.points.slice().sort(function (pointA, pointB) {
+                if (pointA.value > pointB.value) {
+                    return 1;
+                }
+                else {
+                    return -1;
+                }
+            });
         }
         else {
-            points = sort.shadow;
+            points = sort.shadow.slice();
         }
         if (!points || !points.length) {
             return;
@@ -34696,9 +34707,18 @@ var BoardDisplay = /** @class */ (function () {
         }
         g.selectAll("circle").data(points).enter().append("circle");
         g.selectAll("circle").data(points).exit().remove();
-        g.selectAll("circle").data(points).attr("cx", function (point, index) { return _this.xCenter(index, widthSpread, _this.boardWidth); }).attr("cy", function (point) { return _this.yCenter(heightSpread, _this.boardHeight, point.value, valueMin); }).attr("r", radius).attr("class", function (point, index) { return ("point " + (currentNodes.indexOf(index) !== -1 && !shadow ? "active" : "") + " "
-            + ((placed.indexOf(index) !== -1 && !shadow ? "placed" : "") + " ")
+        var t = this.getTransition();
+        g.selectAll("circle").data(points).transition(t).attr("cx", function (point) {
+            var index = shadow ? 0 : point.index;
+            return _this.xCenter(index, widthSpread, _this.boardWidth);
+        }).attr("cy", function (point) { return _this.yCenter(heightSpread, _this.boardHeight, point.value, valueMin); }).attr("r", radius).attr("class", function (point) { return ("point " + (currentNodes.indexOf(point.index) !== -1 && !shadow ? "active" : "") + " "
+            + ((placed.indexOf(point.index) !== -1 && !shadow ? "placed" : "") + " ")
             + ("" + (shadow ? "shadow" : ""))); });
+    };
+    BoardDisplay.prototype.getTransition = function () {
+        var t = d3.transition()
+            .duration(this.delay);
+        return t;
     };
     BoardDisplay.prototype.resetAll = function () {
         var _this = this;

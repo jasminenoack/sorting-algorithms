@@ -100,9 +100,19 @@ export class BoardDisplay {
     const sort = group.sort;
     let points;
     if (!shadow) {
-      points = board.points;
+      points = board.points.slice();
+      board.points.forEach((point, index) => {
+        point.index = index;
+      });
+      points = board.points.slice().sort((pointA, pointB) => {
+        if (pointA.value > pointB.value) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
     } else {
-      points = sort.shadow;
+      points = sort.shadow.slice();
     }
     if (!points || !points.length) {
       return;
@@ -132,21 +142,31 @@ export class BoardDisplay {
     g.selectAll(`circle`).data(points).enter().append("circle");
     g.selectAll(`circle`).data(points).exit().remove();
 
+    const t = this.getTransition();
     g.selectAll("circle").data(
       points,
-    ).attr(
-      "cx", (point, index) => this.xCenter(index, widthSpread, this.boardWidth),
+    ).transition(t).attr(
+      "cx", (point) => {
+        const index = shadow ? 0 : point.index;
+        return this.xCenter(index, widthSpread, this.boardWidth);
+      },
     ).attr(
       "cy", (point) => this.yCenter(heightSpread, this.boardHeight, point.value, valueMin),
     ).attr(
       "r", radius,
     ).attr(
-      "class", (point, index) => (
-        `point ${currentNodes.indexOf(index) !== -1 && !shadow ? "active" : ""} `
-        + `${placed.indexOf(index) !== -1 && !shadow ? "placed" : ""} `
+      "class", (point) => (
+        `point ${currentNodes.indexOf(point.index) !== -1 && !shadow ? "active" : ""} `
+        + `${placed.indexOf(point.index) !== -1 && !shadow ? "placed" : ""} `
         + `${shadow ? "shadow" : ""}`
       ),
     );
+  }
+
+  public getTransition() {
+    const t = d3.transition()
+      .duration(this.delay);
+    return t;
   }
 
   public resetAll() {

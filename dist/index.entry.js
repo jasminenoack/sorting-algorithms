@@ -59991,6 +59991,7 @@ var GraphDisplay = /** @class */ (function () {
         this.listEl = listEl;
         this.historyEl = historyEl;
         this.delay = 250;
+        this.numberSteps = 5;
         this.groups = [];
         // this.setupReset();
         this.setupRemove();
@@ -60032,15 +60033,23 @@ var GraphDisplay = /** @class */ (function () {
         return div.firstChild;
     };
     GraphDisplay.prototype.step = function () {
+        var _this = this;
         var done = true;
         this.groups.forEach(function (group) {
             var sort = group.sort;
-            if (!sort.done) {
-                group.sort.next();
-                done = false;
+            for (var i = 0; i < _this.numberSteps; i++) {
+                if (!sort.done) {
+                    group.sort.next();
+                    done = false;
+                }
             }
         });
         return done;
+    };
+    GraphDisplay.prototype.getTransition = function () {
+        var t = d3.transition()
+            .duration(this.delay);
+        return t;
     };
     GraphDisplay.prototype.createXAxis = function (xMax, width, height, svg) {
         this.xAxisCall = d3.axisBottom(undefined);
@@ -60141,8 +60150,7 @@ var GraphDisplay = /** @class */ (function () {
     GraphDisplay.prototype.updateDots = function (dataset) {
         var _this = this;
         var index = jquery("#" + dataset.name).index();
-        var t = d3.transition()
-            .duration(this.delay);
+        var t = this.getTransition();
         d3.select("#graph").select("g").selectAll(".dot." + dataset.key)
             .data(dataset.values)
             .enter().append("circle")
@@ -60161,16 +60169,14 @@ var GraphDisplay = /** @class */ (function () {
             .x(function (d) { return _this.xScale(d.x); }) // set the x values for the line generator
             .y(function (d) { return _this.yScale(d.y); }) // set the y values for the line generator
             .curve(d3.curveMonotoneX);
-        var t = d3.transition()
-            .duration(this.delay);
+        var t = this.getTransition();
         d3.select("#graph").select("path.line." + dataset.key)
             .datum(dataset.values)
             .transition(t)
             .attr("d", line);
     };
     GraphDisplay.prototype.updateAxis = function () {
-        var t = d3.transition()
-            .duration(this.delay);
+        var t = this.getTransition();
         d3.select(".x.axis").transition(t).call(this.xAxisCall);
         d3.select(".y.axis").transition(t).call(this.yAxisCall);
     };

@@ -19,6 +19,7 @@ export class GraphDisplay {
   public xScale: any;
   public yAxisCall: any;
   public yScale: any;
+  public numberSteps: number = 5;
 
   constructor(
     public graphEl: HTMLElement,
@@ -76,12 +77,20 @@ export class GraphDisplay {
     let done = true;
     this.groups.forEach((group) => {
       const sort = group.sort;
-      if (!sort.done) {
-        group.sort.next();
-        done = false;
+      for (let i = 0; i < this.numberSteps; i++) {
+        if (!sort.done) {
+          group.sort.next();
+          done = false;
+        }
       }
     });
     return done;
+  }
+
+  public getTransition() {
+    const t = d3.transition()
+      .duration(this.delay);
+    return t;
   }
 
   public createXAxis(xMax: number, width: number, height: number, svg: SVGElement) {
@@ -203,9 +212,7 @@ export class GraphDisplay {
 
   public updateDots(dataset: IGraphData) {
     const index = jquery(`#${dataset.name}`).index();
-    const t = d3.transition()
-      .duration(this.delay);
-
+    const t = this.getTransition();
     d3.select("#graph").select("g").selectAll(`.dot.${dataset.key}`)
       .data(dataset.values)
       .enter().append("circle")
@@ -213,7 +220,6 @@ export class GraphDisplay {
       "class",
       `dot ${dataset.key} ${dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps"}-${index}`,
     );
-
     d3.select("#graph").select("g").selectAll(`.dot.${dataset.key}`)
       .data(dataset.values)
       .transition(t)
@@ -228,8 +234,7 @@ export class GraphDisplay {
       .x((d: any) => this.xScale(d.x)) // set the x values for the line generator
       .y((d: any) => this.yScale(d.y)) // set the y values for the line generator
       .curve(d3.curveMonotoneX);
-    const t = d3.transition()
-      .duration(this.delay);
+    const t = this.getTransition();
     d3.select("#graph").select(`path.line.${dataset.key}`)
       .datum(dataset.values)
       .transition(t)
@@ -237,8 +242,7 @@ export class GraphDisplay {
   }
 
   public updateAxis() {
-    const t = d3.transition()
-      .duration(this.delay);
+    const t = this.getTransition();
     d3.select(".x.axis").transition(t).call(this.xAxisCall);
     d3.select(".y.axis").transition(t).call(this.yAxisCall);
   }

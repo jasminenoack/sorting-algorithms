@@ -41,7 +41,8 @@
   },
   "scripts": {
     "build": "webpack --watch",
-    "test": "karma start"
+    "test": "karma start",
+    "sendCoverage": "CODECLIMATE_REPO_TOKEN=ea0bc479adb6a18b2ab58cd62b95589bc6e3db2f24552303d1a39a2c3f98eb61 codeclimate-test-reporter < coverage/lcov.info"
   },
   "repository": {
     "type": "git",

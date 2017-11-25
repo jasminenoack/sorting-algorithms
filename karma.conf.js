@@ -27,7 +27,7 @@ module.exports = (config) => {
 
     coverageIstanbulReporter: {
       fixWebpackSourcePaths: true,
-      reports: ["html"],
+      reports: ["html", "lcovonly"],
       skipFilesWithNoCoverage: false,
     },
 

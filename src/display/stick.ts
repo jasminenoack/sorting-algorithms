@@ -89,15 +89,15 @@ export class StickDisplay {
     const currentNodes = sort.currentNodes();
 
     const boardEl = d3.select(`#${group.name}`).select(".board");
-    boardEl.selectAll("line").data(points)
-      .enter().append("line");
+    boardEl.selectAll("line.known").data(points)
+      .enter().append("line").attr("class", "known");
 
     const baseX = 0;
     const baseY = this.boardHeight;
     const topX = 0;
     const topY = this.boardHeight - this.lineHeight;
     const t = this.getTransition();
-    d3.select(`#${group.name}`).select(".board").selectAll("line").data(points)
+    d3.select(`#${group.name}`).select(".board").selectAll("line.known").data(points)
       .transition(t)
       // sets the bottom location
       .attr("x1", (point: Point) => point.index * betweenDists)
@@ -114,8 +114,29 @@ export class StickDisplay {
         return baseY - this.lineHeight * angle;
       }).attr("class", (point) => {
         const index = point.index;
-        return `${currentNodes.indexOf(index) !== -1 ? "active" : ""} `
+        return `known ${currentNodes.indexOf(index) !== -1 ? "active" : ""} `
           + `${placed.indexOf(index) !== -1 ? "placed" : ""}`;
+      });
+
+    const shadow = sort.shadow;
+    boardEl.selectAll("line.shadow").data(shadow)
+      .enter().append("line").attr("class", "shadow");
+    boardEl.selectAll("line.shadow").data(shadow).exit().remove();
+
+    boardEl.selectAll("line.shadow").data(shadow).transition(t)
+      // sets the bottom location
+      .attr("x1", (point: Point) => 0)
+      .attr("y1", (point: Point) => baseY)
+      // sets top location based on sin and cosine
+      .attr("x2", (point: Point) => {
+        const index = point.index;
+        const angle = Math.sin(this.getAngle(point.value, heightSpread, valueMin));
+        return 0 + this.lineHeight * angle;
+      })
+      .attr("y2", (point: Point) => {
+        const index = point.index;
+        const angle = Math.cos(this.getAngle(point.value, heightSpread, valueMin));
+        return baseY - this.lineHeight * angle;
       });
   }
 

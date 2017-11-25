@@ -60419,14 +60419,14 @@ var StickDisplay = /** @class */ (function () {
         var placed = sort.placed;
         var currentNodes = sort.currentNodes();
         var boardEl = d3.select("#" + group.name).select(".board");
-        boardEl.selectAll("line").data(points)
-            .enter().append("line");
+        boardEl.selectAll("line.known").data(points)
+            .enter().append("line").attr("class", "known");
         var baseX = 0;
         var baseY = this.boardHeight;
         var topX = 0;
         var topY = this.boardHeight - this.lineHeight;
         var t = this.getTransition();
-        d3.select("#" + group.name).select(".board").selectAll("line").data(points)
+        d3.select("#" + group.name).select(".board").selectAll("line.known").data(points)
             .transition(t)
             .attr("x1", function (point) { return point.index * betweenDists; })
             .attr("y1", function (point) { return baseY; })
@@ -60441,8 +60441,25 @@ var StickDisplay = /** @class */ (function () {
             return baseY - _this.lineHeight * angle;
         }).attr("class", function (point) {
             var index = point.index;
-            return (currentNodes.indexOf(index) !== -1 ? "active" : "") + " "
+            return "known " + (currentNodes.indexOf(index) !== -1 ? "active" : "") + " "
                 + ("" + (placed.indexOf(index) !== -1 ? "placed" : ""));
+        });
+        var shadow = sort.shadow;
+        boardEl.selectAll("line.shadow").data(shadow)
+            .enter().append("line").attr("class", "shadow");
+        boardEl.selectAll("line.shadow").data(shadow).exit().remove();
+        boardEl.selectAll("line.shadow").data(shadow).transition(t)
+            .attr("x1", function (point) { return 0; })
+            .attr("y1", function (point) { return baseY; })
+            .attr("x2", function (point) {
+            var index = point.index;
+            var angle = Math.sin(_this.getAngle(point.value, heightSpread, valueMin));
+            return 0 + _this.lineHeight * angle;
+        })
+            .attr("y2", function (point) {
+            var index = point.index;
+            var angle = Math.cos(_this.getAngle(point.value, heightSpread, valueMin));
+            return baseY - _this.lineHeight * angle;
         });
     };
     StickDisplay.prototype.getTransition = function () {
@@ -60773,7 +60790,7 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n  </div>\n</article>\n\n<div id=\"sticks\">\n</div>\n\n<style>\n  #content {\n    width: 90%;\n    max-width: none;\n  }\n  svg {\n    margin: 20px auto;\n  }\n  line {\n    stroke: black;\n    stroke-width: 3px;\n  }\n  line.active {\n    stroke: blue;\n  }\n  line.placed {\n    stroke: purple;\n  }\n  .reset {\n    position: absolute;\n    right: 0;\n    z-index: 100;\n  }\n</style>\n\n";
+output += "\n  </div>\n</article>\n\n<div id=\"sticks\">\n</div>\n\n<style>\n  #content {\n    width: 90%;\n    max-width: none;\n  }\n  svg {\n    margin: 20px auto;\n  }\n  line {\n    stroke: black;\n    stroke-width: 3px;\n  }\n  line.active {\n    stroke: blue;\n  }\n  line.placed {\n    stroke: purple;\n  }\n  line.shadow {\n    stroke: gray;\n  }\n  .reset {\n    position: absolute;\n    right: 0;\n    z-index: 100;\n  }\n</style>\n\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {

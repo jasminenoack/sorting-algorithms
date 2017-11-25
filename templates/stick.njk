@@ -1,0 +1,42 @@
+<div><a href="../../index.html">Index</a></div>
+<div><a href="javascript:history.back()"><< Back</a></div>
+<article class="sorting">
+  <div class="controls">
+    <div>
+      {% include "./controls/sort.njk" %}
+      {% include "./controls/count.njk" %}
+      {% include "./controls/order.njk" %}
+      {% include "./controls/values.njk" %}
+    </div>
+    {% include "./controls/runButtons.njk" %}
+  </div>
+</article>
+
+<div id="sticks">
+</div>
+
+<style>
+  #content {
+    width: 90%;
+    max-width: none;
+  }
+  svg {
+    margin: 20px auto;
+  }
+  line {
+    stroke: black;
+    stroke-width: 3px;
+  }
+  line.active {
+    stroke: blue;
+  }
+  line.placed {
+    stroke: purple;
+  }
+  .reset {
+    position: absolute;
+    right: 0;
+    z-index: 100;
+  }
+</style>
+

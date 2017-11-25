@@ -1,0 +1,18 @@
+<article>
+  <div style="position:relative;" id="{{name}}" class="stick-wrapper">
+    <h3>{{title}}</h3>
+    <div class="board-information">
+      {% include "./boardData.njk" %}
+    </div>
+    {% if verbosity > 3 %}
+      <button class="remove" {% if disabled %}disabled{% endif %}>X</button>
+    {% endif %}
+    {% if verbosity > 1 %}
+      <button class="reset" {% if disabled %}disabled{% endif %}>Reset</button>
+    {% endif %}
+    <svg class="sticks" height="{{height + 20 * 2}}" width="{{width + margin * 2}}">
+      <g transform="translate({{margin}}, {{20}})" class="board">
+      </g>
+    </svg>
+  </div>
+</article>

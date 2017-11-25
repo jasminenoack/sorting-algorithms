@@ -24,6 +24,7 @@ export const tools = {
   "Profile Graphs": "#profile",
   "Scatter Animations": "#scatter",
   "Single Sort": "#single",
+  "Stick Animation": "#stick",
 };
 
 export const learn = {

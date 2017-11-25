@@ -12,6 +12,11 @@ import * as Boards from "../board";
  * swaps: []
  */
 
+export interface IDatum {
+  x: number;
+  y: number;
+}
+
 export abstract class BaseSort {
   public static title: string = "";
   public static links: any[];
@@ -30,7 +35,7 @@ export abstract class BaseSort {
   public placed: number[];
   public shadow: any[];
   public lastSwapped: boolean;
-  public profile: { [key: string]: Array<{ [key: string]: number }> };
+  public profile: { [key: string]: IDatum[] };
   public nextItemToAdd: number;
   public direction?: number;
   public start?: number;

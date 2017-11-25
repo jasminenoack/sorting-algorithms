@@ -195,17 +195,6 @@ function haversin(x) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * database structure:
- *
- * sort_name:
- * order:
- * value_type:
- * point_count:
- * steps:
- * comparisons: []
- * swaps: []
- */
 var BaseSort = /** @class */ (function () {
     function BaseSort(board, trackAll) {
         if (trackAll === void 0) { trackAll = false; }
@@ -60054,7 +60043,7 @@ var GraphDisplay = /** @class */ (function () {
         return done;
     };
     GraphDisplay.prototype.createXAxis = function (xMax, width, height, svg) {
-        this.xAxisCall = d3.axisBottom();
+        this.xAxisCall = d3.axisBottom(undefined);
         this.xScale = d3.scaleLinear()
             .domain([0, xMax])
             .range([0, width]);
@@ -60065,7 +60054,7 @@ var GraphDisplay = /** @class */ (function () {
             .call(this.xAxisCall);
     };
     GraphDisplay.prototype.createYAxis = function (yMax, height, svg) {
-        this.yAxisCall = d3.axisLeft();
+        this.yAxisCall = d3.axisLeft(undefined);
         this.yScale = d3.scaleLinear()
             .domain([0, yMax])
             .range([height, 0]);
@@ -60083,14 +60072,14 @@ var GraphDisplay = /** @class */ (function () {
             .y(function (d) { return _this.yScale(d.y); }) // set the y values for the line generator
             .curve(d3.curveMonotoneX); // apply smoothing to the line
         svg.append("path")
-            .datum(dataset.values) // 10. Binds data to the line
-            .attr("class", "line " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index) // Assign a class for styling
-            .attr("d", line); // 11. Calls the line generator
-        // 12. Appends a circle for each datapoint
+            .datum(dataset.values)
+            .attr("stroke-width", dataset.strokeWidth)
+            .attr("class", "line " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index)
+            .attr("d", line);
         svg.selectAll(".dot." + dataset.key)
             .data(dataset.values)
-            .enter().append("circle") // Uses the enter().append() method
-            .attr("class", "dot " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index) // Assign a class for styling
+            .enter().append("circle")
+            .attr("class", "dot " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index)
             .attr("cx", function (d) { return _this.xScale(d.x); })
             .attr("cy", function (d) { return _this.yScale(d.y); })
             .attr("r", 5);
@@ -60113,15 +60102,15 @@ var GraphDisplay = /** @class */ (function () {
             yMax = Math.max(yMax, yValue);
             xMax = Math.max(xMax, xValue);
         });
-        var svg = d3.select("#graph").append("svg")
+        var wrapper = d3.select("#graph").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        this.createXAxis(xMax, width, height, svg);
-        this.createYAxis(yMax, height, svg);
+        this.createXAxis(xMax, width, height, wrapper);
+        this.createYAxis(yMax, height, wrapper);
         data.forEach(function (dataset, index) {
-            _this.createLine(svg, dataset);
+            _this.createLine(wrapper, dataset);
         });
     };
     GraphDisplay.prototype.run = function () {
@@ -60140,7 +60129,6 @@ var GraphDisplay = /** @class */ (function () {
         this.xScale.domain([0, xMax]);
         this.yScale.domain([0, yMax]);
         this.updateAxis();
-        var data = this.getData();
         data.forEach(function (dataset, index) {
             _this.updateLine(dataset);
             _this.updateDots(dataset);
@@ -60207,13 +60195,18 @@ var GraphDisplay = /** @class */ (function () {
         });
         return data;
     };
+    GraphDisplay.prototype.handleDisable = function (value) {
+        jquery(".remove").prop("disabled", value);
+        jquery("#swaps").prop("disabled", value);
+        jquery("#comps").prop("disabled", value);
+        jquery("#create").prop("disabled", value);
+        jquery("#run").prop("disabled", value);
+    };
     GraphDisplay.prototype.setupRun = function () {
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;
-            jquery(".remove").prop("disabled", false);
-            jquery("#swaps").prop("disabled", false);
-            jquery("#comps").prop("disabled", false);
+            this.handleDisable(false);
         }
         else {
             var swaps = document.getElementById("swaps").checked;
@@ -60221,9 +60214,7 @@ var GraphDisplay = /** @class */ (function () {
             if (!this.groups.length || !(swaps || comps)) {
                 return;
             }
-            jquery(".remove").prop("disabled", true);
-            jquery("#swaps").prop("disabled", true);
-            jquery("#comps").prop("disabled", true);
+            this.handleDisable(true);
             this.step();
             this.createGraph();
             this.interval = setInterval(this.run.bind(this), this.delay);

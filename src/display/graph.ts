@@ -1,15 +1,12 @@
 import * as d3 from "d3";
 import * as jquery from "jquery";
 import { filter, map } from "lodash";
+import { IDatum } from "./../sorts/baseSort";
 import { ITestGroup } from "./board";
-
-interface IDatum {
-  x: number;
-  y: number;
-}
 
 interface IGraphData {
   key: string;
+  name: string;
   strokeWidth: number;
   values: IDatum[];
 }
@@ -18,6 +15,10 @@ export class GraphDisplay {
   public groups: ITestGroup[];
   public delay: number = 250;
   public interval: any;
+  public xAxisCall: any;
+  public xScale: any;
+  public yAxisCall: any;
+  public yScale: any;
 
   constructor(
     public graphEl: HTMLElement,
@@ -83,60 +84,60 @@ export class GraphDisplay {
     return done;
   }
 
-  public createXAxis(xMax: number, width: number, height, svg) {
-    this.xAxisCall = d3.axisBottom();
+  public createXAxis(xMax: number, width: number, height: number, svg: SVGElement) {
+    this.xAxisCall = d3.axisBottom(undefined);
 
     this.xScale = d3.scaleLinear()
       .domain([0, xMax])
       .range([0, width]);
     this.xAxisCall.scale(this.xScale);
 
-    svg.append("g")
+    (svg as any).append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
       .call(this.xAxisCall);
   }
 
-  public createYAxis(yMax: number, height, svg) {
-    this.yAxisCall = d3.axisLeft();
+  public createYAxis(yMax: number, height: number, svg: SVGElement) {
+    this.yAxisCall = d3.axisLeft(undefined);
 
     this.yScale = d3.scaleLinear()
       .domain([0, yMax])
       .range([height, 0]);
     this.yAxisCall.scale(this.yScale);
 
-    svg.append("g")
+    (svg as any).append("g")
       .attr("class", "y axis")
       .call(this.yAxisCall);
   }
 
-  public createLine(svg, dataset) {
+  public createLine(svg: SVGElement, dataset: IGraphData) {
     const index = jquery(`#${dataset.name}`).index();
 
     // 7. d3's line generator
     const line = d3.line()
-      .x((d) => this.xScale(d.x)) // set the x values for the line generator
-      .y((d) => this.yScale(d.y)) // set the y values for the line generator
+      .x((d: any) => this.xScale(d.x)) // set the x values for the line generator
+      .y((d: any) => this.yScale(d.y)) // set the y values for the line generator
       .curve(d3.curveMonotoneX); // apply smoothing to the line
 
-    svg.append("path")
-      .datum(dataset.values) // 10. Binds data to the line
+    (svg as any).append("path")
+      .datum(dataset.values)
+      .attr("stroke-width", dataset.strokeWidth)
       .attr(
       "class",
       `line ${dataset.key} ${dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps"}-${index}`,
-    ) // Assign a class for styling
-      .attr("d", line); // 11. Calls the line generator
+    )
+      .attr("d", line);
 
-    // 12. Appends a circle for each datapoint
-    svg.selectAll(`.dot.${dataset.key}`)
+    (svg as any).selectAll(`.dot.${dataset.key}`)
       .data(dataset.values)
-      .enter().append("circle") // Uses the enter().append() method
+      .enter().append("circle")
       .attr(
       "class",
       `dot ${dataset.key} ${dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps"}-${index}`,
-    ) // Assign a class for styling
-      .attr("cx", (d) => this.xScale(d.x))
-      .attr("cy", (d) => this.yScale(d.y))
+    )
+      .attr("cx", (d: IDatum) => this.xScale(d.x))
+      .attr("cy", (d: IDatum) => this.yScale(d.y))
       .attr("r", 5);
   }
 
@@ -159,17 +160,17 @@ export class GraphDisplay {
       yMax = Math.max(yMax, yValue);
       xMax = Math.max(xMax, xValue);
     });
-    const svg = d3.select("#graph").append("svg")
+    const wrapper: any = d3.select("#graph").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    this.createXAxis(xMax, width, height, svg);
-    this.createYAxis(yMax, height, svg);
+    this.createXAxis(xMax, width, height, wrapper);
+    this.createYAxis(yMax, height, wrapper);
 
     data.forEach((dataset, index) => {
-      this.createLine(svg, dataset);
+      this.createLine(wrapper, dataset);
     });
   }
 
@@ -190,14 +191,13 @@ export class GraphDisplay {
     this.yScale.domain([0, yMax]);
     this.updateAxis();
 
-    const data = this.getData();
     data.forEach((dataset, index) => {
       this.updateLine(dataset);
       this.updateDots(dataset);
     });
   }
 
-  public updateDots(dataset) {
+  public updateDots(dataset: IGraphData) {
     const index = jquery(`#${dataset.name}`).index();
     const t = d3.transition()
       .duration(this.delay);
@@ -218,18 +218,18 @@ export class GraphDisplay {
       .attr("r", 5);
   }
 
-  public updateLine(dataset) {
+  public updateLine(dataset: IGraphData) {
     const index = jquery(`#${dataset.name}`).index();
     const line = d3.line()
-      .x((d) => this.xScale(d.x)) // set the x values for the line generator
-      .y((d) => this.yScale(d.y)) // set the y values for the line generator
+      .x((d: any) => this.xScale(d.x)) // set the x values for the line generator
+      .y((d: any) => this.yScale(d.y)) // set the y values for the line generator
       .curve(d3.curveMonotoneX);
     const t = d3.transition()
       .duration(this.delay);
     d3.select("#graph").select(`path.line.${dataset.key}`)
       .datum(dataset.values)
       .transition(t)
-      .attr("d", line);
+      .attr("d", line as any);
   }
 
   public updateAxis() {
@@ -265,22 +265,26 @@ export class GraphDisplay {
     return data;
   }
 
+  public handleDisable(value: boolean) {
+    jquery(".remove").prop("disabled", value);
+    jquery("#swaps").prop("disabled", value);
+    jquery("#comps").prop("disabled", value);
+    jquery("#create").prop("disabled", value);
+    jquery("#run").prop("disabled", value);
+  }
+
   public setupRun() {
     if (this.interval) {
       clearInterval(this.interval);
       this.interval = null;
-      jquery(".remove").prop("disabled", false);
-      jquery("#swaps").prop("disabled", false);
-      jquery("#comps").prop("disabled", false);
+      this.handleDisable(false);
     } else {
       const swaps = (document.getElementById("swaps") as any).checked;
       const comps = (document.getElementById("comps") as any).checked;
       if (!this.groups.length || !(swaps || comps)) {
         return;
       }
-      jquery(".remove").prop("disabled", true);
-      jquery("#swaps").prop("disabled", true);
-      jquery("#comps").prop("disabled", true);
+      this.handleDisable(true);
       this.step();
       this.createGraph();
       this.interval = setInterval(this.run.bind(this), this.delay);

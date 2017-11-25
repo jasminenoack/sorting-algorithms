@@ -37,7 +37,9 @@ export class GraphDisplay {
 
   public handleRemove(event: Event) {
     const currentGroup = this.findGroupFromEvent(event);
-    this.remove(currentGroup.name);
+    if (currentGroup) {
+      this.remove(currentGroup.name);
+    }
   }
 
   public findGroupFromEvent(event: Event) {
@@ -53,8 +55,10 @@ export class GraphDisplay {
 
   public remove(name: string) {
     const currentGroup = filter(this.groups, (group) => group.name === name)[0];
-    this.listEl.removeChild(currentGroup.domElement);
-    this.groups = filter(this.groups, (group) => group.name !== name);
+    if (currentGroup) {
+      this.listEl.removeChild(currentGroup.domElement);
+      this.groups = filter(this.groups, (group) => group.name !== name);
+    }
   }
 
   public createBoardList(group: ITestGroup) {

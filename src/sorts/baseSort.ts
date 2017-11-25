@@ -18,52 +18,155 @@ export interface IDatum {
 }
 
 export abstract class BaseSort {
+  /**
+   * All
+   */
+  // The title of the sort
   public static title: string = "";
+  // links to articles, more fun than meaningful
   public static links: any[];
+  // If the sort is completed
+  public done: boolean;
+
+  /**
+   * All Data
+   */
+  // how many steps have been taken
   public steps: number;
+  // the number of comparisons
+  public comparisons: number;
+  // the number of swaps
+  public swaps: number;
+  // the data profile
+  public profile: { [key: string]: IDatum[] };
+  // Determine if we should track a point in the profile
+  public nextItemToAdd: number;
+  // The number of points
+  public length: number;
+
+  /**
+   * Nodes being compared
+   */
   public baseNode: number;
   public comparisonNode: number;
-  // used for sorts that short circuit
-  public done: boolean;
-  // used for sorts that short circuit
-  public ordered: boolean;
-  public comparisons: number;
-  public swaps: number;
-  public length: number;
-  public end: number;
-  public maxRounds: number;
-  public placed: number[];
-  public shadow: any[];
-  public lastSwapped: boolean;
-  public profile: { [key: string]: IDatum[] };
-  public nextItemToAdd: number;
-  public direction?: number;
-  public start?: number;
-  public baseNodes?: number[];
-  public orderedSets?: boolean[];
-  public gap?: number;
-  public shrink?: number;
-  public currentValue?: number;
-  public numberLess?: number;
-  public partition?: number;
-  public lower?: number;
-  public higher?: number;
-  public partitionStart?: number;
-  public partitionEnd?: number;
-  public partitionTop?: number;
-  public partitions?: number[][];
+  // a group of base nodes
+  public baseNodes?: number[]; // odd even && bubble
+
+  /**
+   * Permutation sort
+   * -- always available.
+   */
+  // the original order of the values.
   public original: number[];
-  public permutation?: number[];
-  public evenSorted?: boolean;
-  public oddSorted?: boolean;
-  public oddPhase?: boolean;
-  public leonardoNumbers?: number[];
-  public treeSizes?: number[];
-  public nodesToHeap?: number[];
-  public roots?: number[];
-  public rootsToCompare?: number[];
-  public currentTop?: number;
+
+  /**
+   * Used in determining when to end a sort.
+   */
+  // Are the elements in order
+  public ordered: boolean; // Bubble, Comb, Cocktail, Bogo, OddEven
+  // the start of the section being sorted
+  public start?: number;
+  // The end of the section being sorted
+  public end: number; // bubble, cocktail
+  // Elements that we know are in place
+  public placed: number[]; // Bubble, Cocktail, Cycle, Heap, Quick, Smooth
+  // Shadow Element being considered ((Used for display))
+  public shadow: any[]; // cycle, insertion
+
+  /**
+   * Gnome
+   */
+  // track if we swapped the last two elements
+  public lastSwapped: boolean;
+  // The element that is the current gnome
   public currentGnome?: number;
+
+  /**
+   * Cocktail
+   */
+  // what direction are we sorting in.
+  public direction?: number;
+
+  /**
+   * Figuring out
+   */
+  public maxRounds: number;
+
+  /**
+   * Bubble
+   */
+  // tracks sets for bubble concurrent;
+  public orderedSets?: boolean[];
+
+  /**
+   * Comb
+   */
+  // the gap between the points
+  public gap?: number;
+  // the amount to shrink between rounds
+  public shrink?: number;
+
+  /**
+   * Cycle
+   */
+  // The value we are looking for.
+  public currentValue?: number;
+  // The number lower than the value
+  public numberLess?: number;
+
+  /**
+   * Partitions
+   */
+  // The element that is the partition
+  public partition?: number; // quick
+  // The element where the partition starts
+  public partitionStart?: number; // quick
+  // The element where the partition ends
+  public partitionEnd?: number; // quick
+  // The top of the partition
+  public partitionTop?: number; // quick
+  // A list of the partitions
+  public partitions?: number[][]; // quick && cycle
+  // the start index of the parition
+  public lower?: number;
+  // the end index of the partition
+  public higher?: number;
+
+  /**
+   * Bogo
+   */
+  // the current permutation
+  public permutation?: number[]; // permutation
+  // the current top number
+  public currentTop?: number; // bogobogo
+
+  /**
+   * Smooth
+   */
+  // The number of elements in the tree starting at the given element
+  public treeSizes?: number[];
+  // The list of leonardo numbers
+  public leonardoNumbers?: number[];
+  // list of roots for the heaps
+  public roots?: number[];
+  // list of roots that we need to compare
+  public rootsToCompare?: number[];
+
+  /**
+   * Heaping
+   */
+  // list of nodes that we need to run a heap on.
+  public nodesToHeap?: number[]; // smooth && heap
+
+  /**
+   * Odd Even Sort
+   */
+  // even round was sorted
+  public evenSorted?: boolean;
+  // odd round was sorted
+  public oddSorted?: boolean;
+  // Are we looking at odd numbers
+  public oddPhase?: boolean;
 
   constructor(public board: Boards.Board, public trackAll: boolean = false) {
     this.baseSetUp();
@@ -170,10 +273,6 @@ export abstract class BaseSort {
     this.swaps = 0;
     this.comparisons = 0;
     this.steps = 0;
-    this.baseNode = 0;
-    this.comparisonNode = 1;
-    this.length = this.board.length;
-    this.end = this.length - 1;
     this.lastSwapped = false;
     this.ordered = true;
     this.placed = [];

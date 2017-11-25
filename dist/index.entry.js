@@ -3557,10 +3557,6 @@ var BaseSort = /** @class */ (function () {
         this.swaps = 0;
         this.comparisons = 0;
         this.steps = 0;
-        this.baseNode = 0;
-        this.comparisonNode = 1;
-        this.length = this.board.length;
-        this.end = this.length - 1;
         this.lastSwapped = false;
         this.ordered = true;
         this.placed = [];
@@ -3575,6 +3571,10 @@ var BaseSort = /** @class */ (function () {
         // tslint:disable-next-line:no-console
         console.log(this.constructor.title);
     };
+    /**
+     * All
+     */
+    // The title of the sort
     BaseSort.title = "";
     return BaseSort;
 }());
@@ -58112,7 +58112,9 @@ var GraphDisplay = /** @class */ (function () {
     };
     GraphDisplay.prototype.handleRemove = function (event) {
         var currentGroup = this.findGroupFromEvent(event);
-        this.remove(currentGroup.name);
+        if (currentGroup) {
+            this.remove(currentGroup.name);
+        }
     };
     GraphDisplay.prototype.findGroupFromEvent = function (event) {
         var item = jquery(event.currentTarget).closest(".item")[0];
@@ -58125,8 +58127,10 @@ var GraphDisplay = /** @class */ (function () {
     };
     GraphDisplay.prototype.remove = function (name) {
         var currentGroup = lodash_1.filter(this.groups, function (group) { return group.name === name; })[0];
-        this.listEl.removeChild(currentGroup.domElement);
-        this.groups = lodash_1.filter(this.groups, function (group) { return group.name !== name; });
+        if (currentGroup) {
+            this.listEl.removeChild(currentGroup.domElement);
+            this.groups = lodash_1.filter(this.groups, function (group) { return group.name !== name; });
+        }
     };
     GraphDisplay.prototype.createBoardList = function (group) {
         var tpl = __webpack_require__(526);

@@ -7,7 +7,7 @@ import { GraphDisplay } from "./../../src/display/graph";
 import { Comb } from "./../../src/sorts/comb/base";
 import { Heap } from "./../../src/sorts/heap/base";
 
-describe("display graphd", () => {
+describe("display graph", () => {
   let board1: Board;
   let board2: Board;
   let sort1: BaseSort;

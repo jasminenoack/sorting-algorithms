@@ -1,10 +1,6 @@
 import * as jquery from "jquery";
 import { Board } from "../board";
 import { GraphDisplay } from "../display/graph";
-import {
-  closestParent, createBoardList, createDelegatedEvent,
-  functionRunBoardsWithoutRender, manageAutoRunCharts,
-} from "../index";
 import * as shuffles from "../shuffles";
 import * as sizes from "../sizes";
 import { BaseSort } from "../sorts/baseSort";

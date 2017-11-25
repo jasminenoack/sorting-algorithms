@@ -63,6 +63,20 @@ export class BoardDisplay {
     return div.firstChild;
   }
 
+  public replaceData(group: ITestGroup) {
+    const tpl = require("../../templates/board/boardData.njk");
+    const board = group.board;
+    const sort = group.sort;
+    const numPoints = board.points.length;
+    const html = tpl.render({
+      board,
+      shuffleTitle: board.shuffle.title,
+      sort,
+      verbosity: board.verbosity,
+    });
+    jquery(group.domElement).find(".board-information").html(html);
+  }
+
   public getRadius(boxHeight: number, heightSpread: number, boxWidth: number, widthSpread: number) {
     return Math.max(Math.min(
       boxHeight / heightSpread / 2, boxWidth / widthSpread / 2,
@@ -151,6 +165,7 @@ export class BoardDisplay {
         this.drawSpots(group, true);
         done = false;
       }
+      this.replaceData(group);
     });
     return done;
   }

@@ -150,6 +150,22 @@ export class GraphDisplay {
       .attr("r", 5);
   }
 
+  public getMinAndMax(data: IGraphData[]) {
+    let yMax = 0;
+    let xMax = 0;
+    data.forEach((datum: any) => {
+      const lastValue = datum.values[datum.values.length - 1];
+      if (!lastValue) {
+        return;
+      }
+      const xValue = lastValue.x;
+      const yValue = lastValue.y;
+      yMax = Math.max(yMax, yValue);
+      xMax = Math.max(xMax, xValue);
+    });
+    return [xMax, yMax];
+  }
+
   public createGraph() {
     const totalHeight = 500;
     const totalWidth = 500;
@@ -159,16 +175,8 @@ export class GraphDisplay {
     const margin = { top: 50, right: 50, bottom: 50, left: 50 };
     const width = totalWidth - margin.left - margin.right;
     const height = totalHeight - margin.top - margin.bottom;
+    const [xMax, yMax] = this.getMinAndMax(data);
 
-    let yMax = 0;
-    let xMax = 0;
-    data.forEach((datum: any) => {
-      const lastValue = datum.values[datum.values.length - 1];
-      const xValue = lastValue.x;
-      const yValue = lastValue.y;
-      yMax = Math.max(yMax, yValue);
-      xMax = Math.max(xMax, xValue);
-    });
     const wrapper: any = d3.select("#graph").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -190,15 +198,7 @@ export class GraphDisplay {
     }
     this.step();
     const data = this.getData();
-    let yMax = 0;
-    let xMax = 0;
-    data.forEach((datum: any) => {
-      const lastValue = datum.values[datum.values.length - 1];
-      const xValue = lastValue.x;
-      const yValue = lastValue.y;
-      yMax = Math.max(yMax, yValue);
-      xMax = Math.max(xMax, xValue);
-    });
+    const [xMax, yMax] = this.getMinAndMax(data);
 
     this.xScale.domain([0, xMax]);
     this.yScale.domain([0, yMax]);

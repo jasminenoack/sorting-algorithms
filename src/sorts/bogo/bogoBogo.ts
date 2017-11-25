@@ -22,7 +22,7 @@ export class BogoBogo extends BaseSort {
 
     const values = this.board.values();
     this.comparisons++;
-    if (values[this.currentTop] < values[this.currentTop + 1]) {
+    if (values[this.currentTop] <= values[this.currentTop + 1]) {
       this.currentTop++;
     } else {
       const start = values.slice();
@@ -44,6 +44,7 @@ export class BogoBogo extends BaseSort {
       this.setDone();
     }
 
+    this.trackProfile();
     return currentNodes;
   }
 }

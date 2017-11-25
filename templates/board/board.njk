@@ -14,10 +14,10 @@
       {% endif %}
     </div>
     {% if verbosity > 3 %}
-    <button class="remove">X</button>
+    <button class="remove" {% if disabled %}disabled{% endif %}>X</button>
     {% endif %}
     {% if verbosity > 1 %}
-      <button class="reset">Reset</button>
+      <button class="reset" {% if disabled %}disabled{% endif %}>Reset</button>
     {% endif %}
     <svg viewBox="0 0 {{width + 40}} {{height + 40}}">
       <g transform="translate(20, 20)" class="board">

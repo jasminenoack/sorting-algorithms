@@ -1,4 +1,6 @@
+import * as jquery from "jquery";
 import { Board } from "../board";
+import { GraphDisplay } from "../display/graph";
 import {
   closestParent, createBoardList, createDelegatedEvent,
   functionRunBoardsWithoutRender, manageAutoRunCharts,
@@ -34,95 +36,50 @@ export const setUpProfile = (
   return html;
 };
 
-export const profileCallback = () => {
-  const createButton = document.getElementById("create");
+let index = 0;
+
+export const createSort = (display: GraphDisplay) => {
+  // the figure out the size
   const sizeElement = document.getElementById("size");
+  const size: ISize = (sizes as { [key: string]: ISize })[(sizeElement as any).value];
+
+  // figure out the order
   const orderSelect = document.getElementById("order");
+  const order: IShuffle = (shuffles as { [key: string]: IShuffle })[(orderSelect as any).value];
+
+  // figure out the value type
   const valueTypeSelect = document.getElementById("value-type");
+  const value: IValueType = (valueTypes as { [key: string]: IValueType })[(valueTypeSelect as any).value];
+
+  // figure out the sort
   const sortElement = document.getElementById("sort");
+  const Sort: BaseSort = (sorts as any)[(sortElement as any).value];
+
+  const board = new Board(size, order, value);
+  const sort = new (Sort as any)(board);
+
+  display.add({
+    board,
+    name: `board-${index}`,
+    sort,
+  });
+  index++;
+};
+
+export const profileCallback = () => {
+  // graph display
   const listDisplayElement = document.getElementById("sorts");
-  const boardList: any[] = [];
-
-  if (createButton) {
-    createButton.addEventListener("click", () => {
-      const size: ISize = (sizes as { [key: string]: ISize })[(sizeElement as any).value];
-      const value: IValueType = (valueTypes as { [key: string]: IValueType })[(valueTypeSelect as any).value];
-      const order: IShuffle = (shuffles as { [key: string]: IShuffle })[(orderSelect as any).value];
-      const Sort: BaseSort = (sorts as any)[(sortElement as any).value];
-
-      // let board = new Boards.Board(size)
-      const board = new Board(size, order, value);
-      boardList.push({
-        board,
-        sort: new (Sort as any)(board, true),
-      });
-      createBoardList(boardList, listDisplayElement);
-    });
-  }
-
-  if (listDisplayElement) {
-    createDelegatedEvent(listDisplayElement, "click", (event: Event, target: HTMLElement) => {
-      const wrapperElement = closestParent(target, ".list-wrapper");
-      const wrappers = document.getElementsByClassName("list-wrapper");
-      for (let i = 0; i < wrappers.length; i++) {
-        if (wrappers[i] === wrapperElement) {
-          boardList.splice(i, 1);
-          break;
-        }
-      }
-      createBoardList(boardList, listDisplayElement);
-    }, ".remove");
-  }
-
-  let running: boolean = null;
-  const runElement = document.getElementById("run");
   const graphElement = document.getElementById("graph");
   const oldGraphs = document.getElementById("previous");
-  if (runElement) {
-    runElement.addEventListener("click", (event) => {
-      if (!running) {
-        running = true;
 
-        const dataTypes = [];
-        if ((document.getElementById("swaps") as any).checked) {
-          dataTypes.push("swaps");
-        }
-        if ((document.getElementById("comps") as any).checked) {
-          dataTypes.push("comps");
-        }
+  const display = new GraphDisplay(graphElement, listDisplayElement, oldGraphs);
 
-        if (!(boardList.length && dataTypes.length)) {
-          running = false;
-          return;
-        }
-        createBoardList(boardList, listDisplayElement, false);
+  // create
+  const createButton = document.getElementById("create");
+  jquery(createButton).click(createSort.bind(this, display));
 
-        (runElement as any).disabled = true;
-        (createButton as any).disabled = true;
-        functionRunBoardsWithoutRender(boardList, 100);
-        manageAutoRunCharts(boardList, 500, "graph", dataTypes, () => {
-          boardList.forEach((board) => {
-            board.sort.reset();
-          });
-          const svg = graphElement.getElementsByTagName("svg")[0];
-          const first = oldGraphs.firstChild;
-
-          const newsortList = listDisplayElement.cloneNode(true);
-
-          if (first) {
-            oldGraphs.insertBefore(svg, first);
-          } else {
-            oldGraphs.appendChild(svg);
-          }
-          oldGraphs.insertBefore(newsortList, svg);
-          graphElement.innerHTML = "";
-
-          (runElement as any).disabled = false;
-          (createButton as any).disabled = false;
-          running = false;
-          createBoardList(boardList, listDisplayElement);
-        });
-      }
-    });
-  }
+  const runElement = document.getElementById("run");
+  jquery(runElement).click(() => {
+    display.setupRun();
+  });
 };

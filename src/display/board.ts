@@ -4,7 +4,7 @@ import { filter } from "lodash";
 import { BaseSort } from "../sorts/baseSort";
 import { Board } from "./../board";
 
-interface ITestGroup {
+export interface ITestGroup {
   name: string;
   board: Board;
   sort: BaseSort;
@@ -49,6 +49,7 @@ export class BoardDisplay {
     const numPoints = board.points.length;
     const html = tpl.render({
       board,
+      disabled: !!this.interval,
       height: this.boardHeight,
       name: group.name,
       shuffleTitle: board.shuffle.title,
@@ -173,7 +174,7 @@ export class BoardDisplay {
         }
       }, this.delay);
       jquery(".reset").prop("disabled", true);
-      jquery(".remove").prop("disabled", false);
+      jquery(".remove").prop("disabled", true);
     }
   }
 
@@ -197,7 +198,7 @@ export class BoardDisplay {
 
   public resetGroup(group: ITestGroup) {
     group.sort.reset();
-    this.drawSpots(group);
+    this.drawSpots(group, false);
   }
 
   public reset(event: Event) {

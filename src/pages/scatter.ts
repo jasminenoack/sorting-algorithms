@@ -74,7 +74,14 @@ export const scatterCallback = () => {
   jquery(createButton).click(createBoard.bind(this, display));
 
   const autoElement = document.getElementById("auto");
-  jquery(autoElement).click(display.setupAuto.bind(display));
+  jquery(autoElement).click(() => {
+    display.setupAuto();
+    if (display.interval) {
+      autoElement.innerText = "Stop";
+    } else {
+      autoElement.innerText = "Auto";
+    }
+  });
 
   const stepElement = document.getElementById("step");
   jquery(stepElement).click(display.step.bind(display));

@@ -60115,6 +60115,10 @@ var GraphDisplay = /** @class */ (function () {
     };
     GraphDisplay.prototype.run = function () {
         var _this = this;
+        var done = this.checkDone();
+        if (done) {
+            return this.handleDone();
+        }
         this.step();
         var data = this.getData();
         var yMax = 0;
@@ -60201,6 +60205,33 @@ var GraphDisplay = /** @class */ (function () {
         jquery("#comps").prop("disabled", value);
         jquery("#create").prop("disabled", value);
         jquery("#run").prop("disabled", value);
+    };
+    GraphDisplay.prototype.checkDone = function () {
+        var done = true;
+        this.groups.forEach(function (group) {
+            var sort = group.sort;
+            if (!sort.done) {
+                done = false;
+            }
+        });
+        return done;
+    };
+    GraphDisplay.prototype.resetAll = function () {
+        this.groups.forEach(function (group) {
+            var sort = group.sort;
+            sort.reset();
+        });
+    };
+    GraphDisplay.prototype.handleDone = function () {
+        // stop the interval
+        clearInterval(this.interval);
+        this.interval = null;
+        this.handleDisable(false);
+        // reset all
+        this.resetAll();
+        // move chart to previous
+        jquery("#previous").prepend(jquery("#graph svg"));
+        jquery("#previous").prepend(jquery("#sorts .item").clone());
     };
     GraphDisplay.prototype.setupRun = function () {
         if (this.interval) {

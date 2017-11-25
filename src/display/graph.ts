@@ -175,6 +175,10 @@ export class GraphDisplay {
   }
 
   public run() {
+    const done = this.checkDone();
+    if (done) {
+      return this.handleDone();
+    }
     this.step();
     const data = this.getData();
     let yMax = 0;
@@ -271,6 +275,38 @@ export class GraphDisplay {
     jquery("#comps").prop("disabled", value);
     jquery("#create").prop("disabled", value);
     jquery("#run").prop("disabled", value);
+  }
+
+  public checkDone() {
+    let done = true;
+    this.groups.forEach((group) => {
+      const sort = group.sort;
+      if (!sort.done) {
+        done = false;
+      }
+    });
+    return done;
+  }
+
+  public resetAll() {
+    this.groups.forEach((group) => {
+      const sort = group.sort;
+      sort.reset();
+    });
+  }
+
+  public handleDone() {
+    // stop the interval
+    clearInterval(this.interval);
+    this.interval = null;
+    this.handleDisable(false);
+
+    // reset all
+    this.resetAll();
+
+    // move chart to previous
+    jquery("#previous").prepend(jquery("#graph svg"));
+    jquery("#previous").prepend(jquery("#sorts .item").clone());
   }
 
   public setupRun() {

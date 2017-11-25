@@ -3,6 +3,9 @@ engines:
     enabled: true
   csslint:
     enabled: true
+  tslint:
+    enabled: true
+    config: tslint.json
   duplication:
     enabled: true
     config:

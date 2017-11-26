@@ -48,6 +48,9 @@ import { Heap } from "./heap/base";
 // insertion
 import { Insertion } from "./insertion/base";
 
+// merge
+import { Merge } from "./merge/base";
+
 // odd even
 import { OddEven } from "./oddEven/base";
 import { OddEvenConcurrent } from "./oddEven/concurrent";
@@ -112,6 +115,8 @@ export {
   Heap,
   // insertion
   Insertion,
+  // merge
+  Merge,
   // odd even
   OddEven,
   OddEvenConcurrent,

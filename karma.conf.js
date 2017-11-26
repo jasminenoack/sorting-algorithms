@@ -21,7 +21,7 @@ module.exports = (config) => {
 
     webpack: webpackConfig,
 
-    reporters: ["spec", "coverage-istanbul"],
+    reporters: ["mocha", "coverage-istanbul"],
 
     browsers: ["ChromeHeadless"],
 

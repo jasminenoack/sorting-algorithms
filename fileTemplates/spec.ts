@@ -1,5 +1,5 @@
 import { Board } from "../src/board";
-import { xXLarge } from "../src/sizes";
+import { fewFew, xXLarge } from "../src/sizes";
 
 xdescribe("sort test base", () => {
   let size;
@@ -151,6 +151,19 @@ xdescribe("sort test base", () => {
 
       expect(sort.done).toEqual(true);
       expect(board.values()).toEqual([-4, -3, -2, -1, 0, 0, 1, 2, 3, 4]);
+      expect(sort.swaps).not.toEqual(0);
+      expect(sort.comparisons).not.toEqual(0);
+      expect(sort.steps).not.toEqual(0);
+    });
+
+    xit("handles different size", () => {
+      board = new Board(fewFew);
+      const values = [3, 0, 2, 1, 4];
+      board.setPoints(values);
+      sort = new Sort(board);
+
+      expect(sort.done).toEqual(true);
+      expect(board.values()).toEqual([0, 1, 2, 3, 4]);
       expect(sort.swaps).not.toEqual(0);
       expect(sort.comparisons).not.toEqual(0);
       expect(sort.steps).not.toEqual(0);

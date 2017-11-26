@@ -52,7 +52,9 @@ export class Board {
   public swap(index1: number, index2: number) {
     const temp = this.get(index1);
     this.points[index1] = this.get(index2);
+    this.points[index1].index = index1;
     this.points[index2] = temp;
+    this.points[index2].index = index2;
   }
   public values() {
     const items = [];

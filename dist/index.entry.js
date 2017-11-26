@@ -21730,7 +21730,9 @@ var Board = /** @class */ (function () {
     Board.prototype.swap = function (index1, index2) {
         var temp = this.get(index1);
         this.points[index1] = this.get(index2);
+        this.points[index1].index = index1;
         this.points[index2] = temp;
+        this.points[index2].index = index2;
     };
     Board.prototype.values = function () {
         var items = [];
@@ -34116,14 +34118,17 @@ exports.Heap = base_7.Heap;
 // insertion
 var base_8 = __webpack_require__(547);
 exports.Insertion = base_8.Insertion;
+// merge
+var base_9 = __webpack_require__(568);
+exports.Merge = base_9.Merge;
 // odd even
-var base_9 = __webpack_require__(114);
-exports.OddEven = base_9.OddEven;
+var base_10 = __webpack_require__(114);
+exports.OddEven = base_10.OddEven;
 var concurrent_2 = __webpack_require__(548);
 exports.OddEvenConcurrent = concurrent_2.OddEvenConcurrent;
 // quick
-var base_10 = __webpack_require__(66);
-exports.QuickSort2 = base_10.QuickSort2;
+var base_11 = __webpack_require__(66);
+exports.QuickSort2 = base_11.QuickSort2;
 var partition3_1 = __webpack_require__(549);
 exports.QuickSort3 = partition3_1.QuickSort3;
 var partition3Random_1 = __webpack_require__(550);
@@ -34135,16 +34140,16 @@ exports.QuickSort2Random = randomPartition_1.QuickSort2Random;
 var rightPartition_1 = __webpack_require__(209);
 exports.QuickSort2RightPartition = rightPartition_1.QuickSort2RightPartition;
 // selection
-var base_11 = __webpack_require__(552);
-exports.SelectionSort = base_11.SelectionSort;
+var base_12 = __webpack_require__(552);
+exports.SelectionSort = base_12.SelectionSort;
 // smooth
-var base_12 = __webpack_require__(115);
-exports.Smooth = base_12.Smooth;
+var base_13 = __webpack_require__(115);
+exports.Smooth = base_13.Smooth;
 var fromBottom_1 = __webpack_require__(553);
 exports.SmoothSetUpBottom = fromBottom_1.SmoothSetUpBottom;
 // stooge
-var base_13 = __webpack_require__(554);
-exports.Stooge = base_13.Stooge;
+var base_14 = __webpack_require__(554);
+exports.Stooge = base_14.Stooge;
 
 
 /***/ }),
@@ -61097,6 +61102,117 @@ root: root
 
 
 module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/controls/home.njk"] , dependencies)
+
+/***/ }),
+/* 568 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(13);
+var baseSort_1 = __webpack_require__(4);
+var Merge = /** @class */ (function (_super) {
+    __extends(Merge, _super);
+    function Merge() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Merge.prototype.setUp = function () {
+        this.sections = [];
+        this.setupSections(this.sections);
+    };
+    Merge.prototype.currentNodes = function () {
+        return lodash_1.flatten(this.sections[this.sections.length - 1]);
+    };
+    /**
+     * To get the merge to work look at the sections
+     * that are being merged.
+     *
+     * If the first element in the first section is smaller
+     * than the first element in the second section.
+     * Remove that element from the section.
+     *
+     * If the first element in the first section is larger
+     * ---
+     *
+     * If there are no elements in either of the sections:
+     * Then the current set is complete.
+     *
+     * If there are no sets left the sort is complete.
+     */
+    Merge.prototype.takeStepInMerge = function () {
+        var _a = this.sections[this.sections.length - 1], first = _a[0], second = _a[1];
+        var values = this.board.values();
+        var firstIndex = first[0];
+        var secondIndex = second[0];
+        var firstValue = values[firstIndex];
+        var secondValue = values[secondIndex];
+        this.comparisons++;
+        if (firstValue > secondValue) {
+            var firstLength = first.length;
+            var secondLength = second.length;
+            // swap down to first location
+            for (var i = secondIndex; i > firstIndex; i--) {
+                this.swap([i, i - 1]);
+            }
+            var allNumbers = lodash_1.flatten([first, second]);
+            allNumbers.shift();
+            first = lodash_1.take(allNumbers, firstLength);
+            second = lodash_1.takeRight(allNumbers, allNumbers.length - firstLength);
+            this.sections.pop();
+            this.sections.push([first, second]);
+        }
+        else {
+            first.shift();
+        }
+        if (first.length === 0 || second.length === 0) {
+            this.sections.pop();
+        }
+        if (this.sections.length === 0) {
+            this.done = true;
+        }
+    };
+    Merge.prototype.next = function () {
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        // handle mergggy
+        this.takeStepInMerge();
+        this.trackProfile();
+        return currentNodes;
+    };
+    Merge.prototype.setupSections = function (sections) {
+        var queue = [lodash_1.range(0, this.board.length)];
+        while (queue.length) {
+            var current = queue.shift();
+            if (current.length === 1) {
+                continue;
+            }
+            var half = Math.floor(current.length / 2);
+            var first = lodash_1.take(current, half);
+            var second = lodash_1.takeRight(current, current.length - half);
+            queue.unshift(second);
+            queue.unshift(first);
+            sections.push([first, second]);
+        }
+    };
+    Merge.title = "Merge Sort";
+    return Merge;
+}(baseSort_1.BaseSort));
+exports.Merge = Merge;
+
 
 /***/ })
 /******/ ]);

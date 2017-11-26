@@ -3,46 +3,21 @@ import * as jquery from "jquery";
 import { filter } from "lodash";
 import { BaseSort } from "../sorts/baseSort";
 import { Board } from "./../board";
+import { AbstractDisplay, ITestGroup } from "./abstract";
 
-export interface ITestGroup {
-  name: string;
-  board: Board;
-  sort: BaseSort;
-  domElement?: Node;
-}
-
-export class BoardDisplay {
-  public groups: ITestGroup[];
-  public delay: number = 250;
-  public interval: any;
-
+export class BoardDisplay extends AbstractDisplay {
   constructor(
     public displayEl: HTMLElement,
     public boardHeight: number,
     public boardWidth: number,
   ) {
-    this.groups = [];
-    this.setupReset();
-    this.setupRemove();
+    super(displayEl);
   }
 
-  public add(group: ITestGroup) {
-    const element = this.createBoardElement(group);
-    group.domElement = element;
-    this.displayEl.appendChild(element);
-    this.drawSpots(group, false);
-    this.groups.push(group);
-  }
-
-  public remove(name: string) {
-    const currentGroup = filter(this.groups, (group) => group.name === name)[0];
-    this.groups = filter(this.groups, (group) => group.name !== name);
-    if (currentGroup) {
-      this.displayEl.removeChild(currentGroup.domElement);
-    }
-  }
-
-  public createBoardElement(group: ITestGroup) {
+  /**
+   * @override
+   */
+  public createElement(group: ITestGroup): HTMLElement {
     const tpl = require("../../templates/board/board.njk");
     const board = group.board;
     const sort = group.sort;
@@ -60,42 +35,16 @@ export class BoardDisplay {
     });
     const div = document.createElement("div");
     div.innerHTML = html;
-    return div.firstChild;
+    return div.firstChild as HTMLElement;
   }
 
-  public replaceData(group: ITestGroup) {
-    const tpl = require("../../templates/board/boardData.njk");
-    const board = group.board;
-    const sort = group.sort;
-    const numPoints = board.points.length;
-    const html = tpl.render({
-      board,
-      shuffleTitle: board.shuffle.title,
-      sort,
-      verbosity: board.verbosity,
-    });
-    jquery(group.domElement).find(".board-information").html(html);
-  }
-
-  public getRadius(boxHeight: number, heightSpread: number, boxWidth: number, widthSpread: number) {
-    return Math.max(Math.min(
-      boxHeight / heightSpread / 2, boxWidth / widthSpread / 2,
-    ), 2);
-  }
-
-  public xCenter(index: number, widthSpread: number, width: number) {
-    return (index) / widthSpread * width;
-  }
-
-  public yCenter(heightSpread: number, height: number, value: number, valueMin: number) {
-    if (heightSpread) {
-      return (heightSpread - (value - valueMin)) / heightSpread * height;
-    } else {
-      return height / 2;
-    }
-  }
-
-  public drawSpots(group: ITestGroup, shadow: boolean) {
+  /**
+   * @override
+   *
+   * @param group
+   * @param shadow
+   */
+  public draw(group: ITestGroup, shadow: boolean) {
     const board = group.board;
     const sort = group.sort;
     let points;
@@ -163,81 +112,41 @@ export class BoardDisplay {
     );
   }
 
-  public getTransition() {
-    const t = d3.transition()
-      .duration(this.delay);
-    return t;
+  /**
+   * Get the radius for a spot.
+   * @param boxHeight
+   * @param heightSpread
+   * @param boxWidth
+   * @param widthSpread
+   */
+  private getRadius(boxHeight: number, heightSpread: number, boxWidth: number, widthSpread: number) {
+    return Math.max(Math.min(
+      boxHeight / heightSpread / 2, boxWidth / widthSpread / 2,
+    ), 2);
   }
 
-  public resetAll() {
-    this.groups.forEach((group) => {
-      this.resetGroup(group);
-    });
+  /**
+   * Get the x coordinate for the center for a spot.
+   * @param index
+   * @param widthSpread
+   * @param width
+   */
+  private xCenter(index: number, widthSpread: number, width: number) {
+    return (index) / widthSpread * width;
   }
 
-  public step() {
-    let done = true;
-    this.groups.forEach((group) => {
-      const sort = group.sort;
-      if (!sort.done) {
-        group.sort.next();
-        this.drawSpots(group, false);
-        this.drawSpots(group, true);
-        done = false;
-      }
-      this.replaceData(group);
-    });
-    return done;
-  }
-
-  public setupAuto() {
-    if (this.interval) {
-      clearInterval(this.interval);
-      this.interval = null;
-      jquery(".reset").prop("disabled", false);
-      jquery(".remove").prop("disabled", false);
+  /**
+   * Get the y coordinate for the center of a spot.
+   * @param heightSpread
+   * @param height
+   * @param value
+   * @param valueMin
+   */
+  private yCenter(heightSpread: number, height: number, value: number, valueMin: number) {
+    if (heightSpread) {
+      return (heightSpread - (value - valueMin)) / heightSpread * height;
     } else {
-      this.interval = setInterval(() => {
-        const done = this.step();
-        if (done) {
-          clearInterval(this.interval);
-          this.interval = null;
-          setTimeout(() => {
-            this.resetAll();
-            this.setupAuto();
-          }, this.delay * 10);
-        }
-      }, this.delay);
-      jquery(".reset").prop("disabled", true);
-      jquery(".remove").prop("disabled", true);
+      return height / 2;
     }
-  }
-
-  public setupReset() {
-    jquery(this.displayEl).on("click", ".reset", this.reset.bind(this));
-  }
-
-  public setupRemove() {
-    jquery(this.displayEl).on("click", ".remove", this.handleRemove.bind(this));
-  }
-
-  public handleRemove(event: Event) {
-    const currentGroup = this.findGroupFromEvent(event);
-    this.remove(currentGroup.name);
-  }
-
-  public findGroupFromEvent(event: Event) {
-    const wrapper = jquery(event.currentTarget).closest(".wrapper")[0];
-    return filter(this.groups, (group) => group.name === wrapper.id)[0];
-  }
-
-  public resetGroup(group: ITestGroup) {
-    group.sort.reset();
-    this.drawSpots(group, false);
-  }
-
-  public reset(event: Event) {
-    const currentGroup = this.findGroupFromEvent(event);
-    this.resetGroup(currentGroup);
   }
 }

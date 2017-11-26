@@ -34600,35 +34600,32 @@ exports.FirstAndLastSwapped = FirstAndLastSwapped;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var d3 = __webpack_require__(71);
-var jquery = __webpack_require__(29);
-var lodash_1 = __webpack_require__(13);
-var BoardDisplay = /** @class */ (function () {
+var abstract_1 = __webpack_require__(572);
+var BoardDisplay = /** @class */ (function (_super) {
+    __extends(BoardDisplay, _super);
     function BoardDisplay(displayEl, boardHeight, boardWidth) {
-        this.displayEl = displayEl;
-        this.boardHeight = boardHeight;
-        this.boardWidth = boardWidth;
-        this.delay = 250;
-        this.groups = [];
-        this.setupReset();
-        this.setupRemove();
+        var _this = _super.call(this, displayEl) || this;
+        _this.displayEl = displayEl;
+        _this.boardHeight = boardHeight;
+        _this.boardWidth = boardWidth;
+        return _this;
     }
-    BoardDisplay.prototype.add = function (group) {
-        var element = this.createBoardElement(group);
-        group.domElement = element;
-        this.displayEl.appendChild(element);
-        this.drawSpots(group, false);
-        this.groups.push(group);
-    };
-    BoardDisplay.prototype.remove = function (name) {
-        var currentGroup = lodash_1.filter(this.groups, function (group) { return group.name === name; })[0];
-        this.groups = lodash_1.filter(this.groups, function (group) { return group.name !== name; });
-        if (currentGroup) {
-            this.displayEl.removeChild(currentGroup.domElement);
-        }
-    };
-    BoardDisplay.prototype.createBoardElement = function (group) {
+    /**
+     * @override
+     */
+    BoardDisplay.prototype.createElement = function (group) {
         var tpl = __webpack_require__(517);
         var board = group.board;
         var sort = group.sort;
@@ -34648,34 +34645,13 @@ var BoardDisplay = /** @class */ (function () {
         div.innerHTML = html;
         return div.firstChild;
     };
-    BoardDisplay.prototype.replaceData = function (group) {
-        var tpl = __webpack_require__(113);
-        var board = group.board;
-        var sort = group.sort;
-        var numPoints = board.points.length;
-        var html = tpl.render({
-            board: board,
-            shuffleTitle: board.shuffle.title,
-            sort: sort,
-            verbosity: board.verbosity,
-        });
-        jquery(group.domElement).find(".board-information").html(html);
-    };
-    BoardDisplay.prototype.getRadius = function (boxHeight, heightSpread, boxWidth, widthSpread) {
-        return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
-    };
-    BoardDisplay.prototype.xCenter = function (index, widthSpread, width) {
-        return (index) / widthSpread * width;
-    };
-    BoardDisplay.prototype.yCenter = function (heightSpread, height, value, valueMin) {
-        if (heightSpread) {
-            return (heightSpread - (value - valueMin)) / heightSpread * height;
-        }
-        else {
-            return height / 2;
-        }
-    };
-    BoardDisplay.prototype.drawSpots = function (group, shadow) {
+    /**
+     * @override
+     *
+     * @param group
+     * @param shadow
+     */
+    BoardDisplay.prototype.draw = function (group, shadow) {
         var _this = this;
         var board = group.board;
         var sort = group.sort;
@@ -34724,80 +34700,42 @@ var BoardDisplay = /** @class */ (function () {
             + ((placed.indexOf(point.index) !== -1 && !shadow ? "placed" : "") + " ")
             + ("" + (shadow ? "shadow" : ""))); });
     };
-    BoardDisplay.prototype.getTransition = function () {
-        var t = d3.transition()
-            .duration(this.delay);
-        return t;
+    /**
+     * Get the radius for a spot.
+     * @param boxHeight
+     * @param heightSpread
+     * @param boxWidth
+     * @param widthSpread
+     */
+    BoardDisplay.prototype.getRadius = function (boxHeight, heightSpread, boxWidth, widthSpread) {
+        return Math.max(Math.min(boxHeight / heightSpread / 2, boxWidth / widthSpread / 2), 2);
     };
-    BoardDisplay.prototype.resetAll = function () {
-        var _this = this;
-        this.groups.forEach(function (group) {
-            _this.resetGroup(group);
-        });
+    /**
+     * Get the x coordinate for the center for a spot.
+     * @param index
+     * @param widthSpread
+     * @param width
+     */
+    BoardDisplay.prototype.xCenter = function (index, widthSpread, width) {
+        return (index) / widthSpread * width;
     };
-    BoardDisplay.prototype.step = function () {
-        var _this = this;
-        var done = true;
-        this.groups.forEach(function (group) {
-            var sort = group.sort;
-            if (!sort.done) {
-                group.sort.next();
-                _this.drawSpots(group, false);
-                _this.drawSpots(group, true);
-                done = false;
-            }
-            _this.replaceData(group);
-        });
-        return done;
-    };
-    BoardDisplay.prototype.setupAuto = function () {
-        var _this = this;
-        if (this.interval) {
-            clearInterval(this.interval);
-            this.interval = null;
-            jquery(".reset").prop("disabled", false);
-            jquery(".remove").prop("disabled", false);
+    /**
+     * Get the y coordinate for the center of a spot.
+     * @param heightSpread
+     * @param height
+     * @param value
+     * @param valueMin
+     */
+    BoardDisplay.prototype.yCenter = function (heightSpread, height, value, valueMin) {
+        if (heightSpread) {
+            return (heightSpread - (value - valueMin)) / heightSpread * height;
         }
         else {
-            this.interval = setInterval(function () {
-                var done = _this.step();
-                if (done) {
-                    clearInterval(_this.interval);
-                    _this.interval = null;
-                    setTimeout(function () {
-                        _this.resetAll();
-                        _this.setupAuto();
-                    }, _this.delay * 10);
-                }
-            }, this.delay);
-            jquery(".reset").prop("disabled", true);
-            jquery(".remove").prop("disabled", true);
+            return height / 2;
         }
     };
-    BoardDisplay.prototype.setupReset = function () {
-        jquery(this.displayEl).on("click", ".reset", this.reset.bind(this));
-    };
-    BoardDisplay.prototype.setupRemove = function () {
-        jquery(this.displayEl).on("click", ".remove", this.handleRemove.bind(this));
-    };
-    BoardDisplay.prototype.handleRemove = function (event) {
-        var currentGroup = this.findGroupFromEvent(event);
-        this.remove(currentGroup.name);
-    };
-    BoardDisplay.prototype.findGroupFromEvent = function (event) {
-        var wrapper = jquery(event.currentTarget).closest(".wrapper")[0];
-        return lodash_1.filter(this.groups, function (group) { return group.name === wrapper.id; })[0];
-    };
-    BoardDisplay.prototype.resetGroup = function (group) {
-        group.sort.reset();
-        this.drawSpots(group, false);
-    };
-    BoardDisplay.prototype.reset = function (event) {
-        var currentGroup = this.findGroupFromEvent(event);
-        this.resetGroup(currentGroup);
-    };
     return BoardDisplay;
-}());
+}(abstract_1.AbstractDisplay));
 exports.BoardDisplay = BoardDisplay;
 
 
@@ -43487,6 +43425,7 @@ module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/con
 Object.defineProperty(exports, "__esModule", { value: true });
 var header_1 = __webpack_require__(212);
 var index_1 = __webpack_require__(214);
+var pipe_1 = __webpack_require__(571);
 var profile_1 = __webpack_require__(524);
 var scatter_1 = __webpack_require__(558);
 var single_1 = __webpack_require__(560);
@@ -43501,6 +43440,7 @@ router.register("^scatter$", scatter_1.setUpScatter, scatter_1.scatterCallback);
 router.register("^profile$", profile_1.setUpProfile, profile_1.profileCallback);
 router.register("^single$", single_1.setUpSingle, single_1.singleCallback);
 router.register("^stick$", stick_1.setUpStick, stick_1.stickCallback);
+router.register("^pipe$", pipe_1.setUpPipe, pipe_1.pipeCallback);
 window.onpopstate();
 queensBackground_1.setUpQueens();
 
@@ -58090,7 +58030,7 @@ exports.profileCallback = function () {
     jquery(createButton).click(exports.createSort.bind(_this, display));
     var runElement = document.getElementById("run");
     jquery(runElement).click(function () {
-        display.setupRun();
+        display.setupAuto();
     });
 };
 
@@ -58101,47 +58041,48 @@ exports.profileCallback = function () {
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var d3 = __webpack_require__(71);
 var jquery = __webpack_require__(29);
-var lodash_1 = __webpack_require__(13);
-var GraphDisplay = /** @class */ (function () {
-    function GraphDisplay(graphEl, listEl, historyEl) {
-        this.graphEl = graphEl;
-        this.listEl = listEl;
-        this.historyEl = historyEl;
-        this.delay = 250;
-        this.numberSteps = 5;
-        this.groups = [];
-        // this.setupReset();
-        this.setupRemove();
+var abstract_1 = __webpack_require__(572);
+var GraphDisplay = /** @class */ (function (_super) {
+    __extends(GraphDisplay, _super);
+    function GraphDisplay(graphEl, displayEl, historyEl) {
+        var _this = _super.call(this, displayEl) || this;
+        _this.graphEl = graphEl;
+        _this.displayEl = displayEl;
+        _this.historyEl = historyEl;
+        _this.delay = 250;
+        _this.numberSteps = 5;
+        _this.wrapperClass = "item";
+        _this.groups = [];
+        return _this;
     }
-    GraphDisplay.prototype.setupRemove = function () {
-        jquery(this.listEl).on("click", ".remove", this.handleRemove.bind(this));
+    /**
+     * @override
+     *
+     * nothing to draw until we start profiling.
+     * @param group
+     * @param shadow
+     */
+    GraphDisplay.prototype.draw = function (group, shadow) {
+        return;
     };
-    GraphDisplay.prototype.handleRemove = function (event) {
-        var currentGroup = this.findGroupFromEvent(event);
-        if (currentGroup) {
-            this.remove(currentGroup.name);
-        }
-    };
-    GraphDisplay.prototype.findGroupFromEvent = function (event) {
-        var item = jquery(event.currentTarget).closest(".item")[0];
-        return lodash_1.filter(this.groups, function (group) { return group.name === item.id; })[0];
-    };
-    GraphDisplay.prototype.add = function (group) {
-        this.groups.push(group);
-        group.domElement = this.createBoardList(group);
-        this.listEl.appendChild(group.domElement);
-    };
-    GraphDisplay.prototype.remove = function (name) {
-        var currentGroup = lodash_1.filter(this.groups, function (group) { return group.name === name; })[0];
-        if (currentGroup) {
-            this.listEl.removeChild(currentGroup.domElement);
-            this.groups = lodash_1.filter(this.groups, function (group) { return group.name !== name; });
-        }
-    };
-    GraphDisplay.prototype.createBoardList = function (group) {
+    /**
+     * @override
+     * @param group
+     */
+    GraphDisplay.prototype.createElement = function (group) {
         var tpl = __webpack_require__(526);
         var sort = group.sort;
         var board = group.board;
@@ -58156,26 +58097,45 @@ var GraphDisplay = /** @class */ (function () {
         div.innerHTML = html;
         return div.firstChild;
     };
+    /**
+     * @override
+     */
     GraphDisplay.prototype.step = function () {
         var _this = this;
-        var done = true;
-        this.groups.forEach(function (group) {
-            var sort = group.sort;
-            for (var i = 0; i < _this.numberSteps; i++) {
-                if (!sort.done) {
-                    group.sort.next();
-                    done = false;
-                }
-            }
+        var done = _super.prototype.step.call(this);
+        var data = this.getData();
+        this.updateAxis(data);
+        data.forEach(function (dataset) {
+            var index = jquery("#" + dataset.name).index();
+            _this.drawLine(dataset, index);
+            _this.drawDots(dataset, index);
         });
         return done;
     };
-    GraphDisplay.prototype.getTransition = function () {
-        var t = d3.transition()
-            .duration(this.delay);
-        return t;
+    /**
+     * @override
+     */
+    GraphDisplay.prototype.startInterval = function () {
+        var swaps = document.getElementById("swaps").checked;
+        var comps = document.getElementById("comps").checked;
+        if (!this.groups.length || !(swaps || comps)) {
+            return;
+        }
+        this.disable(true);
+        this.createGraph();
+        _super.prototype.startInterval.call(this);
     };
+    /**
+     * Build the x-axis
+     * @param xMax
+     * @param width
+     * @param height
+     * @param svg
+     */
     GraphDisplay.prototype.createXAxis = function (xMax, width, height, svg) {
+        if (!svg.select(".x.axis").empty()) {
+            return;
+        }
         this.xAxisCall = d3.axisBottom(undefined);
         this.xScale = d3.scaleLinear()
             .domain([0, xMax])
@@ -58186,7 +58146,16 @@ var GraphDisplay = /** @class */ (function () {
             .attr("transform", "translate(0," + height + ")")
             .call(this.xAxisCall);
     };
+    /**
+     * build the y-axis
+     * @param yMax
+     * @param height
+     * @param svg
+     */
     GraphDisplay.prototype.createYAxis = function (yMax, height, svg) {
+        if (!svg.select(".y.axis").empty()) {
+            return;
+        }
         this.yAxisCall = d3.axisLeft(undefined);
         this.yScale = d3.scaleLinear()
             .domain([0, yMax])
@@ -58196,27 +58165,73 @@ var GraphDisplay = /** @class */ (function () {
             .attr("class", "y axis")
             .call(this.yAxisCall);
     };
-    GraphDisplay.prototype.createLine = function (svg, dataset) {
-        var _this = this;
+    /**
+     * Update Axis
+     * @param data
+     */
+    GraphDisplay.prototype.updateAxis = function (data) {
+        var _a = this.getMinAndMax(data), xMax = _a[0], yMax = _a[1];
+        this.xScale.domain([0, xMax]);
+        this.yScale.domain([0, yMax]);
+        var t = this.getTransition();
+        d3.select(".x.axis").transition(t).call(this.xAxisCall);
+        d3.select(".y.axis").transition(t).call(this.yAxisCall);
+    };
+    /**
+     * Daws the line part of the graph
+     * @param svg
+     * @param dataset
+     */
+    GraphDisplay.prototype.drawLineGraph = function (svg, dataset) {
         var index = jquery("#" + dataset.name).index();
-        // 7. d3's line generator
+        this.drawLine(dataset, index);
+        this.drawDots(dataset, index);
+    };
+    /**
+     * Draws the path for the graph
+     * @param dataset
+     * @param index
+     */
+    GraphDisplay.prototype.drawLine = function (dataset, index) {
+        var _this = this;
+        d3.select("#graph").select("g").selectAll("path.line." + dataset.key)
+            .data(dataset.values)
+            .enter().append("path")
+            .attr("stroke-width", dataset.strokeWidth)
+            .attr("class", "line " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index);
         var line = d3.line()
             .x(function (d) { return _this.xScale(d.x); }) // set the x values for the line generator
             .y(function (d) { return _this.yScale(d.y); }) // set the y values for the line generator
-            .curve(d3.curveMonotoneX); // apply smoothing to the line
-        svg.append("path")
+            .curve(d3.curveMonotoneX);
+        var t = this.getTransition();
+        d3.select("#graph").select("path.line." + dataset.key)
             .datum(dataset.values)
-            .attr("stroke-width", dataset.strokeWidth)
-            .attr("class", "line " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index)
+            .transition(t)
             .attr("d", line);
-        svg.selectAll(".dot." + dataset.key)
+    };
+    /**
+     * Draws the dots for the graph
+     * @param dataset
+     * @param index
+     */
+    GraphDisplay.prototype.drawDots = function (dataset, index) {
+        var _this = this;
+        var t = this.getTransition();
+        d3.select("#graph").select("g").selectAll(".dot." + dataset.key)
             .data(dataset.values)
             .enter().append("circle")
-            .attr("class", "dot " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index)
+            .attr("class", "dot " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index);
+        d3.select("#graph").select("g").selectAll(".dot." + dataset.key)
+            .data(dataset.values)
+            .transition(t)
             .attr("cx", function (d) { return _this.xScale(d.x); })
             .attr("cy", function (d) { return _this.yScale(d.y); })
             .attr("r", 5);
     };
+    /**
+     * Gets the maxes for the graph.
+     * @param data
+     */
     GraphDisplay.prototype.getMinAndMax = function (data) {
         var yMax = 0;
         var xMax = 0;
@@ -58232,6 +58247,9 @@ var GraphDisplay = /** @class */ (function () {
         });
         return [xMax, yMax];
     };
+    /**
+     * Draw the graph
+     */
     GraphDisplay.prototype.createGraph = function () {
         var _this = this;
         var totalHeight = 500;
@@ -58242,67 +58260,22 @@ var GraphDisplay = /** @class */ (function () {
         var width = totalWidth - margin.left - margin.right;
         var height = totalHeight - margin.top - margin.bottom;
         var _a = this.getMinAndMax(data), xMax = _a[0], yMax = _a[1];
-        var wrapper = d3.select("#graph").append("svg")
+        d3.select("#graph").selectAll("svg").data([1]).enter().append("svg");
+        d3.select("#graph svg").selectAll("g").data([1]).enter().append("g");
+        var wrapper = d3.select("#graph").select("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-            .append("g")
+            .select("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         this.createXAxis(xMax, width, height, wrapper);
         this.createYAxis(yMax, height, wrapper);
         data.forEach(function (dataset, index) {
-            _this.createLine(wrapper, dataset);
+            _this.drawLineGraph(wrapper, dataset);
         });
     };
-    GraphDisplay.prototype.run = function () {
-        var _this = this;
-        var done = this.checkDone();
-        if (done) {
-            return this.handleDone();
-        }
-        this.step();
-        var data = this.getData();
-        var _a = this.getMinAndMax(data), xMax = _a[0], yMax = _a[1];
-        this.xScale.domain([0, xMax]);
-        this.yScale.domain([0, yMax]);
-        this.updateAxis();
-        data.forEach(function (dataset, index) {
-            _this.updateLine(dataset);
-            _this.updateDots(dataset);
-        });
-    };
-    GraphDisplay.prototype.updateDots = function (dataset) {
-        var _this = this;
-        var index = jquery("#" + dataset.name).index();
-        var t = this.getTransition();
-        d3.select("#graph").select("g").selectAll(".dot." + dataset.key)
-            .data(dataset.values)
-            .enter().append("circle")
-            .attr("class", "dot " + dataset.key + " " + (dataset.key.indexOf("swaps") !== -1 ? "swaps" : "comps") + "-" + index);
-        d3.select("#graph").select("g").selectAll(".dot." + dataset.key)
-            .data(dataset.values)
-            .transition(t)
-            .attr("cx", function (d) { return _this.xScale(d.x); })
-            .attr("cy", function (d) { return _this.yScale(d.y); })
-            .attr("r", 5);
-    };
-    GraphDisplay.prototype.updateLine = function (dataset) {
-        var _this = this;
-        var index = jquery("#" + dataset.name).index();
-        var line = d3.line()
-            .x(function (d) { return _this.xScale(d.x); }) // set the x values for the line generator
-            .y(function (d) { return _this.yScale(d.y); }) // set the y values for the line generator
-            .curve(d3.curveMonotoneX);
-        var t = this.getTransition();
-        d3.select("#graph").select("path.line." + dataset.key)
-            .datum(dataset.values)
-            .transition(t)
-            .attr("d", line);
-    };
-    GraphDisplay.prototype.updateAxis = function () {
-        var t = this.getTransition();
-        d3.select(".x.axis").transition(t).call(this.xAxisCall);
-        d3.select(".y.axis").transition(t).call(this.yAxisCall);
-    };
+    /**
+     * Gets the data for the graph.
+     */
     GraphDisplay.prototype.getData = function () {
         var swaps = document.getElementById("swaps").checked;
         var comps = document.getElementById("comps").checked;
@@ -58328,60 +58301,8 @@ var GraphDisplay = /** @class */ (function () {
         });
         return data;
     };
-    GraphDisplay.prototype.handleDisable = function (value) {
-        jquery(".remove").prop("disabled", value);
-        jquery("#swaps").prop("disabled", value);
-        jquery("#comps").prop("disabled", value);
-        jquery("#create").prop("disabled", value);
-        jquery("#run").prop("disabled", value);
-    };
-    GraphDisplay.prototype.checkDone = function () {
-        var done = true;
-        this.groups.forEach(function (group) {
-            var sort = group.sort;
-            if (!sort.done) {
-                done = false;
-            }
-        });
-        return done;
-    };
-    GraphDisplay.prototype.resetAll = function () {
-        this.groups.forEach(function (group) {
-            var sort = group.sort;
-            sort.reset();
-        });
-    };
-    GraphDisplay.prototype.handleDone = function () {
-        // stop the interval
-        clearInterval(this.interval);
-        this.interval = null;
-        this.handleDisable(false);
-        // reset all
-        this.resetAll();
-        // move chart to previous
-        jquery("#previous").prepend(jquery("#graph svg"));
-        jquery("#previous").prepend(jquery("#sorts .item").clone());
-    };
-    GraphDisplay.prototype.setupRun = function () {
-        if (this.interval) {
-            clearInterval(this.interval);
-            this.interval = null;
-            this.handleDisable(false);
-        }
-        else {
-            var swaps = document.getElementById("swaps").checked;
-            var comps = document.getElementById("comps").checked;
-            if (!this.groups.length || !(swaps || comps)) {
-                return;
-            }
-            this.handleDisable(true);
-            this.step();
-            this.createGraph();
-            this.interval = setInterval(this.run.bind(this), this.delay);
-        }
-    };
     return GraphDisplay;
-}());
+}(abstract_1.AbstractDisplay));
 exports.GraphDisplay = GraphDisplay;
 
 
@@ -61349,6 +61270,227 @@ var MergeSmallest = /** @class */ (function (_super) {
     return MergeSmallest;
 }(base_1.Merge));
 exports.MergeSmallest = MergeSmallest;
+
+
+/***/ }),
+/* 571 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.setUpPipe = function (location, data, query) {
+    return "<div>Pipe</div>";
+};
+var index = 1;
+exports.pipeCallback = function () {
+    return;
+};
+
+
+/***/ }),
+/* 572 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var d3 = __webpack_require__(71);
+var jquery = __webpack_require__(29);
+var lodash_1 = __webpack_require__(13);
+var AbstractDisplay = /** @class */ (function () {
+    function AbstractDisplay(displayEl) {
+        this.displayEl = displayEl;
+        this.delay = 250;
+        this.wrapperClass = "wrapper";
+        this.groups = [];
+        this.setupReset();
+        this.setupRemove();
+    }
+    /**
+     * Add a group to the element.
+     * @param group
+     */
+    AbstractDisplay.prototype.add = function (group) {
+        var element = this.createElement(group);
+        group.domElement = element;
+        this.displayEl.appendChild(element);
+        this.draw(group, false);
+        this.groups.push(group);
+    };
+    /**
+     * Create the element for each group.
+     *
+     * @param group
+     */
+    AbstractDisplay.prototype.createElement = function (group) {
+        var div = document.createElement("div");
+        div.innerText = "NOT IMPLEMENTED";
+        return div;
+    };
+    /**
+     * Draw the element for a specified group
+     *
+     * @param group
+     * @param shadow
+     */
+    AbstractDisplay.prototype.draw = function (group, shadow) {
+        if (shadow === void 0) { shadow = false; }
+        // tslint:disable-next-line:no-console
+        console.error("IMPLEMENT DRAW");
+    };
+    /**
+     * Remove a group from the element.
+     * @param name
+     */
+    AbstractDisplay.prototype.remove = function (name) {
+        var currentGroup = lodash_1.filter(this.groups, function (group) { return group.name === name; })[0];
+        this.groups = lodash_1.filter(this.groups, function (group) { return group.name !== name; });
+        if (currentGroup) {
+            this.displayEl.removeChild(currentGroup.domElement);
+        }
+    };
+    /**
+     * Set up reseting element.
+     */
+    AbstractDisplay.prototype.setupReset = function () {
+        jquery(this.displayEl).on("click", ".reset", this.reset.bind(this));
+    };
+    /**
+     * Find a group and call reset on it.
+     * @param event
+     */
+    AbstractDisplay.prototype.reset = function (event) {
+        var currentGroup = this.findGroupFromEvent(event);
+        this.resetGroup(currentGroup);
+    };
+    /**
+     * Reset a specific group
+     * @param group
+     */
+    AbstractDisplay.prototype.resetGroup = function (group) {
+        group.sort.reset();
+        this.draw(group, false);
+    };
+    /**
+     * Figure out the current group from the event
+     * @param event
+     */
+    AbstractDisplay.prototype.findGroupFromEvent = function (event) {
+        var wrapper = jquery(event.currentTarget).closest("." + this.wrapperClass)[0];
+        return lodash_1.filter(this.groups, function (group) { return group.name === wrapper.id; })[0];
+    };
+    /**
+     * Set up removing element.
+     */
+    AbstractDisplay.prototype.setupRemove = function () {
+        jquery(this.displayEl).on("click", ".remove", this.handleRemove.bind(this));
+    };
+    /**
+     * Handle a click on remove.
+     * @param event
+     */
+    AbstractDisplay.prototype.handleRemove = function (event) {
+        var currentGroup = this.findGroupFromEvent(event);
+        this.remove(currentGroup.name);
+    };
+    /**
+     * Take a step on all the boards.
+     */
+    AbstractDisplay.prototype.step = function () {
+        var _this = this;
+        var done = true;
+        this.groups.forEach(function (group) {
+            var sort = group.sort;
+            if (!sort.done) {
+                group.sort.next();
+                _this.draw(group, false);
+                _this.draw(group, true);
+                done = false;
+            }
+            _this.replaceData(group);
+        });
+        return done;
+    };
+    /**
+     * Replace the board information for every board.
+     *
+     * @param group
+     */
+    AbstractDisplay.prototype.replaceData = function (group) {
+        var tpl = __webpack_require__(113);
+        var board = group.board;
+        var sort = group.sort;
+        var numPoints = board.points.length;
+        var html = tpl.render({
+            board: board,
+            shuffleTitle: board.shuffle.title,
+            sort: sort,
+            verbosity: board.verbosity,
+        });
+        jquery(group.domElement).find(".board-information").html(html);
+    };
+    /**
+     * Reset every group.
+     */
+    AbstractDisplay.prototype.resetAll = function () {
+        var _this = this;
+        this.groups.forEach(function (group) {
+            _this.resetGroup(group);
+        });
+    };
+    /**
+     * Change disabled state.
+     *
+     * @param value;
+     */
+    AbstractDisplay.prototype.disable = function (value) {
+        jquery(".reset").prop("disabled", value);
+        jquery(".remove").prop("disabled", value);
+        jquery("#swaps").prop("disabled", value);
+        jquery("#comps").prop("disabled", value);
+        jquery("#create").prop("disabled", value);
+        jquery("#step").prop("disabled", value);
+    };
+    /**
+     * Set up auto running.
+     */
+    AbstractDisplay.prototype.setupAuto = function () {
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+            this.disable(false);
+        }
+        else {
+            this.startInterval();
+        }
+    };
+    /**
+     * Get the d3 transition
+     */
+    AbstractDisplay.prototype.getTransition = function () {
+        var t = d3.transition()
+            .duration(this.delay);
+        return t;
+    };
+    /**
+     * Code to start the interval
+     */
+    AbstractDisplay.prototype.startInterval = function () {
+        var _this = this;
+        this.interval = setInterval(function () {
+            var done = _this.step();
+            if (done) {
+                clearInterval(_this.interval);
+                _this.interval = null;
+                _this.disable(false);
+            }
+        }, this.delay);
+        this.disable(true);
+    };
+    return AbstractDisplay;
+}());
+exports.AbstractDisplay = AbstractDisplay;
 
 
 /***/ })

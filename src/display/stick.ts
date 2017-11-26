@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import * as jquery from "jquery";
 import { filter } from "lodash";
 import { Point } from "./../point";
-import { ITestGroup } from "./board";
+import { ITestGroup } from "./abstract";
 
 export class StickDisplay {
   public groups: ITestGroup[];

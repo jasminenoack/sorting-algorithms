@@ -76,6 +76,6 @@ export const profileCallback = () => {
 
   const runElement = document.getElementById("run");
   jquery(runElement).click(() => {
-    display.setupRun();
+    display.setupAuto();
   });
 };

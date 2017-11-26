@@ -1,0 +1,21 @@
+{% include "./controls/home.njk" %}
+<h2>Pipe</h2>
+<div>
+  This visualization shows the profile for a given sort.
+</div>
+<article class="sorting">
+  <div class="controls">
+    <div>
+      {% include "./controls/sort.njk" %}
+      {% include "./controls/count.njk" %}
+      {% include "./controls/order.njk" %}
+      {% include "./controls/values.njk" %}
+    </div>
+    {% include "./controls/profileButtons.njk" %}
+  </div>
+  <div id="pipe">
+  </div>
+
+  <style>
+  </style>
+</article>

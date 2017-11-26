@@ -44,20 +44,7 @@ export class StickDisplay extends AbstractDisplay {
     // find the variables
     const board = group.board;
     const sort = group.sort;
-
-    // set indexes to actually be right.
-    board.points.forEach((point, index) => {
-      point.index = index;
-    });
-
-    // create a sorted version of the points.
-    const points = board.points.slice().sort((pointA, pointB) => {
-      if (pointA.value > pointB.value) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
+    const points = this.getPointsInOrder(group);
 
     // data for the math
     const valueMin = board.min();

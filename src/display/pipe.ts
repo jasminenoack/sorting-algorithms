@@ -1,3 +1,5 @@
-export class PipeDisplay {
+import { AbstractDisplay } from "./abstract";
+
+export class PipeDisplay extends AbstractDisplay {
 
 }

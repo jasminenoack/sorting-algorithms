@@ -32,17 +32,7 @@ export class BoardDisplay extends AbstractDisplay {
     const sort = group.sort;
     let points;
     if (!shadow) {
-      points = board.points.slice();
-      board.points.forEach((point, index) => {
-        point.index = index;
-      });
-      points = board.points.slice().sort((pointA, pointB) => {
-        if (pointA.value > pointB.value) {
-          return 1;
-        } else {
-          return -1;
-        }
-      });
+      points = this.getPointsInOrder(group);
     } else {
       points = sort.shadow.slice();
     }

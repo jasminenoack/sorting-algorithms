@@ -1,19 +1,38 @@
+import * as jquery from "jquery";
+import { Board } from "../board";
 import { PipeDisplay } from "../display/pipe";
+import * as shuffles from "../shuffles";
+import * as sizes from "../sizes";
+import * as sorts from "../sorts/sorts";
+import * as valueTypes from "../valueTypes";
 
 export const setUpPipe = (
   location: string,
   data: { [key: string]: string },
   query: { [key: string]: string },
 ) => {
-  return "<div>Pipe</div>";
+  // tslint:disable-next-line:no-var-requires
+  const tpl = require("../../templates/pipe.njk");
+  const html = tpl.render({
+    defaults: {
+      count: "xLarge",
+      shuffle: "RandomShuffle",
+      sort: "Comb",
+      valueType: "Integer",
+    },
+    shuffles,
+    sizes,
+    sorts,
+    valueTypes,
+  });
+  return html;
 };
 
 const index = 1;
 
 export const pipeCallback = () => {
-  // the wrapper for the boards
-  // const boardsElement = document.getElementById("boards");
-  // const display = new BoardDisplay(boardsElement, 500, 500);
+  const pipeElement = document.getElementById("pipe");
+  const display = new PipeDisplay(pipeElement);
 
   // // controls
   // const createButton = document.getElementById("create");

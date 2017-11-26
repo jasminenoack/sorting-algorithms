@@ -34640,18 +34640,7 @@ var BoardDisplay = /** @class */ (function (_super) {
         var sort = group.sort;
         var points;
         if (!shadow) {
-            points = board.points.slice();
-            board.points.forEach(function (point, index) {
-                point.index = index;
-            });
-            points = board.points.slice().sort(function (pointA, pointB) {
-                if (pointA.value > pointB.value) {
-                    return 1;
-                }
-                else {
-                    return -1;
-                }
-            });
+            points = this.getPointsInOrder(group);
         }
         else {
             points = sort.shadow.slice();
@@ -60369,19 +60358,7 @@ var StickDisplay = /** @class */ (function (_super) {
         // find the variables
         var board = group.board;
         var sort = group.sort;
-        // set indexes to actually be right.
-        board.points.forEach(function (point, index) {
-            point.index = index;
-        });
-        // create a sorted version of the points.
-        var points = board.points.slice().sort(function (pointA, pointB) {
-            if (pointA.value > pointB.value) {
-                return 1;
-            }
-            else {
-                return -1;
-            }
-        });
+        var points = this.getPointsInOrder(group);
         // data for the math
         var valueMin = board.min();
         var valueMax = board.max();
@@ -61168,14 +61145,32 @@ exports.MergeSmallest = MergeSmallest;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var pipe_1 = __webpack_require__(575);
+var shuffles = __webpack_require__(23);
+var sizes = __webpack_require__(45);
+var sorts = __webpack_require__(64);
+var valueTypes = __webpack_require__(24);
 exports.setUpPipe = function (location, data, query) {
-    return "<div>Pipe</div>";
+    // tslint:disable-next-line:no-var-requires
+    var tpl = __webpack_require__(574);
+    var html = tpl.render({
+        defaults: {
+            count: "xLarge",
+            shuffle: "RandomShuffle",
+            sort: "Comb",
+            valueType: "Integer",
+        },
+        shuffles: shuffles,
+        sizes: sizes,
+        sorts: sorts,
+        valueTypes: valueTypes,
+    });
+    return html;
 };
 var index = 1;
 exports.pipeCallback = function () {
-    // the wrapper for the boards
-    // const boardsElement = document.getElementById("boards");
-    // const display = new BoardDisplay(boardsElement, 500, 500);
+    var pipeElement = document.getElementById("pipe");
+    var display = new pipe_1.PipeDisplay(pipeElement);
     // // controls
     // const createButton = document.getElementById("create");
     // // on create
@@ -61412,6 +61407,32 @@ var AbstractDisplay = /** @class */ (function () {
         return t;
     };
     /**
+     * Ensure indexes are accurate
+     */
+    AbstractDisplay.prototype.updateIndexes = function (group) {
+        var board = group.board;
+        board.points.forEach(function (point, index) {
+            point.index = index;
+        });
+    };
+    /**
+     * Get points in order
+     */
+    AbstractDisplay.prototype.getPointsInOrder = function (group) {
+        this.updateIndexes(group);
+        var board = group.board;
+        // create a sorted version of the points.
+        var points = board.points.slice().sort(function (pointA, pointB) {
+            if (pointA.value > pointB.value) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        });
+        return points;
+    };
+    /**
      * Code to start the interval
      */
     AbstractDisplay.prototype.startInterval = function () {
@@ -61429,6 +61450,208 @@ var AbstractDisplay = /** @class */ (function () {
     return AbstractDisplay;
 }());
 exports.AbstractDisplay = AbstractDisplay;
+
+
+/***/ }),
+/* 573 */,
+/* 574 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./controls/home.njk"] = __webpack_require__( 567 );
+dependencies["./controls/sort.njk"] = __webpack_require__( 67 );
+dependencies["./controls/count.njk"] = __webpack_require__( 117 );
+dependencies["./controls/order.njk"] = __webpack_require__( 68 );
+dependencies["./controls/values.njk"] = __webpack_require__( 118 );
+dependencies["./controls/profileButtons.njk"] = __webpack_require__( 557 );
+
+
+
+
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/pipe.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/home.njk", false, "templates/pipe.njk", null, function(t_3,t_1) {
+if(t_3) { cb(t_3); return; }
+callback(null,t_1);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_4,t_2) {
+if(t_4) { cb(t_4); return; }
+callback(null,t_2);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n<h2>Pipe</h2>\n<div>\n  This visualization shows the profile for a given sort.\n</div>\n<article class=\"sorting\">\n  <div class=\"controls\">\n    <div>\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/sort.njk", false, "templates/pipe.njk", null, function(t_7,t_5) {
+if(t_7) { cb(t_7); return; }
+callback(null,t_5);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_8,t_6) {
+if(t_8) { cb(t_8); return; }
+callback(null,t_6);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/count.njk", false, "templates/pipe.njk", null, function(t_11,t_9) {
+if(t_11) { cb(t_11); return; }
+callback(null,t_9);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_12,t_10) {
+if(t_12) { cb(t_12); return; }
+callback(null,t_10);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/order.njk", false, "templates/pipe.njk", null, function(t_15,t_13) {
+if(t_15) { cb(t_15); return; }
+callback(null,t_13);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_16,t_14) {
+if(t_16) { cb(t_16); return; }
+callback(null,t_14);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/values.njk", false, "templates/pipe.njk", null, function(t_19,t_17) {
+if(t_19) { cb(t_19); return; }
+callback(null,t_17);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_20,t_18) {
+if(t_20) { cb(t_20); return; }
+callback(null,t_18);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n    </div>\n    ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./controls/profileButtons.njk", false, "templates/pipe.njk", null, function(t_23,t_21) {
+if(t_23) { cb(t_23); return; }
+callback(null,t_21);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_24,t_22) {
+if(t_24) { cb(t_24); return; }
+callback(null,t_22);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n  </div>\n  <div id=\"pipe\">\n  </div>\n\n  <style>\n  </style>\n</article>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+})})})})})});
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/pipe.njk"] , dependencies)
+
+/***/ }),
+/* 575 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var abstract_1 = __webpack_require__(572);
+var PipeDisplay = /** @class */ (function (_super) {
+    __extends(PipeDisplay, _super);
+    function PipeDisplay() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return PipeDisplay;
+}(abstract_1.AbstractDisplay));
+exports.PipeDisplay = PipeDisplay;
 
 
 /***/ })

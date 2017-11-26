@@ -240,6 +240,33 @@ export abstract class AbstractDisplay {
   }
 
   /**
+   * Ensure indexes are accurate
+   */
+  public updateIndexes(group: ITestGroup) {
+    const board = group.board;
+    board.points.forEach((point, index) => {
+      point.index = index;
+    });
+  }
+
+  /**
+   * Get points in order
+   */
+  public getPointsInOrder(group: ITestGroup) {
+    this.updateIndexes(group);
+    const board = group.board;
+    // create a sorted version of the points.
+    const points = board.points.slice().sort((pointA, pointB) => {
+      if (pointA.value > pointB.value) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+    return points;
+  }
+
+  /**
    * Code to start the interval
    */
   protected startInterval() {

@@ -57945,12 +57945,12 @@ module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/lin
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var jquery = __webpack_require__(29);
-var board_1 = __webpack_require__(22);
 var graph_1 = __webpack_require__(525);
 var shuffles = __webpack_require__(23);
 var sizes = __webpack_require__(45);
 var sorts = __webpack_require__(64);
 var valueTypes = __webpack_require__(24);
+var utils_1 = __webpack_require__(576);
 exports.setUpProfile = function (location, data, query) {
     // tslint:disable-next-line:no-var-requires
     var tpl = __webpack_require__(555);
@@ -57968,29 +57968,6 @@ exports.setUpProfile = function (location, data, query) {
     });
     return html;
 };
-var index = 0;
-exports.createSort = function (display) {
-    // the figure out the size
-    var sizeElement = document.getElementById("size");
-    var size = sizes[sizeElement.value];
-    // figure out the order
-    var orderSelect = document.getElementById("order");
-    var order = shuffles[orderSelect.value];
-    // figure out the value type
-    var valueTypeSelect = document.getElementById("value-type");
-    var value = valueTypes[valueTypeSelect.value];
-    // figure out the sort
-    var sortElement = document.getElementById("sort");
-    var Sort = sorts[sortElement.value];
-    var board = new board_1.Board(size, order, value);
-    var sort = new Sort(board);
-    display.add({
-        board: board,
-        name: "board-" + index,
-        sort: sort,
-    });
-    index++;
-};
 exports.profileCallback = function () {
     // graph display
     var listDisplayElement = document.getElementById("sorts");
@@ -57999,7 +57976,7 @@ exports.profileCallback = function () {
     var display = new graph_1.GraphDisplay(graphElement, listDisplayElement, oldGraphs);
     // create
     var createButton = document.getElementById("create");
-    jquery(createButton).click(exports.createSort.bind(_this, display));
+    jquery(createButton).click(utils_1.createBoard.bind(_this, display));
     var runElement = document.getElementById("run");
     jquery(runElement).click(function () {
         display.setupAuto();
@@ -59808,12 +59785,12 @@ module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/con
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var jquery = __webpack_require__(29);
-var board_1 = __webpack_require__(22);
 var shuffles = __webpack_require__(23);
 var sizes = __webpack_require__(45);
 var sorts = __webpack_require__(64);
 var valueTypes = __webpack_require__(24);
-var board_2 = __webpack_require__(70);
+var board_1 = __webpack_require__(70);
+var utils_1 = __webpack_require__(576);
 exports.setUpScatter = function (location, data, query) {
     // tslint:disable-next-line:no-var-requires
     var tpl = __webpack_require__(559);
@@ -59831,37 +59808,14 @@ exports.setUpScatter = function (location, data, query) {
     });
     return html;
 };
-var index = 1;
-var createBoard = function (display) {
-    // the figure out the size
-    var sizeElement = document.getElementById("size");
-    var size = sizes[sizeElement.value];
-    // figure out the order
-    var orderSelect = document.getElementById("order");
-    var order = shuffles[orderSelect.value];
-    // figure out the value type
-    var valueTypeSelect = document.getElementById("value-type");
-    var value = valueTypes[valueTypeSelect.value];
-    // figure out the sort
-    var sortElement = document.getElementById("sort");
-    var Sort = sorts[sortElement.value];
-    var board = new board_1.Board(size, order, value);
-    var sort = new Sort(board);
-    display.add({
-        board: board,
-        name: "board-" + index,
-        sort: sort,
-    });
-    index++;
-};
 exports.scatterCallback = function () {
     // the wrapper for the boards
     var boardsElement = document.getElementById("boards");
-    var display = new board_2.BoardDisplay(boardsElement, 500, 500);
+    var display = new board_1.BoardDisplay(boardsElement, 500, 500);
     // controls
     var createButton = document.getElementById("create");
     // on create
-    jquery(createButton).click(createBoard.bind(_this, display));
+    jquery(createButton).click(utils_1.createBoard.bind(_this, display));
     var autoElement = document.getElementById("auto");
     jquery(autoElement).click(function () {
         display.setupAuto();
@@ -60245,13 +60199,12 @@ module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/sin
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var jquery = __webpack_require__(29);
-var board_1 = __webpack_require__(22);
 var stick_1 = __webpack_require__(563);
 var shuffles = __webpack_require__(23);
 var sizes = __webpack_require__(45);
 var sorts = __webpack_require__(64);
 var valueTypes = __webpack_require__(24);
-var board_2 = __webpack_require__(22);
+var utils_1 = __webpack_require__(576);
 var index = 0;
 exports.setUpStick = function (location, data, query) {
     var tpl = __webpack_require__(565);
@@ -60269,28 +60222,10 @@ exports.setUpStick = function (location, data, query) {
     });
     return html;
 };
-var createBoard = function (display) {
-    var sizeElement = document.getElementById("size");
-    var size = sizes[sizeElement.value];
-    var orderSelect = document.getElementById("order");
-    var order = shuffles[orderSelect.value];
-    var valueTypeSelect = document.getElementById("value-type");
-    var value = valueTypes[valueTypeSelect.value];
-    var sortElement = document.getElementById("sort");
-    var Sort = sorts[sortElement.value];
-    var board = new board_1.Board(size, order, value, board_2.Verbosity.Debug);
-    var sort = new Sort(board);
-    display.add({
-        board: board,
-        name: "board-" + index,
-        sort: sort,
-    });
-    index++;
-};
 exports.stickCallback = function () {
     var element = document.getElementById("sticks");
     var display = new stick_1.StickDisplay(element);
-    jquery("#create").click(createBoard.bind(_this, display));
+    jquery("#create").click(utils_1.createBoard.bind(_this, display));
     jquery("#step").click(display.step.bind(display));
     var auto = jquery("#auto");
     auto.click(function () {
@@ -61652,6 +61587,43 @@ var PipeDisplay = /** @class */ (function (_super) {
     return PipeDisplay;
 }(abstract_1.AbstractDisplay));
 exports.PipeDisplay = PipeDisplay;
+
+
+/***/ }),
+/* 576 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var board_1 = __webpack_require__(22);
+var shuffles = __webpack_require__(23);
+var sizes = __webpack_require__(45);
+var sorts = __webpack_require__(64);
+var valueTypes = __webpack_require__(24);
+var index = 0;
+exports.createBoard = function (display) {
+    // the figure out the size
+    var sizeElement = document.getElementById("size");
+    var size = sizes[sizeElement.value];
+    // figure out the order
+    var orderSelect = document.getElementById("order");
+    var order = shuffles[orderSelect.value];
+    // figure out the value type
+    var valueTypeSelect = document.getElementById("value-type");
+    var value = valueTypes[valueTypeSelect.value];
+    // figure out the sort
+    var sortElement = document.getElementById("sort");
+    var Sort = sorts[sortElement.value];
+    var board = new board_1.Board(size, order, value);
+    var sort = new Sort(board);
+    display.add({
+        board: board,
+        name: "board-" + index,
+        sort: sort,
+    });
+    index++;
+};
 
 
 /***/ })

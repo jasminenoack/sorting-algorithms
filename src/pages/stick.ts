@@ -11,8 +11,9 @@ import { BoardDisplay } from "./../display/board";
 import { IShuffle } from "./../shuffles/abstract";
 import { ISize } from "./../sizes";
 import { IValueType } from "./../valueTypes";
+import { createBoard } from "./utils";
 
-let index = 0;
+const index = 0;
 
 export const setUpStick = (
   location: string,
@@ -33,30 +34,6 @@ export const setUpStick = (
     valueTypes,
   });
   return html;
-};
-
-const createBoard = (display: StickDisplay) => {
-  const sizeElement = document.getElementById("size");
-  const size: ISize = (sizes as { [key: string]: ISize })[(sizeElement as any).value];
-
-  const orderSelect = document.getElementById("order");
-  const order: IShuffle = (shuffles as { [key: string]: IShuffle })[(orderSelect as any).value];
-
-  const valueTypeSelect = document.getElementById("value-type");
-  const value: IValueType = (valueTypes as { [key: string]: IValueType })[(valueTypeSelect as any).value];
-
-  const sortElement = document.getElementById("sort");
-  const Sort: BaseSort = (sorts as any)[(sortElement as any).value];
-
-  const board = new Board(size, order, value, Verbosity.Debug);
-  const sort = new (Sort as any)(board);
-
-  display.add({
-    board,
-    name: `board-${index}`,
-    sort,
-  });
-  index++;
 };
 
 export const stickCallback = () => {

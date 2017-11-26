@@ -43514,6 +43514,7 @@ exports.tools = {
     "Single Scatter Sort Animation": "#single",
     "Scatter Animations": "#scatter",
     "Profiling": "#profile",
+    "Pipes": "#pipes",
     "Stick Animation": "#stick",
 };
 exports.learn = {
@@ -61079,12 +61080,15 @@ exports.MergeSmallest = MergeSmallest;
 
 "use strict";
 
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var jquery = __webpack_require__(29);
 var pipe_1 = __webpack_require__(575);
 var shuffles = __webpack_require__(23);
 var sizes = __webpack_require__(45);
 var sorts = __webpack_require__(64);
 var valueTypes = __webpack_require__(24);
+var utils_1 = __webpack_require__(576);
 exports.setUpPipe = function (location, data, query) {
     // tslint:disable-next-line:no-var-requires
     var tpl = __webpack_require__(574);
@@ -61106,21 +61110,20 @@ var index = 1;
 exports.pipeCallback = function () {
     var pipeElement = document.getElementById("pipe");
     var display = new pipe_1.PipeDisplay(pipeElement);
-    // // controls
-    // const createButton = document.getElementById("create");
-    // // on create
-    // jquery(createButton).click(createBoard.bind(this, display));
-    // const autoElement = document.getElementById("auto");
-    // jquery(autoElement).click(() => {
-    //   display.setupAuto();
-    //   if (display.interval) {
-    //     autoElement.innerText = "Stop";
-    //   } else {
-    //     autoElement.innerText = "Auto";
-    //   }
-    // });
-    // const stepElement = document.getElementById("step");
-    // jquery(stepElement).click(display.step.bind(display));
+    var autoElement = document.getElementById("auto");
+    jquery(autoElement).click(function () {
+        display.setupAuto();
+        if (display.interval) {
+            autoElement.innerText = "Stop";
+        }
+        else {
+            autoElement.innerText = "Auto";
+        }
+    });
+    var createButton = document.getElementById("create");
+    jquery(createButton).click(utils_1.createBoard.bind(_this, display));
+    var stepElement = document.getElementById("step");
+    jquery(stepElement).click(display.step.bind(display));
 };
 
 
@@ -61151,9 +61154,21 @@ var AbstractDisplay = /** @class */ (function () {
     AbstractDisplay.prototype.add = function (group) {
         var element = this.createElement(group);
         group.domElement = element;
+        group.knownData = [];
+        // tslint:disable-next-line:prefer-for-of
+        for (var i = 0; i < group.board.length; i++) {
+            group.knownData.push([]);
+        }
+        this.updateData(group);
         this.displayEl.appendChild(element);
         this.draw(group, false);
         this.groups.push(group);
+    };
+    /**
+     * Update data if that's something we are doing.
+     */
+    AbstractDisplay.prototype.updateData = function (group) {
+        return;
     };
     /**
      * Get the template for the element
@@ -61263,6 +61278,7 @@ var AbstractDisplay = /** @class */ (function () {
             var sort = group.sort;
             if (!sort.done) {
                 group.sort.next();
+                _this.updateData(group);
                 _this.draw(group, false);
                 _this.draw(group, true);
                 done = false;
@@ -61405,7 +61421,7 @@ dependencies["./controls/sort.njk"] = __webpack_require__( 67 );
 dependencies["./controls/count.njk"] = __webpack_require__( 117 );
 dependencies["./controls/order.njk"] = __webpack_require__( 68 );
 dependencies["./controls/values.njk"] = __webpack_require__( 118 );
-dependencies["./controls/profileButtons.njk"] = __webpack_require__( 557 );
+dependencies["./controls/runButtons.njk"] = __webpack_require__( 210 );
 
 
 
@@ -61523,7 +61539,7 @@ output += "\n    </div>\n    ";
 var tasks = [];
 tasks.push(
 function(callback) {
-env.getTemplate("./controls/profileButtons.njk", false, "templates/pipe.njk", null, function(t_23,t_21) {
+env.getTemplate("./controls/runButtons.njk", false, "templates/pipe.njk", null, function(t_23,t_21) {
 if(t_23) { cb(t_23); return; }
 callback(null,t_21);});
 });
@@ -61539,7 +61555,7 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n  </div>\n  <div id=\"pipe\">\n  </div>\n\n  <style>\n  </style>\n</article>\n";
+output += "\n  </div>\n</article>\n  <div id=\"pipe\">\n  </div>\n\n  <style>\n    path {\n      fill: none;\n      stroke-linecap: round;\n      stroke-linejoin: round;\n      stroke-opacity: 0.6;\n    }\n  </style>\n\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
@@ -61578,12 +61594,89 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var d3 = __webpack_require__(71);
 var abstract_1 = __webpack_require__(572);
 var PipeDisplay = /** @class */ (function (_super) {
     __extends(PipeDisplay, _super);
-    function PipeDisplay() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function PipeDisplay(displayEl) {
+        var _this = _super.call(this, displayEl) || this;
+        _this.wrapperClass = "pipe-wrapper";
+        _this.margin = 60;
+        _this.boardWidth = Math.min(document.body.clientWidth * 0.9 - _this.margin * 4, 1000);
+        _this.boardHeight = 100;
+        return _this;
     }
+    /**
+     * @override
+     */
+    PipeDisplay.prototype.getTemplate = function () {
+        return __webpack_require__(577);
+    };
+    /**
+     * @override
+     */
+    PipeDisplay.prototype.draw = function (group, shadowCall) {
+        if (shadowCall) {
+            return;
+        }
+        var board = group.board;
+        var sort = group.sort;
+        var count = board.length;
+        var width = this.boardWidth;
+        var eachWidth = width / count;
+        var firstLocation = eachWidth / 2;
+        var valueMin = board.min();
+        var valueMax = board.max();
+        var heightSpread = valueMax - valueMin;
+        var firstLine = group.knownData[0];
+        var pieceHeight = 15;
+        var paths = [];
+        group.knownData.forEach(function (line) {
+            var path = "";
+            line.forEach(function (location, index) {
+                if (index === 0) {
+                    path += "M";
+                }
+                else {
+                    path += " L";
+                }
+                path += firstLocation + location * eachWidth + "," + (index * pieceHeight * 3 + pieceHeight);
+                path += " L" + (firstLocation + location * eachWidth) + "," + (index * pieceHeight * 3 + pieceHeight * 2);
+            });
+            paths.push(path);
+        });
+        var points = this.getPointsInOrder(group);
+        d3.select("#" + group.name).select("svg")
+            .attr("height", pieceHeight * 3 * group.knownData[0].length + 40);
+        d3.select("#" + group.name).select("svg").select("g").selectAll("path")
+            .data(paths)
+            .enter().append("path")
+            .attr("stroke-width", Math.min(Math.max(eachWidth + 4, 10), 30));
+        d3.select("#" + group.name).select("svg").select("g").selectAll("path")
+            .data(paths).attr("d", function (path) { return path; })
+            .attr("stroke", function (d, i) { return d3.interpolateRainbow((points[i].value - valueMin) / heightSpread); });
+        window.scrollTo(0, document.body.scrollHeight);
+    };
+    /**
+     * @override
+     * @param group
+     */
+    PipeDisplay.prototype.updateData = function (group) {
+        var points = this.getPointsInOrder(group);
+        var knownData = group.knownData;
+        points.forEach(function (point, index) {
+            knownData[index].push(point.index);
+        });
+    };
+    /**
+     * @override
+     */
+    PipeDisplay.prototype.resetGroup = function (group) {
+        group.knownData.forEach(function (line, index) {
+            group.knownData[index] = [];
+        });
+        _super.prototype.resetGroup.call(this, group);
+    };
     return PipeDisplay;
 }(abstract_1.AbstractDisplay));
 exports.PipeDisplay = PipeDisplay;
@@ -61625,6 +61718,107 @@ exports.createBoard = function (display) {
     index++;
 };
 
+
+/***/ }),
+/* 577 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var nunjucks = __webpack_require__(1);
+var env;
+if (!nunjucks.currentEnv){
+	env = nunjucks.currentEnv = new nunjucks.Environment([], { autoescape: true });
+} else {
+	env = nunjucks.currentEnv;
+}
+var dependencies = nunjucks.webpackDependencies || (nunjucks.webpackDependencies = {});
+dependencies["./boardData.njk"] = __webpack_require__( 113 );
+
+
+
+
+var shim = __webpack_require__(2);
+
+
+(function() {(nunjucks.nunjucksPrecompiled = nunjucks.nunjucksPrecompiled || {})["templates/board/pipe.njk"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = null;
+var colno = null;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<article>\n  <div style=\"position:relative;\" id=\"";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "name"), env.opts.autoescape);
+output += "\" class=\"pipe-wrapper\">\n    <h3>";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "title"), env.opts.autoescape);
+output += "</h3>\n    <div class=\"board-information\">\n      ";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("./boardData.njk", false, "templates/board/pipe.njk", null, function(t_3,t_1) {
+if(t_3) { cb(t_3); return; }
+callback(null,t_1);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_4,t_2) {
+if(t_4) { cb(t_4); return; }
+callback(null,t_2);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
+output += "\n    </div>\n    ";
+if(runtime.contextOrFrameLookup(context, frame, "verbosity") > 3) {
+output += "\n      <button class=\"remove\" ";
+if(runtime.contextOrFrameLookup(context, frame, "disabled")) {
+output += "disabled";
+;
+}
+output += ">X</button>\n    ";
+;
+}
+output += "\n    ";
+if(runtime.contextOrFrameLookup(context, frame, "verbosity") > 1) {
+output += "\n      <button class=\"reset\" ";
+if(runtime.contextOrFrameLookup(context, frame, "disabled")) {
+output += "disabled";
+;
+}
+output += ">Reset</button>\n    ";
+;
+}
+output += "\n    <svg class=\"pipe\" height=\"";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "height") + 20 * 2, env.opts.autoescape);
+output += "\" width=\"";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "width") + runtime.contextOrFrameLookup(context, frame, "margin") * 2, env.opts.autoescape);
+output += "\">\n      <g transform=\"translate(";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "margin"), env.opts.autoescape);
+output += ", ";
+output += runtime.suppressValue(20, env.opts.autoescape);
+output += ")\" class=\"board\">\n      </g>\n    </svg>\n  </div>\n</article>\n";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+});
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+
+module.exports = shim(nunjucks, env, nunjucks.nunjucksPrecompiled["templates/board/pipe.njk"] , dependencies)
 
 /***/ })
 /******/ ]);

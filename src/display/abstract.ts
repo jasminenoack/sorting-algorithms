@@ -9,6 +9,7 @@ export interface ITestGroup {
   board: Board;
   sort: BaseSort;
   domElement?: Node;
+  knownData?: any;
 }
 
 export abstract class AbstractDisplay {
@@ -37,9 +38,22 @@ export abstract class AbstractDisplay {
   public add(group: ITestGroup) {
     const element = this.createElement(group);
     group.domElement = element;
+    group.knownData = [];
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < group.board.length; i++) {
+      group.knownData.push([]);
+    }
+    this.updateData(group);
     this.displayEl.appendChild(element);
     this.draw(group, false);
     this.groups.push(group);
+  }
+
+  /**
+   * Update data if that's something we are doing.
+   */
+  public updateData(group: ITestGroup) {
+    return;
   }
 
   /**
@@ -158,6 +172,7 @@ export abstract class AbstractDisplay {
       const sort = group.sort;
       if (!sort.done) {
         group.sort.next();
+        this.updateData(group);
         this.draw(group, false);
         this.draw(group, true);
         done = false;

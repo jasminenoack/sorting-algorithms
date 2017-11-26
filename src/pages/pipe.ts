@@ -5,6 +5,7 @@ import * as shuffles from "../shuffles";
 import * as sizes from "../sizes";
 import * as sorts from "../sorts/sorts";
 import * as valueTypes from "../valueTypes";
+import { createBoard } from "./utils";
 
 export const setUpPipe = (
   location: string,
@@ -34,22 +35,19 @@ export const pipeCallback = () => {
   const pipeElement = document.getElementById("pipe");
   const display = new PipeDisplay(pipeElement);
 
-  // // controls
-  // const createButton = document.getElementById("create");
+  const autoElement = document.getElementById("auto");
+  jquery(autoElement).click(() => {
+    display.setupAuto();
+    if (display.interval) {
+      autoElement.innerText = "Stop";
+    } else {
+      autoElement.innerText = "Auto";
+    }
+  });
 
-  // // on create
-  // jquery(createButton).click(createBoard.bind(this, display));
+  const createButton = document.getElementById("create");
+  jquery(createButton).click(createBoard.bind(this, display));
 
-  // const autoElement = document.getElementById("auto");
-  // jquery(autoElement).click(() => {
-  //   display.setupAuto();
-  //   if (display.interval) {
-  //     autoElement.innerText = "Stop";
-  //   } else {
-  //     autoElement.innerText = "Auto";
-  //   }
-  // });
-
-  // const stepElement = document.getElementById("step");
-  // jquery(stepElement).click(display.step.bind(display));
+  const stepElement = document.getElementById("step");
+  jquery(stepElement).click(display.step.bind(display));
 };

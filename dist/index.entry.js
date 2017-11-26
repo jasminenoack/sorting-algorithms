@@ -43514,7 +43514,7 @@ exports.tools = {
     "Single Scatter Sort Animation": "#single",
     "Scatter Animations": "#scatter",
     "Profiling": "#profile",
-    "Pipes": "#pipes",
+    "Pipes": "#pipe",
     "Stick Animation": "#stick",
 };
 exports.learn = {

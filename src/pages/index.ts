@@ -27,7 +27,7 @@ export const tools = {
 
   "Profiling": "#profile",
 
-  "Pipes": "#pipes",
+  "Pipes": "#pipe",
 
   "Stick Animation": "#stick",
 };

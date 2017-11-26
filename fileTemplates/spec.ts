@@ -27,7 +27,7 @@ xdescribe("sort test base", () => {
 
   xit("has a reset function", () => {
     const rounds = 0;
-    while (!sort.done && rounds < 10000) {
+    while (!sort.done && rounds < 100) {
       sort.next();
     }
     expect(sort.done).toEqual(true);

@@ -2,8 +2,8 @@ import { flatten, range, take, takeRight } from "lodash";
 import { BaseSort } from "../baseSort";
 
 export class Merge extends BaseSort {
-  public static title: string = "Merge Sort";
-  private sections: number[][][];
+  public static title: string = "Merge Sort(In Place)";
+  protected sections: number[][][];
 
   public setUp() {
     this.sections = [];
@@ -23,7 +23,8 @@ export class Merge extends BaseSort {
    * Remove that element from the section.
    *
    * If the first element in the first section is larger
-   * ---
+   * move it to the beginning of the 2 sections and push the first section
+   * over by one.
    *
    * If there are no elements in either of the sections:
    * Then the current set is complete.
@@ -78,7 +79,7 @@ export class Merge extends BaseSort {
     return currentNodes;
   }
 
-  private setupSections(sections: number[][][]) {
+  protected setupSections(sections: number[][][]) {
     const queue = [range(0, this.board.length)];
     while (queue.length) {
       const current = queue.shift();

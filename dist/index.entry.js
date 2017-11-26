@@ -61143,7 +61143,8 @@ var Merge = /** @class */ (function (_super) {
      * Remove that element from the section.
      *
      * If the first element in the first section is larger
-     * ---
+     * move it to the beginning of the 2 sections and push the first section
+     * over by one.
      *
      * If there are no elements in either of the sections:
      * Then the current set is complete.
@@ -61208,7 +61209,7 @@ var Merge = /** @class */ (function (_super) {
             sections.push([first, second]);
         }
     };
-    Merge.title = "Merge Sort";
+    Merge.title = "Merge Sort(In Place)";
     return Merge;
 }(baseSort_1.BaseSort));
 exports.Merge = Merge;

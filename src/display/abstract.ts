@@ -59,8 +59,8 @@ export abstract class AbstractDisplay {
   /**
    * Get the template for the element
    */
-  public getTemplate() {
-    return require("");
+  public getTemplate(): any {
+    return;
   }
 
   /**
@@ -72,19 +72,25 @@ export abstract class AbstractDisplay {
     const board = group.board;
     const sort = group.sort;
     const tpl = this.getTemplate();
-    const html = tpl.render({
-      board,
-      disabled: !!this.interval,
-      height: this.boardHeight,
-      margin: this.margin,
-      name: group.name,
-      shuffleTitle: board.shuffle.title,
-      sort,
-      sortName: (sort.constructor as any).title,
-      title: (group.sort.constructor as any).title,
-      verbosity: board.verbosity,
-      width: this.boardWidth,
-    });
+    let html;
+    if (tpl) {
+      html = tpl.render({
+        board,
+        disabled: !!this.interval,
+        height: this.boardHeight,
+        margin: this.margin,
+        name: group.name,
+        shuffleTitle: board.shuffle.title,
+        sort,
+        sortName: (sort.constructor as any).title,
+        title: (group.sort.constructor as any).title,
+        verbosity: board.verbosity,
+        width: this.boardWidth,
+      });
+    } else {
+      html = "<div>Need Template</div>";
+    }
+
     const div = document.createElement("div");
     div.innerHTML = html;
     return div.firstChild as HTMLElement;

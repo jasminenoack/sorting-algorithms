@@ -152,9 +152,9 @@ button {
     font-family: inherit;
     font-size: inherit;
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 5px 10px;
     display: inline-block;
-    margin: 10px 20px;
+    margin: 5px 5px;
     outline: none;
     position: relative;
     box-sizing: border-box;
@@ -211,6 +211,10 @@ h1 {
     padding: 5px;
 }
 
+.controls div:first-child {
+    float: left;
+}
+
 content div.two .wrapper {
     width: 44%;
     margin: 3%;
@@ -245,4 +249,8 @@ content div.three .wrapper {
 .done {
   box-sizing: border-box;
   border: 5px solid black;
+}
+
+svg {
+  margin: auto;
 }

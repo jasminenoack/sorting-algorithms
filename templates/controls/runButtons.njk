@@ -1,5 +1,19 @@
-<div>
-  <button id="create">Create</button>
-  <button id="step">Step</button>
-  <button id="auto">Auto</button>
+<div class="button-wrapper">
+  <div class="run-buttons">
+    <button id="create">Create</button>
+    <button id="step">Step</button>
+    <button id="auto">Auto</button>
+  </div>
 </div>
+
+<style>
+  .run-buttons {
+    position: fixed;
+    z-index: 100000;
+  }
+  .button-wrapper {
+    float: right;
+    height: 36px;
+    width: 196px;
+  }
+</style>

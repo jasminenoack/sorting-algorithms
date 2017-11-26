@@ -8,7 +8,7 @@ export class PipeDisplay extends AbstractDisplay {
   ) {
     super(displayEl);
     this.margin = 60;
-    this.boardWidth = Math.min(document.body.clientWidth * 0.9 - this.margin * 4, 1000);
+    this.boardWidth = Math.min(document.body.clientWidth * 0.9 - this.margin * 4, 800);
     this.boardHeight = 100;
 
   }
@@ -39,7 +39,7 @@ export class PipeDisplay extends AbstractDisplay {
 
     const firstLine = group.knownData[0];
 
-    const pieceHeight = 15;
+    const pieceHeight = 5;
 
     const paths: string[] = [];
     group.knownData.forEach((line: number[]) => {
@@ -62,9 +62,9 @@ export class PipeDisplay extends AbstractDisplay {
     d3.select(`#${group.name}`).select("svg").select("g").selectAll("path")
       .data(paths)
       .enter().append("path")
-      .attr("stroke-width", Math.min(Math.max(eachWidth + 4, 10), 30));
+      .attr("stroke-width", Math.min(Math.max(eachWidth + 4, pieceHeight), pieceHeight * 3));
     d3.select(`#${group.name}`).select("svg").select("g").selectAll("path")
-      .data(paths).attr("d", (path) => path)
+      .data(paths).transition(this.getTransition()).attr("d", (path) => path)
       .attr("stroke", (d, i) => d3.interpolateRainbow((points[i].value - valueMin) / heightSpread));
     window.scrollTo(0, document.body.scrollHeight);
   }

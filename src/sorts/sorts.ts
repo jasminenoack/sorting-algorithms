@@ -50,6 +50,8 @@ import { Insertion } from "./insertion/base";
 
 // merge
 import { Merge } from "./merge/base";
+import { MergeOutOfPlace } from "./merge/outPlace";
+import { MergeSmallest } from "./merge/smallest";
 
 // odd even
 import { OddEven } from "./oddEven/base";
@@ -117,6 +119,8 @@ export {
   Insertion,
   // merge
   Merge,
+  MergeOutOfPlace,
+  MergeSmallest,
   // odd even
   OddEven,
   OddEvenConcurrent,

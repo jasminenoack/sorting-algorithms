@@ -34121,6 +34121,10 @@ exports.Insertion = base_8.Insertion;
 // merge
 var base_9 = __webpack_require__(568);
 exports.Merge = base_9.Merge;
+var outPlace_1 = __webpack_require__(569);
+exports.MergeOutOfPlace = outPlace_1.MergeOutOfPlace;
+var smallest_1 = __webpack_require__(570);
+exports.MergeSmallest = smallest_1.MergeSmallest;
 // odd even
 var base_10 = __webpack_require__(114);
 exports.OddEven = base_10.OddEven;
@@ -34605,7 +34609,7 @@ var BoardDisplay = /** @class */ (function () {
         this.displayEl = displayEl;
         this.boardHeight = boardHeight;
         this.boardWidth = boardWidth;
-        this.delay = 100;
+        this.delay = 250;
         this.groups = [];
         this.setupReset();
         this.setupRemove();
@@ -61213,6 +61217,138 @@ var Merge = /** @class */ (function (_super) {
     return Merge;
 }(baseSort_1.BaseSort));
 exports.Merge = Merge;
+
+
+/***/ }),
+/* 569 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(13);
+var sorts_1 = __webpack_require__(64);
+var MergeOutOfPlace = /** @class */ (function (_super) {
+    __extends(MergeOutOfPlace, _super);
+    function MergeOutOfPlace() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.mergedList = [];
+        return _this;
+    }
+    /**
+     * This will do an out of place merge
+     */
+    MergeOutOfPlace.prototype.takeStepInMerge = function () {
+        var _this = this;
+        var _a = this.sections[this.sections.length - 1], first = _a[0], second = _a[1];
+        if (this.mergedListStart === undefined) {
+            this.mergedListStart = first[0];
+        }
+        var values = this.board.values();
+        var firstIndex = first[0];
+        var secondIndex = second[0];
+        var firstValue = values[firstIndex];
+        var secondValue = values[secondIndex];
+        this.comparisons++;
+        if (firstValue > secondValue) {
+            this.mergedList.push(secondValue);
+            second.shift();
+        }
+        else {
+            this.mergedList.push(firstValue);
+            first.shift();
+        }
+        if (first.length === 0 || second.length === 0) {
+            var toAdd = lodash_1.flatten([first, second]);
+            toAdd.forEach(function (currentIndex) {
+                _this.mergedList.push(values[currentIndex]);
+            });
+            this.sections.pop();
+            var index = this.mergedListStart;
+            while (this.mergedList.length) {
+                var currentValues = this.board.values();
+                var currentValue = currentValues[index];
+                var mergeValue = this.mergedList.shift();
+                if (currentValue !== mergeValue) {
+                    // find number to swap in advance
+                    var swapIndex = currentValues.indexOf(mergeValue, index);
+                    this.swap([index, swapIndex]);
+                }
+                index++;
+            }
+            delete this.mergedListStart;
+        }
+        if (this.sections.length === 0) {
+            this.done = true;
+        }
+    };
+    MergeOutOfPlace.title = "Merge Sort(Out Of Place)";
+    return MergeOutOfPlace;
+}(sorts_1.Merge));
+exports.MergeOutOfPlace = MergeOutOfPlace;
+
+
+/***/ }),
+/* 570 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var d3_1 = __webpack_require__(71);
+var lodash_1 = __webpack_require__(13);
+var base_1 = __webpack_require__(568);
+var MergeSmallest = /** @class */ (function (_super) {
+    __extends(MergeSmallest, _super);
+    function MergeSmallest() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MergeSmallest.prototype.setupSections = function (sections) {
+        var _this = this;
+        var index = 0;
+        var indexes = d3_1.range(0, this.board.length);
+        var half = Math.floor(indexes.length / 2);
+        var first = lodash_1.take(indexes, half);
+        var second = lodash_1.takeRight(indexes, indexes.length - half);
+        this.sections.push([first, second]);
+        while (index < this.sections.length) {
+            var section = this.sections[index];
+            section.forEach(function (item) {
+                if (item.length === 1) {
+                    return;
+                }
+                half = Math.floor(item.length / 2);
+                first = lodash_1.take(item, half);
+                second = lodash_1.takeRight(item, item.length - half);
+                _this.sections.push([first, second]);
+            });
+            index++;
+        }
+    };
+    MergeSmallest.title = "Merge Sort(Smallest First)";
+    return MergeSmallest;
+}(base_1.Merge));
+exports.MergeSmallest = MergeSmallest;
 
 
 /***/ })

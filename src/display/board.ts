@@ -13,7 +13,7 @@ export interface ITestGroup {
 
 export class BoardDisplay {
   public groups: ITestGroup[];
-  public delay: number = 100;
+  public delay: number = 250;
   public interval: any;
 
   constructor(

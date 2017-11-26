@@ -12,9 +12,6 @@ interface IGraphData {
 }
 
 export class GraphDisplay extends AbstractDisplay {
-  public groups: ITestGroup[];
-  public delay: number = 250;
-  public interval: any;
   public xAxisCall: any;
   public xScale: any;
   public yAxisCall: any;
@@ -33,6 +30,13 @@ export class GraphDisplay extends AbstractDisplay {
 
   /**
    * @override
+   */
+  public getTemplate() {
+    return require("../../templates/board/list.njk");
+  }
+
+  /**
+   * @override
    *
    * nothing to draw until we start profiling.
    * @param group
@@ -40,26 +44,6 @@ export class GraphDisplay extends AbstractDisplay {
    */
   public draw(group: ITestGroup, shadow: boolean) {
     return;
-  }
-
-  /**
-   * @override
-   * @param group
-   */
-  public createElement(group: ITestGroup): HTMLElement {
-    const tpl = require("../../templates/board/list.njk");
-    const sort = group.sort;
-    const board = group.board;
-    const html = tpl.render({
-      name: group.name,
-      shuffleName: board.shuffle.title,
-      size: board.size.label,
-      sortName: (sort.constructor as any).title,
-      valueType: board.valueType.title,
-    });
-    const div = document.createElement("div");
-    div.innerHTML = html;
-    return div.firstChild as HTMLElement;
   }
 
   /**

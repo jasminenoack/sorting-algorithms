@@ -67,7 +67,7 @@ export const stickCallback = () => {
   jquery("#step").click(display.step.bind(display));
   const auto = jquery("#auto");
   auto.click(() => {
-    display.startAuto();
+    display.setupAuto();
     if (display.interval) {
       auto.text("Stop");
     } else {

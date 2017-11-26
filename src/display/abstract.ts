@@ -16,6 +16,10 @@ export abstract class AbstractDisplay {
   public delay: number = 250;
   public interval: any;
   public wrapperClass: string = "wrapper";
+  public boardHeight: number;
+  public boardWidth: number;
+  public margin: number;
+  public elementTemplate: string;
 
   constructor(
     public displayEl: HTMLElement,
@@ -23,6 +27,7 @@ export abstract class AbstractDisplay {
     this.groups = [];
     this.setupReset();
     this.setupRemove();
+    this.margin = 0;
   }
 
   /**
@@ -38,14 +43,37 @@ export abstract class AbstractDisplay {
   }
 
   /**
+   * Get the template for the element
+   */
+  public getTemplate() {
+    return require("");
+  }
+
+  /**
    * Create the element for each group.
    *
    * @param group
    */
   public createElement(group: ITestGroup): HTMLElement {
+    const board = group.board;
+    const sort = group.sort;
+    const tpl = this.getTemplate();
+    const html = tpl.render({
+      board,
+      disabled: !!this.interval,
+      height: this.boardHeight,
+      margin: this.margin,
+      name: group.name,
+      shuffleTitle: board.shuffle.title,
+      sort,
+      sortName: (sort.constructor as any).title,
+      title: (group.sort.constructor as any).title,
+      verbosity: board.verbosity,
+      width: this.boardWidth,
+    });
     const div = document.createElement("div");
-    div.innerText = "NOT IMPLEMENTED";
-    return div;
+    div.innerHTML = html;
+    return div.firstChild as HTMLElement;
   }
 
   /**
@@ -179,6 +207,12 @@ export abstract class AbstractDisplay {
     jquery("#comps").prop("disabled", value);
     jquery("#create").prop("disabled", value);
     jquery("#step").prop("disabled", value);
+
+    if (value) {
+      jquery("#auto").text("Stop");
+    } else {
+      jquery("#auto").text("Auto");
+    }
   }
 
   /**

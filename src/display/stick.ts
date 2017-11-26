@@ -2,65 +2,45 @@ import * as d3 from "d3";
 import * as jquery from "jquery";
 import { filter } from "lodash";
 import { Point } from "./../point";
-import { ITestGroup } from "./abstract";
+import { AbstractDisplay, ITestGroup } from "./abstract";
 
-export class StickDisplay {
-  public groups: ITestGroup[];
+export class StickDisplay extends AbstractDisplay {
   public delay: number = 250;
   public interval: any;
   public boardWidth: number;
   public boardHeight: number = 60;
-  public lineHeight: number = 60;
+  public lineHeight: number;
   public minAngle: number = -80;
   public maxAngle: number = 80;
+  public margin: number;
+  public wrapperClass: string = "stick-wrapper";
 
   constructor(
-    public domElement: HTMLElement,
+    displayEl: HTMLElement,
   ) {
-    this.groups = [];
+    super(displayEl);
+    this.lineHeight = 60;
+    this.margin = this.lineHeight + 10;
     this.boardWidth = Math.min(document.body.clientWidth * 0.9 - this.lineHeight * 4, 1000);
-    this.setupReset();
-    this.setupRemove();
   }
 
-  public add(group: ITestGroup) {
-    this.groups.push(group);
-    group.domElement = this.createElement(group);
-    this.domElement.appendChild(group.domElement);
-    this.drawBoard(group);
+  /**
+   * @override
+   */
+  public getTemplate() {
+    return require("../../templates/board/sticks.njk");
   }
 
-  public createElement(group: ITestGroup) {
-    const board = group.board;
-    const sort = group.sort;
-    const tpl = require("../../templates/board/sticks.njk");
-    const html = tpl.render({
-      board,
-      disabled: !!this.interval,
-      height: this.boardHeight,
-      margin: this.lineHeight + 10,
-      name: group.name,
-      shuffleTitle: board.shuffle.title,
-      sort,
-      title: (group.sort.constructor as any).title,
-      verbosity: board.verbosity,
-      width: this.boardWidth,
-    });
-    const div = document.createElement("div");
-    div.innerHTML = html;
-    return div.firstChild;
-  }
-
-  public getAngle(value: number, valueSpread: number, valueMin: number) {
-    const angleSpread = this.maxAngle - this.minAngle;
-
-    const valueTranslated = value - valueMin;
-    const percentOfValue = valueTranslated / valueSpread;
-    const angle = this.minAngle + angleSpread * percentOfValue;
-    return this.toRadians(angle);
-  }
-
-  public drawBoard(group: ITestGroup) {
+  /**
+   * @override
+   *
+   * @param group
+   * @param shadowCall
+   */
+  public draw(group: ITestGroup, shadowCall: boolean) {
+    if (shadowCall) {
+      return;
+    }
     // find the variables
     const board = group.board;
     const sort = group.sort;
@@ -97,6 +77,7 @@ export class StickDisplay {
     const topX = 0;
     const topY = this.boardHeight - this.lineHeight;
     const t = this.getTransition();
+
     d3.select(`#${group.name}`).select(".board").selectAll("line.known").data(points)
       .transition(t)
       // sets the bottom location
@@ -140,105 +121,25 @@ export class StickDisplay {
       });
   }
 
-  public getTransition() {
-    const t = d3.transition()
-      .duration(this.delay);
-    return t;
+  /**
+   * Get the angle for the value.
+   * @param value
+   * @param valueSpread
+   * @param valueMin
+   */
+  private getAngle(value: number, valueSpread: number, valueMin: number) {
+    const angleSpread = this.maxAngle - this.minAngle;
+
+    const valueTranslated = value - valueMin;
+    const percentOfValue = valueTranslated / valueSpread;
+    const angle = this.minAngle + angleSpread * percentOfValue;
+    return this.toRadians(angle);
   }
 
-  public remove(name: string) {
-    const currentGroup = filter(this.groups, (group) => group.name === name)[0];
-    this.domElement.removeChild(currentGroup.domElement);
-    this.groups = filter(this.groups, (group) => group.name !== name);
-  }
-
-  public toRadians(angle: number) {
+  /**
+   * Convert Degrees to radians
+   */
+  private toRadians(angle: number) {
     return angle * (Math.PI / 180);
-  }
-
-  public step() {
-    let done = true;
-    this.groups.forEach((group) => {
-      const sort = group.sort;
-      if (!sort.done) {
-        group.sort.next();
-        this.drawBoard(group);
-        done = false;
-      }
-      this.replaceData(group);
-    });
-
-    if (done) {
-      clearInterval(this.interval);
-      this.interval = null;
-      setTimeout(() => {
-        this.resetAll();
-        this.startAuto();
-      }, this.delay * 10);
-    }
-    return done;
-  }
-
-  public replaceData(group: ITestGroup) {
-    const tpl = require("../../templates/board/boardData.njk");
-    const board = group.board;
-    const sort = group.sort;
-    const numPoints = board.points.length;
-    const html = tpl.render({
-      board,
-      shuffleTitle: board.shuffle.title,
-      sort,
-      verbosity: board.verbosity,
-    });
-    jquery(group.domElement).find(".board-information").html(html);
-  }
-
-  public resetAll() {
-    this.groups.forEach((group) => {
-      group.sort.reset();
-      this.drawBoard(group);
-    });
-  }
-
-  public startAuto() {
-    if (this.interval) {
-      clearInterval(this.interval);
-      this.interval = null;
-      jquery(".reset").prop("disabled", false);
-      jquery(".remove").prop("disabled", false);
-    } else {
-      const done = this.step();
-      this.interval = setInterval(this.step.bind(this), this.delay);
-      jquery(".reset").prop("disabled", true);
-      jquery(".remove").prop("disabled", true);
-    }
-  }
-
-  public setupReset() {
-    jquery(this.domElement).on("click", ".reset", this.reset.bind(this));
-  }
-
-  public resetGroup(group: ITestGroup) {
-    group.sort.reset();
-    this.drawBoard(group);
-  }
-
-  public reset(event: Event) {
-    const currentGroup = this.findGroupFromEvent(event);
-    this.resetGroup(currentGroup);
-  }
-
-  public findGroupFromEvent(event: Event) {
-    const wrapper = jquery(event.currentTarget).closest(".stick-wrapper")[0];
-    return filter(this.groups, (group) => group.name === wrapper.id)[0];
-  }
-
-  public setupRemove() {
-    jquery(this.domElement).on("click", ".remove", this.handleRemove.bind(this));
-  }
-
-  public handleRemove(event: Event) {
-    const currentGroup = this.findGroupFromEvent(event);
-    this.remove(currentGroup.name);
   }
 }

@@ -17,25 +17,8 @@ export class BoardDisplay extends AbstractDisplay {
   /**
    * @override
    */
-  public createElement(group: ITestGroup): HTMLElement {
-    const tpl = require("../../templates/board/board.njk");
-    const board = group.board;
-    const sort = group.sort;
-    const numPoints = board.points.length;
-    const html = tpl.render({
-      board,
-      disabled: !!this.interval,
-      height: this.boardHeight,
-      name: group.name,
-      shuffleTitle: board.shuffle.title,
-      sort,
-      title: (group.sort.constructor as any).title,
-      verbosity: board.verbosity,
-      width: this.boardWidth,
-    });
-    const div = document.createElement("div");
-    div.innerHTML = html;
-    return div.firstChild as HTMLElement;
+  public getTemplate() {
+    return require("../../templates/board/board.njk");
   }
 
   /**

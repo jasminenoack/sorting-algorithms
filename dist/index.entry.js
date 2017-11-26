@@ -34625,25 +34625,8 @@ var BoardDisplay = /** @class */ (function (_super) {
     /**
      * @override
      */
-    BoardDisplay.prototype.createElement = function (group) {
-        var tpl = __webpack_require__(517);
-        var board = group.board;
-        var sort = group.sort;
-        var numPoints = board.points.length;
-        var html = tpl.render({
-            board: board,
-            disabled: !!this.interval,
-            height: this.boardHeight,
-            name: group.name,
-            shuffleTitle: board.shuffle.title,
-            sort: sort,
-            title: group.sort.constructor.title,
-            verbosity: board.verbosity,
-            width: this.boardWidth,
-        });
-        var div = document.createElement("div");
-        div.innerHTML = html;
-        return div.firstChild;
+    BoardDisplay.prototype.getTemplate = function () {
+        return __webpack_require__(517);
     };
     /**
      * @override
@@ -58062,12 +58045,17 @@ var GraphDisplay = /** @class */ (function (_super) {
         _this.graphEl = graphEl;
         _this.displayEl = displayEl;
         _this.historyEl = historyEl;
-        _this.delay = 250;
         _this.numberSteps = 5;
         _this.wrapperClass = "item";
         _this.groups = [];
         return _this;
     }
+    /**
+     * @override
+     */
+    GraphDisplay.prototype.getTemplate = function () {
+        return __webpack_require__(526);
+    };
     /**
      * @override
      *
@@ -58077,25 +58065,6 @@ var GraphDisplay = /** @class */ (function (_super) {
      */
     GraphDisplay.prototype.draw = function (group, shadow) {
         return;
-    };
-    /**
-     * @override
-     * @param group
-     */
-    GraphDisplay.prototype.createElement = function (group) {
-        var tpl = __webpack_require__(526);
-        var sort = group.sort;
-        var board = group.board;
-        var html = tpl.render({
-            name: group.name,
-            shuffleName: board.shuffle.title,
-            size: board.size.label,
-            sortName: sort.constructor.title,
-            valueType: board.valueType.title,
-        });
-        var div = document.createElement("div");
-        div.innerHTML = html;
-        return div.firstChild;
     };
     /**
      * @override
@@ -58337,11 +58306,11 @@ output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "na
 output += "\" class=\"item\">\n  <div>\n    <p class=\"list-wrapper\">";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "sortName"), env.opts.autoescape);
 output += ".\n      <b>Order Type</b>: ";
-output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "shuffleName"), env.opts.autoescape);
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "shuffleTitle"), env.opts.autoescape);
 output += ".\n      <b>Value Type</b>: ";
-output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "valueType"), env.opts.autoescape);
+output += runtime.suppressValue(runtime.memberLookup((runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "board")),"valueType")),"title"), env.opts.autoescape);
 output += ".\n      <b>Point Count</b>: ";
-output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "size"), env.opts.autoescape);
+output += runtime.suppressValue(runtime.memberLookup((runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "board")),"size")),"label"), env.opts.autoescape);
 output += ".\n      <b class=\"swaps\">Swaps.</b>\n      <b class=\"comps\">Comps.</b>\n      <span class=\"remove\">\n        <u>Remove</u>\n      </span>\n    </p>\n  </div>\n</span>\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
@@ -60336,7 +60305,7 @@ exports.stickCallback = function () {
     jquery("#step").click(display.step.bind(display));
     var auto = jquery("#auto");
     auto.click(function () {
-        display.startAuto();
+        display.setupAuto();
         if (display.interval) {
             auto.text("Stop");
         }
@@ -60353,58 +60322,50 @@ exports.stickCallback = function () {
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var d3 = __webpack_require__(71);
-var jquery = __webpack_require__(29);
-var lodash_1 = __webpack_require__(13);
-var StickDisplay = /** @class */ (function () {
-    function StickDisplay(domElement) {
-        this.domElement = domElement;
-        this.delay = 250;
-        this.boardHeight = 60;
-        this.lineHeight = 60;
-        this.minAngle = -80;
-        this.maxAngle = 80;
-        this.groups = [];
-        this.boardWidth = Math.min(document.body.clientWidth * 0.9 - this.lineHeight * 4, 1000);
-        this.setupReset();
-        this.setupRemove();
+var abstract_1 = __webpack_require__(572);
+var StickDisplay = /** @class */ (function (_super) {
+    __extends(StickDisplay, _super);
+    function StickDisplay(displayEl) {
+        var _this = _super.call(this, displayEl) || this;
+        _this.delay = 250;
+        _this.boardHeight = 60;
+        _this.minAngle = -80;
+        _this.maxAngle = 80;
+        _this.wrapperClass = "stick-wrapper";
+        _this.lineHeight = 60;
+        _this.margin = _this.lineHeight + 10;
+        _this.boardWidth = Math.min(document.body.clientWidth * 0.9 - _this.lineHeight * 4, 1000);
+        return _this;
     }
-    StickDisplay.prototype.add = function (group) {
-        this.groups.push(group);
-        group.domElement = this.createElement(group);
-        this.domElement.appendChild(group.domElement);
-        this.drawBoard(group);
+    /**
+     * @override
+     */
+    StickDisplay.prototype.getTemplate = function () {
+        return __webpack_require__(564);
     };
-    StickDisplay.prototype.createElement = function (group) {
-        var board = group.board;
-        var sort = group.sort;
-        var tpl = __webpack_require__(564);
-        var html = tpl.render({
-            board: board,
-            disabled: !!this.interval,
-            height: this.boardHeight,
-            margin: this.lineHeight + 10,
-            name: group.name,
-            shuffleTitle: board.shuffle.title,
-            sort: sort,
-            title: group.sort.constructor.title,
-            verbosity: board.verbosity,
-            width: this.boardWidth,
-        });
-        var div = document.createElement("div");
-        div.innerHTML = html;
-        return div.firstChild;
-    };
-    StickDisplay.prototype.getAngle = function (value, valueSpread, valueMin) {
-        var angleSpread = this.maxAngle - this.minAngle;
-        var valueTranslated = value - valueMin;
-        var percentOfValue = valueTranslated / valueSpread;
-        var angle = this.minAngle + angleSpread * percentOfValue;
-        return this.toRadians(angle);
-    };
-    StickDisplay.prototype.drawBoard = function (group) {
+    /**
+     * @override
+     *
+     * @param group
+     * @param shadowCall
+     */
+    StickDisplay.prototype.draw = function (group, shadowCall) {
         var _this = this;
+        if (shadowCall) {
+            return;
+        }
         // find the variables
         var board = group.board;
         var sort = group.sort;
@@ -60473,99 +60434,27 @@ var StickDisplay = /** @class */ (function () {
             return baseY - _this.lineHeight * angle;
         });
     };
-    StickDisplay.prototype.getTransition = function () {
-        var t = d3.transition()
-            .duration(this.delay);
-        return t;
+    /**
+     * Get the angle for the value.
+     * @param value
+     * @param valueSpread
+     * @param valueMin
+     */
+    StickDisplay.prototype.getAngle = function (value, valueSpread, valueMin) {
+        var angleSpread = this.maxAngle - this.minAngle;
+        var valueTranslated = value - valueMin;
+        var percentOfValue = valueTranslated / valueSpread;
+        var angle = this.minAngle + angleSpread * percentOfValue;
+        return this.toRadians(angle);
     };
-    StickDisplay.prototype.remove = function (name) {
-        var currentGroup = lodash_1.filter(this.groups, function (group) { return group.name === name; })[0];
-        this.domElement.removeChild(currentGroup.domElement);
-        this.groups = lodash_1.filter(this.groups, function (group) { return group.name !== name; });
-    };
+    /**
+     * Convert Degrees to radians
+     */
     StickDisplay.prototype.toRadians = function (angle) {
         return angle * (Math.PI / 180);
     };
-    StickDisplay.prototype.step = function () {
-        var _this = this;
-        var done = true;
-        this.groups.forEach(function (group) {
-            var sort = group.sort;
-            if (!sort.done) {
-                group.sort.next();
-                _this.drawBoard(group);
-                done = false;
-            }
-            _this.replaceData(group);
-        });
-        if (done) {
-            clearInterval(this.interval);
-            this.interval = null;
-            setTimeout(function () {
-                _this.resetAll();
-                _this.startAuto();
-            }, this.delay * 10);
-        }
-        return done;
-    };
-    StickDisplay.prototype.replaceData = function (group) {
-        var tpl = __webpack_require__(113);
-        var board = group.board;
-        var sort = group.sort;
-        var numPoints = board.points.length;
-        var html = tpl.render({
-            board: board,
-            shuffleTitle: board.shuffle.title,
-            sort: sort,
-            verbosity: board.verbosity,
-        });
-        jquery(group.domElement).find(".board-information").html(html);
-    };
-    StickDisplay.prototype.resetAll = function () {
-        var _this = this;
-        this.groups.forEach(function (group) {
-            group.sort.reset();
-            _this.drawBoard(group);
-        });
-    };
-    StickDisplay.prototype.startAuto = function () {
-        if (this.interval) {
-            clearInterval(this.interval);
-            this.interval = null;
-            jquery(".reset").prop("disabled", false);
-            jquery(".remove").prop("disabled", false);
-        }
-        else {
-            var done = this.step();
-            this.interval = setInterval(this.step.bind(this), this.delay);
-            jquery(".reset").prop("disabled", true);
-            jquery(".remove").prop("disabled", true);
-        }
-    };
-    StickDisplay.prototype.setupReset = function () {
-        jquery(this.domElement).on("click", ".reset", this.reset.bind(this));
-    };
-    StickDisplay.prototype.resetGroup = function (group) {
-        group.sort.reset();
-        this.drawBoard(group);
-    };
-    StickDisplay.prototype.reset = function (event) {
-        var currentGroup = this.findGroupFromEvent(event);
-        this.resetGroup(currentGroup);
-    };
-    StickDisplay.prototype.findGroupFromEvent = function (event) {
-        var wrapper = jquery(event.currentTarget).closest(".stick-wrapper")[0];
-        return lodash_1.filter(this.groups, function (group) { return group.name === wrapper.id; })[0];
-    };
-    StickDisplay.prototype.setupRemove = function () {
-        jquery(this.domElement).on("click", ".remove", this.handleRemove.bind(this));
-    };
-    StickDisplay.prototype.handleRemove = function (event) {
-        var currentGroup = this.findGroupFromEvent(event);
-        this.remove(currentGroup.name);
-    };
     return StickDisplay;
-}());
+}(abstract_1.AbstractDisplay));
 exports.StickDisplay = StickDisplay;
 
 
@@ -60821,7 +60710,7 @@ output += result;
 callback(null);
 });
 env.waterfall(tasks, function(){
-output += "\n  </div>\n</article>\n\n<div id=\"sticks\">\n</div>\n\n<style>\n  #content {\n    width: 90%;\n    max-width: none;\n  }\n  svg {\n    margin: 20px auto;\n  }\n  line {\n    stroke: black;\n    stroke-width: 3px;\n  }\n  line.active {\n    stroke: blue;\n  }\n  line.placed {\n    stroke: purple;\n  }\n  line.shadow {\n    stroke: gray;\n  }\n  .reset {\n    position: absolute;\n    right: 0;\n    z-index: 100;\n  }\n</style>\n\n";
+output += "\n  </div>\n</article>\n\n<div id=\"sticks\">\n</div>\n\n<style>\n  #content {\n    width: 90%;\n    max-width: none;\n  }\n  svg {\n    margin: 20px auto;\n  }\n  line {\n    stroke: black;\n    stroke-width: 3px;\n  }\n  line.placed {\n    stroke: purple;\n  }\n  line.shadow {\n    stroke: gray;\n  }\n  .reset {\n    position: absolute;\n    right: 0;\n    z-index: 100;\n  }\n  line.active {\n    stroke: blue;\n  }\n</style>\n\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
@@ -61306,6 +61195,7 @@ var AbstractDisplay = /** @class */ (function () {
         this.groups = [];
         this.setupReset();
         this.setupRemove();
+        this.margin = 0;
     }
     /**
      * Add a group to the element.
@@ -61319,14 +61209,36 @@ var AbstractDisplay = /** @class */ (function () {
         this.groups.push(group);
     };
     /**
+     * Get the template for the element
+     */
+    AbstractDisplay.prototype.getTemplate = function () {
+        return __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+    };
+    /**
      * Create the element for each group.
      *
      * @param group
      */
     AbstractDisplay.prototype.createElement = function (group) {
+        var board = group.board;
+        var sort = group.sort;
+        var tpl = this.getTemplate();
+        var html = tpl.render({
+            board: board,
+            disabled: !!this.interval,
+            height: this.boardHeight,
+            margin: this.margin,
+            name: group.name,
+            shuffleTitle: board.shuffle.title,
+            sort: sort,
+            sortName: sort.constructor.title,
+            title: group.sort.constructor.title,
+            verbosity: board.verbosity,
+            width: this.boardWidth,
+        });
         var div = document.createElement("div");
-        div.innerText = "NOT IMPLEMENTED";
-        return div;
+        div.innerHTML = html;
+        return div.firstChild;
     };
     /**
      * Draw the element for a specified group
@@ -61451,6 +61363,12 @@ var AbstractDisplay = /** @class */ (function () {
         jquery("#comps").prop("disabled", value);
         jquery("#create").prop("disabled", value);
         jquery("#step").prop("disabled", value);
+        if (value) {
+            jquery("#auto").text("Stop");
+        }
+        else {
+            jquery("#auto").text("Auto");
+        }
     };
     /**
      * Set up auto running.

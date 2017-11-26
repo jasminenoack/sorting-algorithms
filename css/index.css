@@ -241,3 +241,8 @@ content div.three .wrapper {
 .wrapper h1 {
     font-size: 14px;
 }
+
+.done {
+  box-sizing: border-box;
+  border: 5px solid black;
+}

@@ -58301,17 +58301,17 @@ var colno = null;
 var output = "";
 try {
 var parentTemplate = null;
-output += "<span id=\"";
+output += "<div id=\"";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "name"), env.opts.autoescape);
-output += "\" class=\"item\">\n  <div>\n    <p class=\"list-wrapper\">";
+output += "\" class=\"item\">\n  <p class=\"list-wrapper\">";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "sortName"), env.opts.autoescape);
-output += ".\n      <b>Order Type</b>: ";
+output += ".\n    <b>Order Type</b>: ";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "shuffleTitle"), env.opts.autoescape);
-output += ".\n      <b>Value Type</b>: ";
+output += ".\n    <b>Value Type</b>: ";
 output += runtime.suppressValue(runtime.memberLookup((runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "board")),"valueType")),"title"), env.opts.autoescape);
-output += ".\n      <b>Point Count</b>: ";
+output += ".\n    <b>Point Count</b>: ";
 output += runtime.suppressValue(runtime.memberLookup((runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "board")),"size")),"label"), env.opts.autoescape);
-output += ".\n      <b class=\"swaps\">Swaps.</b>\n      <b class=\"comps\">Comps.</b>\n      <span class=\"remove\">\n        <u>Remove</u>\n      </span>\n    </p>\n  </div>\n</span>\n";
+output += ".\n    <b class=\"swaps\">Swaps.</b>\n    <b class=\"comps\">Comps.</b>\n    <span class=\"remove\">\n      <u>Remove</u>\n    </span>\n  </p>\n</div>\n";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
@@ -61173,7 +61173,24 @@ exports.setUpPipe = function (location, data, query) {
 };
 var index = 1;
 exports.pipeCallback = function () {
-    return;
+    // the wrapper for the boards
+    // const boardsElement = document.getElementById("boards");
+    // const display = new BoardDisplay(boardsElement, 500, 500);
+    // // controls
+    // const createButton = document.getElementById("create");
+    // // on create
+    // jquery(createButton).click(createBoard.bind(this, display));
+    // const autoElement = document.getElementById("auto");
+    // jquery(autoElement).click(() => {
+    //   display.setupAuto();
+    //   if (display.interval) {
+    //     autoElement.innerText = "Stop";
+    //   } else {
+    //     autoElement.innerText = "Auto";
+    //   }
+    // });
+    // const stepElement = document.getElementById("step");
+    // jquery(stepElement).click(display.step.bind(display));
 };
 
 
@@ -61319,6 +61336,9 @@ var AbstractDisplay = /** @class */ (function () {
                 _this.draw(group, false);
                 _this.draw(group, true);
                 done = false;
+            }
+            else {
+                group.domElement.classList.add("done");
             }
             _this.replaceData(group);
         });

@@ -161,6 +161,8 @@ export abstract class AbstractDisplay {
         this.draw(group, false);
         this.draw(group, true);
         done = false;
+      } else {
+        (group.domElement as HTMLElement).classList.add("done");
       }
       this.replaceData(group);
     });

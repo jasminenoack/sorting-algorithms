@@ -42,6 +42,9 @@ import { CycleOptimized } from "./cycle/optimized";
 // gnome
 import { Gnome } from "./gnome/base";
 
+// gravity
+import { Gravity } from "./gravity/base";
+
 // heap
 import { Heap } from "./heap/base";
 
@@ -113,6 +116,8 @@ export {
   CycleOptimized,
   // gnome
   Gnome,
+  // gravity
+  Gravity,
   // heap
   Heap,
   // insertion

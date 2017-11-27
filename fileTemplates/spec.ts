@@ -8,7 +8,7 @@ xdescribe("sort test base", () => {
   let sort;
 
   beforeEach(() => {
-    length = 5;
+    length = 10;
     size = xXLarge;
     board = new Board(size);
     Sort = Sort;
@@ -23,23 +23,6 @@ xdescribe("sort test base", () => {
     xit("has current nodes", () => {
       expect(sort.currentNodes()).toEqual([0, 1]);
     });
-  });
-
-  xit("has a reset function", () => {
-    const rounds = 0;
-    while (!sort.done && rounds < 100) {
-      sort.next();
-    }
-    expect(sort.done).toEqual(true);
-    const values = board.values().slice();
-    sort.reset();
-    expect(sort.done).toBeFalsy();
-    expect(sort.steps).toEqual(0);
-    expect(sort.swaps).toEqual(0);
-    expect(sort.comparisons).toEqual(0);
-    expect(values).not.toEqual(board.values());
-    expect(sort.baseNode).toEqual(0);
-    expect(sort.comparisonNode).toEqual(1);
   });
 
   xdescribe("utils", () => {
@@ -168,5 +151,22 @@ xdescribe("sort test base", () => {
       expect(sort.comparisons).not.toEqual(0);
       expect(sort.steps).not.toEqual(0);
     });
+  });
+
+  xit("has a reset function", () => {
+    const rounds = 0;
+    while (!sort.done && rounds < 100) {
+      sort.next();
+    }
+    expect(sort.done).toEqual(true);
+    const values = board.values().slice();
+    sort.reset();
+    expect(sort.done).toBeFalsy();
+    expect(sort.steps).toEqual(0);
+    expect(sort.swaps).toEqual(0);
+    expect(sort.comparisons).toEqual(0);
+    expect(values).not.toEqual(board.values());
+    expect(sort.baseNode).toEqual(0);
+    expect(sort.comparisonNode).toEqual(1);
   });
 });

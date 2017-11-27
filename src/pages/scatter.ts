@@ -17,7 +17,7 @@ export const setUpScatter = (
     defaults: {
       count: "xLarge",
       shuffle: "RandomShuffle",
-      sort: "Comb",
+      sort: "Gravity",
       valueType: "Integer",
     },
     shuffles,

@@ -32260,27 +32260,30 @@ exports.CycleOptimized = optimized_2.CycleOptimized;
 // gnome
 var base_6 = __webpack_require__(34);
 exports.Gnome = base_6.Gnome;
+// gravity
+var base_7 = __webpack_require__(577);
+exports.Gravity = base_7.Gravity;
 // heap
-var base_7 = __webpack_require__(208);
-exports.Heap = base_7.Heap;
+var base_8 = __webpack_require__(208);
+exports.Heap = base_8.Heap;
 // insertion
-var base_8 = __webpack_require__(551);
-exports.Insertion = base_8.Insertion;
+var base_9 = __webpack_require__(551);
+exports.Insertion = base_9.Insertion;
 // merge
-var base_9 = __webpack_require__(212);
-exports.Merge = base_9.Merge;
+var base_10 = __webpack_require__(212);
+exports.Merge = base_10.Merge;
 var outPlace_1 = __webpack_require__(552);
 exports.MergeOutOfPlace = outPlace_1.MergeOutOfPlace;
 var smallest_1 = __webpack_require__(553);
 exports.MergeSmallest = smallest_1.MergeSmallest;
 // odd even
-var base_10 = __webpack_require__(119);
-exports.OddEven = base_10.OddEven;
+var base_11 = __webpack_require__(119);
+exports.OddEven = base_11.OddEven;
 var concurrent_2 = __webpack_require__(554);
 exports.OddEvenConcurrent = concurrent_2.OddEvenConcurrent;
 // quick
-var base_11 = __webpack_require__(71);
-exports.QuickSort2 = base_11.QuickSort2;
+var base_12 = __webpack_require__(71);
+exports.QuickSort2 = base_12.QuickSort2;
 var partition3_1 = __webpack_require__(555);
 exports.QuickSort3 = partition3_1.QuickSort3;
 var partition3Random_1 = __webpack_require__(556);
@@ -32292,16 +32295,16 @@ exports.QuickSort2Random = randomPartition_1.QuickSort2Random;
 var rightPartition_1 = __webpack_require__(214);
 exports.QuickSort2RightPartition = rightPartition_1.QuickSort2RightPartition;
 // selection
-var base_12 = __webpack_require__(558);
-exports.SelectionSort = base_12.SelectionSort;
+var base_13 = __webpack_require__(558);
+exports.SelectionSort = base_13.SelectionSort;
 // smooth
-var base_13 = __webpack_require__(120);
-exports.Smooth = base_13.Smooth;
+var base_14 = __webpack_require__(120);
+exports.Smooth = base_14.Smooth;
 var fromBottom_1 = __webpack_require__(559);
 exports.SmoothSetUpBottom = fromBottom_1.SmoothSetUpBottom;
 // stooge
-var base_14 = __webpack_require__(560);
-exports.Stooge = base_14.Stooge;
+var base_15 = __webpack_require__(560);
+exports.Stooge = base_15.Stooge;
 
 
 /***/ }),
@@ -60842,7 +60845,7 @@ exports.setUpScatter = function (location, data, query) {
         defaults: {
             count: "xLarge",
             shuffle: "RandomShuffle",
-            sort: "Comb",
+            sort: "Gravity",
             valueType: "Integer",
         },
         shuffles: shuffles,
@@ -61823,6 +61826,110 @@ exports.setUpQueens = function () {
         renderQueens();
     }, 5000);
 };
+
+
+/***/ }),
+/* 577 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __webpack_require__(11);
+var baseSort_1 = __webpack_require__(3);
+var Gravity = /** @class */ (function (_super) {
+    __extends(Gravity, _super);
+    function Gravity() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Gravity.prototype.setUp = function () {
+        this.shadow = [];
+    };
+    Gravity.prototype.handleCurrentShadow = function () {
+        var currentShadow = this.shadow.shift();
+        var shadowValue = currentShadow.value;
+        if (!shadowValue) {
+            return;
+        }
+        var lowestIndex = 0;
+        this.comparisons++;
+        while (this.board.get(lowestIndex).value ===
+            (this.board.get(lowestIndex + 1) && this.board.get(lowestIndex + 1).value)) {
+            if (lowestIndex) {
+                this.comparisons++;
+            }
+            lowestIndex++;
+        }
+        while (lowestIndex) {
+            var point = this.board.get(lowestIndex);
+            var currentValue = point.value;
+            if (lowestIndex === this.end) {
+                var newValue = currentValue + shadowValue;
+                point.value = newValue;
+                shadowValue -= shadowValue;
+                break;
+            }
+            var nextIndex = lowestIndex + 1;
+            var nextPoint = this.board.get(lowestIndex + 1);
+            var nextValue = nextPoint.value;
+            this.comparisons++;
+            if (nextValue !== currentValue) {
+                var additional = Math.min(shadowValue, nextValue - currentValue);
+                var newValue = currentValue + additional;
+                point.value = newValue;
+                shadowValue -= additional;
+            }
+            lowestIndex = nextIndex;
+        }
+    };
+    Gravity.prototype.next = function () {
+        var _this = this;
+        if (this.done) {
+            return [];
+        }
+        this.steps++;
+        var currentNodes = this.currentNodes();
+        if (!this.shadow.length) {
+            var board = this.board;
+            board.points.forEach(function (point) {
+                _this.shadow.push({ index: point.index, value: point.value });
+                point.value = 0;
+            });
+        }
+        else {
+            this.handleCurrentShadow();
+            if (!this.shadow.length) {
+                this.done = true;
+            }
+            this.trackProfile();
+        }
+        return currentNodes;
+    };
+    Gravity.prototype.currentNodes = function () {
+        if (this.done) {
+            return [];
+        }
+        else if (!this.shadow.length) {
+            return lodash_1.range(0, this.board.length);
+        }
+        var count = this.board.length;
+        var shadowValue = this.shadow[0].value;
+        return lodash_1.range(count - shadowValue, count);
+    };
+    Gravity.title = "Gravity Sort(positive integers only)";
+    return Gravity;
+}(baseSort_1.BaseSort));
+exports.Gravity = Gravity;
 
 
 /***/ })

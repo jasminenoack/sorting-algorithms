@@ -4,26 +4,25 @@ import * as sizes from "../sizes";
 import * as sorts from "../sorts/sorts";
 import * as valueTypes from "../valueTypes";
 import { BoardDisplay } from "./../display/board";
-import { createBoard } from "./utils";
+import { createBoard, sanitizeOptions } from "./utils";
+import { scatterPage } from "../templates/pages";
 
 export const setUpScatter = (
   location: string,
   data: { [key: string]: string },
   query: { [key: string]: string },
 ) => {
-  // tslint:disable-next-line:no-var-requires
-  const tpl = require("../../templates/scatter.njk");
-  const html = tpl.render({
+  const html = scatterPage({
     defaults: {
       count: "xLarge",
       shuffle: "RandomShuffle",
       sort: "Gravity",
       valueType: "Integer",
     },
-    shuffles,
-    sizes,
-    sorts,
-    valueTypes,
+    shuffles: sanitizeOptions(shuffles, ["title"]),
+    sizes: sanitizeOptions(sizes, ["label"]),
+    sorts: sanitizeOptions(sorts, ["title"]),
+    valueTypes: sanitizeOptions(valueTypes, ["title"]),
   });
   return html;
 };

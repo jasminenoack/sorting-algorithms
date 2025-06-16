@@ -5,26 +5,25 @@ import * as shuffles from "../shuffles";
 import * as sizes from "../sizes";
 import * as sorts from "../sorts/sorts";
 import * as valueTypes from "../valueTypes";
-import { createBoard } from "./utils";
+import { createBoard, sanitizeOptions } from "./utils";
+import { pipePage } from "../templates/pages";
 
 export const setUpPipe = (
   location: string,
   data: { [key: string]: string },
   query: { [key: string]: string },
 ) => {
-  // tslint:disable-next-line:no-var-requires
-  const tpl = require("../../templates/pipe.njk");
-  const html = tpl.render({
+  const html = pipePage({
     defaults: {
       count: "xLarge",
       shuffle: "RandomShuffle",
       sort: "Comb",
       valueType: "Integer",
     },
-    shuffles,
-    sizes,
-    sorts,
-    valueTypes,
+    shuffles: sanitizeOptions(shuffles, ["title"]),
+    sizes: sanitizeOptions(sizes, ["label"]),
+    sorts: sanitizeOptions(sorts, ["title"]),
+    valueTypes: sanitizeOptions(valueTypes, ["title"]),
   });
   return html;
 };

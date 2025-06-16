@@ -3,6 +3,7 @@ import * as jquery from "jquery";
 import { filter } from "lodash";
 import { Board } from "../board";
 import { BaseSort } from "../sorts/baseSort";
+import { boardData } from "../templates/board";
 
 export interface ITestGroup {
   name: string;
@@ -74,7 +75,7 @@ export abstract class AbstractDisplay {
     const tpl = this.getTemplate();
     let html;
     if (tpl) {
-      html = tpl.render({
+      html = tpl({
         board,
         disabled: !!this.interval,
         height: this.boardHeight,
@@ -196,15 +197,18 @@ export abstract class AbstractDisplay {
    * @param group
    */
   public replaceData(group: ITestGroup) {
-    const tpl = require("../../templates/board/boardData.njk");
     const board = group.board;
     const sort = group.sort;
-    const numPoints = board.points.length;
-    const html = tpl.render({
+    const html = boardData({
       board,
       shuffleTitle: board.shuffle.title,
       sort,
       verbosity: board.verbosity,
+      name: group.name,
+      title: "",
+      width: this.boardWidth,
+      height: this.boardHeight,
+      sortName: (sort.constructor as any).title,
     });
     jquery(group.domElement).find(".board-information").html(html);
   }

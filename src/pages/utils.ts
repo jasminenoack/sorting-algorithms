@@ -39,3 +39,18 @@ export const createBoard = (display: AbstractDisplay) => {
   });
   index++;
 };
+
+export const sanitizeOptions = (
+  obj: { [key: string]: any },
+  props: string[],
+) => {
+  return Object.entries(obj).map(([key, value]) => {
+    const clean: { [key: string]: any } = {};
+    props.forEach((p) => {
+      if (value && Object.prototype.hasOwnProperty.call(value, p)) {
+        clean[p] = value[p];
+      }
+    });
+    return [key, clean];
+  });
+};

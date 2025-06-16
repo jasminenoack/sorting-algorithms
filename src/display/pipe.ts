@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { AbstractDisplay, ITestGroup } from "./abstract";
+import { pipeTemplate } from "../templates/board";
 
 export class PipeDisplay extends AbstractDisplay {
   public wrapperClass: string = "pipe-wrapper";
@@ -17,7 +18,7 @@ export class PipeDisplay extends AbstractDisplay {
    * @override
    */
   public getTemplate() {
-    return require("../../templates/board/pipe.njk");
+    return pipeTemplate;
   }
 
   /**

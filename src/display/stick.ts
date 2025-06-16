@@ -3,6 +3,7 @@ import * as jquery from "jquery";
 import { filter } from "lodash";
 import { Point } from "./../point";
 import { AbstractDisplay, ITestGroup } from "./abstract";
+import { sticksTemplate } from "../templates/board";
 
 export class StickDisplay extends AbstractDisplay {
   public delay: number = 250;
@@ -28,7 +29,7 @@ export class StickDisplay extends AbstractDisplay {
    * @override
    */
   public getTemplate() {
-    return require("../../templates/board/sticks.njk");
+    return sticksTemplate;
   }
 
   /**

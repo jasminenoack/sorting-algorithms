@@ -7,6 +7,7 @@ import { setUpSingle, singleCallback } from "./../src/pages/single";
 import { setUpStick, stickCallback } from "./../src/pages/stick";
 import { Router } from "./../src/router/router";
 import { setUpQueens } from "./../src/tools/queensBackground";
+import "chart.js/auto";
 
 setUpHeaders();
 

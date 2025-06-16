@@ -4,10 +4,9 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "commonjs",
-    "target": "es5"
+    "target": "es2015",
+    "types": ["jest", "node"],
+    "jsx": "react"
   },
-  "include": [
-    "src/**/*",
-    "src/*"
-  ]
+  "include": ["src/**/*", "src/*", "spec/**/*"]
 }

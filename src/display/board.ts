@@ -4,6 +4,7 @@ import { filter } from "lodash";
 import { BaseSort } from "../sorts/baseSort";
 import { Board } from "./../board";
 import { AbstractDisplay, ITestGroup } from "./abstract";
+import { boardTemplate } from "../templates/board";
 
 export class BoardDisplay extends AbstractDisplay {
   constructor(
@@ -18,7 +19,7 @@ export class BoardDisplay extends AbstractDisplay {
    * @override
    */
   public getTemplate() {
-    return require("../../templates/board/board.njk");
+    return boardTemplate;
   }
 
   /**

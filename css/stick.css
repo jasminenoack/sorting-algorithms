@@ -1,0 +1,31 @@
+#content {
+  width: 90%;
+  max-width: none;
+}
+
+svg {
+  margin: 20px auto;
+}
+
+line {
+  stroke: black;
+  stroke-width: 3px;
+}
+
+line.placed {
+  stroke: purple;
+}
+
+line.shadow {
+  stroke: gray;
+}
+
+.reset {
+  position: absolute;
+  right: 0;
+  z-index: 100;
+}
+
+line.active {
+  stroke: blue;
+}

@@ -2,8 +2,8 @@ import { Router } from "../../src/router/router";
 
 describe("router", () => {
   let router: Router;
-  let baseRouteFun: jasmine.Spy;
-  let otherRouteFun: jasmine.Spy;
+  let baseRouteFun: jest.Mock;
+  let otherRouteFun: jest.Mock;
   let baseRoute: string;
   let location: any;
   let changeLocationFun: any;
@@ -12,12 +12,12 @@ describe("router", () => {
   let otherHtml: string;
 
   beforeEach(() => {
-    baseRouteFun = jasmine.createSpy("base");
+    baseRouteFun = jest.fn();
     originalHtml = "<div>Original</div>";
-    baseRouteFun.and.returnValue(originalHtml);
-    otherRouteFun = jasmine.createSpy("other");
+    baseRouteFun.mockReturnValue(originalHtml);
+    otherRouteFun = jest.fn();
     otherHtml = "<div>Other</div>";
-    otherRouteFun.and.returnValue(otherHtml);
+    otherRouteFun.mockReturnValue(otherHtml);
     baseRoute = "^$";
     location = {
       hash: "",
@@ -144,8 +144,8 @@ describe("router", () => {
     let matchListener: any;
     let nonMatchListener: any;
     beforeEach(() => {
-      matchListener = jasmine.createSpy("match");
-      nonMatchListener = jasmine.createSpy("non-match");
+      matchListener = jest.fn();
+      nonMatchListener = jest.fn();
     });
 
     it("should handle a/(c|.*)/b", () => {
@@ -291,7 +291,7 @@ describe("router", () => {
     });
 
     it("should allow for a callback", () => {
-      const callback = jasmine.createSpy();
+      const callback = jest.fn();
       router.register("^test$", baseRouteFun, callback);
       location.hash = "#test";
       changeLocationFun(event);

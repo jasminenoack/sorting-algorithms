@@ -1,7 +1,7 @@
 import * as jquery from "jquery";
 import { Board, Verbosity } from "../board";
 import { BoardDisplay } from "../display/board";
-import { IShuffle, RandomShuffle } from "../shuffles";
+import { IShuffle } from "../shuffles";
 import * as shuffles from "../shuffles";
 import { _25 } from "../sizes";
 import { BaseSort } from "../sorts/baseSort";
@@ -9,6 +9,8 @@ import { Comb } from "../sorts/sorts";
 import * as sorts from "../sorts/sorts";
 import { Integer, IValueType } from "../valueTypes";
 import { ISize } from "./../sizes";
+import { sanitizeOptions } from "./utils";
+import { singlePage } from "../templates/pages";
 
 const defaults = {
   shuffle: "RandomShuffle",
@@ -16,12 +18,10 @@ const defaults = {
 };
 
 export const setUpSingle = () => {
-  // tslint:disable-next-line:no-var-requires
-  const tpl = require("../../templates/single.njk");
-  const html = tpl.render({
+  const html = singlePage({
     defaults,
-    shuffles,
-    sorts,
+    shuffles: sanitizeOptions(shuffles, ["title"]),
+    sorts: sanitizeOptions(sorts, ["title"]),
   });
   return html;
 };

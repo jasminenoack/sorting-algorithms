@@ -3,6 +3,7 @@ import * as jquery from "jquery";
 import { filter, map } from "lodash";
 import { IDatum } from "./../sorts/baseSort";
 import { AbstractDisplay, ITestGroup } from "./abstract";
+import { listTemplate } from "../templates/board";
 
 interface IGraphData {
   key: string;
@@ -32,7 +33,7 @@ export class GraphDisplay extends AbstractDisplay {
    * @override
    */
   public getTemplate() {
-    return require("../../templates/board/list.njk");
+    return listTemplate;
   }
 
   /**

@@ -164,11 +164,11 @@ describe("gravity sort", () => {
       expect(sort.steps).not.toEqual(0);
     });
 
-    xit("handles decimals");
+    xit("handles decimals", () => {});
 
-    xit("handles space between numbers");
+    xit("handles space between numbers", () => {});
 
-    xit("all high");
+    xit("all high", () => {});
   });
 
   xit("has a reset function", () => {
